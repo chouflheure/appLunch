@@ -11,8 +11,7 @@ class TurnCardViewModel: ObservableObject {
     @Published var description = String()
     @Published var starthours = String()
     @Published var endhours = String()
-    
-    
+
     func textFormattedLongFormat() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE  d  MMMM"
