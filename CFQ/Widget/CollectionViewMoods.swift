@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CollectionViewMoods: View {
     @State private var items = MoodType.allCases
-    @State private var selectedItems: Set<MoodType> = []
     @StateObject var viewModel: TurnCardViewModel
 
     let columns = [
@@ -31,7 +30,7 @@ struct CollectionViewMoods: View {
     }
 }
 
-struct ItemView: View {
+private struct ItemView: View {
     let mood: MoodType
     let isSelected: Bool
 

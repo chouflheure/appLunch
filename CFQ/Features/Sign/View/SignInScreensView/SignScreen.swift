@@ -9,10 +9,7 @@ struct SignScreen: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Image(.backgroundNeon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
+                NeonBackgroundImage()
                 
                 VStack {
                     

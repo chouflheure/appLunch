@@ -9,10 +9,7 @@ struct ConfirmCodeScreen: View {
     
     var body: some View {
         ZStack {
-            Image(.backgroundNeon)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .ignoresSafeArea()
+            NeonBackgroundImage()
 
             VStack {
                 Image(.logoWhite)

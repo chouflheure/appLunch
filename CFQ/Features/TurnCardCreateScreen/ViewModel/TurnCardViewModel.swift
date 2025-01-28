@@ -9,6 +9,8 @@ class TurnCardViewModel: ObservableObject {
     @Published var moods = Set<MoodType>()
     @Published var adresse = String()
     @Published var description = String()
+    @Published var starthours = String()
+    @Published var endhours = String()
     
     
     func textFormattedLongFormat() -> String {

@@ -1,9 +1,3 @@
-//
-//  DescriptionTurnCard.swift
-//  CFQ
-//
-//  Created by Calvignac Charles on 24/01/2025.
-//
 
 import SwiftUI
 
@@ -16,5 +10,12 @@ struct DescriptionTurnCard: View {
             .padding(.bottom, 20)
             .padding(.top, 10)
             .lineLimit(3)
+    }
+}
+
+#Preview {
+    ZStack {
+        Color.blue.edgesIgnoringSafeArea(.all)
+        DescriptionTurnCard(viewModel: TurnCardViewModel())
     }
 }

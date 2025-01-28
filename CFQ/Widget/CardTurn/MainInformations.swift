@@ -24,10 +24,8 @@ struct MainInformationsView: View {
                 .padding(.horizontal, 12)
                 .sheet(isPresented: $showMoods) {
                     ZStack {
-                        Image(.backgroundNeon)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .ignoresSafeArea()
+                        NeonBackgroundImage()
+
                         VStack {
                             CollectionViewMoods(viewModel: viewModel)
                             Button(
@@ -50,9 +48,10 @@ struct MainInformationsView: View {
                     .presentationDragIndicator(.visible)
                     .presentationDetents([.height(500)])
                 }
-                
+
                 DatePickerMainInformations(viewModel: viewModel)
                     .padding(.horizontal, 12)
+
 
                 HStack(alignment: .top) {
                         Image(systemName: "mappin")

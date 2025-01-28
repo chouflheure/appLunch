@@ -5,10 +5,7 @@ struct BirthdaySignUpScreen: View {
 
     var body: some View {
         ZStack {
-            Image(.backgroundNeon)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .ignoresSafeArea()
+            NeonBackgroundImage()
 
             VStack {
                 ProgressBar(index: $viewModel.index)
