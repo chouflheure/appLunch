@@ -15,7 +15,7 @@ struct ConfirmCodeScreen: View {
     func verifyCode() {
         let verificationID = UserDefaults.standard.string(forKey: "authVerificationID") ?? ""
         let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: otpCode)
-        
+        print("@@@ credential \(credential)")
         Auth.auth().signIn(with: credential) { authResult, error in
             if let error = error {
                 print("Erreur: \(error.localizedDescription)")
