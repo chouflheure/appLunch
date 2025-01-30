@@ -44,7 +44,7 @@ struct CustomTabView: View {
             VStack {
                 Group {
                     if selectedTab == 0 {
-                        Test()
+                        SignScreen()
                         /*
                          Text("Feed")
                             .foregroundStyle(.white)
@@ -55,8 +55,7 @@ struct CustomTabView: View {
                     } else if selectedTab == 2 {
                         TurnCardView()
                     } else if selectedTab == 3 {
-                        Text("Team Screen")
-                            .foregroundStyle(.white)
+                        Test()
                     } else {
                         Text("Profile Screen")
                             .foregroundStyle(.white)
