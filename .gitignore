@@ -31,7 +31,7 @@ playground.xcworkspace
 # .swiftpm
 
 .build/
-#*.plist
+*.plist
 
 # CocoaPods
 #
