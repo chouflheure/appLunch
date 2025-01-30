@@ -13,7 +13,7 @@ class Coordinator: ObservableObject {
             }
         )
     }
-    
+    /*
     func goToConfirmCode() {
         let view = ConfirmCodeScreen()
             .navigationBarTitleDisplayMode(.inline)
@@ -23,5 +23,5 @@ class Coordinator: ObservableObject {
                 view
             }
         )
-    }
+    }*/
 }

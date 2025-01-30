@@ -1,12 +1,31 @@
 
 import SwiftUI
+import FirebaseAuth
 
 struct ConfirmationScreenDestination: Hashable {}
 
 struct ConfirmCodeScreen: View {
-    @State private var text: String = ""
+    @State private var otpCode = ""
     @State private var hasAlreadyAccount = true
+
+    var verificationID: String
+    var mobileNumber: String
+    @Environment(\.dismiss) var dismiss
     
+    func verifyCode() {
+        let verificationID = UserDefaults.standard.string(forKey: "authVerificationID") ?? ""
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: otpCode)
+        
+        Auth.auth().signIn(with: credential) { authResult, error in
+            if let error = error {
+                print("Erreur: \(error.localizedDescription)")
+                return
+            }
+            print("Connexion réussie ✅")
+            dismiss()
+        }
+    }
+
     var body: some View {
         ZStack {
             NeonBackgroundImage()
@@ -26,7 +45,7 @@ struct ConfirmCodeScreen: View {
                         .padding(.bottom, 20)
 
                     TextFieldBGBlackFull(
-                        text: $text,
+                        text: $otpCode,
                         keyBoardType: .phonePad,
                         placeHolder: Strings.Login.PlaceholderConfimCode
                     )
@@ -38,7 +57,7 @@ struct ConfirmCodeScreen: View {
 
                 VStack {
                     FullButtonLogIn(
-                        action: {},
+                        action: {verifyCode()},
                         title: Strings.Login.CheckConfirmCode
                     ).padding(.horizontal, 20)
 
@@ -54,5 +73,5 @@ struct ConfirmCodeScreen: View {
 }
 
 #Preview {
-    ConfirmCodeScreen()
+    //ConfirmCodeScreen()
 }

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import FirebaseAuth
 
 class SignUpPageViewModel: ObservableObject {
     @Published var index = 0
@@ -13,15 +14,12 @@ class SignUpPageViewModel: ObservableObject {
     @Published var picture: UIImage?
     @Published var friend : String = ""
     @Published var friends: [String] = []
-        
-    
 
     func addFriend() {
         friends.append(friend)
         print("Amis actuels : \(friends)")
     }
 
-    // Simuler un téléchargement d'image
     func uploadPicture() {
         self.picture = UIImage(systemName: "person.circle")
     }
