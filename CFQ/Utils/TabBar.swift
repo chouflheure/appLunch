@@ -44,11 +44,9 @@ struct CustomTabView: View {
             VStack {
                 Group {
                     if selectedTab == 0 {
-                        SignScreen()
-                        /*
+                        // SignScreen()
                          Text("Feed")
                             .foregroundStyle(.white)
-                         */
                     } else if selectedTab == 1 {
                         Text("Maps Screen")
                             .foregroundStyle(.white)
