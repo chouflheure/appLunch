@@ -20,7 +20,7 @@ struct SignScreen: View {
                     VStack {
                         Text(viewModel.hasAlreadyAccount ?
                              Strings.Login.Connexion :
-                                Strings.Login.Inscritpion)
+                                Strings.Login.Inscritpion).font(AppFont.GigalypseTrial.font(size: 12))
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
