@@ -1,9 +1,18 @@
+
 import SwiftUI
+import FirebaseAuth
 
 class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
 
     func start() {
+
+        if let user = Auth.auth().currentUser {
+            print("Utilisateur connecté :", user.uid)
+        } else {
+            print("Aucun utilisateur connecté.")
+        }
+
         let view = CustomTabView()
             .navigationBarTitleDisplayMode(.inline)
 
@@ -13,6 +22,7 @@ class Coordinator: ObservableObject {
             }
         )
     }
+
     /*
     func goToConfirmCode() {
         let view = ConfirmCodeScreen()
