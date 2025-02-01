@@ -60,40 +60,48 @@ struct CustomTabView: View {
                     }
                 }
                 .frame(maxHeight: .infinity)
-                
+
                 HStack() {
-                    
+
                     Spacer()
-                    
-                    TabButton(icon: "1.square.fill", isSelected: selectedTab == 0) {
+
+                    TabButton(iconUnselected: .iconNavHome,
+                              iconSelected: .iconNavHomeFilled,
+                              isSelected: selectedTab == 0) {
                         selectedTab = 0
                     }
-                    
+
                     Spacer()
-                    
-                    TabButton(icon: "map", isSelected: selectedTab == 1) {
+
+                    TabButton(iconUnselected: .iconNavMap,
+                              iconSelected: .iconNavMapFilled,
+                              isSelected: selectedTab == 1) {
                         selectedTab = 1
                     }
-                    
+
                     Spacer()
-                    
+
                     CustomPlusButton()
                         .onTapGesture {
                             selectedTab = 2
                         }
-                    
+
                     Spacer()
-                    
-                    TabButton(icon: "rectangle.3.group", isSelected: selectedTab == 3) {
+
+                    TabButton(iconUnselected: .iconNavTeam,
+                              iconSelected: .iconNavTeamFilled,
+                              isSelected: selectedTab == 3) {
                         selectedTab = 3
                     }
-                    
+
                     Spacer()
-                    
-                    TabButton(icon: "person.circle", isSelected: selectedTab == 4) {
+
+                    TabButton(iconUnselected: .iconNavProfile,
+                              iconSelected: .iconNavProfileFilled,
+                              isSelected: selectedTab == 4) {
                         selectedTab = 4
                     }
-                    
+
                     Spacer()
                 }
                 .padding(.vertical)
@@ -104,13 +112,14 @@ struct CustomTabView: View {
 }
 
 struct TabButton: View {
-    let icon: String
+    let iconUnselected: ImageResource
+    let iconSelected: ImageResource
     let isSelected: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: icon)
+            Image(isSelected ? iconSelected : iconUnselected)
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(isSelected ? .blue : .gray)
         }

@@ -62,7 +62,6 @@ var card: [Card] = [
     Card(color: .yellow, cardName: "Play", logo: "gamecontroller", num: "22, 12"),
     Card(color: .blue, cardName: "Medic", logo: "bandage.fill", num: "10, 73")]
 
-
 struct Test: View {
     @State var cards: [Card] = card
     @State var selectedCradId: UUID? = nil

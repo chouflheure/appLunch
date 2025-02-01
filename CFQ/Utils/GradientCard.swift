@@ -16,6 +16,6 @@ struct GradientCardView: View {
         }
         .frame(height: 500)
         .cornerRadius(20)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 12)
     }
 }
