@@ -1,9 +1,4 @@
-//
-//  TabBar.swift
-//  CFQ
-//
-//  Created by Calvignac Charles on 21/01/2025.
-//
+
 import SwiftUI
 
 struct CustomPlusButton: View {
@@ -51,12 +46,17 @@ struct CustomTabView: View {
                         Text("Maps Screen")
                             .foregroundStyle(.white)
                     } else if selectedTab == 2 {
-                        TurnCardView()
+                        TurnCardView(
+                            viewModel: TurnCardViewModel(),
+                            isShow: false,
+                            select: {selected in print("Card selected \(selected)")}
+                        )
                     } else if selectedTab == 3 {
-                        Test()
+                        // Test()
+                        Text("Team Screen").foregroundStyle(.white)
                     } else {
-                        Text("Profile Screen")
-                            .foregroundStyle(.white)
+                        Screen()
+                        //Text("Profile Screen").foregroundStyle(.white)
                     }
                 }
                 .frame(maxHeight: .infinity)

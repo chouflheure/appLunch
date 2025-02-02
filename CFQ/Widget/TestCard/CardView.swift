@@ -1,9 +1,3 @@
-//
-//  CardView.swift
-//  CFQ
-//
-//  Created by Calvignac Charles on 28/01/2025.
-//
 
 import SwiftUI
 
@@ -11,7 +5,8 @@ struct CardView: View {
     var show: Bool
     var card: Card
     var select: (Bool) -> Void
-    
+    @State private var dragOffset: CGFloat = 0
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
@@ -29,6 +24,27 @@ struct CardView: View {
         .padding()
         .frame(height: 200)
         .background((card.color), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .offset(y: dragOffset) // 🔹 Appliquer l'offset
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            if show {
+                                dragOffset = gesture.translation.height
+                            }
+                        }
+                        .onEnded { gesture in
+                            if show && dragOffset > 50 { // 🔹 Seuil pour fermer la carte
+                                withAnimation(.spring()) {
+                                    dragOffset = 0
+                                    select(false)  // 🔹 Désélectionne la carte
+                                }
+                            } else {
+                                withAnimation(.spring()) {
+                                    dragOffset = 0
+                                }
+                            }
+                        }
+                )
         .onTapGesture {
             withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                 print("@@@ selected")
@@ -49,6 +65,7 @@ struct CardView: View {
 
 import Foundation
 
+
 struct Card: Identifiable {
     var id = UUID()
     var color: Color
@@ -60,7 +77,12 @@ struct Card: Identifiable {
 var card: [Card] = [
     Card(color: .red, cardName: "Shop", logo: "cart", num: "65, 973"),
     Card(color: .yellow, cardName: "Play", logo: "gamecontroller", num: "22, 12"),
-    Card(color: .blue, cardName: "Medic", logo: "bandage.fill", num: "10, 73")]
+    Card(color: .blue, cardName: "Medic", logo: "bandage.fill", num: "10, 73"),
+    Card(color: .red, cardName: "Shop", logo: "cart", num: "65, 973"),
+    Card(color: .purple, cardName: "Shop", logo: "cart", num: "65, 973"),
+    Card(color: .pink, cardName: "Shop", logo: "cart", num: "65, 973"),
+    Card(color: .green, cardName: "Shop", logo: "cart", num: "65, 973"),
+]
 
 struct Test: View {
     @State var cards: [Card] = card
@@ -83,7 +105,7 @@ struct Test: View {
         let selectedCardIndex = cards.firstIndex(where: {$0.id == selectedCradId})
         switch selectedCardIndex {
         case .none:
-            return CGFloat(index * 80)
+            return CGFloat(index*10)
         case .some(let selectedIndex) where selectedIndex == index:
             return -300
         case .some(let selectedIndex):

@@ -1,9 +1,10 @@
 
 import Foundation
+import Combine
 
 class TurnCardViewModel: ObservableObject {
     
-    var isEditing: Bool = true
+    @Published var isEditing: Bool = false
     @Published var title = String()
     @Published var date = Date()
     @Published var moods = Set<MoodType>()
@@ -32,4 +33,6 @@ class TurnCardViewModel: ObservableObject {
 
         return (jour, mois)
     }
+    
+    
 }

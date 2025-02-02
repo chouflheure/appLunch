@@ -55,7 +55,10 @@ struct HeaderCardView: View {
     @State private var isPhotoPickerPresented = false
 
     private func showPhotoPicker() {
-        isPhotoPickerPresented = true
+        print("@@@ click photo")
+        if viewModel.isEditing {
+            isPhotoPickerPresented = true
+        }
     }
 }
 
