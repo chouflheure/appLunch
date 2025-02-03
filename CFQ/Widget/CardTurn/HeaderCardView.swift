@@ -13,7 +13,7 @@ struct HeaderCardView: View {
                 if let selectedImage = selectedImage {
                     selectedImage
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
                         .frame(height: 150)
                         .clipped()
                 } else {

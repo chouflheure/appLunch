@@ -18,8 +18,8 @@ struct DateLabel: View {
                 .textCase(.uppercase)
                 .font(.system(size: 20))
                 .tint(.white)
-                .padding(.horizontal, 10)
                 .padding(.bottom, 10)
+                .frame(width: 90)
 
         }
         .background(.black).opacity(0.8)

@@ -4,7 +4,7 @@ import Combine
 
 class TurnCardViewModel: ObservableObject {
     
-    @Published var isEditing: Bool = false
+    @Published var isEditing: Bool = true
     @Published var title = String()
     @Published var date = Date()
     @Published var moods = Set<MoodType>()

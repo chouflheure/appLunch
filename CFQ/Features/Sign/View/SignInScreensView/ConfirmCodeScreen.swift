@@ -36,7 +36,7 @@ struct ConfirmCodeScreen: View {
             NeonBackgroundImage()
 
             VStack {
-                Image(.logoWhite)
+                Image(.whiteLogo)
                     .imageScale(.large)
                     .foregroundStyle(.tint)
                     .edgesIgnoringSafeArea(.top)

@@ -26,13 +26,13 @@ struct TurnCardView: View {
 
                 // Description
                 DescriptionTurnCard(viewModel: viewModel)
-                    .padding(.horizontal, 16)
+                    // .padding(.horizontal, 16)
 
                 Spacer()
             }
             .cornerRadius(20)
             .frame(height: 500)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 12)
         }
         .offset(y: dragOffset)
         .gesture(
