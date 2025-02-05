@@ -47,7 +47,6 @@ struct CollectionViewHours: View {
         selectedItems = item
         viewModel.starthours = item
     }
-
 }
 
 private struct ItemView: View {

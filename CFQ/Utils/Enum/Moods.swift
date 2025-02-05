@@ -15,41 +15,50 @@ enum MoodType: String, CaseIterable {
 
 struct Mood {
 
-    func data(for mood: MoodType) -> MoodData {
+    func data(for mood: MoodType) -> MoodView {
         switch mood {
         case .party:
-            return MoodData(icon: UIImage(resource: .iconMoodParty), title: "Party")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodParty), title: "Party"))
         case .concert:
-            return MoodData(icon: UIImage(resource: .iconMoodConcert), title: "Concert")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodConcert), title: "Concert"))
         case .nightclub:
-            return MoodData(icon: UIImage(resource: .iconMoodNightClub), title: "Nightclub")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodNightClub), title: "Nightclub"))
         case .after:
-            return MoodData(icon: UIImage(resource: .iconMoodAfter), title: "After")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodAfter), title: "After"))
         case .before:
-            return MoodData(icon: UIImage(resource: .iconMoodBefore), title: "Before")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodBefore), title: "Before"))
         case .dinner:
-            return MoodData(icon: UIImage(resource: .iconMoodDinner), title: "Diner")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodDinner), title: "Diner"))
         case .bar:
-            return MoodData(icon: UIImage(resource: .iconMoodBar), title: "Bar")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodBar), title: "Bar"))
         case .street:
-            return MoodData(icon: UIImage(resource: .iconMoodStreet), title: "Street")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodStreet), title: "Street"))
         case .other:
-            return MoodData(icon: UIImage(resource: .iconMoodOther), title: "Other")
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodOther), title: "Other"))
         }
     }
 }
 
-struct MoodData: View {
+class MoodData {
     let icon: UIImage
     let title: String
+    
+    init(icon: UIImage, title: String) {
+        self.icon = icon
+        self.title = title
+    }
+}
+
+struct MoodView: View {
+    var moodData: MoodData
 
     var body: some View {
         HStack {
-            Image(uiImage: icon)
+            Image(uiImage: moodData.icon)
                 .resizable()
                 .frame(width: 25, height: 25)
                 .foregroundColor(.white)
-            Text(title)
+            Text(moodData.title)
                 .foregroundColor(.white)
                 .font(.system(size: 20))
         }

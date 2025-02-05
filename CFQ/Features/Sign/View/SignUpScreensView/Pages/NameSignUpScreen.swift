@@ -38,7 +38,8 @@ struct NameSignUpScreen: View {
                 VStack {
                     FullButtonLogIn(
                         action: {viewModel.goNext()},
-                        title: Strings.Login.CheckConfirmCode
+                        title: Strings.Login.CheckConfirmCode,
+                        color: .blackMain
                     ).padding(.horizontal, 20)
 
                     PurpleButtonLogIn(

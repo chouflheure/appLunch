@@ -1,21 +1,27 @@
-//
-//  LargeButton.swift
-//  CFQ
-//
-//  Created by Calvignac Charles on 15/01/2025.
-//
 
 import SwiftUI
+
+
+enum LargeButtonTpe {
+    case signNext
+    case signBack
+    case team
+}
+
+struct LargeButtonData {
+    
+}
 
 struct FullButtonLogIn: View{
     var action: () -> Void
     var title: String
+    var color: Color
     var cornerRadius: CGFloat = 6
 
     var body: some View {
         Button(action: action, label: {
             Text(title)
-                .foregroundColor(.white)
+                .foregroundColor(color)
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(.black)
@@ -46,6 +52,11 @@ struct PurpleButtonLogIn: View {
 }
 
 #Preview {
-    FullButtonLogIn(action: {}, title: "Connexion")
-    PurpleButtonLogIn(action: {}, title: "Connexion")
+    ZStack {
+        NeonBackgroundImage()
+        VStack {
+            FullButtonLogIn(action: {}, title: "Connexion", color: .black)
+            PurpleButtonLogIn(action: {}, title: "Connexion")
+        }
+    }.ignoresSafeArea()
 }

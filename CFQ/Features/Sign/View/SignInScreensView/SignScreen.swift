@@ -42,7 +42,8 @@ struct SignScreen: View {
                             action: {viewModel.sendVerificationCode()},
                             title: viewModel.hasAlreadyAccount ?
                             Strings.Login.SendConfirmCode :
-                                Strings.Login.Inscritpion
+                                Strings.Login.Inscritpion,
+                            color: .blackMain
                         ).padding(.horizontal, 20)
 
                         PurpleButtonLogIn(

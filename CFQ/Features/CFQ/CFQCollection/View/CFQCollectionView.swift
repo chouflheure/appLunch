@@ -15,6 +15,7 @@ struct CFQCollectionView: View {
                                     Image(.iconPlus)
                                         .resizable()
                                         .frame(width: 40, height: 40)
+                                        .foregroundColor(.white)
                                 }
                             ).padding(.leading, 20)
                         }

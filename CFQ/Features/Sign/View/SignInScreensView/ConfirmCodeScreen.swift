@@ -63,7 +63,8 @@ struct ConfirmCodeScreen: View {
                 VStack {
                     FullButtonLogIn(
                         action: {verifyCode()},
-                        title: Strings.Login.CheckConfirmCode
+                        title: Strings.Login.CheckConfirmCode,
+                        color: .blackMain
                     ).padding(.horizontal, 20)
 
                     PurpleButtonLogIn(

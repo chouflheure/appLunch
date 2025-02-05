@@ -6,7 +6,8 @@ struct CFQMolecule: View {
     @State var title: String
 
     let gradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color(hex: "C6E7FF"), Color(hex: "A7A9E5")]),
+        gradient: Gradient(colors: [Color(hex: "C6E7FF").opacity(0.3),
+                                    Color(hex: "A7A9E5").opacity(0.3)]),
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -35,7 +36,7 @@ struct CFQMolecule: View {
                 .resizable()
                 .scaledToFill()
                 .frame(width: 60, height: 60)
-                .cornerRadius(100)
+                .clipShape(Circle())
         }
     }
 }

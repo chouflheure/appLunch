@@ -40,8 +40,9 @@ struct CustomTabView: View {
                 Group {
                     if selectedTab == 0 {
                         // SignScreen()
-                         Text("Feed")
-                            .foregroundStyle(.white)
+                        TeamFormView()
+                         // Text("Feed")
+                            // .foregroundStyle(.white)
                     } else if selectedTab == 1 {
                         Text("Maps Screen")
                             .foregroundStyle(.white)
@@ -53,7 +54,7 @@ struct CustomTabView: View {
                         )
                     } else if selectedTab == 3 {
                         // Test()
-                        ContentViewTest()
+                        AttendingGuestsView()
                         // Text("Team Screen").foregroundStyle(.white)
                     } else {
                         Screen()
