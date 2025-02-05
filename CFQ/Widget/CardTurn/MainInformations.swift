@@ -25,7 +25,6 @@ struct MainInformationsView: View {
                 .sheet(isPresented: $showMoods) {
                     ZStack {
                         NeonBackgroundImage()
-
                         VStack {
                             CollectionViewMoods(viewModel: viewModel)
                             Button(
