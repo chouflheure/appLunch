@@ -43,13 +43,15 @@ struct FriendSignUpScreen: View {
                     FullButtonLogIn(
                         action: {viewModel.goNext()},
                         title: Strings.Login.CheckConfirmCode,
-                        color: .blackMain
+                        largeButtonType: .signNext
                     ).padding(.horizontal, 20)
 
-                    PurpleButtonLogIn(
+                    FullButtonLogIn(
                         action: {viewModel.goBack()},
-                        title: Strings.Login.TtitleBackStep
-                    )}
+                        title: Strings.Login.TtitleBackStep,
+                        largeButtonType: .signBack
+                    ).padding(.horizontal, 20)
+                }
                 .padding(.bottom, 100)
             }
         }

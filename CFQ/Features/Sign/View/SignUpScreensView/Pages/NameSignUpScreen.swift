@@ -39,13 +39,15 @@ struct NameSignUpScreen: View {
                     FullButtonLogIn(
                         action: {viewModel.goNext()},
                         title: Strings.Login.CheckConfirmCode,
-                        color: .blackMain
+                        largeButtonType: .signNext
                     ).padding(.horizontal, 20)
 
-                    PurpleButtonLogIn(
+                    FullButtonLogIn(
                         action: {viewModel.goBack()},
-                        title: Strings.Login.DontReceiveCode
-                    )}
+                        title: Strings.Login.DontReceiveCode,
+                        largeButtonType: .signBack
+                    ).padding(.horizontal, 20)
+                }
                 .padding(.bottom, 100)
             }
         }

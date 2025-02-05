@@ -43,15 +43,17 @@ struct SignScreen: View {
                             title: viewModel.hasAlreadyAccount ?
                             Strings.Login.SendConfirmCode :
                                 Strings.Login.Inscritpion,
-                            color: .blackMain
+                            largeButtonType: .signNext
                         ).padding(.horizontal, 20)
-
-                        PurpleButtonLogIn(
+                        
+                        FullButtonLogIn(
                             action: {viewModel.toggleHasAlreadyAccount()},
                             title: viewModel.hasAlreadyAccount ?
                             Strings.Login.NoAccount :
-                                Strings.Login.AlreadyAccount
-                        )}
+                                Strings.Login.AlreadyAccount,
+                            largeButtonType: .signBack
+                        ).padding(.horizontal, 20)
+                    }
                     .padding(.bottom, 100)
                 }
                 .navigationDestination(isPresented: $viewModel.isConfirmScreenActive) {

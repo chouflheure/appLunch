@@ -26,8 +26,6 @@ struct TeamFormView: View {
             }
             .padding(.top, 70)
             
-            
-            
             ZStack(alignment: .bottom) {
                 if let selectedImage = selectedImage {
                     selectedImage
@@ -47,6 +45,7 @@ struct TeamFormView: View {
                     }
                 }
             }
+            .padding(.vertical, 32)
             .onTapGesture {
                 showPhotoPicker()
             }
@@ -60,12 +59,21 @@ struct TeamFormView: View {
 
             TextFieldBGBlackFull(text: $text, keyBoardType: .default, placeHolder: "test")
                 .padding(.horizontal, 16)
-            
-            
-            FullButtonLogIn(action: {}, title: "Connexion", color: .white)
 
             
+            Bazar()
             
+            FullButtonLogIn(
+                action: {},
+                title: "Créer la team",
+                largeButtonType: .teamCreate
+            )
+            .padding(.horizontal, 16)
+            .padding(.bottom, 30)
+            
+
+            
+
             
         }
     }

@@ -64,13 +64,15 @@ struct ConfirmCodeScreen: View {
                     FullButtonLogIn(
                         action: {verifyCode()},
                         title: Strings.Login.CheckConfirmCode,
-                        color: .blackMain
+                        largeButtonType: .signNext
                     ).padding(.horizontal, 20)
-
-                    PurpleButtonLogIn(
-                        action: {},
-                        title: Strings.Login.DontReceiveCode
-                    )}
+                    
+                    FullButtonLogIn(
+                        action: {verifyCode()},
+                        title: Strings.Login.DontReceiveCode,
+                        largeButtonType: .signBack
+                    ).padding(.horizontal, 20)
+                }
                 .padding(.bottom, 100)
             }
         }
