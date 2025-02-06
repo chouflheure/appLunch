@@ -12,15 +12,15 @@ struct SignScreen: View {
 
                 VStack {
                     Image(.whiteLogo)
-                        .imageScale(.large)
-                        .foregroundStyle(.tint)
+                        .resizable()
+                        .padding(.horizontal, 30)
                         .edgesIgnoringSafeArea(.top)
                         .padding(.top, 100)
 
                     VStack {
                         Text(viewModel.hasAlreadyAccount ?
-                             Strings.Login.Connexion :
-                                Strings.Login.Inscritpion).font(AppFont.GigalypseTrial.font(size: 12))
+                             Strings.Sign.Connexion :
+                                Strings.Sign.Inscritpion).font(AppFont.GigalypseTrial.font(size: 12))
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
@@ -29,7 +29,7 @@ struct SignScreen: View {
                         TextFieldBGBlackFull(
                             text: $viewModel.phoneNumber,
                             keyBoardType: .phonePad,
-                            placeHolder: Strings.Login.PlaceholderPhoneNumber
+                            placeHolder: Strings.Sign.PlaceholderPhoneNumber
                         )
                         .padding(.horizontal, 20)
                     }
@@ -41,16 +41,16 @@ struct SignScreen: View {
                         FullButtonLogIn(
                             action: {viewModel.sendVerificationCode()},
                             title: viewModel.hasAlreadyAccount ?
-                            Strings.Login.SendConfirmCode :
-                                Strings.Login.Inscritpion,
+                            Strings.Sign.SendConfirmCode :
+                                Strings.Sign.Inscritpion,
                             largeButtonType: .signNext
                         ).padding(.horizontal, 20)
                         
                         FullButtonLogIn(
                             action: {viewModel.toggleHasAlreadyAccount()},
                             title: viewModel.hasAlreadyAccount ?
-                            Strings.Login.NoAccount :
-                                Strings.Login.AlreadyAccount,
+                            Strings.Sign.NoAccount :
+                                Strings.Sign.AlreadyAccount,
                             largeButtonType: .signBack
                         ).padding(.horizontal, 20)
                     }

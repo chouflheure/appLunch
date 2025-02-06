@@ -16,7 +16,7 @@ struct TeamFormView: View {
                     .padding(.leading, 40)
                     .font(.custom("GigalypseTrial-Regular", size: 24))
                     .frame(maxWidth: .infinity, alignment: .center)
-                
+
                 Button(action: {print("@@@ close button click")}) {
                     Image(.iconCross)
                         .foregroundColor(.white)
@@ -60,7 +60,6 @@ struct TeamFormView: View {
             TextFieldBGBlackFull(text: $text, keyBoardType: .default, placeHolder: "test")
                 .padding(.horizontal, 16)
 
-            
             Bazar()
             
             FullButtonLogIn(
@@ -70,11 +69,7 @@ struct TeamFormView: View {
             )
             .padding(.horizontal, 16)
             .padding(.bottom, 30)
-            
 
-            
-
-            
         }
     }
     

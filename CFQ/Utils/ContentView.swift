@@ -25,26 +25,24 @@ class AuthViewModel: ObservableObject {
 }
 
 
- struct ContentView: View {
-     @StateObject var coordinator = Coordinator()
+struct ContentView: View {
+    @StateObject var coordinator = Coordinator()
 
-     var body: some View {
-         
-         
-         Group {
-             if let currentView = coordinator.currentView {
-                 currentView
-             } else {
-                 Text("Loading...")
-             }
-         }
-         .onAppear {
-             coordinator.start()
-         }
-     }
- }
+    var body: some View {
+        Group {
+            if let currentView = coordinator.currentView {
+                currentView
+            } else {
+                Text("Loading...")
+            }
+        }
+        .onAppear {
+            coordinator.start()
+        }
+    }
+}
 
- #Preview {
-     ContentView()
- }
+#Preview {
+    ContentView()
+}
 

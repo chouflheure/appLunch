@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum Strings {
-    enum Login {
+    enum Sign {
         // LogScreen
         static let Connexion = "Connexion"
         static let Inscritpion = "Inscription"
@@ -38,5 +38,25 @@ enum Strings {
     enum TurnCardInformation {
         static let PlaceholderTitle = "Nom de l'évenement"
     }
+    
+    enum AddFriend {
+        static let guest = "Invités"
+    }
+    
+    enum AttentingGuest {}
+    
+    enum CFQ {}
+    
+    enum Feed {}
+    
+    enum Map {}
+    
+    enum Messaging {}
+    
+    enum Notification {}
+    
+    enum Team {}
+    
+    enum Turn {}
 }
 

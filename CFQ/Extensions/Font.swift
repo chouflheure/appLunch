@@ -9,7 +9,7 @@ enum AppFont: String {
     case InterRegular = "Inter-Regular.otf"
     case InterSemiBold = "Inter-SemiBold.otf"
     case InterLight  = "Inter-Light.otf"
-    
+
     func font(size: CGFloat) -> Font {
         return .custom(self.rawValue, size: size)
     }

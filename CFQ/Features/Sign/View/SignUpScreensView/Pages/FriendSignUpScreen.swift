@@ -12,7 +12,7 @@ struct FriendSignUpScreen: View {
                     .padding(.vertical, 50)
 
                 VStack {
-                    Text(Strings.Login.TitleFindYourFriends)
+                    Text(Strings.Sign.TitleFindYourFriends)
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
@@ -42,13 +42,13 @@ struct FriendSignUpScreen: View {
                 VStack {
                     FullButtonLogIn(
                         action: {viewModel.goNext()},
-                        title: Strings.Login.CheckConfirmCode,
+                        title: Strings.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
 
                     FullButtonLogIn(
                         action: {viewModel.goBack()},
-                        title: Strings.Login.TtitleBackStep,
+                        title: Strings.Sign.TtitleBackStep,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

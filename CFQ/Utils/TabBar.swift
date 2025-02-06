@@ -1,10 +1,10 @@
 
 import SwiftUI
+import MapKit
 
 struct CustomPlusButton: View {
     var body: some View {
         ZStack {
-
             Rectangle()
                 .fill(LinearGradient(
                     gradient: Gradient(colors: [Color.purple, Color.blue.opacity(0.4)]),
@@ -40,12 +40,29 @@ struct CustomTabView: View {
                 Group {
                     if selectedTab == 0 {
                         // SignScreen()
-                        TeamFormView()
-                         // Text("Feed")
-                            // .foregroundStyle(.white)
-                    } else if selectedTab == 1 {
-                        Text("Maps Screen")
+                         Text("Feed")
                             .foregroundStyle(.white)
+                    } else if selectedTab == 1 {
+                        MapView(locations: [
+                            MapLocation(
+                                coordinate: CLLocationCoordinate2D(latitude: 48.8566, longitude: 2.3522),
+                                title: "Paris",
+                                subtitle: "La ville lumière",
+                                imageName: "Header"
+                            ),
+                            MapLocation(
+                                coordinate: CLLocationCoordinate2D(latitude: 45.764, longitude: 4.8357),
+                                title: "Lyon",
+                                subtitle: "Capitale de la gastronomie",
+                                imageName: "profile"
+                            ),
+                            MapLocation(
+                                coordinate: CLLocationCoordinate2D(latitude: 43.6045, longitude: 1.4442),
+                                title: "Toulouse",
+                                subtitle: "La ville rose",
+                                imageName: "backgroundNeon"
+                            )
+                        ])
                     } else if selectedTab == 2 {
                         TurnCardView(
                             viewModel: TurnCardViewModel(),
