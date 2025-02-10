@@ -57,7 +57,9 @@ struct TeamDetailView: View {
                     }
                 }.padding(.horizontal, 36)
                 
-                Button(action: {}) {
+                Button(action: {
+                    Logger.log("Click button quitter", level: .info)
+                }) {
                     VStack {
                         Image(.iconDoor)
                             .frame(width: 24, height: 24)

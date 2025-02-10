@@ -84,8 +84,7 @@ struct CustomTabView: View {
                         )
                     } else if selectedTab == 3 {
                         // Test()
-                        RouteView()
-                        // Text("Team Screen").foregroundStyle(.white)
+                        Text("Team Screen").foregroundStyle(.white)
                     } else {
                         Screen()
                         //Text("Profile Screen").foregroundStyle(.white)
