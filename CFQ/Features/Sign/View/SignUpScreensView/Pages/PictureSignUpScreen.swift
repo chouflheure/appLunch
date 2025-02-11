@@ -54,13 +54,13 @@ struct PictureSignUpScreen: View {
                 Spacer()
 
                 VStack {
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goNext()},
                         title: Strings.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
                     
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goBack()},
                         title: Strings.Sign.TtitleBackStep,
                         largeButtonType: .signBack

@@ -13,13 +13,13 @@ struct TitleTurnCardView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if viewModel.isEditing {
-                TextFieldThinIndicator(
+                CustomTextField(
                     text: $viewModel.title,
                     keyBoardType: .default,
-                    placeHolder: Strings.TurnCardInformation.PlaceholderTitle
-                )
-                    .focused($isFocused)
-                    .padding(.bottom, 16)
+                    placeHolder: Strings.TurnCardInformation.PlaceholderTitle,
+                    textFieldType: .turn
+                ).focused($isFocused)
+                .padding(.bottom, 16)
             } else {
                 Text(viewModel.title)
                     .font(.title)
@@ -49,7 +49,8 @@ struct TitleTurnCardView: View {
 
 #Preview {
     ZStack {
-        Color.blue.ignoresSafeArea()
+        NeonBackgroundImage()
+            .ignoresSafeArea()
         TitleTurnCardView(viewModel: TurnCardViewModel())
     }
 }

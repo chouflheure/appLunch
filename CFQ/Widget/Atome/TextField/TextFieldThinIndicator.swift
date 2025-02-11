@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/*
 struct TextFieldThinIndicator: View {
     @Binding var text: String
     let keyBoardType: UIKeyboardType
@@ -48,3 +49,4 @@ private struct ParentView: View {
     ParentView()
 }
 
+*/

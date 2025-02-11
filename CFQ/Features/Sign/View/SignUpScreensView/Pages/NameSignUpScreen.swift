@@ -20,15 +20,15 @@ struct NameSignUpScreen: View {
                         .textCase(.uppercase)
                         .padding(.bottom, 50)
 
-                    TextFieldBGBlackFull(text: $viewModel.name, keyBoardType: .default, placeHolder: "Nom")
+                    CustomTextField(text: $viewModel.name, keyBoardType: .default, placeHolder: "Nom", textFieldType: .sign)
                         .padding(.bottom, 20)
                         .padding(.horizontal, 20)
 
-                    TextFieldBGBlackFull(text: $viewModel.name, keyBoardType: .default, placeHolder: "prenom")
+                    CustomTextField(text: $viewModel.name, keyBoardType: .default, placeHolder: "prenom", textFieldType: .sign)
                         .padding(.bottom, 20)
                         .padding(.horizontal, 20)
                     
-                    TextFieldBGBlackFull(text: $viewModel.name, keyBoardType: .default, placeHolder: "Pseudo")
+                    CustomTextField(text: $viewModel.name, keyBoardType: .default, placeHolder: "Pseudo", textFieldType: .sign)
                         .padding(.bottom, 20)
                         .padding(.horizontal, 20)
                 }
@@ -36,13 +36,13 @@ struct NameSignUpScreen: View {
                 Spacer()
 
                 VStack {
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goNext()},
                         title: Strings.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
 
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goBack()},
                         title: Strings.Sign.DontReceiveCode,
                         largeButtonType: .signBack

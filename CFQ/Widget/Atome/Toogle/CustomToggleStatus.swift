@@ -1,28 +1,7 @@
 
 import SwiftUI
 
-struct CircleButtonSwitch: View {
-    @State var isOn = false
-
-    var body: some View {
-        ZStack{
-            CirclePictureStatus()
-                .frame(width: 70, height: 70)
-            CustomToggle()
-                .offset(y: 40)
-        }
-    }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        CircleButtonSwitch()
-    }.ignoresSafeArea()
-}
-
-
-struct CustomToggle: View {
+struct CustomToggleStatus: View {
     @State var isActive = false
     
     var body: some View {

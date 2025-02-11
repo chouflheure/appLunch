@@ -14,19 +14,19 @@ enum LargeButtonType {
             return LargeButtonData(
                 background: .black,
                 foregroundColor: .white,
-                stoke: true
+                hasStoke: true
             )
         case .signBack:
             return LargeButtonData(
                 background: .clear,
                 foregroundColor: .purple,
-                stoke: false
+                hasStoke: false
             )
         case .teamCreate:
             return LargeButtonData(
                 background: .white,
                 foregroundColor: .black,
-                stoke: false
+                hasStoke: false
             )
         }
     }
@@ -35,10 +35,10 @@ enum LargeButtonType {
 struct LargeButtonData {
     let background: Color
     let foregroundColor: Color
-    let stoke: Bool
+    let hasStoke: Bool
 }
 
-struct FullButtonLogIn: View{
+struct LargeButtonView: View{
     var action: () -> Void
     var title: String
     var largeButtonType: LargeButtonType
@@ -54,7 +54,7 @@ struct FullButtonLogIn: View{
                 .cornerRadius(cornerRadius)
                 .overlay(
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color.white, lineWidth: largeButtonType.data.stoke ? 0.5 : 0)
+                        .stroke(Color.white, lineWidth: largeButtonType.data.hasStoke ? 0.5 : 0)
                 )
                 
         })
@@ -65,10 +65,10 @@ struct FullButtonLogIn: View{
     ZStack {
         NeonBackgroundImage()
         VStack {
-            FullButtonLogIn(action: {}, title: "Connexion", largeButtonType: .signNext)
-            FullButtonLogIn(action: {}, title: "Connexion", largeButtonType: .signBack)
-            FullButtonLogIn(action: {}, title: "Connexion", largeButtonType: .addParticipant)
-            FullButtonLogIn(action: {}, title: "Connexion", largeButtonType: .teamCreate)
+            LargeButtonView(action: {}, title: "Connexion", largeButtonType: .signNext)
+            LargeButtonView(action: {}, title: "Connexion", largeButtonType: .signBack)
+            LargeButtonView(action: {}, title: "Connexion", largeButtonType: .addParticipant)
+            LargeButtonView(action: {}, title: "Connexion", largeButtonType: .teamCreate)
         }
     }.ignoresSafeArea()
 }

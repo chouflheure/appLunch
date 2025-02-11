@@ -57,12 +57,12 @@ struct TeamFormView: View {
                 }
             }
 
-            TextFieldBGBlackFull(text: $text, keyBoardType: .default, placeHolder: "test")
+            CustomTextField(text: $text, keyBoardType: .default, placeHolder: "test", textFieldType: .sign)
                 .padding(.horizontal, 16)
 
             Bazar()
             
-            FullButtonLogIn(
+            LargeButtonView(
                 action: {},
                 title: "Créer la team",
                 largeButtonType: .teamCreate

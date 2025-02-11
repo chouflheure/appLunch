@@ -48,26 +48,26 @@ struct ConfirmCodeScreen: View {
                         .font(.title)
                         .textCase(.uppercase)
                         .padding(.bottom, 20)
-
-                    TextFieldBGBlackFull(
+                    
+                    CustomTextField(
                         text: $otpCode,
                         keyBoardType: .phonePad,
-                        placeHolder: Strings.Sign.PlaceholderConfimCode
-                    )
-                    .padding(.horizontal, 20)
+                        placeHolder: Strings.Sign.PlaceholderConfimCode,
+                        textFieldType: .sign
+                    ).padding(.horizontal, 20)
                 }
                 .padding(.top, 50)
 
                 Spacer()
 
                 VStack {
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {verifyCode()},
                         title: Strings.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
                     
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {verifyCode()},
                         title: Strings.Sign.DontReceiveCode,
                         largeButtonType: .signBack
