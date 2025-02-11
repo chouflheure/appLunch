@@ -12,15 +12,19 @@ struct TitleTurnCardView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
+            
             if viewModel.isEditing {
                 CustomTextField(
                     text: $viewModel.title,
                     keyBoardType: .default,
                     placeHolder: Strings.TurnCardInformation.PlaceholderTitle,
                     textFieldType: .turn
-                ).focused($isFocused)
+                )
+                .focused($isFocused)
                 .padding(.bottom, 16)
+                
             } else {
+
                 Text(viewModel.title)
                     .font(.title)
                     .padding(.bottom, 16)

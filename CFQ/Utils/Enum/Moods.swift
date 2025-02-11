@@ -49,42 +49,10 @@ class MoodData {
     }
 }
 
-struct MoodView: View {
-    var moodData: MoodData
-
-    var body: some View {
-        HStack {
-            Image(uiImage: moodData.icon)
-                .resizable()
-                .frame(width: 25, height: 25)
-                .foregroundColor(.white)
-            Text(moodData.title)
-                .foregroundColor(.white)
-                .font(.system(size: 20))
-        }
-    }
-}
-
-struct MoodDataTemplate: View {
-    let icon: UIImage = .iconMoodBefore
-    let title: String = "Mood"
-    
-    var body: some View {
-        HStack {
-            Image(uiImage: icon)
-                .resizable()
-                .frame(width: 25, height: 25)
-                .foregroundColor(.gray)
-            Text(title)
-                .foregroundColor(.gray)
-                .font(.system(size: 20))
-        }
-    }
-}
 
 #Preview {
     ZStack {
         Color.blue.ignoresSafeArea()
-        MoodDataTemplate()
+        MoodTemplateView()
     }
 }

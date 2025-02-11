@@ -34,7 +34,7 @@ private struct ParentView: View {
 
     var body: some View {
         VStack {
-            ProgressBar(index: $currentIndex) // Passer la liaison à ProgressBar
+            ProgressBar(index: $currentIndex)
         }
     }
 }
