@@ -12,38 +12,28 @@ private enum FontType: String {
 }
 
 enum FontToken {
-    case titleCardTurn
-    case bodyText
-    case buttonLabel
-
+    case SpecialTitles_White_Bold
+    case H1_White
+    case H2_White
+    case H3_White
+    
     func font() -> Font {
         switch self {
-        case .titleCardTurn:
+        case .SpecialTitles_White_Bold:
             return .custom(FontType.GigalypseTrial.rawValue, size: 24)
-        case .bodyText:
-            return .custom(FontType.InterRegular.rawValue, size: 16)
-        case .buttonLabel:
-            return .custom(FontType.InterSemiBold.rawValue, size: 18)
+        case .H1_White:
+            return .custom(FontType.InterBold.rawValue, size: 32)
+        case .H2_White:
+            return .custom(FontType.InterBold.rawValue, size: 24)
+        case .H3_White:
+            return .custom(FontType.InterBold.rawValue, size: 18)
         }
     }
-
+    
     func color() -> Color {
         switch self {
-        case .titleCardTurn:
-            return .blue
-        case .bodyText:
-            return .gray
-        case .buttonLabel:
+        case .SpecialTitles_White_Bold, .H1_White, .H2_White, .H3_White:
             return .white
-        }
-    }
-
-    func isBold() -> Bool {
-        switch self {
-        case .titleCardTurn, .buttonLabel:
-            return true
-        case .bodyText:
-            return false
         }
     }
 }

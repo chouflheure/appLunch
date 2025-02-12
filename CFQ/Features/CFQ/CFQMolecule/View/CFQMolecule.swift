@@ -6,8 +6,11 @@ struct CFQMolecule: View {
     @State var title: String
 
     let gradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color(hex: "C6E7FF").opacity(0.3),
-                                    Color(hex: "A7A9E5").opacity(0.3)]),
+        gradient: Gradient(
+            colors: [
+                Color(hex: "C6E7FF").opacity(0.3),
+                Color(hex: "A7A9E5").opacity(0.3)
+            ]),
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
