@@ -1,13 +1,6 @@
 
 import Foundation
 
-enum LogLevel: String {
-    case info = "ℹ️ INFO"
-    case action = "💥 ACTION"
-    case warning = "⚠️ WARNING"
-    case error = "❌ ERROR"
-}
-
 struct Logger {
     static func log(_ message: String, level: LogLevel = .info, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
