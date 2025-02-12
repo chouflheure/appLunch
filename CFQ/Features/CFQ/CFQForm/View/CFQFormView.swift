@@ -12,13 +12,17 @@ struct CFQFormView: View {
         VStack(alignment: .leading) {
             HStack(alignment: .center, spacing: 0) {
                 Text("CFQ ?")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
+                    .tokenFont(.titleCardTurn)
+                    // .font(FontToken.titleCardTurn.font())
+                    // .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.leading, 40)
 
-                Button(action: {}) {
+                Button(action: {
+                    Logger.log("Click to close CFQForm", level: .action)
+                }) {
                     Image(.iconCross)
+                        .foregroundStyle(.white)
                         .frame(width: 24, height: 24)
                 }.padding(.trailing, 16)
             }
@@ -92,8 +96,7 @@ struct CellFriendsAdd: View {
 
 #Preview {
     ZStack {
-        Image(.backgroundNeon)
-            .resizable()
+        NeonBackgroundImage()
         CellFriendsAdd()
     }.ignoresSafeArea()
 }

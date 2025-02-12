@@ -44,8 +44,7 @@ struct CustomTabView: View {
                          Text("Feed")
                             .foregroundStyle(.white)
                     } else if selectedTab == 1 {
-                        Text("Map Screen")
-                            .foregroundStyle(.white)
+                        CFQCollectionView()
                         // Test(selectedEvent: $selectedEvent)
                         /*
                         MapView(locations: [

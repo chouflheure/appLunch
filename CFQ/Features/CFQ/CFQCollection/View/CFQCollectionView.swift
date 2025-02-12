@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CFQCollectionView: View {
     var arrayCFQ: [CFQMolecule] = [CFQMolecule(name: "Charles", title: "CFQ SAMEDI ?"), CFQMolecule(name: "Lisa", title: "CFQ DEMAIN SOIR ?"), CFQMolecule(name: "Luis", title: "CFQ CE SOIR ?")]
+
     var body: some View {
         VStack(alignment: .leading) {
             ScrollView(.horizontal, showsIndicators: false) {
@@ -10,7 +11,9 @@ struct CFQCollectionView: View {
                     ForEach(arrayCFQ.indices, id: \.self) { index in
                         if index == 0 {
                             Button(
-                                action: {},
+                                action: {
+                                    Logger.log("Click on Add CFQ", level: .action)
+                                },
                                 label: {
                                     Image(.iconPlus)
                                         .resizable()
