@@ -18,7 +18,7 @@ struct BirthdaySignUpScreen: View {
                         .textCase(.uppercase)
                         .padding(.bottom, 50)
 
-                    TextFieldBGBlackFull(text: $viewModel.name, keyBoardType: .default, placeHolder: "01/01/2000")
+                    CustomTextField(text:  $viewModel.name, keyBoardType: .default, placeHolder: "01/01/2000", textFieldType: .sign)
                         .padding(.bottom, 20)
                         .padding(.horizontal, 20)
                 }
@@ -26,13 +26,13 @@ struct BirthdaySignUpScreen: View {
                 Spacer()
 
                 VStack {
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goNext()},
                         title: Strings.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
                     
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goBack()},
                         title: Strings.Sign.TtitleBackStep,
                         largeButtonType: .signBack

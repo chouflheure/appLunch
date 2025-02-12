@@ -20,25 +20,25 @@ struct SignScreen: View {
                     VStack {
                         Text(viewModel.hasAlreadyAccount ?
                              Strings.Sign.Connexion :
-                                Strings.Sign.Inscritpion).font(AppFont.GigalypseTrial.font(size: 12))
+                                Strings.Sign.Inscritpion)
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
                         .padding(.bottom, 20)
-
-                        TextFieldBGBlackFull(
+                        
+                        CustomTextField(
                             text: $viewModel.phoneNumber,
                             keyBoardType: .phonePad,
-                            placeHolder: Strings.Sign.PlaceholderPhoneNumber
-                        )
-                        .padding(.horizontal, 20)
+                            placeHolder: Strings.Sign.PlaceholderPhoneNumber,
+                            textFieldType: .sign
+                        ).padding(.horizontal, 20)
                     }
                     .padding(.top, 40)
 
                     Spacer()
 
                     VStack {
-                        FullButtonLogIn(
+                        LargeButtonView(
                             action: {viewModel.sendVerificationCode()},
                             title: viewModel.hasAlreadyAccount ?
                             Strings.Sign.SendConfirmCode :
@@ -46,7 +46,7 @@ struct SignScreen: View {
                             largeButtonType: .signNext
                         ).padding(.horizontal, 20)
                         
-                        FullButtonLogIn(
+                        LargeButtonView(
                             action: {viewModel.toggleHasAlreadyAccount()},
                             title: viewModel.hasAlreadyAccount ?
                             Strings.Sign.NoAccount :

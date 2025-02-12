@@ -34,7 +34,12 @@ struct CFQFormView: View {
                     .frame(width: 50, height: 50)
                     .cornerRadius(100)
                 
-                TextFieldBGBlackFull(text: $text, keyBoardType: .default, placeHolder: "CFQ")
+                CustomTextField(
+                    text: $text,
+                    keyBoardType: .default,
+                    placeHolder: "CFQ",
+                    textFieldType: .cfq
+                )
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 16)

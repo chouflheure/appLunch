@@ -1,9 +1,3 @@
-//
-//  LargeButton.swift
-//  CFQ
-//
-//  Created by Calvignac Charles on 15/01/2025.
-//
 
 import SwiftUI
 

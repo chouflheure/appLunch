@@ -44,7 +44,9 @@ struct CustomTabView: View {
                          Text("Feed")
                             .foregroundStyle(.white)
                     } else if selectedTab == 1 {
-                        Test(selectedEvent: $selectedEvent)
+                        Text("Map Screen")
+                            .foregroundStyle(.white)
+                        // Test(selectedEvent: $selectedEvent)
                         /*
                         MapView(locations: [
                             MapLocationEventData(

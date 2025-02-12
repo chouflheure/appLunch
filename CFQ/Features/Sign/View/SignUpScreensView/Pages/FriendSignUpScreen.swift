@@ -18,7 +18,7 @@ struct FriendSignUpScreen: View {
                         .textCase(.uppercase)
                         .padding(.bottom, 50)
 
-                    TextFieldBGBlackFull(text: $viewModel.friend, keyBoardType: .default, placeHolder: "Martin")
+                    CustomTextField(text:   $viewModel.friend, keyBoardType: .default, placeHolder: "Martin", textFieldType: .sign)
                         .padding(.bottom, 20)
                         .padding(.horizontal, 20)
                     
@@ -40,13 +40,13 @@ struct FriendSignUpScreen: View {
                 Spacer()
 
                 VStack {
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goNext()},
                         title: Strings.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
 
-                    FullButtonLogIn(
+                    LargeButtonView(
                         action: {viewModel.goBack()},
                         title: Strings.Sign.TtitleBackStep,
                         largeButtonType: .signBack

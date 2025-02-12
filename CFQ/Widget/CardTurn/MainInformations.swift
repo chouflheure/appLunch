@@ -10,7 +10,7 @@ struct MainInformationsView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         if viewModel.moods.isEmpty {
-                            MoodDataTemplate()
+                            MoodTemplateView()
                         } else {
                             ForEach(Array(viewModel.moods), id: \.self) { mood in
                                 Mood().data(for: mood)
@@ -51,7 +51,6 @@ struct MainInformationsView: View {
                 DatePickerMainInformations(viewModel: viewModel)
                     .padding(.horizontal, 12)
 
-
                 HStack(alignment: .top) {
                         Image(systemName: "mappin")
                             .foregroundColor(.white)
@@ -70,7 +69,6 @@ struct MainInformationsView: View {
                     .stroke(.white, lineWidth: 0.8)
             )
         }
-    
 }
 
 #Preview {
