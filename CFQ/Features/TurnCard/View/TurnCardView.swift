@@ -26,7 +26,7 @@ struct TurnCardView: View {
 
                 // Description
                 DescriptionTurnCard(viewModel: viewModel)
-                    // .padding(.horizontal, 16)
+                    .padding(.horizontal, 16)
 
                 Spacer()
             }

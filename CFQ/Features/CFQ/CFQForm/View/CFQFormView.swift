@@ -12,9 +12,7 @@ struct CFQFormView: View {
         VStack(alignment: .leading) {
             HStack(alignment: .center, spacing: 0) {
                 Text("CFQ ?")
-                    .tokenFont(.titleCardTurn)
-                    // .font(FontToken.titleCardTurn.font())
-                    // .foregroundColor(.white)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.leading, 40)
 

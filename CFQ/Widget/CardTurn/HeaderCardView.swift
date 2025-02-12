@@ -14,7 +14,7 @@ struct HeaderCardView: View {
                     selectedImage
                         .resizable()
                         .scaledToFill()
-                        .frame(height: 150)
+                        .frame(height: 120)
                         .clipped()
                 } else {
                     Image(systemName: "photo")
