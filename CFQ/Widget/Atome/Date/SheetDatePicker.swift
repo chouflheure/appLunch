@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct CollectionViewDate: View {
+struct SheetDatePicker: View {
     @StateObject var viewModel: TurnCardViewModel
     var onClose: () -> Void
 

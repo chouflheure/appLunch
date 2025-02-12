@@ -27,7 +27,7 @@ struct DatePickerMainInformations: View {
             .sheet(isPresented: $showPicker) {
                 ZStack {
                     NeonBackgroundImage()
-                    CollectionViewDate(viewModel: viewModel, onClose: {
+                    SheetDatePicker(viewModel: viewModel, onClose: {
                         showPicker = false
                         hasCompleted = true
                     })

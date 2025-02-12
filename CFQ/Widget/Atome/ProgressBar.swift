@@ -17,9 +17,9 @@ struct ProgressBar: View {
                     RoundedRectangle(cornerRadius: 50)
                         .stroke(Color.white, lineWidth: 0.5)
                 )
-        
+
             Rectangle()
-                .frame(maxWidth: screenWidth * (Double(index)+1)/4 - 20)
+                .frame(maxWidth:  UIScreen.main.bounds.width * ( Double(index) + 1 ) / 4 - 20)
                 .frame(height: 15)
                 .foregroundColor(.white)
                 .cornerRadius(50)

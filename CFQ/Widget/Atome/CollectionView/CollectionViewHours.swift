@@ -31,7 +31,7 @@ struct CollectionViewHours: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(times, id: \.self) { time in
-                    ItemView(hours: time, isSelected: viewModel.starthours == time)
+                    ItemViewHours(hours: time, isSelected: viewModel.starthours == time)
                         .onTapGesture {
                             print("@@@ viewModel.starthours = \(viewModel.starthours)")
                             print("@@@ time = \(time)")
@@ -46,25 +46,6 @@ struct CollectionViewHours: View {
     private func toggleSelection(of item: String) {
         selectedItems = item
         viewModel.starthours = item
-    }
-}
-
-private struct ItemView: View {
-    let hours: String
-    let isSelected: Bool
-
-    var body: some View {
-        Text(hours)
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
-            .foregroundColor(.white)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.white, lineWidth: isSelected ? 0.9 : 0.3)
-                    .animation(.bouncy, value: isSelected)
-                    .shadow(radius: isSelected ? 5 : 1)
-                    .scaleEffect(isSelected ? 1.05 : 1.0)
-            )
     }
 }
 
