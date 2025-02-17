@@ -28,6 +28,13 @@ struct CustomPlusButton: View {
     }
 }
 
+import FirebaseFirestore
+
+struct catchData {
+
+
+}
+
 struct CustomTabView: View {
     @State private var selectedTab = 0
     @State private var selectedEvent: MapLocationEventData? = nil
@@ -157,7 +164,6 @@ struct TabButton: View {
         }
     }
 }
-
 
 #Preview {
     CustomTabView()

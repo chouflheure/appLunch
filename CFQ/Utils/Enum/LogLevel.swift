@@ -6,4 +6,5 @@ enum LogLevel: String {
     case action = "💥 ACTION"
     case warning = "⚠️ WARNING"
     case error = "❌ ERROR"
+    case success = "✅ SUCCESS"
 }
