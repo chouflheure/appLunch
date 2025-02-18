@@ -1,38 +1,20 @@
 
 import Firebase
 
-enum CollectionFirebaseEnum: String {
-    case users = "users"
-    case turns = "turns"
-    case cfqs = "cfqs"
-    case teams = "teams"
-    case notifications = "notifiations"
-    case conversations = "conversations"
-}
-
-// TODO:
-// Select Data By ID
-// Delete Data By ID
-// Update Data By ID
-// Update if let uid = (data as? User)?.uid ?? (data as? Turn)?.uid avec tous les CollectionFirebaseEnum
-// Rename CollectionFirebaseEnum
-
-protocol FirebaseServiceProtocol {
-    func addData<T: Codable>(data: T, to collection: CollectionFirebaseEnum)
-    func updateData<T: Codable>(data: T, to collection: CollectionFirebaseEnum, with id: String)
-    func getAllData<T: Codable>(from collection: CollectionFirebaseEnum, completion: @escaping (Result<[T], Error>) -> Void)
-}
-
 class FirebaseService: FirebaseServiceProtocol {
-
     let db = Firestore.firestore()
 
-    // Méthode générique pour ajouter un objet de n'importe quel type conforme à Codable
-    func addData<T: Codable>(data: T, to collection: CollectionFirebaseEnum) {
+    func addData<T: Codable>(data: T, to collection: CollectionFirebaseType) {
         do {
             let collectionName = collection.rawValue
 
-            if let uid = (data as? User)?.uid ?? (data as? Turn)?.uid {
+            if let uid = (data as? User)?.uid ??
+                (data as? Turn)?.uid ??
+                (data as? Conversation)?.uid ??
+                (data as? Notification)?.uid ??
+                (data as? Team)?.uid ??
+                (data as? CFQ)?.uid
+            {
                 try db.collection(collectionName).document(uid).setData(from: data) { error in
                     if let error = error {
                         Logger.log(" Erreur lors de l'ajout de \(collection.rawValue) : \(error.localizedDescription)", level: .error)
@@ -47,13 +29,18 @@ class FirebaseService: FirebaseServiceProtocol {
             Logger.log("Erreur de conversion des données : \(error.localizedDescription)", level: .error)
         }
     }
-    
-    // Méthode générique pour editer un objet de n'importe quel type conforme à Codable
-    func updateData<T: Codable>(data: T, to collection: CollectionFirebaseEnum, with id: String) {
+
+    func updateDataByID<T>(data: T, to collection: CollectionFirebaseType, with id: String) where T : Decodable, T : Encodable {
         do {
             let collectionName = collection.rawValue
 
-            if let uid = (data as? User)?.uid ?? (data as? Turn)?.uid {
+            if let uid = (data as? User)?.uid ??
+                (data as? Turn)?.uid ??
+                (data as? Conversation)?.uid ??
+                (data as? Notification)?.uid ??
+                (data as? Team)?.uid ??
+                (data as? CFQ)?.uid
+            {
                 try db.collection(collectionName).document(uid).setData(from: data) { error in
                     if let error = error {
                         Logger.log(" Erreur lors de la nodification de \(collection.rawValue) : \(error.localizedDescription)", level: .error)
@@ -69,27 +56,58 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
     
-    // Méthode générique pour récupérer toutes les données d'une collection
-    func getAllData<T: Codable>(from collection: CollectionFirebaseEnum, completion: @escaping (Result<[T], Error>) -> Void) {
+    func deleteDataByID(from collection: CollectionFirebaseType, with id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+            let collectionName = collection.rawValue
+
+            db.collection(collectionName).document(id).delete { error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                completion(.success(()))
+            }
+        }
+    
+    func getDataByID<T: Codable>(from collection: CollectionFirebaseType, whith id: String, completion: @escaping (Result<T, Error>) -> Void) {
+            let collectionName = collection.rawValue
+
+            db.collection(collectionName).document(id).getDocument { document, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let document = document, document.exists else {
+                    completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Document non trouvé."])))
+                    return
+                }
+                
+                do {
+                    let data = try document.data(as: T.self)
+                    completion(.success(data))
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }
+    
+    func getAllData<T: Codable>(from collection: CollectionFirebaseType, completion: @escaping (Result<[T], Error>) -> Void) {
         let collectionName = collection.rawValue
-        
+        var dataArray: [T] = []
+
         db.collection(collectionName).getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            
+
             guard let snapshot = snapshot else {
                 completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Snapshot non disponible."])))
                 return
             }
             
-            var dataArray: [T] = []
-            
-            // Parcours des documents récupérés et décodage des données
             for document in snapshot.documents {
                 do {
-                    // On décode chaque document dans un objet de type T
                     let data = try document.data(as: T.self)
                     dataArray.append(data)
                 } catch {
@@ -97,8 +115,7 @@ class FirebaseService: FirebaseServiceProtocol {
                     return
                 }
             }
-            
-            // Retourne les données sous forme de tableau
+
             completion(.success(dataArray))
         }
     }

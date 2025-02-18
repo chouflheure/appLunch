@@ -1,7 +1,7 @@
 
 import Foundation
 
-enum LogLevel: String {
+enum LogLevelType: String {
     case info = "ℹ️ INFO"
     case action = "💥 ACTION"
     case warning = "⚠️ WARNING"

@@ -37,24 +37,7 @@ struct CFQCollectionView: View {
                 }
             }
         }
-        .onAppear {
-            // Exemple d'utilisation
-            let newUser = User(uid: "@123", username: "", profilePictureUrl: "", location: [], birthDate: nil, isActive: true, favorite: [], friends: [], invitedCfqs: [], invitedTurns: [], notificationsChannelId: "", postedCfqs: [], postedTurns: [], teams: [], tokenFCM: "", unreadNotificationsCount: 2)
-         
-            let firebaseService = FirebaseService()
-
-            // Appel de la méthode générique pour ajouter un utilisateur dans la collection 'users'
-            firebaseService.addData(data: newUser, to: .users)
-
-            firebaseService.getAllData(from: .users) { (result: Result<[User], Error>) in
-                switch result {
-                case .success(let users):
-                    print("Utilisateurs récupérés : \(users[0].uid)")
-                case .failure(let error):
-                    print("Erreur lors de la récupération des utilisateurs : \(error.localizedDescription)")
-                }
-            }
-        }
+        .onAppear {}
     }
 }
 
