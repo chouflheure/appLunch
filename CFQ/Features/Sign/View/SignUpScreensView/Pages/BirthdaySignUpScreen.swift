@@ -12,7 +12,7 @@ struct BirthdaySignUpScreen: View {
                     .padding(.vertical, 50)
 
                 VStack {
-                    Text(Strings.Sign.TitleWhichIsYourBirthday)
+                    Text(StringsToken.Sign.TitleWhichIsYourBirthday)
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
@@ -28,13 +28,13 @@ struct BirthdaySignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {viewModel.goNext()},
-                        title: Strings.Sign.CheckConfirmCode,
+                        title: StringsToken.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
                     
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: Strings.Sign.TtitleBackStep,
+                        title: StringsToken.Sign.TtitleBackStep,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

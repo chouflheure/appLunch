@@ -15,7 +15,7 @@ struct PictureSignUpScreen: View {
                     .padding(.vertical, 50)
 
                 VStack {
-                    Text(Strings.Sign.TitleAddPicture)
+                    Text(StringsToken.Sign.TitleAddPicture)
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
@@ -56,13 +56,13 @@ struct PictureSignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {viewModel.goNext()},
-                        title: Strings.Sign.CheckConfirmCode,
+                        title: StringsToken.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
                     
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: Strings.Sign.TtitleBackStep,
+                        title: StringsToken.Sign.TtitleBackStep,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

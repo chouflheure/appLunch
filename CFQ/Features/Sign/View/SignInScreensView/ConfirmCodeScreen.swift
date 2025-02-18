@@ -43,7 +43,7 @@ struct ConfirmCodeScreen: View {
                     .padding(.top, 120)
 
                 VStack {
-                    Text(Strings.Sign.ConfirmationCode)
+                    Text(StringsToken.Sign.ConfirmationCode)
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
@@ -52,7 +52,7 @@ struct ConfirmCodeScreen: View {
                     CustomTextField(
                         text: $otpCode,
                         keyBoardType: .phonePad,
-                        placeHolder: Strings.Sign.PlaceholderConfimCode,
+                        placeHolder: StringsToken.Sign.PlaceholderConfimCode,
                         textFieldType: .sign
                     ).padding(.horizontal, 20)
                 }
@@ -63,13 +63,13 @@ struct ConfirmCodeScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {verifyCode()},
-                        title: Strings.Sign.CheckConfirmCode,
+                        title: StringsToken.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
                     
                     LargeButtonView(
                         action: {verifyCode()},
-                        title: Strings.Sign.DontReceiveCode,
+                        title: StringsToken.Sign.DontReceiveCode,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

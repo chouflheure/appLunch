@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum Strings {
+enum StringsToken {
     enum Sign {
         // LogScreen
         static let Connexion = "Connexion"

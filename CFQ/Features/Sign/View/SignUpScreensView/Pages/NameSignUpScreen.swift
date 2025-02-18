@@ -14,7 +14,7 @@ struct NameSignUpScreen: View {
                     .padding(.vertical, 50)
 
                 VStack {
-                    Text(Strings.Sign.TitleWhichIsYourIdentifier)
+                    Text(StringsToken.Sign.TitleWhichIsYourIdentifier)
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
@@ -38,13 +38,13 @@ struct NameSignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {viewModel.goNext()},
-                        title: Strings.Sign.CheckConfirmCode,
+                        title: StringsToken.Sign.CheckConfirmCode,
                         largeButtonType: .signNext
                     ).padding(.horizontal, 20)
 
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: Strings.Sign.DontReceiveCode,
+                        title: StringsToken.Sign.DontReceiveCode,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

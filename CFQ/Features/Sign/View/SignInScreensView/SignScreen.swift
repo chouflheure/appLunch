@@ -19,8 +19,8 @@ struct SignScreen: View {
 
                     VStack {
                         Text(viewModel.hasAlreadyAccount ?
-                             Strings.Sign.Connexion :
-                                Strings.Sign.Inscritpion)
+                             StringsToken.Sign.Connexion :
+                                StringsToken.Sign.Inscritpion)
                         .foregroundColor(.white)
                         .font(.title)
                         .textCase(.uppercase)
@@ -29,7 +29,7 @@ struct SignScreen: View {
                         CustomTextField(
                             text: $viewModel.phoneNumber,
                             keyBoardType: .phonePad,
-                            placeHolder: Strings.Sign.PlaceholderPhoneNumber,
+                            placeHolder: StringsToken.Sign.PlaceholderPhoneNumber,
                             textFieldType: .sign
                         ).padding(.horizontal, 20)
                     }
@@ -41,16 +41,16 @@ struct SignScreen: View {
                         LargeButtonView(
                             action: {viewModel.sendVerificationCode()},
                             title: viewModel.hasAlreadyAccount ?
-                            Strings.Sign.SendConfirmCode :
-                                Strings.Sign.Inscritpion,
+                            StringsToken.Sign.SendConfirmCode :
+                                StringsToken.Sign.Inscritpion,
                             largeButtonType: .signNext
                         ).padding(.horizontal, 20)
                         
                         LargeButtonView(
                             action: {viewModel.toggleHasAlreadyAccount()},
                             title: viewModel.hasAlreadyAccount ?
-                            Strings.Sign.NoAccount :
-                                Strings.Sign.AlreadyAccount,
+                            StringsToken.Sign.NoAccount :
+                                StringsToken.Sign.AlreadyAccount,
                             largeButtonType: .signBack
                         ).padding(.horizontal, 20)
                     }

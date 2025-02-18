@@ -17,7 +17,7 @@ struct TitleTurnCardView: View {
                 CustomTextField(
                     text: $viewModel.title,
                     keyBoardType: .default,
-                    placeHolder: Strings.TurnCardInformation.PlaceholderTitle,
+                    placeHolder: StringsToken.TurnCardInformation.PlaceholderTitle,
                     textFieldType: .turn
                 )
                 .focused($isFocused)
