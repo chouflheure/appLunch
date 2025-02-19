@@ -13,15 +13,19 @@ struct LocalisationSignUpScreen: View {
                     .padding(.vertical, 50)
 
                 VStack {
-                    Text(StringsToken.Sign.TitleWhichIsYourBirthday)
-                        .foregroundColor(.white)
-                        .font(.title)
+                    Text(StringsToken.Sign.TitleWhichIsYourLocalisation)
+                        .tokenFont(.Title_Gigalypse_24)
                         .textCase(.uppercase)
                         .padding(.bottom, 50)
 
-                    CustomTextField(text:  $viewModel.name, keyBoardType: .default, placeHolder: "01/01/2000", textFieldType: .sign)
-                        .padding(.bottom, 20)
-                        .padding(.horizontal, 20)
+                    CustomTextField(
+                        text: $viewModel.localisation,
+                        keyBoardType: .default,
+                        placeHolder: "Ta loc",
+                        textFieldType: .sign
+                    )
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 20)
                 }
 
                 Spacer()
@@ -35,7 +39,7 @@ struct LocalisationSignUpScreen: View {
 
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: StringsToken.Sign.TtitleBackStep,
+                        title: StringsToken.Sign.TitleBackStep,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
@@ -48,3 +52,5 @@ struct LocalisationSignUpScreen: View {
 #Preview {
     LocalisationSignUpScreen(viewModel: .init())
 }
+
+// TODO: Add reconnaissance localisation

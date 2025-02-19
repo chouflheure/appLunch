@@ -18,21 +18,28 @@ struct FriendSignUpScreen: View {
                         .textCase(.uppercase)
                         .padding(.bottom, 50)
 
-                    CustomTextField(text:   $viewModel.friend, keyBoardType: .default, placeHolder: "Martin", textFieldType: .sign)
-                        .padding(.bottom, 20)
-                        .padding(.horizontal, 20)
+                    CustomTextField(
+                        text:  $viewModel.friend,
+                        keyBoardType: .default,
+                        placeHolder: "Martin",
+                        textFieldType: .sign
+                    )
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 20)
                     
-                    Button(action: viewModel.addFriend, label: {
-                        Text("Add Friends")
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(.black)
-                            .cornerRadius(2)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 2)
-                                    .stroke(Color.white, lineWidth: 0.5)
-                            )
+                    Button(
+                        action: viewModel.addFriend,
+                        label: {
+                            Text("Add Friends")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(.black)
+                                .cornerRadius(2)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .stroke(Color.white, lineWidth: 0.5)
+                                )
                             
                     })
                 }
@@ -48,7 +55,7 @@ struct FriendSignUpScreen: View {
 
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: StringsToken.Sign.TtitleBackStep,
+                        title: StringsToken.Sign.TitleBackStep,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

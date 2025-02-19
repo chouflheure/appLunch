@@ -1,9 +1,10 @@
 
 import SwiftUI
 
-struct OnBoardingView: View {
-    @AppStorage("isOnboarding") var hasAlreadyOnboarded: Bool?
-    @State private var currentIndex = 0
+struct OnboardingView: View {
+    @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool?
+    @State var currentIndex = 0
+
     let onboardingView = [
         Image(.onboarding1),
         Image(.onboarding2),
@@ -40,12 +41,14 @@ struct OnBoardingView: View {
                     }
                 }
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: currentIndex != 3 ? .always : .never))
+            .tabViewStyle(PageTabViewStyle(
+                indexDisplayMode: currentIndex != 3 ? .always : .never
+            ))
             .ignoresSafeArea()
-        }
+        }.padding(.bottom, 16)
     }
 }
 
 #Preview {
-    OnBoardingView()
+    OnboardingView()
 }

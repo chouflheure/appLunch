@@ -14,14 +14,18 @@ struct BirthdaySignUpScreen: View {
 
                 VStack {
                     Text(StringsToken.Sign.TitleWhichIsYourBirthday)
-                        .foregroundColor(.white)
-                        .font(.title)
+                        .tokenFont(.Title_Gigalypse_24)
                         .textCase(.uppercase)
                         .padding(.bottom, 50)
 
-                    CustomTextField(text:  $viewModel.name, keyBoardType: .default, placeHolder: "01/01/2000", textFieldType: .sign)
-                        .padding(.bottom, 20)
-                        .padding(.horizontal, 20)
+                    CustomTextField(
+                        text: $viewModel.name,
+                        keyBoardType: .default,
+                        placeHolder: "01/01/2000",
+                        textFieldType: .sign
+                    )
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 20)
                 }
 
                 Spacer()
@@ -35,7 +39,7 @@ struct BirthdaySignUpScreen: View {
                     
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: StringsToken.Sign.TtitleBackStep,
+                        title: StringsToken.Sign.TitleBackStep,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

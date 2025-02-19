@@ -62,7 +62,7 @@ struct PictureSignUpScreen: View {
                     
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: StringsToken.Sign.TtitleBackStep,
+                        title: StringsToken.Sign.TitleBackStep,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }

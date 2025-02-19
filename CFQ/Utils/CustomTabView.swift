@@ -15,8 +15,7 @@ struct CustomTabView: View {
                 Group {
                     if selectedTab == 0 {
                         // SignScreen()
-                         Text("Feed")
-                            .foregroundStyle(.white)
+                        SignUpPageView()
                     } else if selectedTab == 1 {
                         CFQCollectionView()
                         // Test(selectedEvent: $selectedEvent)
@@ -111,7 +110,7 @@ struct CustomTabView: View {
                 .padding(.vertical)
                 .background(.black)
             }
-        }
+        }.padding(.bottom, 30)
     }
 }
 

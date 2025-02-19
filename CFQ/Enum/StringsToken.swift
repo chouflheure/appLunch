@@ -19,11 +19,15 @@ enum StringsToken {
         static let ConfirmationCode = "Confirme ton code"
         
         // Inscription
-        static let TitleWhichIsYourIdentifier = "Quel est ton identifiant"
+        static let TitleWhichIsYourIdentifier = "Ton Nom"
         static let TitleWhichIsYourBirthday = "Quel est ta date d'anniversarie"
+        static let TitleWhichIsYourLocalisation = "T'es où ?"
         static let TitleFindYourFriends = "Trouve tes amis"
         static let TitleAddPicture = "Petite photo"
-        static let TtitleBackStep = "Revenir en arrière"
+        static let TitleBackStep = "Revenir en arrière"
+        static let Next = "Next"
+        static let Back = "Back"
+        static let BackToSign = "Retour à l'inscription"
     }
 
     enum Profile {

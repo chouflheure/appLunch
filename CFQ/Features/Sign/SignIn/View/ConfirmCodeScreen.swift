@@ -37,10 +37,9 @@ struct ConfirmCodeScreen: View {
 
             VStack {
                 Image(.whiteLogo)
-                    .imageScale(.large)
-                    .foregroundStyle(.tint)
-                    .edgesIgnoringSafeArea(.top)
-                    .padding(.top, 120)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.top, 30)
 
                 VStack {
                     Text(StringsToken.Sign.ConfirmationCode)
@@ -54,9 +53,8 @@ struct ConfirmCodeScreen: View {
                         keyBoardType: .phonePad,
                         placeHolder: StringsToken.Sign.PlaceholderConfimCode,
                         textFieldType: .sign
-                    ).padding(.horizontal, 20)
+                    )
                 }
-                .padding(.top, 50)
 
                 Spacer()
 
@@ -68,18 +66,18 @@ struct ConfirmCodeScreen: View {
                     ).padding(.horizontal, 20)
                     
                     LargeButtonView(
-                        action: {verifyCode()},
+                        action: {},
                         title: StringsToken.Sign.DontReceiveCode,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
                 .padding(.bottom, 100)
-            }
+            }.padding(.horizontal, 16)
         }
     }
 
 }
 
 #Preview {
-    //ConfirmCodeScreen()
+    ConfirmCodeScreen(verificationID: "", mobileNumber: "")
 }

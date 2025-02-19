@@ -9,7 +9,7 @@ struct SignUpPageView: View {
             NameSignUpScreen(viewModel: viewModel)
                 .tag(0)
 
-            BirthdaySignUpScreen(viewModel: viewModel)
+            LocalisationSignUpScreen(viewModel: viewModel)
                 .tag(1)
 
             PictureSignUpScreen(viewModel: viewModel)
