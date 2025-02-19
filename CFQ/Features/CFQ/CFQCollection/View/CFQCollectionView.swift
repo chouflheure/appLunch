@@ -1,7 +1,5 @@
 
 import SwiftUI
-
-import SwiftUI
 import FirebaseFirestore
 
 struct CFQCollectionView: View {
@@ -44,8 +42,7 @@ struct CFQCollectionView: View {
 
 #Preview {
     ZStack {
-        Image(.backgroundNeon)
-            .resizable()
+        NeonBackgroundImage()
         CFQCollectionView(arrayCFQ: [CFQMolecule(name: "Charles", title: "CFQ SAMEDI ?"), CFQMolecule(name: "Lisa", title: "CFQ DEMAIN SOIR ?"), CFQMolecule(name: "Luis", title: "CFQ CE SOIR ?")])
     }.ignoresSafeArea()
 }

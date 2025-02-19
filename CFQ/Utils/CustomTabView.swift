@@ -1,39 +1,7 @@
 
 import SwiftUI
 import MapKit
-
-struct CustomPlusButton: View {
-    var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(LinearGradient(
-                    gradient: Gradient(colors: [Color.purple, Color.blue.opacity(0.4)]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
-                .blur(radius: 1, opaque: true)
-                .cornerRadius(10)
-                .frame(width: 55, height: 55)
-
-            Rectangle()
-                .foregroundColor(.black)
-                .cornerRadius(10)
-                .frame(width: 50, height: 50)
-                .shadow(radius: 30)
-
-            Image(systemName: "plus")
-                .font(.system(size: 30, weight: .bold))
-                .foregroundColor(.white)
-        }
-    }
-}
-
 import FirebaseFirestore
-
-struct catchData {
-
-
-}
 
 struct CustomTabView: View {
     @State private var selectedTab = 0
@@ -41,9 +9,8 @@ struct CustomTabView: View {
 
     var body: some View {
         ZStack {
-            Image(.backgroundNeon)
-                .resizable()
-                .ignoresSafeArea()
+            NeonBackgroundImage()
+
             VStack {
                 Group {
                     if selectedTab == 0 {
@@ -91,11 +58,9 @@ struct CustomTabView: View {
                             select: {selected in print("Card selected \(selected)")}
                         )
                     } else if selectedTab == 3 {
-                        // Test()
-                        Text("Team Screen").foregroundStyle(.white)
+                        ContactListView()
                     } else {
                         Screen()
-                        //Text("Profile Screen").foregroundStyle(.white)
                     }
                 }
                 .frame(maxHeight: .infinity)
@@ -120,7 +85,7 @@ struct CustomTabView: View {
 
                     Spacer()
 
-                    CustomPlusButton()
+                    CustomPlusButtonTabBar()
                         .onTapGesture {
                             selectedTab = 2
                         }
@@ -146,21 +111,6 @@ struct CustomTabView: View {
                 .padding(.vertical)
                 .background(.black)
             }
-        }
-    }
-}
-
-struct TabButton: View {
-    let iconUnselected: ImageResource
-    let iconSelected: ImageResource
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Image(isSelected ? iconSelected : iconUnselected)
-                .font(.system(size: 22, weight: .bold))
-                .foregroundColor(isSelected ? .blue : .gray)
         }
     }
 }

@@ -46,7 +46,7 @@ struct CFQMolecule: View {
 
 #Preview {
     ZStack {
-        Image(.backgroundNeon)
+        NeonBackgroundImage()
         CFQMolecule(name: "Charles", title: "CFQ CE SOIR ?")
     }.ignoresSafeArea()
 }

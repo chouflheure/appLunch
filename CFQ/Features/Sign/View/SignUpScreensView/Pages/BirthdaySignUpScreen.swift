@@ -10,6 +10,7 @@ struct BirthdaySignUpScreen: View {
             VStack {
                 ProgressBar(index: $viewModel.index)
                     .padding(.vertical, 50)
+                    .padding(.top, 30)
 
                 VStack {
                     Text(StringsToken.Sign.TitleWhichIsYourBirthday)

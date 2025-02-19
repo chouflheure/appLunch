@@ -22,5 +22,7 @@
 		<string>Inter-Regular.otf</string>
 		<string>Inter-SemiBold.otf</string>
 	</array>
+	<key>NSContactsUsageDescription</key>
+	<string>We need access to your contacts</string>
 </dict>
 </plist>

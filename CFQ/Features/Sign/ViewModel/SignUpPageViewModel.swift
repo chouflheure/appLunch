@@ -39,10 +39,6 @@ class SignUpPageViewModel: ObservableObject {
             }
         }
     }
-    
-    func createUser() {
-        UserDataProfile(id: 1, name: name, firstName: name, pseudo: name, birthday: name, picture: name, friends: [name])
-    }
 }
 
 

@@ -13,9 +13,8 @@ struct SignScreen: View {
                 VStack {
                     Image(.whiteLogo)
                         .resizable()
-                        .padding(.horizontal, 30)
-                        .edgesIgnoringSafeArea(.top)
-                        .padding(.top, 100)
+                        .scaledToFit()
+                        .padding(.top, 30)
 
                     VStack {
                         Text(viewModel.hasAlreadyAccount ?
@@ -31,9 +30,8 @@ struct SignScreen: View {
                             keyBoardType: .phonePad,
                             placeHolder: StringsToken.Sign.PlaceholderPhoneNumber,
                             textFieldType: .sign
-                        ).padding(.horizontal, 20)
+                        )
                     }
-                    .padding(.top, 40)
 
                     Spacer()
 
@@ -44,7 +42,7 @@ struct SignScreen: View {
                             StringsToken.Sign.SendConfirmCode :
                                 StringsToken.Sign.Inscritpion,
                             largeButtonType: .signNext
-                        ).padding(.horizontal, 20)
+                        )
                         
                         LargeButtonView(
                             action: {viewModel.toggleHasAlreadyAccount()},
@@ -52,10 +50,11 @@ struct SignScreen: View {
                             StringsToken.Sign.NoAccount :
                                 StringsToken.Sign.AlreadyAccount,
                             largeButtonType: .signBack
-                        ).padding(.horizontal, 20)
+                        )
                     }
                     .padding(.bottom, 100)
                 }
+                .padding(.horizontal, 16)
                 .navigationDestination(isPresented: $viewModel.isConfirmScreenActive) {
                     ConfirmCodeScreen(verificationID: viewModel.verificationID, mobileNumber: viewModel.phoneNumber)
                         .navigationBarBackButtonHidden(true)
