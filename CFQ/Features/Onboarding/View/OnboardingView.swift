@@ -24,10 +24,10 @@ struct OnboardingView: View {
                                 .ignoresSafeArea()
                             LargeButtonView(
                                 action: {
-                                    Logger.log("Click go to visit app", level: .action);
+                                    Logger.log("Clique go to visit app", level: .action);
                                     hasAlreadyOnboarded = true
                                 },
-                                title: "Click ici pour découvrir l'App",
+                                title: "Clique ici pour découvrir l'App",
                                 largeButtonType: .signNext
                             )
                             .frame(maxHeight: .infinity, alignment: .bottom)

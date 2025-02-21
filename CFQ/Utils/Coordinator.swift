@@ -6,7 +6,7 @@ class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
 
     func start() {
-/*
+       /*
         if let user = Auth.auth().currentUser {
             currentView = AnyView(
                 NavigationView {
@@ -17,15 +17,18 @@ class Coordinator: ObservableObject {
         } else {
             currentView = AnyView(
                 NavigationView {
-                    // SignScreen()
-                    CustomTabView()
+                    SignScreen()
+                    // CustomTabView()
                 }
             )
             print("Aucun utilisateur connecté.")
         }
-*/
-        let view = CustomTabView()
-            .navigationBarTitleDisplayMode(.inline)
+    }
+    */
+
+        let view = SignScreen()
+        // let view = CustomTabView()
+           // .navigationBarTitleDisplayMode(.inline)
 
         currentView = AnyView(
             NavigationView {
@@ -33,6 +36,8 @@ class Coordinator: ObservableObject {
             }
         )
     }
+ 
+
     /*
     func goToConfirmCode() {
         let view = ConfirmCodeScreen()

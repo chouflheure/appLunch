@@ -4,6 +4,7 @@ import SwiftUI
 struct NameSignUpScreen: View {
     @State private var index = 0
     @ObservedObject var viewModel: SignUpPageViewModel
+    var onDismiss: () -> Void
 
     var body: some View {
         ZStack {
@@ -12,7 +13,6 @@ struct NameSignUpScreen: View {
             VStack {
                 ProgressBar(index: $viewModel.index)
                     .padding(.vertical, 50)
-                    .padding(.top, 30)
 
                 VStack {
                     Text(StringsToken.Sign.TitleWhichIsYourIdentifier)
@@ -61,7 +61,7 @@ struct NameSignUpScreen: View {
                     ).padding(.horizontal, 20)
 
                     LargeButtonView(
-                        action: {viewModel.goBack()},
+                        action: {onDismiss()},
                         title: StringsToken.Sign.BackToSign,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
@@ -73,5 +73,5 @@ struct NameSignUpScreen: View {
 }
 
 #Preview {
-    NameSignUpScreen(viewModel: .init())
+    // NameSignUpScreen(viewModel: .init())
 }

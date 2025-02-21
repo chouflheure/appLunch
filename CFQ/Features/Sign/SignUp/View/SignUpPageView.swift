@@ -3,10 +3,13 @@ import SwiftUI
 
 struct SignUpPageView: View {
     @StateObject private var viewModel = SignUpPageViewModel()
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         TabView(selection: $viewModel.index) {
-            NameSignUpScreen(viewModel: viewModel)
+            NameSignUpScreen(viewModel: viewModel) {
+                dismiss()
+            }
                 .tag(0)
 
             LocalisationSignUpScreen(viewModel: viewModel)

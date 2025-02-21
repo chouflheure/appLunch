@@ -2,82 +2,99 @@
 import SwiftUI
 import FirebaseAuth
 
-struct ConfirmationScreenDestination: Hashable {}
-
 struct ConfirmCodeScreen: View {
     @State private var otpCode = ""
     @State private var hasAlreadyAccount = true
+    @State private var toast: Toast? = nil
 
+    @State var viewModel: SignInViewModel
     var verificationID: String
     var mobileNumber: String
+    // @State var showNewPage: Bool = false
+
     @Environment(\.dismiss) var dismiss
-    
-    func verifyCode() {
-        let verificationID = UserDefaults.standard.string(forKey: "authVerificationID") ?? ""
-        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: otpCode)
-
-        Auth.auth().signIn(with: credential) { authResult, error in
-            if let error = error {
-                print("Erreur: \(error.localizedDescription)")
-                return
-            }
-            
-            if let user = Auth.auth().currentUser {
-                let uid = user.uid
-                print("Connexion réussie ✅ - UID: \(uid)")
-            }
-
-            dismiss()
-        }
-    }
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
-
-            VStack {
-                Image(.whiteLogo)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.top, 30)
-
+        NavigationStack {
+            ZStack {
+                NeonBackgroundImage()
+                
                 VStack {
-                    Text(StringsToken.Sign.ConfirmationCode)
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .textCase(.uppercase)
-                        .padding(.bottom, 20)
-                    
-                    CustomTextField(
-                        text: $otpCode,
-                        keyBoardType: .phonePad,
-                        placeHolder: StringsToken.Sign.PlaceholderConfimCode,
-                        textFieldType: .sign
-                    )
-                }
+                    Image(.whiteLogo)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.top, 30)
 
-                Spacer()
-
-                VStack {
-                    LargeButtonView(
-                        action: {verifyCode()},
-                        title: StringsToken.Sign.CheckConfirmCode,
-                        largeButtonType: .signNext
-                    ).padding(.horizontal, 20)
+                    VStack {
+                        Text(StringsToken.Sign.ConfirmationCode)
+                            .tokenFont(.Title_Gigalypse_24)
+                            .textCase(.uppercase)
+                            .padding(.bottom, 20)
+                        
+                        CustomTextField(
+                            text: $otpCode,
+                            keyBoardType: .phonePad,
+                            placeHolder: StringsToken.Sign.PlaceholderConfimCode,
+                            textFieldType: .sign
+                        )
+                    }
                     
-                    LargeButtonView(
-                        action: {},
-                        title: StringsToken.Sign.DontReceiveCode,
-                        largeButtonType: .signBack
-                    ).padding(.horizontal, 20)
+                    Spacer()
+                    
+                    VStack {
+                        LargeButtonView(
+                            action: {
+                                viewModel.verifyCode(for: otpCode) { success, message in
+                                    if success {
+                                        dismiss()
+                                        // showNewPage = true
+                                    } else {
+                                        toast = Toast(style: .error, message: message)
+                                    }
+                                }
+                            },
+                            title: StringsToken.Sign.CheckConfirmCode,
+                            largeButtonType: .signNext,
+                            isDisabled: otpCode.isEmpty
+                        )
+                        LargeButtonView(
+                            action: {
+                                viewModel.dontReciveVerificationCode() { success, message in
+                                    if success {
+                                        toast = Toast(style: .success, message: "Le code a été renvoyé")
+                                    } else {
+                                        toast = Toast(style: .error, message: message)
+                                    }
+                                }
+                            },
+                            title: StringsToken.Sign.DontReceiveCode,
+                            largeButtonType: .signBack
+                        )
+                        .padding(.horizontal, 20)
+                    }
+                    .padding(.bottom, 100)
                 }
-                .padding(.bottom, 100)
-            }.padding(.horizontal, 16)
+                .padding(.horizontal, 16)
+            }
+            .toastView(toast: $toast)
+            .onTapGesture {
+                UIApplication.shared.endEditing(true)
+            }
         }
     }
-
 }
 
 #Preview {
-    ConfirmCodeScreen(verificationID: "", mobileNumber: "")
+    // ConfirmCodeScreen(viewModel: SignInViewModel(), verificationID: "", mobileNumber: "")
+}
+
+
+import SwiftUI
+
+struct NewPageView: View {
+    var body: some View {
+        Text("Bienvenue sur la nouvelle page !")
+            .font(.largeTitle)
+            .padding()
+    }
 }

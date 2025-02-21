@@ -38,7 +38,8 @@ struct CFQApp: App {
             if hasAlreadyOnboarded {
                 ContentView()
             } else {
-                OnboardingView()
+                // OnboardingView()
+                ContentView()
             }
         }
     }
