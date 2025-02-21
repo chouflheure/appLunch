@@ -2,6 +2,8 @@ import Foundation
 
 class User: Encodable, Decodable {
     var uid: String
+    var name: String
+    var firstName: String
     var username: String
     var profilePictureUrl: String
     var location: [String]
@@ -22,6 +24,8 @@ class User: Encodable, Decodable {
 
     init(
         uid: String,
+        name: String,
+        firstName: String,
         username: String,
         profilePictureUrl: String,
         location: [String],
@@ -38,21 +42,23 @@ class User: Encodable, Decodable {
         tokenFCM: String,
         unreadNotificationsCount: Int
     ) {
-            self.uid = uid
-            self.username = username
-            self.profilePictureUrl = profilePictureUrl
-            self.location = location
-            self.birthDate = birthDate
-            self.isActive = isActive
-            self.favorite = favorite
-            self.friends = friends
-            self.invitedCfqs = invitedCfqs
-            self.invitedTurns = invitedTurns
-            self.notificationsChannelId = notificationsChannelId
-            self.postedCfqs = postedCfqs
-            self.postedTurns = postedTurns
-            self.teams = teams
-            self.tokenFCM = tokenFCM
-            self.unreadNotificationsCount = unreadNotificationsCount
+        self.uid = uid
+        self.name = name
+        self.firstName = firstName
+        self.username = username
+        self.profilePictureUrl = profilePictureUrl
+        self.location = location
+        self.birthDate = birthDate
+        self.isActive = isActive
+        self.favorite = favorite
+        self.friends = friends
+        self.invitedCfqs = invitedCfqs
+        self.invitedTurns = invitedTurns
+        self.notificationsChannelId = notificationsChannelId
+        self.postedCfqs = postedCfqs
+        self.postedTurns = postedTurns
+        self.teams = teams
+        self.tokenFCM = tokenFCM
+        self.unreadNotificationsCount = unreadNotificationsCount
     }
 }

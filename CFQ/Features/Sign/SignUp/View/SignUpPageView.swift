@@ -1,16 +1,14 @@
-
 import SwiftUI
 
 struct SignUpPageView: View {
-    @StateObject private var viewModel = SignUpPageViewModel()
+    @StateObject var viewModel: SignUpPageViewModel
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         TabView(selection: $viewModel.index) {
             NameSignUpScreen(viewModel: viewModel) {
                 dismiss()
-            }
-                .tag(0)
+            }.tag(0)
 
             LocalisationSignUpScreen(viewModel: viewModel)
                 .tag(1)
@@ -26,5 +24,5 @@ struct SignUpPageView: View {
 }
 
 #Preview {
-    SignUpPageView()
+    SignUpPageView(viewModel: SignUpPageViewModel(uidUser: ""))
 }

@@ -3,19 +3,16 @@ import SwiftUI
 struct SignScreen: View {
     @StateObject private var viewModel = SignInViewModel()
     @State private var toast: Toast? = nil
-    // @State private var showNewPage = false
 
     var body: some View {
-
         ZStack {
             NeonBackgroundImage()
-
             VStack {
                 Image(.whiteLogo)
                     .resizable()
                     .scaledToFit()
                     .padding(.top, 30)
-
+                
                 VStack {
                     Text(
                         viewModel.hasAlreadyAccount
@@ -73,7 +70,6 @@ struct SignScreen: View {
                     viewModel: viewModel,
                     verificationID: viewModel.verificationID,
                     mobileNumber: viewModel.phoneNumber
-                    //showNewPage: $showNewPage
                 )
                 .navigationBarBackButtonHidden(true)
             }
@@ -81,7 +77,7 @@ struct SignScreen: View {
                 if viewModel.isUserExist {
                     Text("Hello")
                 } else {
-                    SignUpPageView()
+                    SignUpPageView(viewModel: SignUpPageViewModel(uidUser: viewModel.uidUser))
                 }
             }
         }

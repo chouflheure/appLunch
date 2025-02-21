@@ -47,7 +47,7 @@ struct ConfirmCodeScreen: View {
                                 viewModel.verifyCode(for: otpCode) { success, message in
                                     if success {
                                         dismiss()
-                                        // showNewPage = true
+                                        print("@@@ message TTTT = \(message)")
                                     } else {
                                         toast = Toast(style: .error, message: message)
                                     }

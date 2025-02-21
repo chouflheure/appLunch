@@ -14,10 +14,12 @@ struct CustomTabView: View {
             VStack {
                 Group {
                     if selectedTab == 0 {
-                        // SignScreen()
-                        SignUpPageView()
+                        Text("Feed")
+                            .foregroundStyle(.white)
                     } else if selectedTab == 1 {
-                        CFQCollectionView()
+                        Text("Map")
+                            .foregroundStyle(.white)
+                        // CFQCollectionView()
                         // Test(selectedEvent: $selectedEvent)
                         /*
                         MapView(locations: [

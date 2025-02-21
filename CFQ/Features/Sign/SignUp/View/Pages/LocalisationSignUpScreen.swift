@@ -50,7 +50,7 @@ struct LocalisationSignUpScreen: View {
 }
 
 #Preview {
-    LocalisationSignUpScreen(viewModel: .init())
+    LocalisationSignUpScreen(viewModel: .init(uidUser: ""))
 }
 
 // TODO: Add reconnaissance localisation

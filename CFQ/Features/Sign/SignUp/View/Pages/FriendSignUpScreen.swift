@@ -67,6 +67,6 @@ struct FriendSignUpScreen: View {
 }
 
 #Preview {
-    FriendSignUpScreen(viewModel: .init())
+    FriendSignUpScreen(viewModel: .init(uidUser: ""))
 }
 

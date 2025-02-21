@@ -4,40 +4,34 @@ import Foundation
 import SwiftUI
 
 class SignInViewModel: ObservableObject {
-    @Published var hasAlreadyAccount = false
-    @Published var isConfirmScreenActive: Bool = false
-    @Published var isSignFinish: Bool = false
-    @Published var isSignUpScreenActive: Bool = false
+    @Published var uidUser = String()
     @Published var phoneNumber = String()
     @Published var verificationID = String()
+    @Published var isUserExist = false
+    @Published var isSignFinish = false
+    @Published var hasAlreadyAccount = false
+    @Published var isConfirmScreenActive = false
     private let firebaseService = FirebaseService()
-    @Published var showNewPage: Bool = false
-    @Published var isUserExist: Bool = false
-
-    private func goToConfirmCode() {
-        isConfirmScreenActive = true
-    }
 
     func toggleHasAlreadyAccount() {
         hasAlreadyAccount.toggle()
     }
 
-    private func getUserWithIDConnexion(uid: String) -> Bool {
-        var isUserExist: Bool = false
+    private func getUserWithIDConnexion(uid: String) {
         self.isSignFinish = true
         
         firebaseService.getDataByID(from: .users, whith: uid) {
             (result: Result<User, Error>) in
             switch result {
             case .success(let user):
-                isUserExist = true
+                // TODO: - Add User env
+                self.isUserExist = true
                 return
-            case .failure(let error):
-                isUserExist = false
+            case .failure(_):
+                self.isUserExist = false
                 return
             }
         }
-        return isUserExist
     }
 
     private func formatPhoneNumber(for phoneNumber: String) -> String {
@@ -60,8 +54,10 @@ class SignInViewModel: ObservableObject {
             }
             if let verificationID = verificationID {
                 UserDefaults.standard.set(
-                    verificationID, forKey: "authVerificationID")
-                self.goToConfirmCode()
+                    verificationID,
+                    forKey: "authVerificationID"
+                )
+                self.isConfirmScreenActive = true
             }
         }
     }
@@ -84,14 +80,10 @@ class SignInViewModel: ObservableObject {
 
             if let user = Auth.auth().currentUser {
                 let uid = user.uid
+                self.uidUser = uid
                 Logger.log("Connexion réussie - UID: \(uid)", level: .success)
-                let isUserExist = self.getUserWithIDConnexion(uid: uid)
-                if isUserExist {
-                    completion(true, "")
-                } else {
-                    // completion(false, "")
-                    completion(true, "")
-                }
+                self.getUserWithIDConnexion(uid: uid)
+                completion(true, uid)
             }
         }
     }
@@ -100,8 +92,6 @@ class SignInViewModel: ObservableObject {
         completion: @escaping (Bool, String) -> Void
     ) {
         sendVerificationCode { (success, message) in
-            print("@@@ success = \(success)")
-            print("@@@ message = \(message)")
             completion(success, message)
         }
     }

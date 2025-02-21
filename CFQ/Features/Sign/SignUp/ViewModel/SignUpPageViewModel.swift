@@ -4,20 +4,20 @@ import FirebaseAuth
 
 class SignUpPageViewModel: ObservableObject {
     @Published var index = 0
-    
     @Published var name = String()
     @Published var firstName = String()
     @Published var pseudo = String()
-    
     @Published var birthday = Date()
-    
     @Published var localisation = String()
-
     @Published var picture = UIImage()
     @Published var friend = String()
     @Published var friends: [String] = []
-
     private var user: User?
+    var uidUser: String
+
+    init(uidUser: String) {
+        self.uidUser = uidUser
+    }
 
     func addFriend() {
         friends.append(friend ?? "")
@@ -46,8 +46,10 @@ class SignUpPageViewModel: ObservableObject {
     
     func setupUser() {
         user = User(
-            uid: "",
-            username: self.name,
+            uid: uidUser,
+            name: name,
+            firstName: firstName,
+            username: pseudo,
             profilePictureUrl: "",
             location: [],
             isActive: true,

@@ -50,5 +50,5 @@ struct BirthdaySignUpScreen: View {
 }
 
 #Preview {
-    BirthdaySignUpScreen(viewModel: .init())
+    BirthdaySignUpScreen(viewModel: .init(uidUser: ""))
 }
