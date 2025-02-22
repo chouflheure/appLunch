@@ -57,7 +57,8 @@ struct PictureSignUpScreen: View {
                     LargeButtonView(
                         action: {viewModel.goNext()},
                         title: StringsToken.Sign.CheckConfirmCode,
-                        largeButtonType: .signNext
+                        largeButtonType: .signNext,
+                        isDisabled: viewModel.localisation.isEmpty
                     ).padding(.horizontal, 20)
                     
                     LargeButtonView(

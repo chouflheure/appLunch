@@ -57,7 +57,8 @@ struct NameSignUpScreen: View {
                             viewModel.goNext()
                         },
                         title: StringsToken.Sign.Next,
-                        largeButtonType: .signNext
+                        largeButtonType: .signNext,
+                        isDisabled: viewModel.name.isEmpty || viewModel.firstName.isEmpty || viewModel.pseudo.isEmpty
                     ).padding(.horizontal, 20)
 
                     LargeButtonView(

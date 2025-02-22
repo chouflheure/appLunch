@@ -12,8 +12,10 @@ class SignUpPageViewModel: ObservableObject {
     @Published var picture = UIImage()
     @Published var friend = String()
     @Published var friends: [String] = []
+
     private var user: User?
-    var uidUser: String
+    private let firebase = FirebaseService()
+    private var uidUser: String
 
     init(uidUser: String) {
         self.uidUser = uidUser
@@ -43,8 +45,8 @@ class SignUpPageViewModel: ObservableObject {
             }
         }
     }
-    
-    func setupUser() {
+
+    func addUserToDatabase() {
         user = User(
             uid: uidUser,
             name: name,
@@ -64,6 +66,8 @@ class SignUpPageViewModel: ObservableObject {
             tokenFCM: "",
             unreadNotificationsCount: 0
         )
+        
+        firebase.addData(data: user, to: .users)
     }
 }
 

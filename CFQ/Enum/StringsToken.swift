@@ -28,6 +28,7 @@ enum StringsToken {
         static let Next = "Next"
         static let Back = "Back"
         static let BackToSign = "Retour à l'inscription"
+        static let WelcomeToCFQ = "Bienvenue sur CFQ 🎉"
     }
 
     enum Profile {
