@@ -59,7 +59,7 @@ struct CustomTabView: View {
                             select: {selected in print("Card selected \(selected)")}
                         )
                     } else if selectedTab == 3 {
-                        ContactListView()
+                        ProfileView() // ContactListView()
                     } else {
                         Screen()
                     }

@@ -37,7 +37,7 @@ class Coordinator: ObservableObject {
     */
 
         // ##### TEST ##### 
-        let view = SignUpPageView(viewModel: .init(uidUser: "JtISdWec8JV4Od1WszEGXkqEVAI2"), coordinator: self)
+        let view = CustomTabView()
 
         currentView = AnyView(
             NavigationView {

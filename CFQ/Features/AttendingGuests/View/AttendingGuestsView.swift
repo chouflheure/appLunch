@@ -125,6 +125,7 @@ struct CollectionViewParticipant: View {
                         }
                 }
             }
+            .scrollIndicators(.hidden)
             .padding()
         }
     }
