@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-enum MoodType: String, CaseIterable {
+enum MoodType: CaseIterable {
     case party
     case concert
     case nightclub

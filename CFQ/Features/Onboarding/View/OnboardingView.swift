@@ -45,7 +45,22 @@ struct OnboardingView: View {
                 indexDisplayMode: currentIndex != 3 ? .always : .never
             ))
             .ignoresSafeArea()
-        }.padding(.bottom, 16)
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        hasAlreadyOnboarded = true
+                    }) {
+                        Text("Skip")
+                            .foregroundColor(.white)
+                            .underline()
+                    }
+                    .padding(.top, 70)
+                    .padding(.trailing, 20)
+                }
+                Spacer()
+            }
+        }.padding(.vertical, 25)
     }
 }
 

@@ -4,7 +4,7 @@ import PhotosUI
 struct PictureSignUpScreen: View {
     @ObservedObject var viewModel: SignUpPageViewModel
     @State private var avatarPhotoItem: PhotosPickerItem?
-    @State private var selectedImage: Image?
+    @State private var selectedImage: UIImage?
 
     var body: some View {
         ZStack {
@@ -28,7 +28,7 @@ struct PictureSignUpScreen: View {
                             .overlay(
                                 ZStack(alignment: .bottom) {
                                     if let selectedImage = selectedImage {
-                                        selectedImage
+                                        Image(uiImage: selectedImage)
                                             .resizable()
                                             .scaledToFill()
                                             .clipShape(Circle())
@@ -55,10 +55,13 @@ struct PictureSignUpScreen: View {
 
                 VStack {
                     LargeButtonView(
-                        action: {viewModel.goNext()},
-                        title: StringsToken.Sign.CheckConfirmCode,
+                        action: {
+                            viewModel.picture = selectedImage ?? UIImage()
+                            viewModel.goNext()
+                        },
+                        title: StringsToken.Sign.Next,
                         largeButtonType: .signNext,
-                        isDisabled: viewModel.localisation.isEmpty
+                        isDisabled: selectedImage == nil
                     ).padding(.horizontal, 20)
                     
                     LargeButtonView(
@@ -73,7 +76,7 @@ struct PictureSignUpScreen: View {
             .task(id: avatarPhotoItem) {
                 if let data = try? await avatarPhotoItem?.loadTransferable(type: Data.self),
                    let uiImage = UIImage(data: data) {
-                    selectedImage = Image(uiImage: uiImage)
+                    selectedImage = uiImage
                 }
             }
         }

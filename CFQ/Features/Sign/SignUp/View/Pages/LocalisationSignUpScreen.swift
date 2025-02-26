@@ -3,6 +3,7 @@ import SwiftUI
 
 struct LocalisationSignUpScreen: View {
     @ObservedObject var viewModel: SignUpPageViewModel
+    @State var selectedItems: String = ""
 
     var body: some View {
         ZStack {
@@ -16,16 +17,9 @@ struct LocalisationSignUpScreen: View {
                     Text(StringsToken.Sign.TitleWhichIsYourLocalisation)
                         .tokenFont(.Title_Gigalypse_24)
                         .textCase(.uppercase)
-                        .padding(.bottom, 50)
+                        .padding(.bottom, 20)
 
-                    CustomTextField(
-                        text: $viewModel.localisation,
-                        keyBoardType: .default,
-                        placeHolder: "Ta loc",
-                        textFieldType: .sign
-                    )
-                    .padding(.bottom, 20)
-                    .padding(.horizontal, 20)
+                    CollectionViewLocalisations(viewModel: viewModel)
                 }
 
                 Spacer()
@@ -34,7 +28,8 @@ struct LocalisationSignUpScreen: View {
                     LargeButtonView(
                         action: {viewModel.goNext()},
                         title: StringsToken.Sign.CheckConfirmCode,
-                        largeButtonType: .signNext
+                        largeButtonType: .signNext,
+                        isDisabled: viewModel.locations.isEmpty
                     ).padding(.horizontal, 20)
 
                     LargeButtonView(
@@ -52,5 +47,3 @@ struct LocalisationSignUpScreen: View {
 #Preview {
     LocalisationSignUpScreen(viewModel: .init(uidUser: ""))
 }
-
-// TODO: Add reconnaissance localisation

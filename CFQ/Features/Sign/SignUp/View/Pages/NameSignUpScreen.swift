@@ -70,6 +70,9 @@ struct NameSignUpScreen: View {
                 .padding(.bottom, 100)
             }
         }
+        .onTapGesture {
+            UIApplication.shared.endEditing(true)
+        }
     }
 }
 

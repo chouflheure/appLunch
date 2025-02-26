@@ -3,6 +3,7 @@ import SwiftUI
 struct SignScreen: View {
     @StateObject private var viewModel = SignInViewModel()
     @State private var toast: Toast? = nil
+    var coordinator: Coordinator
 
     var body: some View {
         ZStack {
@@ -77,7 +78,7 @@ struct SignScreen: View {
                 if viewModel.isUserExist {
                     Text("Hello")
                 } else {
-                    SignUpPageView(viewModel: SignUpPageViewModel(uidUser: viewModel.uidUser))
+                    SignUpPageView(viewModel: SignUpPageViewModel(uidUser: viewModel.uidUser), coordinator: coordinator)
                 }
             }
         }
@@ -90,5 +91,5 @@ struct SignScreen: View {
 }
 
 #Preview {
-    SignScreen()
+    SignScreen(coordinator: .init())
 }

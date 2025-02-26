@@ -20,7 +20,7 @@ class SignInViewModel: ObservableObject {
     private func getUserWithIDConnexion(uid: String) {
         self.isSignFinish = true
         
-        firebaseService.getDataByID(from: .users, whith: uid) {
+        firebaseService.getDataByID(from: .users, with: uid) {
             (result: Result<User, Error>) in
             switch result {
             case .success(let user):

@@ -9,3 +9,7 @@ struct NeonBackgroundImage: View {
             .ignoresSafeArea()
     }
 }
+
+#Preview {
+    NeonBackgroundImage()
+}

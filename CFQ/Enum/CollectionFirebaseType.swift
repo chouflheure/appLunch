@@ -6,4 +6,5 @@ enum CollectionFirebaseType: String {
     case teams = "teams"
     case notifications = "notifiations"
     case conversations = "conversations"
+    case usersPreviews = "usersPreviews"
 }

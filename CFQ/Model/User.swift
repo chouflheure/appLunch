@@ -6,7 +6,7 @@ class User: Encodable, Decodable {
     var firstName: String
     var username: String
     var profilePictureUrl: String
-    var location: [String]
+    var location: Set<String>
     var birthDate: Date?
     var isActive: Bool
     var favorite: [String]
@@ -28,7 +28,7 @@ class User: Encodable, Decodable {
         firstName: String,
         username: String,
         profilePictureUrl: String,
-        location: [String],
+        location: Set<String>,
         birthDate: Date? = nil,
         isActive: Bool,
         favorite: [String],
