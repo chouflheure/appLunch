@@ -5,15 +5,24 @@ struct LargeButtonView: View{
     var action: () -> Void
     var title: String
     var largeButtonType: LargeButtonType
+    var isDisabled: Bool = false
     var cornerRadius: CGFloat = 12
 
     var body: some View {
         Button(action: action, label: {
             Text(title)
-                .foregroundColor(largeButtonType.data.foregroundColor)
+                .foregroundColor(
+                    isDisabled ?
+                        largeButtonType.data.foregroundColor.opacity(0.3) :
+                        largeButtonType.data.foregroundColor
+                )
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(largeButtonType.data.background)
+                .background(
+                    isDisabled ?
+                        largeButtonType.data.background.opacity(0.3) :
+                        largeButtonType.data.background
+                )
                 .cornerRadius(cornerRadius)
                 .overlay(
                     RoundedRectangle(cornerRadius: cornerRadius)
@@ -21,6 +30,10 @@ struct LargeButtonView: View{
                 )
                 
         })
+        .disabled(isDisabled)
+        .onTapGesture {
+            UIApplication.shared.endEditing(true)
+        }
     }
 }
 

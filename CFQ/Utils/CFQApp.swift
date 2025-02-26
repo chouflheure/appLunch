@@ -31,10 +31,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct CFQApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+    @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = false
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if hasAlreadyOnboarded {
+                ContentView()
+            } else {
+                OnboardingView()
+            }
         }
     }
 }

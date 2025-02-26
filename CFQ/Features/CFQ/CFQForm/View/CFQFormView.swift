@@ -60,8 +60,7 @@ struct CFQFormView: View {
 
 #Preview {
     ZStack {
-        Image(.backgroundNeon)
-            .resizable()
+        NeonBackgroundImage()
         CFQFormView()
     }.ignoresSafeArea()
 }

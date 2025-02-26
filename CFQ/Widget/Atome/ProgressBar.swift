@@ -23,7 +23,9 @@ struct ProgressBar: View {
                 .frame(height: 15)
                 .foregroundColor(.white)
                 .cornerRadius(50)
-        }.padding()
+        }
+        .padding()
+        .padding(.top, 30)
     }
 }
 
