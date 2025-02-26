@@ -1,38 +1,31 @@
 
 import SwiftUI
 
-struct ProfileView2: View {
+struct ProfileView: View {
+    var isUserProfile: Bool = true
+
     var body: some View {
         VStack {
-            HStack {
-                Button(
-                    action: {},
-                    label: {
-                        Image(.iconArrow)
-                            .foregroundColor(.white)
-                            .frame(width: 24, height: 24)
-                    })
-                Spacer()
-                Button(
-                    action: {},
-                    label: {
-                        Image(.iconParametres)
-                            .foregroundColor(.white)
-                            .frame(width: 24, height: 24)
-                    })
-            }.padding(.bottom, 32)
-            
+            isUserProfile ?
+            AnyView(HeaderProfileUser())
+                .padding(.trailing, 12)
+                .padding(.bottom, 32)
+            :
+            AnyView(HeaderProfileFriend())
+                .padding(.trailing, 12)
+                .padding(.bottom, 32)
+
             HStack {
                 SwitchStatusUserProfile()
                     .padding(.trailing, 12)
 
                 VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Pseudo")
-                            .tokenFont(.Body_Inter_Medium_16)
-                        Text(" ~ " + "Nil B.")
-                            .tokenFont(.Placeholder_Inter_Regular_16)
-                    }
+                    PreviewPseudoName(
+                        name: "Nil",
+                        firstName: "Bensimon",
+                        pseudo: "olalanil"
+                    )
+
                     HStack(alignment: .center) {
                         Image(.iconLocation)
                             .resizable()
@@ -65,7 +58,7 @@ struct ProfileView2: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        ProfileView2()
+        ProfileView()
     }
 }
 
@@ -105,47 +98,44 @@ struct PageViewEvent: View {
                 CollectionViewParticipant(viewModel: TurnCardViewModel())
                     .tag(1)
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Mode Page sans dots
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }
     }
 }
 
-
-struct ProfileView: View {
-    @State var selectedCradId: UUID? = nil
-    var cards: [TurnCard] = [
-        TurnCard(title: "test1"),
-        TurnCard(title: "test2"),
-        TurnCard(title: "test3")
-    ]
-
+private struct HeaderProfileFriend: View {
     var body: some View {
-        VStack {
+        HStack(alignment: .center) {
+            Button(
+                action: {},
+                label: {
+                    Image(.iconArrow)
+                        .foregroundColor(.white)
+                        .frame(width: 24, height: 24)
+                })
             Spacer()
-            ZStack {
-                ForEach(cards.indices, id: \.self) { card in
-                    TurnCardView(isShow: selectedCradId == cards[card].id,
-                                 select: {self.selectedCradId = $0 ? cards[card].id : nil}
-                    )
-                    .offset(y: calculateOffSetForCard(at: card))
-                }
-            }.frame(height: 10)
+            Button(
+                action: {},
+                label: {
+                    Image(.iconDots)
+                        .foregroundColor(.white)
+                        .frame(width: 24, height: 24)
+                })
         }
     }
+}
 
-    func calculateOffSetForCard(at index: Int) -> CGFloat {
-        let selectedCardIndex = cards.firstIndex(where: {$0.id == selectedCradId})
-        switch selectedCardIndex {
-        case .none:
-            return CGFloat(index * 80)
-        case .some(let selectedIndex) where selectedIndex == index:
-            let screenHeight = UIScreen.main.bounds.height
-            let cardHeight: CGFloat = 500
-            let centerOffset = (screenHeight - (cardHeight - CGFloat(index * 80))) / 2
-            return -screenHeight/2
-        case .some:
-            return 300
-
+private struct HeaderProfileUser: View {
+    var body: some View {
+        HStack(alignment: .center) {
+            Spacer()
+            Button(
+                action: {},
+                label: {
+                    Image(.iconParametres)
+                        .foregroundColor(.white)
+                        .frame(width: 24, height: 24)
+                })
         }
     }
 }

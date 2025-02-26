@@ -1,11 +1,10 @@
-
-import SwiftUI
 import FirebaseAuth
+import SwiftUI
 
 class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
     private var firebase = FirebaseService()
-    
+
     func start() {
         /*
         if let user = Auth.auth().currentUser {
@@ -14,7 +13,7 @@ class Coordinator: ObservableObject {
                 case .success(let user):
                     self.currentView = AnyView(
                         NavigationView {
-                            CustomTabView()
+                            CustomTabView(coordinator: self)
                         }
                     )
                 case .failure(let error):
@@ -34,23 +33,39 @@ class Coordinator: ObservableObject {
             )
             print("Aucun utilisateur connecté.")
         }
-    */
+         */
+    
 
-        // ##### TEST ##### 
-        let view = CustomTabView()
+        // ##### TEST #####
+        let view = SettingsView(coordinator: .init())
 
         currentView = AnyView(
             NavigationView {
                 view
             }
         )
-    
+
     }
- 
+
+    func logOutUser() {
+        do {
+            try Auth.auth().signOut()
+            // isUserLoggedIn = false
+            print("User successfully signed out.")
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+        currentView = AnyView(
+            NavigationView {
+                SignScreen(coordinator: self)
+            }
+        )
+    }
+
     func gotoCustomTabView() {
         currentView = AnyView(
             NavigationView {
-                CustomTabView()
+                CustomTabView(coordinator: self)
             }
         )
     }
