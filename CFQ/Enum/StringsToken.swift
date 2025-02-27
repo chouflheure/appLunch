@@ -31,6 +31,14 @@ enum StringsToken {
         static let WelcomeToCFQ = "Bienvenue sur CFQ 🎉"
     }
 
+    enum Popup {
+        static let TitleRemoveAccount = "Tu veux supprimer ton compte ?"
+        static let TitleLogOut = "Tu veux te déconnecter ?"
+        static let TitleButtonNoLogOut = "Nop, je reste"
+        static let TitleButtonYesLogout = "Yes, ciao"
+        static let TitleButtonNoRemoveAccount = "Nop, je garde"
+        static let TitleButtonYesRemoveAccount = "Yes, ça dégage"
+    }
     enum Profile {
         static let Friends = "Amis"
     }

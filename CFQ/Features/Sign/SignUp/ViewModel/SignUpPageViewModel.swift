@@ -1,7 +1,6 @@
 import Contacts
 import Firebase
 import FirebaseAuth
-import FirebaseStorage
 import Foundation
 import SwiftUI
 
@@ -48,11 +47,6 @@ class SignUpPageViewModel: ObservableObject {
 
     init(uidUser: String) {
         self.uidUser = uidUser
-    }
-
-    func addFriend() {
-        friends.append(friend ?? "")
-        print("Amis actuels : \(friends)")
     }
 
     func goNext() {
@@ -126,34 +120,28 @@ class SignUpPageViewModel: ObservableObject {
     }
 
     // TODO: - Update error messages
-    func uploadImage() {
-        guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
-            uploadStatus = "Error converting image to data"
-            return
-        }
-
-        let storageRef = Storage.storage().reference().child("images/\(self.uidUser).jpg")
-        let metadata = StorageMetadata()
-        
-        metadata.contentType = "image/jpeg"
-
-        storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
-            if let error = error {
-                print("Error uploading image: \(error.localizedDescription)")
-                return
+    private func uploadImage() {
+        firebase.uploadImage(picture: picture, uidUser: user.uid) { result in
+            switch result {
+            case .success(let urlString):
+                self.user.profilePictureUrl = urlString
+                self.uploadDataUser()
+            case .failure(let error): break
+                // TODO: Update error
             }
-
-            storageRef.downloadURL { (url, error) in
-                if let error = error {
-                    print("Error getting download URL: \(error.localizedDescription)")
-                    return
-                }
-
-                if let url = url {
-                    self.urlProfilePicture = url.absoluteString
-                    print("Image uploaded successfully at \(self.urlProfilePicture  + "\n" + url.absoluteString)!")
-                    self.updateProfilePictureURL()
-                }
+        }
+    }
+    
+    private func uploadDataUser() {
+        firebase.addData(data: user, to: .users) { (result: Result<Void, Error>) in
+            switch result {
+            case .success():
+                // completion(true, "")
+                return
+            case .failure(let error):
+                // TODO: Implement error message
+                // completion(false, error.localizedDescription)
+                return
             }
         }
     }
@@ -173,23 +161,11 @@ class SignUpPageViewModel: ObservableObject {
     }
     
     private func updateProfilePictureURL() {
-        firebase.updateDataByID(data: user, to: .users, at: uidUser)
+        firebase.updateDataByID(data: ["profilePictureUrl": urlProfilePicture], to: .users, at: uidUser)
     }
 
     func addUserDataOnDataBase(completion: @escaping (Bool, String) -> Void) {
         uploadImage()
-        firebase.addData(data: user, to: .users) {
-            (result: Result<Void, Error>) in
-            switch result {
-            case .success():
-                completion(true, "")
-                return
-            case .failure(let error):
-                // TODO: Implement error message
-                completion(false, error.localizedDescription)
-                return
-            }
-        }
     }
 
 }

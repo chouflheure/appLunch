@@ -1,5 +1,6 @@
 
 import Firebase
+import FirebaseStorage
 
 class FirebaseService: FirebaseServiceProtocol {
     let db = Firestore.firestore()
@@ -33,31 +34,19 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
 
-    func updateDataByID<T>(data: T, to collection: CollectionFirebaseType, at id: String) where T : Decodable, T : Encodable {
-        do {
-            let collectionName = collection.rawValue
+    // exemple call : updateFieldByID(field: "name", value: "John Doe", to: .users, at: "12345")
+    func updateDataByID(data: [String: Any], to collection: CollectionFirebaseType, at id: String) {
+        let collectionName = collection.rawValue
 
-            if let uid = (data as? User)?.uid ??
-                (data as? Turn)?.uid ??
-                (data as? Conversation)?.uid ??
-                (data as? Notification)?.uid ??
-                (data as? Team)?.uid ??
-                (data as? CFQ)?.uid
-            {
-                try db.collection(collectionName).document(uid).setData(from: data) { error in
-                    if let error = error {
-                        Logger.log(" Erreur lors de la nodification de \(collection.rawValue) : \(error.localizedDescription)", level: .error)
-                    } else {
-                        Logger.log("\(collection.rawValue) a été modifié avec success", level: .success)
-                    }
-                }
+        db.collection(collectionName).document(id).updateData(data) { error in
+            if let error = error {
+                Logger.log("Erreur lors de la modification de \(collection.rawValue) : \(error.localizedDescription)", level: .error)
             } else {
-                Logger.log("Erreur : Impossible de récupérer l'identifiant de l'objet", level: .error)
+                Logger.log("\(collection.rawValue) a été modifié avec succès", level: .success)
             }
-        } catch {
-            Logger.log("Erreur de conversion des données : \(error.localizedDescription)", level: .error)
         }
     }
+
     
     func deleteDataByID(from collection: CollectionFirebaseType, with id: String, completion: @escaping (Result<Void, Error>) -> Void) {
             let collectionName = collection.rawValue
@@ -162,6 +151,39 @@ class FirebaseService: FirebaseServiceProtocol {
             }
 
             completion(.success(dataArray))
+        }
+    }
+}
+
+// Firebase Storage
+extension FirebaseService {
+    
+    func uploadImage(picture: UIImage, uidUser: String, completion: @escaping (Result<String, Error>) -> Void ) {
+        guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
+            return
+        }
+
+        let storageRef = Storage.storage().reference().child("images/\(uidUser).jpg")
+        let metadata = StorageMetadata()
+        
+        metadata.contentType = "image/jpeg"
+
+        storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            storageRef.downloadURL { (url, error) in
+                if let error = error {
+                    print("Error getting download URL: \(error.localizedDescription)")
+                    return
+                }
+
+                if let url = url {
+                    completion(.success(url.absoluteString))
+                }
+            }
         }
     }
 }
