@@ -9,7 +9,8 @@ struct SettingsView: View {
     @State private var showPopup = false
     var firebase = FirebaseService()
     var viewModel = SettingsViewModel()
-    
+    var coordinator: Coordinator
+
     var arrayIconTitleForNextScreen: [(icon: ImageResource, value: String, screen: ScreensSettingsType)] = [
         (.iconNavProfile, StringsToken.Settings.headereditMyProfil, .editProfile),
         (.iconPlus, StringsToken.Settings.onboardingPreview, .onboarding),
@@ -21,8 +22,6 @@ struct SettingsView: View {
         (.iconDoor, StringsToken.Settings.logOut, .logout),
         (.iconCross, StringsToken.Settings.deleteAccount, .removeAccount)
     ]
-    
-    var coordinator: Coordinator
 
     var body: some View {
         ZStack {
@@ -119,9 +118,9 @@ struct SettingsView: View {
             case .bugReport:
                 IssueReportView(showDetail: $showDetail)
             case .logout:
-                PopUpSettings(showPopup: $showPopup, popupType: .logout)
+                PopUpSettings(showPopup: $showPopup, popupType: .logout, coordinator: coordinator)
             case .removeAccount:
-                PopUpSettings(showPopup: $showPopup, popupType: .removeProfile)
+                PopUpSettings(showPopup: $showPopup, popupType: .removeProfile, coordinator: coordinator)
             }
         }
 }

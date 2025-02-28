@@ -48,17 +48,17 @@ class FirebaseService: FirebaseServiceProtocol {
     }
 
     
-    func deleteDataByID(from collection: CollectionFirebaseType, with id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-            let collectionName = collection.rawValue
+    func deleteDataByID(from collection: CollectionFirebaseType, at id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let collectionName = collection.rawValue
 
-            db.collection(collectionName).document(id).delete { error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                completion(.success(()))
+        db.collection(collectionName).document(id).delete { error in
+            if let error = error {
+                completion(.failure(error))
+                return
             }
+            completion(.success(()))
         }
+    }
     
     func getDataByID<T: Codable>(from collection: CollectionFirebaseType, with id: String, completion: @escaping (Result<T, Error>) -> Void) {
         let collectionName = collection.rawValue
@@ -82,7 +82,7 @@ class FirebaseService: FirebaseServiceProtocol {
             }
         }
     }
-    
+
     func getDataByIDs<T: Codable>(from collection: CollectionFirebaseType, with ids: [String], completion: @escaping (Result<[T], Error>) -> Void) {
         let collectionName = collection.rawValue
             let dispatchGroup = DispatchGroup()

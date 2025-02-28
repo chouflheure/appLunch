@@ -4,6 +4,8 @@ import SwiftUI
 struct PopUpSettings: View {
     @Binding var showPopup: Bool
     var popupType: PopUpType
+    var coordinator: Coordinator
+    var viewModel = PopUpSettingsViewModel()
 
     var body: some View {
         ZStack() {
@@ -29,11 +31,22 @@ struct PopUpSettings: View {
                                     .frame(width: 130, height: 40)
                             }
                     })
-                    
+
                     Spacer()
-                    
+
                     Button(action: {
                         withAnimation {
+                            if popupType == .removeProfile {
+                                viewModel.removeUserFromDataBase(uidUser: "") { success, error in
+                                    if success {
+                                        coordinator.logOutUser()
+                                    } else {
+                                        // TODO: - Error messages
+                                    }
+                                }
+                            } else {
+                                coordinator.logOutUser()
+                            }
                             showPopup = false
                         }
                     }, label: {
