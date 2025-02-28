@@ -7,7 +7,7 @@ struct CustomTabView: View {
     @State private var selectedTab = 0
     @State private var selectedEvent: MapLocationEventData? = nil
     var coordinator: Coordinator
-    
+    @EnvironmentObject var user: User
 
     var body: some View {
         ZStack {
@@ -65,9 +65,8 @@ struct CustomTabView: View {
                             select: {selected in print("Card selected \(selected)")}
                         )
                     } else if selectedTab == 3 {
-                        ContactListView()
+                        Screen()
                     } else {
-                        // Screen()
                         ProfileView()
                     }
                 }

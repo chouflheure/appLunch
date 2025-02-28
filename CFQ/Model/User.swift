@@ -1,6 +1,6 @@
 import Foundation
 
-class User: Encodable, Decodable {
+class User: Encodable, Decodable, ObservableObject {
     var uid: String
     var name: String
     var firstName: String
@@ -23,24 +23,24 @@ class User: Encodable, Decodable {
     // conversations
 
     init(
-        uid: String,
-        name: String,
-        firstName: String,
-        username: String,
-        profilePictureUrl: String,
-        location: Set<String>,
+        uid: String = "",
+        name: String = "",
+        firstName: String = "",
+        username: String = "",
+        profilePictureUrl: String = "",
+        location: Set<String> = [""],
         birthDate: Date? = nil,
-        isActive: Bool,
-        favorite: [String],
-        friends: [String],
-        invitedCfqs: [String],
-        invitedTurns: [String],
-        notificationsChannelId: String,
-        postedCfqs: [String],
-        postedTurns: [String],
-        teams: [String],
-        tokenFCM: String,
-        unreadNotificationsCount: Int
+        isActive: Bool = true,
+        favorite: [String] = [""] ,
+        friends: [String] = [""],
+        invitedCfqs: [String] = [""],
+        invitedTurns: [String] = [""],
+        notificationsChannelId: String = "",
+        postedCfqs: [String] = [""],
+        postedTurns: [String] = [""],
+        teams: [String] = [""],
+        tokenFCM: String = "",
+        unreadNotificationsCount: Int = 0
     ) {
         self.uid = uid
         self.name = name

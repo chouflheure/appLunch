@@ -6,7 +6,7 @@ class Coordinator: ObservableObject {
     private var firebase = FirebaseService()
 
     func start() {
-        /*
+        
         if let user = Auth.auth().currentUser {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
@@ -14,6 +14,7 @@ class Coordinator: ObservableObject {
                     self.currentView = AnyView(
                         NavigationView {
                             CustomTabView(coordinator: self)
+                                .environmentObject(user)
                         }
                     )
                 case .failure(let error):
@@ -33,11 +34,11 @@ class Coordinator: ObservableObject {
             )
             print("Aucun utilisateur connecté.")
         }
-         */
+         
     
 
         // ##### TEST #####
-        let view = SettingsView(coordinator: .init())
+        let view = SettingsView(coordinator: self)
 
         currentView = AnyView(
             NavigationView {

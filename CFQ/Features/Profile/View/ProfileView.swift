@@ -91,11 +91,12 @@ struct PageViewEvent: View {
             }
             .padding(.top, 20)
 
-            // PageView avec TabView
             TabView(selection: $selectedIndex) {
-                CollectionViewParticipant(viewModel: TurnCardViewModel())
+                Text("Empty")
+                    .foregroundColor(.white)
                     .tag(0)
-                CollectionViewParticipant(viewModel: TurnCardViewModel())
+                Text("Empty")
+                    .foregroundColor(.white)
                     .tag(1)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
