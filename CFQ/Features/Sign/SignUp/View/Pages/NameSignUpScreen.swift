@@ -1,9 +1,16 @@
 
 import SwiftUI
 
+private enum Field {
+    case name
+    case firstName
+    case pseudo
+}
+
 struct NameSignUpScreen: View {
     @State private var index = 0
     @ObservedObject var viewModel: SignUpPageViewModel
+    @FocusState private var focusedField: Field?
     var onDismiss: () -> Void
 
     var body: some View {
@@ -26,6 +33,8 @@ struct NameSignUpScreen: View {
                         placeHolder: "Nom",
                         textFieldType: .sign
                     )
+                    .focused($focusedField, equals: .name)
+                    .submitLabel(.next)
                     .padding(.bottom, 20)
                     .padding(.horizontal, 20)
 
@@ -35,6 +44,8 @@ struct NameSignUpScreen: View {
                         placeHolder: "Prenom",
                         textFieldType: .sign
                     )
+                    .focused($focusedField, equals: .firstName)
+                    .submitLabel(.next)
                     .padding(.bottom, 20)
                     .padding(.horizontal, 20)
                     
@@ -44,8 +55,22 @@ struct NameSignUpScreen: View {
                         placeHolder: "Pseudo",
                         textFieldType: .sign
                     )
+                    .focused($focusedField, equals: .pseudo)
+                    .submitLabel(.return)
                     .padding(.bottom, 20)
                     .padding(.horizontal, 20)
+                }
+                .onSubmit {
+                    switch focusedField {
+                    case .name:
+                        focusedField = .firstName
+                    case .firstName:
+                        focusedField = .pseudo
+                    case .pseudo:
+                        focusedField = .none
+                    case .none:
+                        focusedField = .none
+                    }
                 }
 
                 Spacer()
@@ -53,7 +78,6 @@ struct NameSignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {
-                            print("@@@ \(viewModel.name)")
                             viewModel.goNext()
                         },
                         title: StringsToken.Sign.Next,
@@ -74,8 +98,4 @@ struct NameSignUpScreen: View {
             UIApplication.shared.endEditing(true)
         }
     }
-}
-
-#Preview {
-    // NameSignUpScreen(viewModel: .init())
 }

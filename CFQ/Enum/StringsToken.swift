@@ -32,15 +32,29 @@ enum StringsToken {
     }
 
     enum Popup {
-        static let TitleRemoveAccount = "Tu veux supprimer ton compte ?"
+        static let TitleRemoveAccount = "Tu supprimer ton compte ?"
         static let TitleLogOut = "Tu veux te déconnecter ?"
         static let TitleButtonNoLogOut = "Nop, je reste"
         static let TitleButtonYesLogout = "Yes, ciao"
         static let TitleButtonNoRemoveAccount = "Nop, je garde"
         static let TitleButtonYesRemoveAccount = "Yes, ça dégage"
     }
+
     enum Profile {
         static let Friends = "Amis"
+    }
+    
+    enum Settings {
+        static let edit = "Modifier"
+        static let headereditMyProfil = "Modifier mon profil"
+        static let onboardingPreview = "Guide d'utilisation"
+        static let aBugTellUs = "Un bug, une remarque ? Dis nous tout !"
+        static let logOut = "Se deconnecter"
+        static let deleteAccount = "Supprimer mon compte"
+        static let shareReport = "Envoyer vos retours 💌"
+        static let subject = "Feedback"
+        static let adressForMail = "cfq.hq.25@gmail.com"
+        static let headerABug = "Un bug, une remarque"
     }
     
     enum ButtonTitle {

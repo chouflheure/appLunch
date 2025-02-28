@@ -7,8 +7,8 @@ class SettingsViewModel: ObservableObject {
     @Published var name: String = ""
     @Published var pseudo: String = ""
     @Published var firstName: String = ""
-    @Published var picture = UIImage()
-    @Published var localisation: [String] = []
+    var picture = UIImage()
+    @Published var localisation: Set<String> = ["Marseille", "Nice", "Nantes", "Toulouse", "Lyon"]
     
     private var profilePictureUrl: String = ""
     private var firebase = FirebaseService()
