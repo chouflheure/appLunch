@@ -6,10 +6,11 @@ enum LargeButtonType {
     case signBack
     case teamCreate
     case addParticipant
+    case settings
     
     var data: LargeButtonData {
         switch self {
-        case .signNext, .addParticipant:
+        case .signNext, .addParticipant, .settings:
             return LargeButtonData(
                 background: .black,
                 foregroundColor: .white,

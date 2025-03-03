@@ -46,7 +46,7 @@ enum FontToken {
         case .Label_Inter_Medium_12:
             return .custom(FontType.InterMedium.rawValue, size: 12)
         case .Label_Gigalypse_12:
-            return .custom(FontType.GigalypseTrial.rawValue, size: 12)
+            return .custom(FontType.GigalypseTrial.rawValue, size: 14)
         case .Body_Inter_Medium_16:
             return .custom(FontType.InterMedium.rawValue, size: 16)
         case .Body_Inter_Regular_16:

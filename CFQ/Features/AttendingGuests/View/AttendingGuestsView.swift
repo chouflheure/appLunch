@@ -126,7 +126,7 @@ struct CollectionViewParticipant: View {
                 }
             }
             .padding()
-        }
+        }.scrollIndicators(.hidden)
     }
 
     private func toggleSelection(of item: String) {

@@ -18,13 +18,15 @@ class SignInViewModel: ObservableObject {
     }
 
     private func getUserWithIDConnexion(uid: String) {
+        // TODO: - Check that je ne suis pas sur que ca soit une bonne idée
+        // ###
         self.isSignFinish = true
+        // ###
         
         firebaseService.getDataByID(from: .users, with: uid) {
             (result: Result<User, Error>) in
             switch result {
             case .success(let user):
-                // TODO: - Add User env
                 self.isUserExist = true
                 return
             case .failure(_):

@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct CustomToggleStatus: View {
-    @State var isActive = false
+    @StateObject var viewModel: SwitchStatusUserProfileViewModel
     
     var body: some View {
         ZStack {
@@ -20,15 +20,15 @@ struct CustomToggleStatus: View {
                     .foregroundColor(.black)
                     .overlay(
                         Circle()
-                            .stroke(isActive ? .active : .inactive)
+                            .stroke(viewModel.user.isActive ? .active : .inactive)
                     )
-                Image( isActive ? .disco : .moonStars)
+                Image(viewModel.user.isActive ? .disco : .moonStars)
             }
-            .offset(x: isActive ? 14 : -14)
+            .offset(x: viewModel.user.isActive ? 14 : -14)
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
-                    isActive.toggle()
-                    Logger.log("status toogle is : \(isActive)", level: .info)
+                    viewModel.user.isActive.toggle()
+                    Logger.log("status toogle is : \(viewModel.user.isActive)", level: .info)
                 }
             }
         }

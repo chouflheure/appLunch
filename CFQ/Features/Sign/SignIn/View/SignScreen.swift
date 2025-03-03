@@ -4,6 +4,7 @@ struct SignScreen: View {
     @StateObject private var viewModel = SignInViewModel()
     @State private var toast: Toast? = nil
     var coordinator: Coordinator
+    @EnvironmentObject var user: User
 
     var body: some View {
         ZStack {
@@ -76,7 +77,7 @@ struct SignScreen: View {
             }
             .fullScreenCover(isPresented: $viewModel.isSignFinish) {
                 if viewModel.isUserExist {
-                    Text("Hello")
+                    CustomTabView(coordinator: coordinator)
                 } else {
                     SignUpPageView(viewModel: SignUpPageViewModel(uidUser: viewModel.uidUser), coordinator: coordinator)
                 }

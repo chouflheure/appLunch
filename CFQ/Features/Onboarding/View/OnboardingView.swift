@@ -4,6 +4,7 @@ import SwiftUI
 struct OnboardingView: View {
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool?
     @State var currentIndex = 0
+    var onFinish: (() -> Void)?
 
     let onboardingView = [
         Image(.onboarding1),
@@ -24,7 +25,8 @@ struct OnboardingView: View {
                                 .ignoresSafeArea()
                             LargeButtonView(
                                 action: {
-                                    Logger.log("Clique go to visit app", level: .action);
+                                    Logger.log("Clique go to visit app", level: .action)
+                                    onFinish?()
                                     hasAlreadyOnboarded = true
                                 },
                                 title: "Clique ici pour découvrir l'App",
@@ -50,6 +52,7 @@ struct OnboardingView: View {
                     Spacer()
                     Button(action: {
                         hasAlreadyOnboarded = true
+                        onFinish?()
                     }) {
                         Text("Skip")
                             .foregroundColor(.white)

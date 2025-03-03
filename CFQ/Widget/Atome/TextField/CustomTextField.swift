@@ -4,10 +4,11 @@ enum TextFieldType {
     case sign
     case turn
     case cfq
+    case editProfile
     
     var data: TextFieldData {
         switch self {
-        case .sign, .cfq:
+        case .sign, .cfq, .editProfile:
             return TextFieldData(
                 background: .black,
                 foregroundColor: .white,
@@ -62,6 +63,12 @@ struct CustomTextField: View {
     }
 }
 
+
+
+#Preview {
+    ParentView()
+}
+
 private struct ParentView: View {
     @State private var currentIndex = ""
     @State private var currentIndex2 = ""
@@ -85,8 +92,4 @@ private struct ParentView: View {
             }
         }
     }
-}
-
-#Preview {
-    ParentView()
 }

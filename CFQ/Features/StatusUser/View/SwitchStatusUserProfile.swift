@@ -2,13 +2,13 @@
 import SwiftUI
 
 struct SwitchStatusUserProfile: View {
-    @State var isOn = false
+    @ObservedObject var viewModel: SwitchStatusUserProfileViewModel
 
     var body: some View {
         ZStack{
-            CirclePictureStatus()
+            CirclePictureStatus(viewModel: viewModel)
                 .frame(width: 70, height: 70)
-            CustomToggleStatus()
+            CustomToggleStatus(viewModel: viewModel)
                 .offset(y: 40)
         }
     }
@@ -17,6 +17,6 @@ struct SwitchStatusUserProfile: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        SwitchStatusUserProfile()
     }.ignoresSafeArea()
 }
+

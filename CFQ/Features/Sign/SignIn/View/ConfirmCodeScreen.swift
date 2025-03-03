@@ -10,7 +10,6 @@ struct ConfirmCodeScreen: View {
     @State var viewModel: SignInViewModel
     var verificationID: String
     var mobileNumber: String
-    // @State var showNewPage: Bool = false
 
     @Environment(\.dismiss) var dismiss
 
@@ -36,7 +35,7 @@ struct ConfirmCodeScreen: View {
                             keyBoardType: .phonePad,
                             placeHolder: StringsToken.Sign.PlaceholderConfimCode,
                             textFieldType: .sign
-                        )
+                        ).textContentType(.oneTimeCode)
                     }
                     
                     Spacer()
@@ -47,7 +46,6 @@ struct ConfirmCodeScreen: View {
                                 viewModel.verifyCode(for: otpCode) { success, message in
                                     if success {
                                         dismiss()
-                                        print("@@@ message TTTT = \(message)")
                                     } else {
                                         toast = Toast(style: .error, message: message)
                                     }

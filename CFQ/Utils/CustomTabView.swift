@@ -6,6 +6,8 @@ import FirebaseFirestore
 struct CustomTabView: View {
     @State private var selectedTab = 0
     @State private var selectedEvent: MapLocationEventData? = nil
+    @EnvironmentObject var user: User
+    var coordinator: Coordinator
 
     var body: some View {
         ZStack {
@@ -16,6 +18,7 @@ struct CustomTabView: View {
                     if selectedTab == 0 {
                         Text("Feed")
                             .foregroundStyle(.white)
+                        SwitchStatusUserProfile(viewModel: SwitchStatusUserProfileViewModel(user: user))
                     } else if selectedTab == 1 {
                         Text("Map")
                             .foregroundStyle(.white)
@@ -59,9 +62,9 @@ struct CustomTabView: View {
                             select: {selected in print("Card selected \(selected)")}
                         )
                     } else if selectedTab == 3 {
-                        ContactListView()
-                    } else {
                         Screen()
+                    } else {
+                        ProfileView(coordinator: coordinator)
                     }
                 }
                 .frame(maxHeight: .infinity)
@@ -112,10 +115,10 @@ struct CustomTabView: View {
                 .padding(.vertical)
                 .background(.black)
             }
-        }.padding(.bottom, 30)
+        }.padding(.bottom, 50)
     }
 }
 
 #Preview {
-    CustomTabView()
+    CustomTabView(coordinator: .init())
 }
