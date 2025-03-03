@@ -3,27 +3,36 @@ import SwiftUI
 
 struct ProfileView: View {
     var isUserProfile: Bool = true
+    var coordinator: Coordinator
+    @EnvironmentObject var user: User
+    @StateObject var viewModel = ProfileViewModel()
 
     var body: some View {
         VStack {
-            isUserProfile ?
-            AnyView(HeaderProfileUser())
-                .padding(.trailing, 12)
-                .padding(.bottom, 32)
-            :
-            AnyView(HeaderProfileFriend())
-                .padding(.trailing, 12)
-                .padding(.bottom, 32)
+            HStack(alignment: .center) {
+                Spacer()
+                Button(
+                    action: {
+                        viewModel.isShowingSettingsView = true
+                    },
+                    label: {
+                        Image(.iconParametres)
+                            .foregroundColor(.white)
+                            .frame(width: 24, height: 24)
+                    })
+            }
+            .padding(.trailing, 12)
+            .padding(.bottom, 32)
 
             HStack {
-                SwitchStatusUserProfile()
+                SwitchStatusUserProfile(viewModel: SwitchStatusUserProfileViewModel(user: user))
                     .padding(.trailing, 12)
 
                 VStack(alignment: .leading, spacing: 12) {
                     PreviewPseudoName(
-                        name: "Nil",
-                        firstName: "Bensimon",
-                        pseudo: "olalanil"
+                        name: user.name,
+                        firstName: user.firstName,
+                        pseudo: user.pseudo
                     )
 
                     HStack(alignment: .center) {
@@ -31,7 +40,7 @@ struct ProfileView: View {
                             .resizable()
                             .frame(width: 16, height: 16)
                             .foregroundColor(.white)
-                        Text("Localisation")
+                        Text("\(user.location)")
                             .tokenFont(.Body_Inter_Medium_16)
                     }
                 }
@@ -50,18 +59,13 @@ struct ProfileView: View {
             PageViewEvent()
 
         }
-        .padding(.top, 50)
+        .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
+            SettingsView(coordinator: coordinator)
+        }
+        .padding(.top, 70)
         .padding(.horizontal, 16)
     }
 }
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        ProfileView()
-    }
-}
-
 
 struct PageViewEvent: View {
     @State private var selectedIndex = 0
@@ -127,11 +131,15 @@ private struct HeaderProfileFriend: View {
 }
 
 private struct HeaderProfileUser: View {
+    var viewModel: ProfileViewModel
+
     var body: some View {
         HStack(alignment: .center) {
             Spacer()
             Button(
-                action: {},
+                action: {
+                    viewModel.isShowingSettingsView = true
+                },
                 label: {
                     Image(.iconParametres)
                         .foregroundColor(.white)

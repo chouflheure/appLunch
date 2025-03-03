@@ -28,7 +28,7 @@ class SignUpPageViewModel: ObservableObject {
             uid: uidUser,
             name: name,
             firstName: firstName,
-            username: pseudo,
+            pseudo: pseudo,
             profilePictureUrl: urlProfilePicture,
             location: locations,
             isActive: true,

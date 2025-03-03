@@ -3,7 +3,7 @@ import SwiftUI
 
 struct CirclePictureStatus: View {
     @State var image: Image?
-    @State var isActiveTonight: Bool = true
+    @ObservedObject var viewModel: SwitchStatusUserProfileViewModel
 
     var body: some View {
         ZStack {
@@ -14,12 +14,8 @@ struct CirclePictureStatus: View {
                 .overlay(
                     Circle()
                         .stroke(style: StrokeStyle(lineWidth: 2))
-                        .foregroundColor(isActiveTonight ? .active : .inactive)
+                        .foregroundColor(viewModel.user.isActive ? .active : .inactive)
                 )
         }
     }
-}
-
-#Preview {
-    CirclePictureStatus()
 }

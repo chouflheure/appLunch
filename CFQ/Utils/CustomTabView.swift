@@ -6,8 +6,8 @@ import FirebaseFirestore
 struct CustomTabView: View {
     @State private var selectedTab = 0
     @State private var selectedEvent: MapLocationEventData? = nil
-    var coordinator: Coordinator
     @EnvironmentObject var user: User
+    var coordinator: Coordinator
 
     var body: some View {
         ZStack {
@@ -18,10 +18,7 @@ struct CustomTabView: View {
                     if selectedTab == 0 {
                         Text("Feed")
                             .foregroundStyle(.white)
-                        Button(action: {coordinator.logOutUser()}, label: {
-                            Text("log out ")
-                                .foregroundColor(.white)
-                        })
+                        SwitchStatusUserProfile(viewModel: SwitchStatusUserProfileViewModel(user: user))
                     } else if selectedTab == 1 {
                         Text("Map")
                             .foregroundStyle(.white)
@@ -67,7 +64,7 @@ struct CustomTabView: View {
                     } else if selectedTab == 3 {
                         Screen()
                     } else {
-                        ProfileView()
+                        ProfileView(coordinator: coordinator)
                     }
                 }
                 .frame(maxHeight: .infinity)
@@ -118,7 +115,7 @@ struct CustomTabView: View {
                 .padding(.vertical)
                 .background(.black)
             }
-        }.padding(.bottom, 30)
+        }.padding(.bottom, 50)
     }
 }
 

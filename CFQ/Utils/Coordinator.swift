@@ -4,6 +4,7 @@ import SwiftUI
 class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
     private var firebase = FirebaseService()
+    @Published var user = User()
 
     func start() {
         
@@ -11,6 +12,7 @@ class Coordinator: ObservableObject {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
+                    print("@@@ here")
                     self.currentView = AnyView(
                         NavigationView {
                             CustomTabView(coordinator: self)
@@ -36,7 +38,7 @@ class Coordinator: ObservableObject {
         }
          
     
-
+/*
         // ##### TEST #####
         let view = SettingsView(coordinator: self)
 
@@ -45,13 +47,12 @@ class Coordinator: ObservableObject {
                 view
             }
         )
-
+*/
     }
 
     func logOutUser() {
         do {
             try Auth.auth().signOut()
-            // isUserLoggedIn = false
             print("User successfully signed out.")
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)

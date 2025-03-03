@@ -15,6 +15,7 @@ struct EditProfileUserView: View {
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var selectedImage: UIImage?
     @State private var isPhotoPickerPresented = false
+    @EnvironmentObject var user: User
 
     private func showPhotoPicker() {
         isPhotoPickerPresented = true
@@ -83,25 +84,25 @@ struct EditProfileUserView: View {
                     CustomTextField(
                         text: $viewModel.pseudo,
                         keyBoardType: .default,
-                        placeHolder: "User.pseudo", // TODO: User.pseudo
+                        placeHolder: user.pseudo,
                         textFieldType: .editProfile
                     )
                     
                     CustomTextField(
                         text: $viewModel.name,
                         keyBoardType: .default,
-                        placeHolder: "User.name", // TODO: User.name
+                        placeHolder: user.name,
                         textFieldType: .editProfile
                     )
                     
                     CustomTextField(
                         text: $viewModel.firstName,
                         keyBoardType: .default,
-                        placeHolder: "User.firstName", // TODO: User.firstName
+                        placeHolder: user.firstName,
                         textFieldType: .editProfile
                     )
                     
-                    CollectionViewLocalisations(selectedItems: viewModel.localisation)
+                    CollectionViewLocalisations(selectedItems: user.location)
                 }
                 .padding(.top, 20)
                 .padding(.horizontal, 16)

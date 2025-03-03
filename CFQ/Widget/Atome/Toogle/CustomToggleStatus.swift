@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct CustomToggleStatus: View {
-    @State var isActive = false
+    @StateObject var viewModel: SwitchStatusUserProfileViewModel
     
     var body: some View {
         ZStack {
@@ -20,17 +20,42 @@ struct CustomToggleStatus: View {
                     .foregroundColor(.black)
                     .overlay(
                         Circle()
-                            .stroke(isActive ? .active : .inactive)
+                            .stroke(viewModel.user.isActive ? .active : .inactive)
                     )
-                Image( isActive ? .disco : .moonStars)
+                Image(viewModel.user.isActive ? .disco : .moonStars)
             }
-            .offset(x: isActive ? 14 : -14)
+            .offset(x: viewModel.user.isActive ? 14 : -14)
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
-                    isActive.toggle()
-                    Logger.log("status toogle is : \(isActive)", level: .info)
+                    viewModel.user.isActive.toggle()
+                    Logger.log("status toogle is : \(viewModel.user.isActive)", level: .info)
                 }
             }
         }
+    }
+}
+
+import Combine
+import Firebase
+
+class SwitchStatusUserProfileViewModel: ObservableObject {
+    @Published var isActive: Bool = false
+    private var firebase = FirebaseService()
+    private var cancellables = Set<AnyCancellable>()
+    @Published var user: User
+
+    init(user: User) {
+        self.user = user
+
+        user.$isActive
+            .dropFirst() // Ignore la valeur initiale
+            .sink { [weak self] newValue in
+                self?.switchStatusClick(isActive: newValue)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func switchStatusClick(isActive: Bool) {
+        firebase.updateDataByID(data: ["isActive": isActive], to: .users, at: user.uid)
     }
 }

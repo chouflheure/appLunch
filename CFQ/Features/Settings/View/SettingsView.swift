@@ -10,6 +10,7 @@ struct SettingsView: View {
     var firebase = FirebaseService()
     var viewModel = SettingsViewModel()
     var coordinator: Coordinator
+    @Environment(\.dismiss) var dismiss
 
     var arrayIconTitleForNextScreen: [(icon: ImageResource, value: String, screen: ScreensSettingsType)] = [
         (.iconNavProfile, StringsToken.Settings.headereditMyProfil, .editProfile),
@@ -28,22 +29,27 @@ struct SettingsView: View {
             Color.black
             VStack {
                 HStack(alignment: .center) {
-                    Button(
-                        action: {},
-                        label: {
-                            Image(.iconArrow)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.white)
-                        }
-                    )
 
                     Text("Paramètres")
                         .tokenFont(.Title_Inter_semibold_24)
                         .textCase(.uppercase)
 
                     Spacer()
+                    
+                    Button(
+                        action: {
+                            dismiss()
+                        },
+                        label: {
+                            Image(.iconArrow)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.white)
+                                .rotationEffect(Angle(degrees: -90))
+                        }
+                    )
                 }
+                .padding(.horizontal, 16)
                 .background(.black)
                 
                 Divider()
