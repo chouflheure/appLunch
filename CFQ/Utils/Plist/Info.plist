@@ -13,6 +13,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>GigalypseTrial-Regular.otf</string>
@@ -22,7 +24,10 @@
 		<string>Inter-Regular.otf</string>
 		<string>Inter-SemiBold.otf</string>
 	</array>
-	<key>NSContactsUsageDescription</key>
-	<string>We need access to your contacts</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

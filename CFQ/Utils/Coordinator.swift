@@ -12,7 +12,6 @@ class Coordinator: ObservableObject {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
-                    print("@@@ here")
                     self.currentView = AnyView(
                         NavigationView {
                             CustomTabView(coordinator: self)
