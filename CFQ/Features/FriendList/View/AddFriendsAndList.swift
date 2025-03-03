@@ -11,9 +11,9 @@ struct Bazar: View {
     var arrayPicture = [CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture()]
 
     var arrayFriends = [CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd()]
+    
     var body: some View {
         // Recherche bar
-        
         VStack(alignment: .leading) {
             HStack {
                 Text("Invités")
