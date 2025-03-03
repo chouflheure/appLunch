@@ -5,6 +5,7 @@ struct SignScreen: View {
     @State private var toast: Toast? = nil
     var coordinator: Coordinator
     @EnvironmentObject var user: User
+    @State var isSignFinish = false
 
     var body: some View {
         ZStack {
@@ -75,9 +76,17 @@ struct SignScreen: View {
                 )
                 .navigationBarBackButtonHidden(true)
             }
-            .fullScreenCover(isPresented: $viewModel.isSignFinish) {
-                if viewModel.isUserExist {
+            .onReceive(viewModel.$user) { newUser in
+                if newUser != nil {
+                    isSignFinish = true
+                } else {
+                    isSignFinish = false
+                }
+            }
+            .fullScreenCover(isPresented: $isSignFinish) {
+                if viewModel.isUserExist, let user = viewModel.user {
                     CustomTabView(coordinator: coordinator)
+                        .environmentObject(user)
                 } else {
                     SignUpPageView(viewModel: SignUpPageViewModel(uidUser: viewModel.uidUser), coordinator: coordinator)
                 }
