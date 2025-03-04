@@ -7,7 +7,7 @@ class Coordinator: ObservableObject {
     @Published var user = User()
 
     func start() {
-        
+        /*
         if let user = Auth.auth().currentUser {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
@@ -15,7 +15,7 @@ class Coordinator: ObservableObject {
                     if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
                         print("Le token FCM est : \(fcmToken)")
                         user.tokenFCM = fcmToken
-                        self.firebase.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
+                        self.firebase.updateDataByID(data: [    "tokenFCM": fcmToken], to: .users, at: user.uid)
                     }
                     self.currentView = AnyView(
                         NavigationView {
@@ -40,18 +40,17 @@ class Coordinator: ObservableObject {
             )
             print("Aucun utilisateur connecté.")
         }
-         
+         */
     
-/*
         // ##### TEST #####
-        let view = SettingsView(coordinator: self)
-
+        
+        let view = ProfileView(coordinator: self)
         currentView = AnyView(
             NavigationView {
                 view
             }
         )
-*/
+
     }
 
     func logOutUser() {

@@ -5,19 +5,16 @@ import FirebaseMessaging
 import UserNotifications
 
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
-
-    func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         FirebaseApp.configure()
         
         Messaging.messaging().delegate = self
-                
-                // Request permission for notifications and register for remote notifications
         requestNotificationPermission(application)
-    return true
-  }
-    
+
+        return true
+    }
     
     private func requestNotificationPermission(_ application: UIApplication) {
         let center = UNUserNotificationCenter.current()
@@ -36,48 +33,24 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-            print("@@@ FCM token received: \(fcmToken ?? "nil")")
-            
             if let token = fcmToken {
-                // Store the token locally
                 UserDefaults.standard.set(token, forKey: "fcmToken")
-                
-                // Create a data dictionary to pass the token via notification
-                let dataDict: [String: String] = ["token": token]
-                
-                // Post a notification with the token that other parts of the app can observe
-                
-                // Send the token to your server
-                sendFCMTokenToServer(token)
             }
         }
+        
     func refreshFCMToken() {
-            Messaging.messaging().token { token, error in
-                if let error = error {
-                    print("@@@ Error retrieving FCM token: \(error.localizedDescription)")
-                    return
-                }
-                
-                if let token = token {
-                    print("@@@ FCM token refreshed: \(token)")
-                    self.sendFCMTokenToServer(token)
-                }
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("@@@ Error retrieving FCM token: \(error.localizedDescription)")
+                return
             }
         }
-    
-    private func sendFCMTokenToServer(_ token: String) {
-            print("@@@ Token ready to send to server: \(token)")
-        }
+    }
     
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Auth.auth().setAPNSToken(deviceToken, type: .sandbox)
         Messaging.messaging().apnsToken = deviceToken
-                
-        // For debugging - convert token to string format
-        let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
-        let token = tokenParts.joined()
-        print("@@@ APNS device token: \(token)")
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -94,21 +67,14 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             let userInfo = notification.request.content.userInfo
             print("@@@ Received notification in foreground: \(userInfo)")
-            
-            // Show the notification banner even when app is in foreground
-            if #available(iOS 14.0, *) {
-                completionHandler([[.banner, .sound]])
-            } else {
-                completionHandler([[.alert, .sound]])
-            }
+
+            completionHandler([[.banner, .sound]])
         }
         
         // Handle user interaction with the notification
         func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
             let userInfo = response.notification.request.content.userInfo
             print("@@@ User interacted with notification: \(userInfo)")
-            
-            // Handle navigation based on notification content here
             
             completionHandler()
         }

@@ -148,3 +148,7 @@ private struct HeaderProfileUser: View {
         }
     }
 }
+
+#Preview {
+    ProfileView(coordinator: .init())
+}
