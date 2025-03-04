@@ -2,24 +2,24 @@ import Foundation
 import Combine
 
 class User: ObservableObject, Encodable, Decodable {
-    var uid: String
-    var name: String
-    var firstName: String
-    var pseudo: String
-    var profilePictureUrl: String
-    var location: Set<String>
-    var birthDate: Date?
-    @Published var isActive: Bool
-    var favorite: [String]
-    var friends: [String]
-    var invitedCfqs: [String]
-    var invitedTurns: [String]
-    var notificationsChannelId: String
-    var postedCfqs: [String]
-    var postedTurns: [String]
-    var teams: [String]
-    var tokenFCM: String
-    var unreadNotificationsCount: Int
+   @Published var uid: String
+   @Published var name: String
+   @Published var firstName: String
+   @Published var pseudo: String
+   @Published var profilePictureUrl: String
+   @Published var location: Set<String>
+   @Published var birthDate: Date?
+   @Published var isActive: Bool
+   @Published var favorite: [String]
+   @Published var friends: [String]
+   @Published var invitedCfqs: [String]
+   @Published var invitedTurns: [String]
+   @Published var notificationsChannelId: String
+   @Published var postedCfqs: [String]
+   @Published var postedTurns: [String]
+   @Published var teams: [String]
+   @Published var tokenFCM: String
+   @Published var unreadNotificationsCount: Int
     // requests
     // conversations
 

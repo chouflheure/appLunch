@@ -12,26 +12,27 @@ class SignInViewModel: ObservableObject {
     @Published var hasAlreadyAccount = false
     @Published var isConfirmScreenActive = false
     private let firebaseService = FirebaseService()
+    @Published var user: User? = nil
 
     func toggleHasAlreadyAccount() {
         hasAlreadyAccount.toggle()
     }
 
-    private func getUserWithIDConnexion(uid: String) {
-        // TODO: - Check that je ne suis pas sur que ca soit une bonne idée
-        // ###
-        self.isSignFinish = true
-        // ###
-        
+    private func getUserWithIDConnexion(uid: String) {        
         firebaseService.getDataByID(from: .users, with: uid) {
             (result: Result<User, Error>) in
             switch result {
             case .success(let user):
-                self.isUserExist = true
-                return
+                DispatchQueue.main.async {
+                    self.user = user  // 🔹 Mise à jour du user
+                    print("@@@ user = \(user)")
+                    self.isUserExist = true
+                    self.isSignFinish = true
+                }
             case .failure(_):
+                self.user = nil
                 self.isUserExist = false
-                return
+                self.isSignFinish = true
             }
         }
     }

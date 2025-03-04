@@ -11,6 +11,7 @@
 		A38F7E6E2D4BCBD700EE9536 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A38F7E6D2D4BCBD700EE9536 /* FirebaseDatabase */; };
 		A38F7E702D4BCBD700EE9536 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A38F7E6F2D4BCBD700EE9536 /* FirebaseFirestore */; };
 		A38F7E722D4BCBD700EE9536 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A38F7E712D4BCBD700EE9536 /* FirebaseStorage */; };
+		A39B98A22D760826005E983B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A39B98A12D760826005E983B /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 			files = (
 				A38F7E6E2D4BCBD700EE9536 /* FirebaseDatabase in Frameworks */,
 				A38F7E722D4BCBD700EE9536 /* FirebaseStorage in Frameworks */,
+				A39B98A22D760826005E983B /* FirebaseMessaging in Frameworks */,
 				A38F7E6C2D4BCBD700EE9536 /* FirebaseAuth in Frameworks */,
 				A38F7E702D4BCBD700EE9536 /* FirebaseFirestore in Frameworks */,
 			);
@@ -93,6 +95,7 @@
 				A38F7E6D2D4BCBD700EE9536 /* FirebaseDatabase */,
 				A38F7E6F2D4BCBD700EE9536 /* FirebaseFirestore */,
 				A38F7E712D4BCBD700EE9536 /* FirebaseStorage */,
+				A39B98A12D760826005E983B /* FirebaseMessaging */,
 			);
 			productName = CFQ;
 			productReference = A3DDB2242D3524FA00060C79 /* CFQ.app */;
@@ -285,6 +288,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CFQ/Utils/Plist/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -327,6 +331,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CFQ/Utils/Plist/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -408,6 +413,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A38F7E6A2D4BCBD700EE9536 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		A39B98A12D760826005E983B /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A38F7E6A2D4BCBD700EE9536 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
