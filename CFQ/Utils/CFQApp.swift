@@ -20,25 +20,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     
     
     private func requestNotificationPermission(_ application: UIApplication) {
-        if #available(iOS 10.0, *) {
-            // For iOS 10 and above
-            let center = UNUserNotificationCenter.current()
-            center.delegate = self
-            
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            center.requestAuthorization(options: authOptions) { granted, error in
-                if let error = error {
-                    print("@@@ Error requesting notification authorization: \(error.localizedDescription)")
-                }
-                print("@@@ Notification authorization granted: \(granted)")
-            }
-        } else {
-            // For iOS 9 and below (rarely needed now)
-            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        center.requestAuthorization(options: authOptions) { granted, error in
+        if let error = error {
+            print("@@@ Error requesting notification authorization: \(error.localizedDescription)")
         }
-        
-        // This is needed to receive notifications
+            print("@@@ Notification authorization granted: \(granted)")
+        }
+
         application.registerForRemoteNotifications()
     }
     
@@ -74,29 +66,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         }
     
     private func sendFCMTokenToServer(_ token: String) {
-            // IMPLEMENTATION NEEDED: Replace with your actual API call
-            // Example:
-            // let url = URL(string: "https://your-api.com/register-device")!
-            // var request = URLRequest(url: url)
-            // request.httpMethod = "POST"
-            // request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            //
-            // let body: [String: Any] = [
-            //     "token": token,
-            //     "device_id": UIDevice.current.identifierForVendor?.uuidString ?? "",
-            //     "platform": "ios"
-            // ]
-            //
-            // request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-            //
-            // URLSession.shared.dataTask(with: request) { data, response, error in
-            //     if let error = error {
-            //         print("Error sending token to server: \(error.localizedDescription)")
-            //         return
-            //     }
-            //     print("Token successfully sent to server")
-            // }.resume()
-            
             print("@@@ Token ready to send to server: \(token)")
         }
     
@@ -145,7 +114,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
-            // Refresh FCM token when app becomes active
             refreshFCMToken()
         }
     

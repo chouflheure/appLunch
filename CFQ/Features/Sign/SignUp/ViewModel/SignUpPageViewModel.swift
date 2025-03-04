@@ -124,6 +124,10 @@ class SignUpPageViewModel: ObservableObject {
         firebase.uploadImage(picture: picture, uidUser: user.uid) { result in
             switch result {
             case .success(let urlString):
+                if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
+                    print("Le token FCM est : \(fcmToken)")
+                    self.user.tokenFCM = fcmToken
+                }
                 self.user.profilePictureUrl = urlString
                 self.uploadDataUser()
             case .failure(let error): break

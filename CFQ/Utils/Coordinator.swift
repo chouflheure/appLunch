@@ -12,6 +12,11 @@ class Coordinator: ObservableObject {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
+                    if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
+                        print("Le token FCM est : \(fcmToken)")
+                        user.tokenFCM = fcmToken
+                        self.firebase.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
+                    }
                     self.currentView = AnyView(
                         NavigationView {
                             CustomTabView(coordinator: self)
