@@ -64,18 +64,6 @@ exports.sendScheduledDataMessageIsTurnTonight6PM = functions
             },
         };
 
-/*
-        const message = {
-            notification: {
-                title: "Ça sort ce soir ?",
-                body: "Va activer le switch sur ton profil si tu sors",
-            },
-            topic: "daily_ask_turn",
-            data: {
-                notificationType: "daily_reminder", // Ajoutez un champ personnalisé ici
-            },
-        };
-*/
         const usersRef = admin.firestore().collection("users");
         const snapshot = await usersRef.get();
         const batch = admin.firestore().batch();

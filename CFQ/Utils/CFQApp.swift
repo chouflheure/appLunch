@@ -1,9 +1,9 @@
+
 import SwiftUI
 import FirebaseCore
 import FirebaseAuth
 import FirebaseMessaging
 import UserNotifications
-import os.log
 
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
     
@@ -74,7 +74,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
                let body = alert["body"] as? String {
 
                 // Planifiez une notification locale
-                TestNotif().scheduleNotification(body: body)
+                // TestNotif().scheduleNotification(body: body)
             }
         
         if let category = userInfo["aps"] as? [String: Any],
@@ -128,18 +128,16 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         
         let actionIdentifier = response.actionIdentifier
         switch actionIdentifier {
-                case "FIRST_BUTTON_IDENTIFIER":
-                    // Gérer l'action du premier bouton
-                    print("First button tapped")
-                case "SECOND_BUTTON_IDENTIFIER":
-                    // Gérer l'action du second bouton
-                    print("Second button tapped")
-                default:
-            UNUserNotificationCenter.current().removeAllDeliveredNotifications()
-                }
+            case "FIRST_BUTTON_IDENTIFIER":
+            // Gérer l'action du premier bouton
+                print("First button tapped")
+            case "SECOND_BUTTON_IDENTIFIER":
+                // Gérer l'action du second bouton
+                print("Second button tapped")
+            default:
+                UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        }
         
-        
-        print("@@@ response.notification.request.content.categoryIdentifier = \(response.notification.request.content.categoryIdentifier)")
         if response.notification.request.content.categoryIdentifier == "NO_ACTION" {
             print("@@@ here")
             return
@@ -172,12 +170,6 @@ struct CFQApp: App {
         }
     }
 }
-
-
-
-import Foundation
-import Firebase
-import FirebaseMessaging
 
 class FCMService {
     static let shared = FCMService()
@@ -260,7 +252,50 @@ class FCMService {
 
 
 
+class NotifService {
+    
+    func scheduleNotification() {
+        let content = UNMutableNotificationContent()
 
+        // Définir les actions pour les boutons
+        let firstAction = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER",
+                                               title: "💃 Ça sort !",
+                                               options: [])
+
+        let secondAction = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER",
+                                                title: "🥱 Ça dort ce soir",
+                                                options: [])
+
+        let firstAction1 = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER1",
+                                               title: "rep 1",
+                                               options: [])
+
+        let secondAction1 = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER1",
+                                                title: "rep 2",
+                                                options: [])
+        // Créer une catégorie pour les actions
+        let category = UNNotificationCategory(identifier: "CUSTOM_CATEGORY", actions: [firstAction, secondAction], intentIdentifiers: [], options: [])
+
+        let category1 = UNNotificationCategory(identifier: "", actions: [firstAction1, secondAction1], intentIdentifiers: [], options: [])
+        // Enregistrer la catégorie
+        UNUserNotificationCenter.current().setNotificationCategories([category, category1])
+
+        // Assigner la catégorie au contenu de la notification
+        content.categoryIdentifier = "CUSTOM_CATEGORY"
+
+        // Définir le déclencheur pour la notification (par exemple, 5 secondes après l'appel)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+
+        // Ajouter la notification
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Erreur lors de l'ajout de la notification: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+}
 
 struct TestNotif: View {
     var body: some View {
@@ -280,19 +315,19 @@ struct TestNotif: View {
 
         // Définir les actions pour les boutons
         let firstAction = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER",
-                                               title: "💃 Ça sort !!",
+                                               title: "💃 Ça sort !",
                                                options: [])
 
         let secondAction = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER",
                                                 title: "🥱 Ça dort ce soir",
                                                 options: [])
 
-        let firstAction1 = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER",
-                                               title: "1",
+        let firstAction1 = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER1",
+                                               title: "rep 1",
                                                options: [])
 
-        let secondAction1 = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER",
-                                                title: "2",
+        let secondAction1 = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER1",
+                                                title: "rep 2",
                                                 options: [])
         // Créer une catégorie pour les actions
         let category = UNNotificationCategory(identifier: "CUSTOM_CATEGORY", actions: [firstAction, secondAction], intentIdentifiers: [], options: [])
