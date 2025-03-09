@@ -34,14 +34,12 @@ struct FriendSignUpScreen: View {
 
                 Spacer()
 
+                // TODO: - Edit le success et l'erreur 
                 VStack {
                     LargeButtonView(
                         action: {
-                            print("@@@ tetete ")
                             viewModel.addUserDataOnDataBase(coordinator: coordinator) { success, message in
                                 if success {
-                                    print("@@@ here we go")
-                                    // coordinator.gotoCustomTabView(user: viewModel.user)
                                 } else {
                                     toast = Toast(
                                         style: .error, message: message)
@@ -64,7 +62,7 @@ struct FriendSignUpScreen: View {
         }
         .toastView(toast: $toast)
         .onAppear {
-            viewModel.fetchContacts()
+            // viewModel.fetchContacts()
         }
     }
 }

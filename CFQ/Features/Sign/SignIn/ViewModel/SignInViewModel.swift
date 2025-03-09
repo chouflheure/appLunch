@@ -24,9 +24,7 @@ class SignInViewModel: ObservableObject {
     }
 
     private func getUserWithIDConnexion(uid: String) {
-        print("@@@ here")
         firebaseService.getDataByID(from: .users, with: uid) { (result: Result<User, Error>) in
-            print("@@@ result = \(result)")
             switch result {
             case .success(let user):
                 DispatchQueue.main.async {
@@ -92,20 +90,13 @@ class SignInViewModel: ObservableObject {
             if let authResult = authResult {
                 let isNewUser = authResult.additionalUserInfo?.isNewUser ?? false
                 if isNewUser {
-                    print("@@@ Nouvel utilisateur.")
                     self.uidUser = authResult.user.uid
-                    print("@@@ UID: \(self.uidUser)")
-                    // self.isUserExist = false
-                    // self.closeConfirmScreen()
-                    // TODO: - edit pour éviter l'appel inutil à firebase
-                    self.getUserWithIDConnexion(uid: authResult.user.uid)
+                    self.isUserExist = false
+                    self.closeConfirmScreen()
                 } else {
-                    print("@@@ Utilisateur existant.")
                     self.getUserWithIDConnexion(uid: authResult.user.uid)
                 }
             }
-            
-            self.uidUser = authResult?.user.uid ?? ""
         }
     }
 

@@ -38,17 +38,32 @@ exports.updateUserIsActive2PM = functions
 exports.sendScheduledDataMessageIsTurnTonight6PM = functions
     .region("europe-west2")
     .pubsub
-    .schedule("00 18 * * *")
+    .schedule("24 21 * * *")
     .timeZone("Europe/Paris")
     .onRun(async (context) => {
-      const message = {
-        notification: {
-          event: "daily_ask_turn",
-          timestamp: new Date().toISOString(),
-          message: "Ca turn ce soir ?",
-        },
-        topic: "daily_ask_turn",
-      };
+        const message = {
+            notification: {
+                title: "Ça sort ce soir ?",
+                body: "Reste appuyé sur la notif pour répondre",
+            },
+            topic: "daily_ask_turn",
+            data: {
+                notificationType: "daily_reminder",
+            },
+            apns: {
+                payload: {
+                    aps: {
+                        category: "CUSTOM_CATEGORY",
+                        alert: {
+                            title: "Ça sort ce soir ?",
+                            body: "Reste appuyé sur la notif pour répondre",
+                        },
+                        sound: "silverWind.caf",
+                    },
+                },
+            },
+        };
+
 /*
         const message = {
             notification: {

@@ -122,7 +122,6 @@ struct IssueReportView: View {
                     type: Data.self),
                     let uiImage = UIImage(data: data)
                 {
-                    print("@@@ \(uiImage.size)")
                     selectedImage = uiImage
                 }
             }

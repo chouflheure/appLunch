@@ -85,7 +85,7 @@ struct SignScreen: View {
                     isSignFinish = true
                 }
             }
-            .fullScreenCover(isPresented: $isSignFinish) {
+            .fullScreenCover(isPresented: $viewModel.isSignFinish) {
                 if viewModel.isUserExist, let user = viewModel.user {
                     CustomTabView(coordinator: coordinator)
                         .environmentObject(user)

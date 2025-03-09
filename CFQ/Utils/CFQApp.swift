@@ -25,10 +25,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         
         center.requestAuthorization(options: authOptions) { granted, error in
-        if let error = error {
-            print("@@@ Error requesting notification authorization: \(error.localizedDescription)")
-        }
-            print("@@@ Notification authorization granted: \(granted)")
+            if let error = error {
+                print("@@@ Error requesting notification authorization: \(error.localizedDescription)")
+            }
         }
         application.registerForRemoteNotifications()
     }
@@ -59,16 +58,13 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print("@@@ Notification reçue en arrière-plan : \(userInfo)")
-        os_log("@@@ Notification received in background", log: OSLog.default, type: .info)
 
-        TestNotif().scheduleNotification(body: "body")
+        // TestNotif().scheduleNotification(body: "body")
         
         
         if let category = userInfo["aps"] as? [String: Any],
            let categoryIdentifier = category["category"] as? String,
            categoryIdentifier == "NO_ACTION" {
-            print("Action spécifique pour NO_ACTION")
             // Exécuter une tâche en arrière-plan (ex: envoyer une requête réseau)
         }
 

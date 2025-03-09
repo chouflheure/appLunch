@@ -87,7 +87,6 @@ class SignUpPageViewModel: ObservableObject {
                         if let phoneNumber = contact.phoneNumbers.first?.value
                             .stringValue
                         {
-                            print("@@@ phoneNumber = \(phoneNumber)")
                             let formattedPhoneNumber =
                                 phoneNumber.replacingOccurrences(
                                     of: " ", with: ""
@@ -105,7 +104,6 @@ class SignUpPageViewModel: ObservableObject {
                                 }
                             }
                             self?.contacts = Array(Set(arrayUsersContact))
-                            print("contacts = \(self?.contacts)")
                         }
                     }
                 } catch {
