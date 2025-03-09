@@ -102,7 +102,7 @@ struct EditProfileUserView: View {
                         textFieldType: .editProfile
                     )
                     
-                    CollectionViewLocalisations(selectedItems: user.location)
+                    CollectionViewLocalisations(selectedItems: $user.location)
                 }
                 .padding(.top, 20)
                 .padding(.horizontal, 16)

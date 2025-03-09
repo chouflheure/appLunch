@@ -18,21 +18,28 @@ class SignInViewModel: ObservableObject {
         hasAlreadyAccount.toggle()
     }
 
-    private func getUserWithIDConnexion(uid: String) {        
-        firebaseService.getDataByID(from: .users, with: uid) {
-            (result: Result<User, Error>) in
+    private func closeConfirmScreen() {
+        self.isConfirmScreenActive = false
+        self.isSignFinish = true
+    }
+
+    private func getUserWithIDConnexion(uid: String) {
+        print("@@@ here")
+        firebaseService.getDataByID(from: .users, with: uid) { (result: Result<User, Error>) in
+            print("@@@ result = \(result)")
             switch result {
             case .success(let user):
                 DispatchQueue.main.async {
-                    self.user = user  // 🔹 Mise à jour du user
-                    print("@@@ user = \(user)")
+                    self.user = user
                     self.isUserExist = true
-                    self.isSignFinish = true
+                    self.closeConfirmScreen()
                 }
             case .failure(_):
-                self.user = nil
-                self.isUserExist = false
-                self.isSignFinish = true
+                DispatchQueue.main.async {
+                    self.user = nil
+                    self.isUserExist = false
+                    self.closeConfirmScreen()
+                }
             }
         }
     }
@@ -67,13 +74,14 @@ class SignInViewModel: ObservableObject {
 
     func verifyCode(
         for verificationCode: String,
-        completion: @escaping (Bool, String) -> Void
+        completion: @escaping (Bool, String?) -> Void
     ) {
-        let verificationID =
-            UserDefaults.standard.string(forKey: "authVerificationID") ?? ""
+        let verificationID = UserDefaults.standard.string(forKey: "authVerificationID") ?? ""
+
         let credential = PhoneAuthProvider.provider().credential(
             withVerificationID: verificationID,
-            verificationCode: verificationCode)
+            verificationCode: verificationCode
+        )
 
         Auth.auth().signIn(with: credential) { authResult, error in
             if let error = error {
@@ -81,13 +89,23 @@ class SignInViewModel: ObservableObject {
                 return
             }
 
-            if let user = Auth.auth().currentUser {
-                let uid = user.uid
-                self.uidUser = uid
-                Logger.log("Connexion réussie - UID: \(uid)", level: .success)
-                self.getUserWithIDConnexion(uid: uid)
-                completion(true, uid)
+            if let authResult = authResult {
+                let isNewUser = authResult.additionalUserInfo?.isNewUser ?? false
+                if isNewUser {
+                    print("@@@ Nouvel utilisateur.")
+                    self.uidUser = authResult.user.uid
+                    print("@@@ UID: \(self.uidUser)")
+                    // self.isUserExist = false
+                    // self.closeConfirmScreen()
+                    // TODO: - edit pour éviter l'appel inutil à firebase
+                    self.getUserWithIDConnexion(uid: authResult.user.uid)
+                } else {
+                    print("@@@ Utilisateur existant.")
+                    self.getUserWithIDConnexion(uid: authResult.user.uid)
+                }
             }
+            
+            self.uidUser = authResult?.user.uid ?? ""
         }
     }
 

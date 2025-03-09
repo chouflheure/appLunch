@@ -53,7 +53,7 @@ struct TeamDetailView: View {
                             ))
                             .frame(width: 53, height: 53)
                         Text("TURN")
-                            .foregroundColor(.white)
+                            .tokenFont(.Label_Gigalypse_12)
                     }
                 }.padding(.horizontal, 36)
                 
@@ -75,45 +75,47 @@ struct TeamDetailView: View {
                 .overlay(.white)
                 .frame(height: 3)
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(0..<3, id: \.self) { _ in
-                        VStack {
-                            CirclePicture()
-                                .frame(width: 56, height: 56)
-                                .onTapGesture {
-                                    print("@@@ CellTeamView tapped")
-                                }
-                            Text("Name")
-                                .foregroundColor(.white)
-                        }.padding(.leading, 16)
-                    }
-                }
-            }
-            .padding(.vertical, 16)
-            
-            Divider()
-                .overlay(.whitePrimary)
-                .frame(height: 3)
-            
-            
-            CFQCollectionView()
-                .padding(.vertical, 16)
-            
-            Divider()
-                .overlay(.whiteSecondary)
-                .frame(height: 3)
+
 
             ScrollView(.vertical, showsIndicators: false) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(0..<3, id: \.self) { _ in
+                            VStack {
+                                CirclePicture()
+                                    .frame(width: 56, height: 56)
+                                    .onTapGesture {
+                                        print("@@@ CellTeamView tapped")
+                                    }
+                                Text("Name")
+                                    .foregroundColor(.white)
+                            }.padding(.leading, 16)
+                        }
+                    }
+                }
+                .padding(.vertical, 16)
+                
+                Divider()
+                    .overlay(.whitePrimary)
+                    .frame(height: 3)
+                
+                
+                CFQCollectionView()
+                    .padding(.vertical, 16)
+                
+                Divider()
+                    .overlay(.whiteSecondary)
+                    .frame(height: 3)
+                
                 ForEach(0..<3, id: \.self) { _ in
                     CellTeamView()
                         .padding(.bottom, 16)
+                        .padding(.horizontal, 12)
                         .onTapGesture {
                             print("@@@ CellTeamView tapped")
                         }
                 }
             }
-            .padding(.horizontal, 12)
         }
     }
 }

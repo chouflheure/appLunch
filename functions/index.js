@@ -4,8 +4,6 @@ const admin = require("firebase-admin");
 // Initialisation de Firebase Admin SDK
 admin.initializeApp();
 
-// Fonction planifiée pour s'exécuter toutes les 10 minutes
-
 /*
 exports.updateUserIsActive2PM = functions
     .region("europe-west2")
@@ -43,8 +41,7 @@ exports.sendScheduledDataMessageIsTurnTonight6PM = functions
     .schedule("00 18 * * *")
     .timeZone("Europe/Paris")
     .onRun(async (context) => {
-      /*
-      const dataMessage = {
+      const message = {
         notification: {
           event: "daily_ask_turn",
           timestamp: new Date().toISOString(),
@@ -52,31 +49,35 @@ exports.sendScheduledDataMessageIsTurnTonight6PM = functions
         },
         topic: "daily_ask_turn",
       };
-      */
-      const message = {
-        notification: {
-          title: "Ça sort ce soir ?",
-          body: "Va activer le switch sur ton profil si tu sors",
-        },
-        topic: "daily_ask_turn",
-      };
-
-      const usersRef = admin.firestore().collection("users");
-      const snapshot = await usersRef.get();
-      const batch = admin.firestore().batch();
-      snapshot.forEach((doc) => {
+/*
+        const message = {
+            notification: {
+                title: "Ça sort ce soir ?",
+                body: "Va activer le switch sur ton profil si tu sors",
+            },
+            topic: "daily_ask_turn",
+            data: {
+                notificationType: "daily_reminder", // Ajoutez un champ personnalisé ici
+            },
+        };
+*/
+        const usersRef = admin.firestore().collection("users");
+        const snapshot = await usersRef.get();
+        const batch = admin.firestore().batch();
+        snapshot.forEach((doc) => {
         batch.update(doc.ref, {isActive: false});
-      });
+    });
 
-      try {
+    try {
         await admin.messaging().send(message);
         console.log("Message de données envoyé avec succès.");
-      } catch (error) {
+    } catch (error) {
         console.error("Erreur lors de l’envoi du message de données :", error);
-      }
+    }
 
-      return null;
-    });
+    return null;
+});
+
 /*
 exports.sendScheduledMessage4AMIfTurnAlready = functions
     .region("europe-west2")
@@ -118,8 +119,8 @@ exports.sendScheduledMessage4AMIfTurnAlready = functions
         }
       }
     });
-*/
-/*
+
+
 exports.onNotificationCreated = functions
     .region("europe-west2")
     .firestore

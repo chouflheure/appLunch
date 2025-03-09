@@ -4,7 +4,14 @@ import SwiftUI
 struct ProfileView: View {
     var isUserProfile: Bool = true
     var coordinator: Coordinator
-    @EnvironmentObject var user: User
+    // @EnvironmentObject var user: User
+    var user = User(
+        uid: "1234567890",
+        name: "John",
+        firstName: "Doe",
+        pseudo: "johndoe",
+        location: ["Ici"]
+    )
     @StateObject var viewModel = ProfileViewModel()
 
     var body: some View {
@@ -62,7 +69,6 @@ struct ProfileView: View {
         .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
             SettingsView(coordinator: coordinator)
         }
-        .padding(.top, 70)
         .padding(.horizontal, 16)
     }
 }
@@ -150,5 +156,8 @@ private struct HeaderProfileUser: View {
 }
 
 #Preview {
-    ProfileView(coordinator: .init())
+    ZStack {
+        Color.black
+        ProfileView(coordinator: .init())
+    }.ignoresSafeArea()
 }

@@ -14,36 +14,34 @@ class SignUpPageViewModel: ObservableObject {
     @Published var birthday = Date()
     @Published var locations = Set<String>()
     @Published var picture = UIImage()
-
-    @Published var friend = String()
+    @Published var isDoneUpdateUser = false
     @Published var friends: [String] = []
     @Published var contacts: [UserContact] = []
-    @State private var uploadStatus: String = ""
+    var coordinator: Coordinator?
     
     private var urlProfilePicture = String()
     private let firebase = FirebaseService()
+    
 
-    private var user: User {
-        User(
-            uid: uidUser,
-            name: name,
-            firstName: firstName,
-            pseudo: pseudo,
-            profilePictureUrl: urlProfilePicture,
-            location: locations,
-            isActive: true,
-            favorite: [""],
-            friends: [""],
-            invitedCfqs: [""],
-            invitedTurns: [""],
-            notificationsChannelId: "",
-            postedCfqs: [""],
-            postedTurns: [""],
-            teams: [""],
-            tokenFCM: "",
-            unreadNotificationsCount: 0
-        )
-    }
+    @Published var user = User(
+        uid: "",
+        name: "",
+        firstName: "",
+        pseudo: "",
+        profilePictureUrl: "",
+        location: [],
+        isActive: true,
+        favorite: [""],
+        friends: [""],
+        invitedCfqs: [""],
+        invitedTurns: [""],
+        notificationsChannelId: "",
+        postedCfqs: [""],
+        postedTurns: [""],
+        teams: [""],
+        tokenFCM: "",
+        unreadNotificationsCount: 0
+    )
 
     init(uidUser: String) {
         self.uidUser = uidUser
@@ -120,32 +118,36 @@ class SignUpPageViewModel: ObservableObject {
     }
 
     // TODO: - Update error messages
-    private func uploadImage() {
-        firebase.uploadImage(picture: picture, uidUser: user.uid) { result in
+    private func uploadImageToDataBase() {
+        firebase.uploadImage(picture: picture, uidUser: uidUser) { result in
             switch result {
             case .success(let urlString):
-                if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
-                    print("Le token FCM est : \(fcmToken)")
-                    self.user.tokenFCM = fcmToken
+                DispatchQueue.main.async {
+                    if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
+                        self.user.tokenFCM = fcmToken
+                    }
+                    self.urlProfilePicture = urlString
+                    self.uploadDataUser()
                 }
-                self.user.profilePictureUrl = urlString
-                self.uploadDataUser()
-            case .failure(let error): break
-                // TODO: Update error
+            case .failure(let error):
+                print("Erreur lors du téléversement de l'image : \(error.localizedDescription)")
+                // TODO: Gérer l'erreur de manière appropriée
             }
         }
     }
     
+    
     private func uploadDataUser() {
+        user.uid = uidUser
+        user.tokenFCM = UserDefaults.standard.string(forKey: "fcmToken") ?? ""
+        user.profilePictureUrl = urlProfilePicture
+        
         firebase.addData(data: user, to: .users) { (result: Result<Void, Error>) in
-            switch result {
+            switch result {
             case .success():
-                // completion(true, "")
-                return
+                self.coordinator?.gotoCustomTabView(user: self.user)
             case .failure(let error):
-                // TODO: Implement error message
-                // completion(false, error.localizedDescription)
-                return
+                print("@@@ error = \(error)")
             }
         }
     }
@@ -168,8 +170,9 @@ class SignUpPageViewModel: ObservableObject {
         firebase.updateDataByID(data: ["profilePictureUrl": urlProfilePicture], to: .users, at: uidUser)
     }
 
-    func addUserDataOnDataBase(completion: @escaping (Bool, String) -> Void) {
-        uploadImage()
+    func addUserDataOnDataBase(coordinator: Coordinator, completion: @escaping (Bool, String) -> Void) {
+        self.coordinator = coordinator
+        uploadImageToDataBase()
     }
 
 }

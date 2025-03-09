@@ -2,24 +2,24 @@ import Foundation
 import Combine
 
 class User: ObservableObject, Encodable, Decodable {
-   @Published var uid: String
-   @Published var name: String
-   @Published var firstName: String
-   @Published var pseudo: String
-   @Published var profilePictureUrl: String
-   @Published var location: Set<String>
-   @Published var birthDate: Date?
-   @Published var isActive: Bool
-   @Published var favorite: [String]
-   @Published var friends: [String]
-   @Published var invitedCfqs: [String]
-   @Published var invitedTurns: [String]
-   @Published var notificationsChannelId: String
-   @Published var postedCfqs: [String]
-   @Published var postedTurns: [String]
-   @Published var teams: [String]
-   @Published var tokenFCM: String
-   @Published var unreadNotificationsCount: Int
+    @Published var uid: String
+    @Published var name: String
+    @Published var firstName: String
+    @Published var pseudo: String
+    @Published var profilePictureUrl: String
+    @Published var location: Set<String>
+    // @Published var birthDate: Date?
+    @Published var isActive: Bool
+    @Published var favorite: [String]?
+    @Published var friends: [String]?
+    @Published var invitedCfqs: [String]?
+    @Published var invitedTurns: [String]?
+    @Published var notificationsChannelId: String?
+    @Published var postedCfqs: [String]?
+    @Published var postedTurns: [String]?
+    @Published var teams: [String]?
+    @Published var tokenFCM: String
+    @Published var unreadNotificationsCount: Int
     // requests
     // conversations
 
@@ -30,7 +30,7 @@ class User: ObservableObject, Encodable, Decodable {
         pseudo: String = "",
         profilePictureUrl: String = "",
         location: Set<String> = [""],
-        birthDate: Date? = nil,
+        // birthDate: Date? = nil,
         isActive: Bool = true,
         favorite: [String] = [""] ,
         friends: [String] = [""],
@@ -49,7 +49,7 @@ class User: ObservableObject, Encodable, Decodable {
         self.pseudo = pseudo
         self.profilePictureUrl = profilePictureUrl
         self.location = location
-        self.birthDate = birthDate
+        // self.birthDate = birthDate
         self.isActive = isActive
         self.favorite = favorite
         self.friends = friends
@@ -93,6 +93,7 @@ class User: ObservableObject, Encodable, Decodable {
         profilePictureUrl = try values.decode(String.self, forKey: .profilePictureUrl)
         isActive = try values.decode(Bool.self, forKey: .isActive)
         location = try values.decode(Set<String>.self, forKey: .location)
+        // birthDate = try values.decode(Date.self, forKey: .birthDate)
         favorite = try values.decode([String].self, forKey: .favorite)
         friends = try values.decode([String].self, forKey: .friends)
         invitedCfqs = try values.decode([String].self, forKey: .invitedCfqs)
@@ -107,6 +108,23 @@ class User: ObservableObject, Encodable, Decodable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uid, forKey: .uid)
+        try container.encode(name, forKey: .name)
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(pseudo, forKey: .pseudo)
+        try container.encode(profilePictureUrl, forKey: .profilePictureUrl)
         try container.encode(isActive, forKey: .isActive)
+        try container.encode(location, forKey: .location)
+        // try container.encode(birthDate, forKey: .birthDate)
+        try container.encode(favorite, forKey: .favorite)
+        try container.encode(friends, forKey: .friends)
+        try container.encode(invitedCfqs, forKey: .invitedCfqs)
+        try container.encode(invitedTurns, forKey: .invitedTurns)
+        try container.encode(notificationsChannelId, forKey: .notificationsChannelId)
+        try container.encode(postedCfqs, forKey: .postedCfqs)
+        try container.encode(postedTurns, forKey: .postedTurns)
+        try container.encode(teams, forKey: .teams)
+        try container.encode(tokenFCM, forKey: .tokenFCM)
+        try container.encode(unreadNotificationsCount, forKey: .unreadNotificationsCount)
     }
 }

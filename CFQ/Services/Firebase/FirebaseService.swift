@@ -155,11 +155,20 @@ class FirebaseService: FirebaseServiceProtocol {
     }
 }
 
+
+enum ImageUploadError: Error {
+    case imageConversionFailed
+    case uploadFailed(Error)
+    // Ajoutez d'autres cas d'erreur si nécessaire
+}
+
+
 // Firebase Storage
 extension FirebaseService {
     
     func uploadImage(picture: UIImage, uidUser: String, completion: @escaping (Result<String, Error>) -> Void ) {
         guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
+            completion(.failure(ImageUploadError.imageConversionFailed))
             return
         }
 
@@ -181,6 +190,7 @@ extension FirebaseService {
                 }
 
                 if let url = url {
+                    print("@@ Download URL: \(url.absoluteString)")
                     completion(.success(url.absoluteString))
                 }
             }

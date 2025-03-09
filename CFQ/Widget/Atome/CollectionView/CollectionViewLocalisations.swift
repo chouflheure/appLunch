@@ -3,7 +3,7 @@ import SwiftUI
 struct CollectionViewLocalisations: View {
     var items = LocalisationType.allCases
 
-    @State var selectedItems: Set<String>
+    @Binding var selectedItems: Set<String>
 
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -33,13 +33,5 @@ struct CollectionViewLocalisations: View {
         } else {
             selectedItems.insert(item.title)
         }
-    }
-}
-
-#Preview {
-    var selectedItems: Set<String> = []
-    ZStack {
-        NeonBackgroundImage()
-        CollectionViewLocalisations(selectedItems: selectedItems)
     }
 }

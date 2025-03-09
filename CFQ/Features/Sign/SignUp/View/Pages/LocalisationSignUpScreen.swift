@@ -19,7 +19,7 @@ struct LocalisationSignUpScreen: View {
                         .textCase(.uppercase)
                         .padding(.bottom, 20)
 
-                    CollectionViewLocalisations(selectedItems: viewModel.locations)
+                    CollectionViewLocalisations(selectedItems: $viewModel.user.location)
                 }
 
                 Spacer()
@@ -27,9 +27,9 @@ struct LocalisationSignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {viewModel.goNext()},
-                        title: StringsToken.Sign.CheckConfirmCode,
+                        title: StringsToken.Sign.AlmostThere,
                         largeButtonType: .signNext,
-                        isDisabled: viewModel.locations.isEmpty
+                        isDisabled: viewModel.user.location.isEmpty
                     ).padding(.horizontal, 20)
 
                     LargeButtonView(

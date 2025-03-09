@@ -4,6 +4,7 @@ struct FriendSignUpScreen: View {
     @ObservedObject var viewModel: SignUpPageViewModel
     var coordinator: Coordinator
     @State private var toast: Toast? = nil
+    var onDismiss: () -> Void
 
     var body: some View {
         ZStack {
@@ -36,9 +37,11 @@ struct FriendSignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {
-                            viewModel.addUserDataOnDataBase() { success, message in
+                            print("@@@ tetete ")
+                            viewModel.addUserDataOnDataBase(coordinator: coordinator) { success, message in
                                 if success {
-                                    coordinator.gotoCustomTabView()
+                                    print("@@@ here we go")
+                                    // coordinator.gotoCustomTabView(user: viewModel.user)
                                 } else {
                                     toast = Toast(
                                         style: .error, message: message)

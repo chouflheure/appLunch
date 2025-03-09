@@ -6,7 +6,7 @@ struct SignScreen: View {
     var coordinator: Coordinator
     @EnvironmentObject var user: User
     @State var isSignFinish = false
-
+    
     var body: some View {
         ZStack {
             NeonBackgroundImage()
@@ -15,7 +15,7 @@ struct SignScreen: View {
                     .resizable()
                     .scaledToFit()
                     .padding(.top, 30)
-                
+
                 VStack {
                     Text(
                         viewModel.hasAlreadyAccount
@@ -79,8 +79,10 @@ struct SignScreen: View {
             .onReceive(viewModel.$user) { newUser in
                 if newUser != nil {
                     isSignFinish = true
-                } else {
-                    isSignFinish = false
+                }
+
+                if !viewModel.uidUser.isEmpty {
+                    isSignFinish = true
                 }
             }
             .fullScreenCover(isPresented: $isSignFinish) {
@@ -96,7 +98,6 @@ struct SignScreen: View {
         .onTapGesture {
             UIApplication.shared.endEditing(true)
         }
-
     }
 }
 

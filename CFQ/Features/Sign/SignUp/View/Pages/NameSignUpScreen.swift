@@ -28,9 +28,9 @@ struct NameSignUpScreen: View {
                         .padding(.bottom, 50)
 
                     CustomTextField(
-                        text: $viewModel.name,
+                        text: $viewModel.user.firstName,
                         keyBoardType: .default,
-                        placeHolder: "Nom",
+                        placeHolder: "Prenom",
                         textFieldType: .sign
                     )
                     .focused($focusedField, equals: .name)
@@ -39,9 +39,9 @@ struct NameSignUpScreen: View {
                     .padding(.horizontal, 20)
 
                     CustomTextField(
-                        text: $viewModel.firstName,
+                        text: $viewModel.user.name,
                         keyBoardType: .default,
-                        placeHolder: "Prenom",
+                        placeHolder: "Nom",
                         textFieldType: .sign
                     )
                     .focused($focusedField, equals: .firstName)
@@ -50,7 +50,7 @@ struct NameSignUpScreen: View {
                     .padding(.horizontal, 20)
                     
                     CustomTextField(
-                        text: $viewModel.pseudo,
+                        text: $viewModel.user.pseudo,
                         keyBoardType: .default,
                         placeHolder: "Pseudo",
                         textFieldType: .sign
@@ -82,7 +82,7 @@ struct NameSignUpScreen: View {
                         },
                         title: StringsToken.Sign.Next,
                         largeButtonType: .signNext,
-                        isDisabled: viewModel.name.isEmpty || viewModel.firstName.isEmpty || viewModel.pseudo.isEmpty
+                        isDisabled: viewModel.user.name.isEmpty || viewModel.user.firstName.isEmpty || viewModel.user.pseudo.isEmpty
                     ).padding(.horizontal, 20)
 
                     LargeButtonView(

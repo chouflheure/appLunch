@@ -5,17 +5,17 @@ class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
     private var firebase = FirebaseService()
     @Published var user = User()
+    @Published var showDetail = false
 
     func start() {
-        /*
+        /// when user has an id and an account
         if let user = Auth.auth().currentUser {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
+                    print("@@@ success = \(user.uid)")
                     if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
-                        print("Le token FCM est : \(fcmToken)")
-                        user.tokenFCM = fcmToken
-                        self.firebase.updateDataByID(data: [    "tokenFCM": fcmToken], to: .users, at: user.uid)
+                        self.firebase.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
                     }
                     self.currentView = AnyView(
                         NavigationView {
@@ -23,34 +23,40 @@ class Coordinator: ObservableObject {
                                 .environmentObject(user)
                         }
                     )
-                case .failure(let error):
+                    Logger.log("User connected and have account ", level: .info)
+                
+                /// when user has an id but not account
+                case .failure(_):
+                    print("@@@ failed = \(user.uid)")
                     self.currentView = AnyView(
                         NavigationView {
                             SignScreen(coordinator: self)
                         }
                     )
-                    Logger.log("No user connected", level: .info)
+                    Logger.log("User connected but not account ", level: .info)
                 }
             }
+        /// when user hasn't an id and no account
         } else {
             currentView = AnyView(
                 NavigationView {
                     SignScreen(coordinator: self)
                 }
             )
-            print("Aucun utilisateur connecté.")
+            Logger.log("User not connected and not account ", level: .info)
         }
-         */
-    
-        // ##### TEST #####
-        
-        let view = ProfileView(coordinator: self)
+
+/*
+        // ##### TEST ####
+
+        let view = CustomTabView(coordinator: .init())
         currentView = AnyView(
             NavigationView {
                 view
             }
         )
-
+        // #### TEST ####
+ */
     }
 
     func logOutUser() {
@@ -67,10 +73,11 @@ class Coordinator: ObservableObject {
         )
     }
 
-    func gotoCustomTabView() {
+    func gotoCustomTabView(user: User) {
         currentView = AnyView(
             NavigationView {
                 CustomTabView(coordinator: self)
+                    .environmentObject(user)
             }
         )
     }

@@ -15,7 +15,8 @@ struct SettingsView: View {
     var arrayIconTitleForNextScreen: [(icon: ImageResource, value: String, screen: ScreensSettingsType)] = [
         (.iconNavProfile, StringsToken.Settings.headereditMyProfil, .editProfile),
         (.iconPlus, StringsToken.Settings.onboardingPreview, .onboarding),
-        (.iconNotifs, StringsToken.Settings.aBugTellUs, .bugReport)
+        (.iconBug, StringsToken.Settings.aBugTellUs, .bugReport),
+        (.iconNotifs, StringsToken.Settings.notifications, .notifications)
     ]
     
     var arrayIconTitleForPopUp: [(icon: ImageResource, value: String, screen: ScreensSettingsType)] =
@@ -123,6 +124,8 @@ struct SettingsView: View {
                 OnboardingPreviewSettingsView(showDetail: $showDetail)
             case .bugReport:
                 IssueReportView(showDetail: $showDetail)
+            case .notifications:
+                NotificationsListView(showDetail: $showDetail)
             case .logout:
                 PopUpSettings(showPopup: $showPopup, popupType: .logout, coordinator: coordinator)
             case .removeAccount:
@@ -141,6 +144,7 @@ private struct SettingCellView: View {
             Button(action: {onClick()}, label: {
                 Image(icon)
                     .resizable()
+                    .scaledToFill()
                     .frame(width: 20, height: 20)
                     .foregroundColor(.white)
                 

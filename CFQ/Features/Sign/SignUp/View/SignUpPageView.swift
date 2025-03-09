@@ -17,7 +17,9 @@ struct SignUpPageView: View {
              PictureSignUpScreen(viewModel: viewModel)
              .tag(2)
              
-            FriendSignUpScreen(viewModel: viewModel, coordinator: coordinator)
+            FriendSignUpScreen(viewModel: viewModel, coordinator: coordinator) {
+                dismiss()
+            }
              .tag(3)
         }
         .ignoresSafeArea()

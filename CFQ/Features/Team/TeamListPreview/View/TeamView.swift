@@ -1,43 +1,44 @@
-
 import SwiftUI
 
 struct TeamView: View {
-    var body: some View {
-        VStack {
-            HStack(alignment: .center) {
-                Text("MES TEAMs")
-                    .foregroundColor(.white)
-                    .font(.custom("GigalypseTrial-Regular", size: 35))
-                
-            }.padding(.top, 70)
-            
-            Button(action: {print("@@@")}) {
-                Image(.iconPlus)
-                    .resizable()
-                    .scaledToFill()
-                    .foregroundColor(.white)
-                    .padding(.vertical, 16)
-                    .frame(width: 40, height: 40)
-            }.padding(.vertical, 30)
+    @State var isSignFinish = false
+    @State private var showDetail = false
+    @ObservedObject var coordinator: Coordinator
 
-            ScrollView(.vertical, showsIndicators: false) {
-                ForEach(0..<3, id: \.self) { _ in
-                    CellTeamView()
-                        .padding(.bottom, 16)
-                        .onTapGesture {
-                            print("@@@ CellTeamView tapped")
-                        }
+    var body: some View {
+        ZStack {
+            VStack {
+                HStack(alignment: .center) {
+                    Text("MES TEAMs")
+                        .tokenFont(.Title_Gigalypse_24)
                 }
+
+                ScrollView(.vertical, showsIndicators: false) {
+                    Button(action: {
+                        coordinator.showDetail = true
+                    }) {
+                        Image(.iconPlus)
+                            .resizable()
+                            .scaledToFill()
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .frame(width: 40, height: 40)
+                    }.padding(.vertical, 30)
+
+                    ForEach(0..<3, id: \.self) { _ in
+                        CellTeamView()
+                            .padding(.bottom, 16)
+
+                    }
+                }
+                .padding(.horizontal, 12)
             }
-            .padding(.horizontal, 12)
         }
     }
 }
 
-
 struct CellTeamView: View {
     var body: some View {
-        
         HStack(alignment: .center) {
             CirclePicture()
                 .frame(width: 50, height: 50)
@@ -55,12 +56,16 @@ struct CellTeamView: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.white, lineWidth: 1)
         )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            print("@@@ CellTeamView tapped")
+        }
     }
 }
 
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        TeamView()
+        TeamView(coordinator: .init())
     }.ignoresSafeArea()
 }
