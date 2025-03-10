@@ -76,15 +76,6 @@ struct SignScreen: View {
                 )
                 .navigationBarBackButtonHidden(true)
             }
-            .onReceive(viewModel.$user) { newUser in
-                if newUser != nil {
-                    isSignFinish = true
-                }
-
-                if !viewModel.uidUser.isEmpty {
-                    isSignFinish = true
-                }
-            }
             .fullScreenCover(isPresented: $viewModel.isSignFinish) {
                 if viewModel.isUserExist, let user = viewModel.user {
                     CustomTabView(coordinator: coordinator)

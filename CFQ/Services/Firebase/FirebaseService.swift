@@ -34,7 +34,6 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
 
-    // exemple call : updateFieldByID(field: "name", value: "John Doe", to: .users, at: "12345")
     func updateDataByID(data: [String: Any], to collection: CollectionFirebaseType, at id: String) {
         let collectionName = collection.rawValue
 

@@ -13,7 +13,8 @@ class Coordinator: ObservableObject {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
-                    print("@@@ success = \(user.uid)")
+                    UserDefaults.standard.set(user.uid, forKey: "userUID")
+
                     if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
                         self.firebase.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
                     }
@@ -27,7 +28,6 @@ class Coordinator: ObservableObject {
                 
                 /// when user has an id but not account
                 case .failure(_):
-                    print("@@@ failed = \(user.uid)")
                     self.currentView = AnyView(
                         NavigationView {
                             SignScreen(coordinator: self)

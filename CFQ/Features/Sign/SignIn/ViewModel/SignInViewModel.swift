@@ -21,6 +21,7 @@ class SignInViewModel: ObservableObject {
     private func closeConfirmScreen() {
         self.isConfirmScreenActive = false
         self.isSignFinish = true
+        UserDefaults.standard.set(user?.uid, forKey: "userUID")
     }
 
     private func getUserWithIDConnexion(uid: String) {
