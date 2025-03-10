@@ -4,13 +4,18 @@ import FirebaseCore
 import FirebaseAuth
 import FirebaseMessaging
 import UserNotifications
+import Firebase
 
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
+    
+    private var firebaseService: FirebaseService?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
         FirebaseApp.configure()
         
+        firebaseService = FirebaseService()
+
         Messaging.messaging().delegate = self
         
         requestNotificationPermission(application)
@@ -47,21 +52,20 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             }
         }
     }
-    
+
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Auth.auth().setAPNSToken(deviceToken, type: .sandbox)
         Messaging.messaging().apnsToken = deviceToken
     }
-    
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("@@@ Failed to register for remote notifications: \(error.localizedDescription)")
     }
-    
+
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 
-        // TestNotif().scheduleNotification(body: "body")
-        
-        
+        TestNotif().scheduleNotification()
+
         if let category = userInfo["aps"] as? [String: Any],
            let categoryIdentifier = category["category"] as? String,
            categoryIdentifier == "NO_ACTION" {
@@ -74,9 +78,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
                let body = alert["body"] as? String {
 
                 // Planifiez une notification locale
-                // TestNotif().scheduleNotification(body: body)
+                TestNotif().scheduleNotification()
             }
-        
+
         if let category = userInfo["aps"] as? [String: Any],
            let categoryIdentifier = category["category"] as? String,
            categoryIdentifier == "NO_ACTION" {
@@ -93,12 +97,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
 
         completionHandler(result)
     }
-    
-    
-    
+
     // when your are on the app
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-            print("here")
+
             let userInfo = notification.request.content.userInfo
 
                 // Déclencher une action spécifique si nécessaire
@@ -120,20 +122,28 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
 
         completionHandler(options)
     }
-        
-        // Handle user interaction with the notification
+
+    // Handle user interaction with the notification
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         print("@@@ User interacted with notification: \(userInfo)")
-        
+        print("@@@ User interacted with notification: \(response.notification.request.content.userInfo)")
+
+        guard let userUID = UserDefaults.standard.string(forKey: "userUID"), let firebaseService = firebaseService else {
+            return
+        }
+        print("@@@ USSSSSSER = \(userUID)")
+
         let actionIdentifier = response.actionIdentifier
         switch actionIdentifier {
             case "FIRST_BUTTON_IDENTIFIER":
             // Gérer l'action du premier bouton
                 print("First button tapped")
+            firebaseService.updateDataByID(data: ["isActive": true], to: .users, at: userUID)
             case "SECOND_BUTTON_IDENTIFIER":
                 // Gérer l'action du second bouton
                 print("Second button tapped")
+            firebaseService.updateDataByID(data: ["isActive": false], to: .users, at: userUID)
             default:
                 UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         }
@@ -171,87 +181,6 @@ struct CFQApp: App {
     }
 }
 
-class FCMService {
-    static let shared = FCMService()
-
-    private let subscribedTopicsKey = "subscribedTopics"
-
-    private init() {}
-
-    // Get the current stored FCM token
-    var currentToken: String? {
-        return UserDefaults.standard.string(forKey: "fcmToken")
-    }
-
-    // Request a new token
-    func refreshToken(completion: @escaping (String?, Error?) -> Void) {
-        Messaging.messaging().token { token, error in
-            if let error = error {
-                completion(nil, error)
-                return
-            }
-
-            if let token = token {
-                UserDefaults.standard.set(token, forKey: "fcmToken")
-            }
-
-            completion(token, nil)
-        }
-    }
-
-    func subscribeToTopic(_ topic: String, completion: @escaping (Error?) -> Void) {
-        Messaging.messaging().subscribe(toTopic: topic) { error in
-            if let error = error {
-                completion(error)
-                return
-            }
-
-            self.addSubscribedTopic(topic)
-            completion(nil)
-        }
-    }
-
-    // Unsubscribe from a topic
-    func unsubscribeFromTopic(_ topic: String, completion: @escaping (Error?) -> Void) {
-        Messaging.messaging().unsubscribe(fromTopic: topic) { error in
-            if let error = error {
-                print("Échec du désabonnement au topic \(topic) : \(error.localizedDescription)")
-                completion(error)
-                return
-            }
-
-            self.removeSubscribedTopic(topic)
-            print("Désabonnement avec succès au topic \(topic)")
-            completion(nil)
-        }
-    }
-
-    // Get the list of subscribed topics
-    func getSubscribedTopics() -> [String] {
-        return UserDefaults.standard.stringArray(forKey: subscribedTopicsKey) ?? []
-    }
-
-    // Add a topic to the local list
-    private func addSubscribedTopic(_ topic: String) {
-        var topics = getSubscribedTopics()
-        if !topics.contains(topic) {
-            topics.append(topic)
-            UserDefaults.standard.set(topics, forKey: subscribedTopicsKey)
-        }
-    }
-
-    // Remove a topic from the local list
-    private func removeSubscribedTopic(_ topic: String) {
-        var topics = getSubscribedTopics()
-        if let index = topics.firstIndex(of: topic) {
-            topics.remove(at: index)
-            UserDefaults.standard.set(topics, forKey: subscribedTopicsKey)
-        }
-    }
-}
-
-
-
 class NotifService {
     
     func scheduleNotification() {
@@ -273,10 +202,22 @@ class NotifService {
         let secondAction1 = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER1",
                                                 title: "rep 2",
                                                 options: [])
+        
         // Créer une catégorie pour les actions
-        let category = UNNotificationCategory(identifier: "CUSTOM_CATEGORY", actions: [firstAction, secondAction], intentIdentifiers: [], options: [])
+        let category = UNNotificationCategory(
+            identifier: "CUSTOM_CATEGORY",
+            actions: [firstAction, secondAction],
+            intentIdentifiers: [],
+            options: []
+        )
 
-        let category1 = UNNotificationCategory(identifier: "", actions: [firstAction1, secondAction1], intentIdentifiers: [], options: [])
+        let category1 = UNNotificationCategory(
+            identifier: "",
+            actions: [firstAction1, secondAction1],
+            intentIdentifiers: [],
+            options: []
+        )
+
         // Enregistrer la catégorie
         UNUserNotificationCenter.current().setNotificationCategories([category, category1])
 
@@ -296,77 +237,4 @@ class NotifService {
     }
     
 }
-
-struct TestNotif: View {
-    var body: some View {
-        VStack {
-            Button(action: {
-                scheduleNotification(body: "test kiki")
-            }) {
-                Text("Send Notification")
-            }
-        }
-    }
-    
-    func scheduleNotification(body: String) {
-        let content = UNMutableNotificationContent()
-        content.title = "Titre de la Notification"
-        content.body = body
-
-        // Définir les actions pour les boutons
-        let firstAction = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER",
-                                               title: "💃 Ça sort !",
-                                               options: [])
-
-        let secondAction = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER",
-                                                title: "🥱 Ça dort ce soir",
-                                                options: [])
-
-        let firstAction1 = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER1",
-                                               title: "rep 1",
-                                               options: [])
-
-        let secondAction1 = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER1",
-                                                title: "rep 2",
-                                                options: [])
-        // Créer une catégorie pour les actions
-        let category = UNNotificationCategory(identifier: "CUSTOM_CATEGORY", actions: [firstAction, secondAction], intentIdentifiers: [], options: [])
-
-        let category1 = UNNotificationCategory(identifier: "", actions: [firstAction1, secondAction1], intentIdentifiers: [], options: [])
-        // Enregistrer la catégorie
-        UNUserNotificationCenter.current().setNotificationCategories([category, category1])
-
-        // Assigner la catégorie au contenu de la notification
-        content.categoryIdentifier = "CUSTOM_CATEGORY"
-
-        // Définir le déclencheur pour la notification (par exemple, 5 secondes après l'appel)
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
-
-        // Ajouter la notification
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Erreur lors de l'ajout de la notification: \(error.localizedDescription)")
-            }
-        }
-    }
-
-    func sendNotification() {
-        let content = UNMutableNotificationContent()
-        content.title = "Notification"
-        content.body = "Ceci est une notification non cliquable."
-        content.categoryIdentifier = "NO_ACTION"
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        let request = UNNotificationRequest(identifier: "TestNotification", content: content, trigger: trigger)
-
-
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-    }
-}
-
 
