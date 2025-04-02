@@ -2,7 +2,8 @@
   "data" : [
     {
       "filename" : "silver-wind.caf",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "universal-type-identifier" : ".caf"
     }
   ],
   "info" : {

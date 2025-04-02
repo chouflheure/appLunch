@@ -43,6 +43,7 @@ enum StringsToken {
 
     enum Profile {
         static let Friends = "Amis"
+        static let NoTurnAtThisMoment = "Aucun TURN pour l’instant"
     }
     
     enum Settings {

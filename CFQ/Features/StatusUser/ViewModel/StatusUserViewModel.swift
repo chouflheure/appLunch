@@ -10,7 +10,7 @@ class SwitchStatusUserProfileViewModel: ObservableObject {
         self.user = user
 
         user.$isActive
-            .dropFirst() // Ignore la valeur initiale
+            .dropFirst()
             .sink { [weak self] newValue in
                 self?.switchStatusClick(isActive: newValue)
             }

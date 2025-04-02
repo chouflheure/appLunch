@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct CirclePictureStatus: View {
+struct CirclePictureStatusUserProfile: View {
     @State var image: Image?
     @ObservedObject var viewModel: SwitchStatusUserProfileViewModel
 
@@ -15,6 +15,27 @@ struct CirclePictureStatus: View {
                     Circle()
                         .stroke(style: StrokeStyle(lineWidth: 2))
                         .foregroundColor(viewModel.user.isActive ? .active : .inactive)
+                )
+        }
+    }
+}
+
+
+struct CirclePictureStatus: View {
+    @State var image: Image?
+    
+    var isActive: Bool
+
+    var body: some View {
+        ZStack {
+            Image(.header)
+                .resizable()
+                .scaledToFill()
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(style: StrokeStyle(lineWidth: 2))
+                        .foregroundColor(isActive ? .active : .inactive)
                 )
         }
     }

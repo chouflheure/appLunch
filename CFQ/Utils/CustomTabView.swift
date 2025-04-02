@@ -6,14 +6,9 @@ import FirebaseFirestore
 struct CustomTabView: View {
     @State private var selectedTab = 0
     @State private var selectedEvent: MapLocationEventData? = nil
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: ["Ici"]
-    )
+    @EnvironmentObject var user: User
+
+  
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
 
@@ -28,11 +23,7 @@ struct CustomTabView: View {
                     VStack {
                         Group {
                             if selectedTab == 0 {
-                                TestNotif()
-                                
-                                Text("Feed")
-                                    .foregroundStyle(.white)
-                                
+                                FeedView()
                             } else if selectedTab == 1 {
                                 Text("Map")
                                     .foregroundStyle(.white)
@@ -97,7 +88,7 @@ struct CustomTabView: View {
                         .padding(.vertical)
                         .background(.black)
                     }
-                    .padding(.top, geometry.safeAreaInsets.top) // Respecte la safe area en haut
+                    .padding(.top, 15)// geometry.safeAreaInsets.top) // Respecte la safe area en haut
                     .padding(.bottom, geometry.safeAreaInsets.bottom)
                     .edgesIgnoringSafeArea(.bottom)
                 }

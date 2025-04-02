@@ -19,8 +19,32 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         Messaging.messaging().delegate = self
         
         requestNotificationPermission(application)
-
+        registerNotificationCategories()
         return true
+    }
+
+    func registerNotificationCategories() {
+        let acceptAction = UNNotificationAction(
+            identifier: "ACCEPT_ACTION",
+            title: "Accept",
+            options: [.foreground]
+        )
+        
+        let declineAction = UNNotificationAction(
+            identifier: "DECLINE_ACTION",
+            title: "Decline",
+            options: [.destructive]
+        )
+
+        let inviteCategory = UNNotificationCategory(
+            identifier: "INVITE_CATEGORY",
+            actions: [declineAction, acceptAction],
+            intentIdentifiers: [],
+            options: []
+        )
+
+        let center = UNUserNotificationCenter.current()
+        center.setNotificationCategories([inviteCategory])
     }
     
     private func requestNotificationPermission(_ application: UIApplication) {
@@ -144,7 +168,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
                 // Gérer l'action du second bouton
                 print("Second button tapped")
             firebaseService.updateDataByID(data: ["isActive": false], to: .users, at: userUID)
-            default:
+        case "DECLINE_IDENTIFIER":
+                print("User declined the invitation")
+            case "ACCEPT_IDENTIFIER":
+                print("User accepted the invitation")
+        default:
                 UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         }
         

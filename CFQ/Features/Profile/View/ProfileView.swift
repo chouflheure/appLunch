@@ -16,7 +16,7 @@ struct ProfileView: View {
 
     var body: some View {
         VStack {
-            HStack(alignment: .center) {
+            HStack() {
                 Spacer()
                 Button(
                     action: {
@@ -30,7 +30,7 @@ struct ProfileView: View {
             }
             .padding(.trailing, 12)
             .padding(.bottom, 32)
-
+            
             HStack {
                 SwitchStatusUserProfile(viewModel: SwitchStatusUserProfileViewModel(user: user))
                     .padding(.trailing, 12)
@@ -114,46 +114,6 @@ struct PageViewEvent: View {
     }
 }
 
-private struct HeaderProfileFriend: View {
-    var body: some View {
-        HStack(alignment: .center) {
-            Button(
-                action: {},
-                label: {
-                    Image(.iconArrow)
-                        .foregroundColor(.white)
-                        .frame(width: 24, height: 24)
-                })
-            Spacer()
-            Button(
-                action: {},
-                label: {
-                    Image(.iconDots)
-                        .foregroundColor(.white)
-                        .frame(width: 24, height: 24)
-                })
-        }
-    }
-}
-
-private struct HeaderProfileUser: View {
-    var viewModel: ProfileViewModel
-
-    var body: some View {
-        HStack(alignment: .center) {
-            Spacer()
-            Button(
-                action: {
-                    viewModel.isShowingSettingsView = true
-                },
-                label: {
-                    Image(.iconParametres)
-                        .foregroundColor(.white)
-                        .frame(width: 24, height: 24)
-                })
-        }
-    }
-}
 
 #Preview {
     ZStack {

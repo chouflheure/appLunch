@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct FeedView: View {
+    @EnvironmentObject var user: User
 
     var body: some View {
         VStack {
@@ -24,20 +25,32 @@ struct FeedView: View {
                 }
                 .padding(.horizontal, 16)
             }
-            
-            /*
+
             VStack(alignment: .leading) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack() {
+                        SwitchStatusUserProfile(
+                            viewModel: SwitchStatusUserProfileViewModel(user: user)
+                        )
                         ForEach(0..<5) { index in
-                            CirclePictureStatus(isActive: .constant(true))
+                            CirclePictureStatus(isActive: true)
                                 .frame(width: 48, height: 48)
                                 .padding(.leading, 17)
+                                .onTapGesture {
+                                    print("@@@ ")
+                                }
                         }.frame(height: 100)
                     }
                 }
             }
-            */
+            
+            Divider()
+                .background(.white)
+
+            CFQCollectionView()
+
+            Divider()
+                .background(.white)
         }
     }
 }

@@ -6,33 +6,29 @@ struct TeamView: View {
     @ObservedObject var coordinator: Coordinator
 
     var body: some View {
-        ZStack {
-            VStack {
-                HStack(alignment: .center) {
-                    Text("MES TEAMs")
-                        .tokenFont(.Title_Gigalypse_24)
-                }
-
-                ScrollView(.vertical, showsIndicators: false) {
-                    Button(action: {
-                        coordinator.showDetail = true
-                    }) {
-                        Image(.iconPlus)
-                            .resizable()
-                            .scaledToFill()
-                            .foregroundColor(.white)
-                            .padding(.vertical, 16)
-                            .frame(width: 40, height: 40)
-                    }.padding(.vertical, 30)
-
-                    ForEach(0..<3, id: \.self) { _ in
-                        CellTeamView()
-                            .padding(.bottom, 16)
-
-                    }
-                }
-                .padding(.horizontal, 12)
+        VStack {
+            HStack(alignment: .center) {
+                Text("MES TEAMs")
+                    .tokenFont(.Title_Gigalypse_24)
             }
+            ScrollView(.vertical, showsIndicators: false) {
+                Button(action: {
+                    coordinator.showDetail = true
+                }) {
+                    Image(.iconPlus)
+                        .resizable()
+                        .scaledToFill()
+                        .foregroundColor(.white)
+                        .padding(.vertical, 16)
+                        .frame(width: 40, height: 40)
+                }.padding(.vertical, 30)
+
+                ForEach(0..<3, id: \.self) { _ in
+                    CellTeamView()
+                        .padding(.bottom, 16)
+                }
+            }
+            .padding(.horizontal, 12)
         }
     }
 }
