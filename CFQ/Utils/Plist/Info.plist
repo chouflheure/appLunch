@@ -34,5 +34,7 @@
 		<string>remote-notification</string>
 		<string>processing</string>
 	</array>
+	<key>UNNotificationExtensionUserInteractionEnabled</key>
+	<true/>
 </dict>
 </plist>

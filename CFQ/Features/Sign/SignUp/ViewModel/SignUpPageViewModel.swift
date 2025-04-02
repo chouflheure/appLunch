@@ -29,7 +29,7 @@ class SignUpPageViewModel: ObservableObject {
         firstName: "",
         pseudo: "",
         profilePictureUrl: "",
-        location: [],
+        location: [""],
         isActive: true,
         favorite: [""],
         friends: [""],

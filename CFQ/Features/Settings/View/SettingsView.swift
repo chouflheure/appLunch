@@ -3,6 +3,20 @@ import SwiftUI
 import PhotosUI
 import MessageUI
 
+class ScreenSettingsData {
+    var icon: ImageResource
+    var label: String
+    var screen: ScreensSettingsType
+    var color: Color?
+    
+    init(icon: ImageResource, label: String, screen: ScreensSettingsType, color: Color = .white) {
+        self.icon = icon
+        self.label = label
+        self.screen = screen
+        self.color = color
+    }
+}
+
 struct SettingsView: View {
     @State private var showDetail = false
     @State private var selectedDestination: ScreensSettingsType? = nil
@@ -12,17 +26,42 @@ struct SettingsView: View {
     var coordinator: Coordinator
     @Environment(\.dismiss) var dismiss
 
-    var arrayIconTitleForNextScreen: [(icon: ImageResource, value: String, screen: ScreensSettingsType)] = [
-        (.iconNavProfile, StringsToken.Settings.headereditMyProfil, .editProfile),
-        (.iconPlus, StringsToken.Settings.onboardingPreview, .onboarding),
-        (.iconBug, StringsToken.Settings.aBugTellUs, .bugReport),
-        (.iconNotifs, StringsToken.Settings.notifications, .notifications)
+    var arrayIconTitleForNextScreen: [ScreenSettingsData] = [
+        ScreenSettingsData(
+            icon: .iconNavProfile,
+            label: StringsToken.Settings.headereditMyProfil,
+            screen: .editProfile
+        ),
+        ScreenSettingsData(
+            icon: .iconPlus,
+            label: StringsToken.Settings.onboardingPreview,
+            screen: .onboarding
+        ),
+        ScreenSettingsData(
+            icon: .iconBug,
+            label: StringsToken.Settings.aBugTellUs,
+            screen: .bugReport
+        ),
+        ScreenSettingsData(
+            icon: .iconNotifs,
+            label: StringsToken.Settings.notifications,
+            screen: .notifications
+        )
     ]
     
-    var arrayIconTitleForPopUp: [(icon: ImageResource, value: String, screen: ScreensSettingsType)] =
-    [
-        (.iconDoor, StringsToken.Settings.logOut, .logout),
-        (.iconCross, StringsToken.Settings.deleteAccount, .removeAccount)
+    var arrayIconTitleForPopUp: [ScreenSettingsData] = [
+        ScreenSettingsData(
+            icon: .iconDoor,
+            label: StringsToken.Settings.logOut,
+            screen: .logout,
+            color: .purpleDark
+        ),
+        ScreenSettingsData(
+            icon: .iconCross,
+            label: StringsToken.Settings.deleteAccount,
+            screen: .removeAccount,
+            color: .red
+        ),
     ]
 
     var body: some View {
@@ -57,29 +96,27 @@ struct SettingsView: View {
                     .background(.white)
                 
                 VStack(alignment: .leading) {
-                    
-                    ForEach(arrayIconTitleForNextScreen, id: \.icon) { info in
+
+                    ForEach(arrayIconTitleForNextScreen, id: \.icon) { data in
                         SettingCellView(
-                            icon: info.icon,
-                            label: info.value,
+                            data: data,
                             onClick: {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     showDetail = true
-                                    selectedDestination = info.screen
+                                    selectedDestination = data.screen
                                 }
                             }
                         )
                         .padding(12)
                     }
-                    
-                    ForEach(arrayIconTitleForPopUp, id: \.icon) { info in
+
+                    ForEach(arrayIconTitleForPopUp, id: \.icon) { data in
                         SettingCellView(
-                            icon: info.icon,
-                            label: info.value,
+                            data: data,
                             onClick: {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     showPopup = true
-                                    selectedDestination = info.screen
+                                    selectedDestination = data.screen
                                 }
                             }
                         )
@@ -135,22 +172,20 @@ struct SettingsView: View {
 }
 
 private struct SettingCellView: View {
-    var icon: ImageResource
-    var label: String
+    var data: ScreenSettingsData
     var onClick: (() -> Void)
     
     var body: some View {
         HStack{
             Button(action: {onClick()}, label: {
-                Image(icon)
+                Image(data.icon)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
-                
-                Text(label)
-                    .tokenFont(.Body_Inter_Medium_14)
+                    .foregroundColor(data.color)
 
+                Text(data.label)
+                    .tokenFont(.Body_Inter_Medium_14, color: data.color)
                 Spacer()
             })
         }

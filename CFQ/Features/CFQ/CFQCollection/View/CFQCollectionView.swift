@@ -20,7 +20,7 @@ struct CFQCollectionView: View {
                             Logger.log("Click on Add CFQ", level: .action)
                         },
                         label: {
-                            Image(systemName: "plus.circle.fill")
+                            Image("icon-plus")
                                 .resizable()
                                 .frame(width: 40, height: 40)
                                 .foregroundColor(.white)

@@ -28,6 +28,7 @@ struct CustomToggleStatus: View {
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     viewModel.user.isActive.toggle()
+                    viewModel.objectWillChange.send()
                     Logger.log("status toogle is : \(viewModel.user.isActive)", level: .info)
                 }
             }

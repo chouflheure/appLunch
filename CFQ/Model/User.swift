@@ -11,7 +11,7 @@ class User: ObservableObject, Encodable, Decodable {
     // @Published var birthDate: Date?
     @Published var isActive: Bool
     @Published var favorite: [String]?
-    @Published var friends: [String]?
+    @Published var friends: Set<String>
     @Published var invitedCfqs: [String]?
     @Published var invitedTurns: [String]?
     @Published var notificationsChannelId: String?
@@ -20,7 +20,8 @@ class User: ObservableObject, Encodable, Decodable {
     @Published var teams: [String]?
     @Published var tokenFCM: String
     @Published var unreadNotificationsCount: Int
-    // requests
+    @Published var isPrivateAccount: Bool
+    @Published var requestsFriends: Set<String>
     // conversations
 
     init(
@@ -33,7 +34,7 @@ class User: ObservableObject, Encodable, Decodable {
         // birthDate: Date? = nil,
         isActive: Bool = true,
         favorite: [String] = [""] ,
-        friends: [String] = [""],
+        friends: Set<String> = [""],
         invitedCfqs: [String] = [""],
         invitedTurns: [String] = [""],
         notificationsChannelId: String = "",
@@ -41,7 +42,9 @@ class User: ObservableObject, Encodable, Decodable {
         postedTurns: [String] = [""],
         teams: [String] = [""],
         tokenFCM: String = "",
-        unreadNotificationsCount: Int = 0
+        unreadNotificationsCount: Int = 0,
+        isPrivateAccount: Bool = true,
+        requestsFriends: Set<String> = [""]
     ) {
         self.uid = uid
         self.name = name
@@ -61,6 +64,8 @@ class User: ObservableObject, Encodable, Decodable {
         self.teams = teams
         self.tokenFCM = tokenFCM
         self.unreadNotificationsCount = unreadNotificationsCount
+        self.isPrivateAccount = isPrivateAccount
+        self.requestsFriends = requestsFriends
     }
 
     enum CodingKeys: String, CodingKey {
@@ -82,6 +87,8 @@ class User: ObservableObject, Encodable, Decodable {
         case teams
         case tokenFCM
         case unreadNotificationsCount
+        case isPrivateAccount
+        case requestsFriends
     }
     
     required init(from decoder:Decoder) throws {
@@ -95,7 +102,7 @@ class User: ObservableObject, Encodable, Decodable {
         location = try values.decode(Set<String>.self, forKey: .location)
         // birthDate = try values.decode(Date.self, forKey: .birthDate)
         favorite = try values.decode([String].self, forKey: .favorite)
-        friends = try values.decode([String].self, forKey: .friends)
+        friends = try values.decode(Set<String>.self, forKey: .friends)
         invitedCfqs = try values.decode([String].self, forKey: .invitedCfqs)
         invitedTurns = try values.decode([String].self, forKey: .invitedTurns)
         notificationsChannelId = try values.decode(String.self, forKey: .notificationsChannelId)
@@ -104,6 +111,8 @@ class User: ObservableObject, Encodable, Decodable {
         teams = try values.decode([String].self, forKey: .teams)
         tokenFCM = try values.decode(String.self, forKey: .tokenFCM)
         unreadNotificationsCount = try values.decode(Int.self, forKey: .unreadNotificationsCount)
+        isPrivateAccount = try values.decode(Bool.self, forKey: .isPrivateAccount)
+        requestsFriends = try values.decode(Set<String>.self, forKey: .requestsFriends)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -126,5 +135,7 @@ class User: ObservableObject, Encodable, Decodable {
         try container.encode(teams, forKey: .teams)
         try container.encode(tokenFCM, forKey: .tokenFCM)
         try container.encode(unreadNotificationsCount, forKey: .unreadNotificationsCount)
+        try container.encode(isPrivateAccount, forKey: .isPrivateAccount)
+        try container.encode(requestsFriends, forKey: .requestsFriends)
     }
 }
