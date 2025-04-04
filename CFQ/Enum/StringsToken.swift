@@ -42,8 +42,9 @@ enum StringsToken {
     }
 
     enum Profile {
-        static let Friends = "Amis"
+        static let Friends = "Mes Amis"
         static let NoTurnAtThisMoment = "Aucun TURN pour l’instant"
+        static let AskAsFriend = "te demande en ami"
     }
     
     enum Settings {
@@ -72,6 +73,10 @@ enum StringsToken {
     
     enum AddFriend {
         static let guest = "Invités"
+    }
+    
+    enum Friend {
+        static let myFriends = "Mes amis"
     }
     
     enum AttentingGuest {}

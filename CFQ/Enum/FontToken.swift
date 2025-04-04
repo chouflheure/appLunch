@@ -81,10 +81,9 @@ enum FontToken {
                 .Body_Inter_Regular_16,
                 .Body_Inter_Regular_14,
                 .Body_Inter_Semibold_12,
-                .Body_Inter_Regular_12,
                 .Body_Inter_Regular_10 :
             return .whitePrimary
-        case .Placeholder_Inter_Regular_16:
+        case .Placeholder_Inter_Regular_16, .Body_Inter_Regular_12:
             return .whiteTertiary
         }
     }

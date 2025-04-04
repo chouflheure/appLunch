@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FriendProfileView: View {
-    var isUserProfile: Bool = true
+    @Binding var show: Bool
 
     // @EnvironmentObject var user: User
     var user = User(
@@ -13,194 +13,260 @@ struct FriendProfileView: View {
         friends: ["77MKZdb3FJX8EFvlRGotntxk6oi1"],
         isPrivateAccount: false
     )
-    
+
     var profileFriend = User(
         uid: "77MKZdb3FJX8EFvlRGotntxk6oi1",
         name: "Profile",
         firstName: "Friend",
         pseudo: "Charles",
         location: ["Ici"],
-        isPrivateAccount: true
+        isPrivateAccount: true,
+        requestsFriends: ["1234567890"]
     )
 
     @StateObject var viewModel = FriendProfileViewModel()
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
-            VStack {
-                HStack(alignment: .center) {
-                    Button(
-                        action: {},
-                        label: {
-                            Image(.iconArrow)
-                                .foregroundColor(.white)
-                                .frame(width: 24, height: 24)
-                        })
-                    Spacer()
-                    Button(
-                        action: {
-                            viewModel.isShowingSettingsView = true
-                        },
-                        label: {
-                            Image(.iconDots)
-                                .foregroundColor(.white)
-                                .frame(width: 24, height: 24)
-                        })
-                }
-                .padding(.trailing, 12)
-                .padding(.bottom, 32)
-                
-                HStack {
-                    CirclePictureStatus(isActive: true)
-                        .frame(width: 70, height: 70)
-                        .padding(.trailing, 12)
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        PreviewPseudoName(
-                            name: profileFriend.name,
-                            firstName: profileFriend.firstName,
-                            pseudo: profileFriend.pseudo
-                        )
-                        
-                        HStack(alignment: .center) {
-                            Image(.iconLocation)
-                                .resizable()
-                                .frame(width: 16, height: 16)
-                                .foregroundColor(.white)
-                            Text("\(profileFriend.location)")
-                                .tokenFont(.Body_Inter_Medium_16)
-                        }
-                    }
-                    Spacer()
-                    
-                    if !viewModel.isRequestedToBeFriendByTheUser {
+        DraggableView(isPresented: $show) {
+            SafeAreaContainer {
+                VStack {
+                    HStack(alignment: .center) {
                         Button(
                             action: {
-                                viewModel.onclickAddFriend()
+                                withAnimation {
+                                    show = false
+                                }
                             },
                             label: {
-                                ZStack {
-                                    Rectangle()
-                                        .frame(width: 44, height: 44)
-                                        .cornerRadius(10)
-                                        .foregroundColor(viewModel.statusFriend.backgroungColorIcon)
-                                    
-                                    Image(viewModel.statusFriend.icon)
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                        .foregroundColor(.white)
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(viewModel.statusFriend.strokeColor, lineWidth: 0.5)
-                                                .frame(width: 44, height: 44)
-                                        }
-                                }
+                                Image(.iconArrow)
+                                    .foregroundColor(.white)
+                                    .frame(width: 24, height: 24)
                             })
-                    }
-                }
-                .padding(.bottom, 16)
-
-                if viewModel.isRequestedToBeFriendByTheUser {
-                    HStack {
-                        Text("\(profileFriend.pseudo) te demande en ami")
-                            .tokenFont(.Title_Gigalypse_20)
                         Spacer()
                         Button(
                             action: {
-                                viewModel.becomeFriend(answer: true)
+                                viewModel.isShowingSettingsView = true
                             },
                             label: {
-                                ZStack {
-                                    Rectangle()
-                                        .frame(width: 44, height: 44)
-                                        .cornerRadius(10)
-                                        .foregroundColor(viewModel.statusFriend.backgroungColorIcon)
+                                Image(.iconDots)
+                                    .foregroundColor(.white)
+                                    .frame(width: 24, height: 24)
+                            })
+                    }
+                    .padding(.trailing, 12)
+                    .padding(.bottom, 32)
+                    
+                    HStack {
+                        CirclePictureStatus(isActive: true, onClick: {})
+                            .frame(width: 70, height: 70)
+                            .padding(.trailing, 12)
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            PreviewPseudoName(
+                                name: profileFriend.name,
+                                firstName: profileFriend.firstName,
+                                pseudo: profileFriend.pseudo
+                            )
+                            
+                            HStack(alignment: .center) {
+                                Image(.iconLocation)
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                    .foregroundColor(.white)
+                                Text("\(profileFriend.location)")
+                                    .tokenFont(.Body_Inter_Medium_16)
+                            }
+                        }
+                        Spacer()
+                        
+                        if !viewModel.isRequestedToBeFriendByTheUser {
+                            Button(
+                                action: {
+                                    viewModel.onclickAddFriend()
+                                },
+                                label: {
+                                    ZStack {
+                                        Rectangle()
+                                            .frame(width: 44, height: 44)
+                                            .cornerRadius(10)
+                                            .foregroundColor(viewModel.statusFriend.backgroungColorIcon)
+                                        
+                                        Image(viewModel.statusFriend.icon)
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            .foregroundColor(.white)
+                                            .overlay {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(viewModel.statusFriend.strokeColor, lineWidth: 0.5)
+                                                    .frame(width: 44, height: 44)
+                                            }
+                                    }
+                                })
+                            .onAppear() {
+                                viewModel.statusFriendButton(user: user, friend: profileFriend)
+                            }
+                        }
+                    }
+                    .padding(.bottom, 16)
+                    
+                    if viewModel.isRequestedToBeFriendByTheUser {
+                        AnswerFriendToTheProfile(viewModel: viewModel, profileFriend: profileFriend)
+                    }
 
-                                    Image(.iconAccept)
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                        .foregroundColor(.white)
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(viewModel.statusFriend.strokeColor, lineWidth: 0.5)
-                                                .frame(width: 44, height: 44)
-                                        }
-                                }
-                            })
-                        Button(
-                            action: {
-                                viewModel.becomeFriend(answer: false)
-                            },
-                            label: {
-                                ZStack {
-                                    Rectangle()
-                                        .frame(width: 44, height: 44)
-                                        .cornerRadius(10)
-                                        .foregroundColor(.clear)
-                                    Image(.iconCross)
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                        .foregroundColor(.white)
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(.white, lineWidth: 0.5)
-                                                .frame(width: 44, height: 44)
-                                        }
-                                }
-                            })
+                    HStack {
+                        PreviewParticipants(pictures: [.profile, .profile, .profile, .profile])
+                        Spacer()
+                    }
+                    
+                    if viewModel.isPrivateAccount && profileFriend.isPrivateAccount {
+                        PrivateEventShow()
+                    } else {
+                        PageViewEventFriends()
                     }
                 }
+                .padding(.horizontal, 16)
+                
+                .sheet(isPresented: $viewModel.isShowingSettingsView) {
+                    ZStack {
+                        Color.black
+                            .ignoresSafeArea()
+                        VStack(alignment: .trailing, spacing: 30) {
+                            HStack(spacing: 15) {
+                                Image(.iconSignal)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundColor(.white)
+                                Button(
+                                    action: {
+                                        Logger.log("Profile signalé", level: .action)
+                                        viewModel.isShowingSettingsView = false
+                                    },
+                                    label: {
+                                        Text("Signaler le profile")
+                                            .tokenFont(.Body_Inter_Medium_16)
+                                    })
+                                Spacer()
+                            }
+                            .padding(.leading, 12)
 
-                if viewModel.isPrivateAccount && profileFriend.isPrivateAccount {
-                    Spacer()
-                    VStack {
-                        Image(.iconLock)
-                            .resizable()
-                            .frame(width: 44, height: 44)
-                            .padding(.bottom, 16)
-                            .foregroundColor(.white)
-                        
-                        Text("COMPTE PRIVÉ")
-                            .tokenFont(.Body_Inter_Medium_16)
+                            HStack {
+                                Image(.iconBlock)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundColor(.white)
+                                Button(
+                                    action: {
+                                        Logger.log("Profile bloqué", level: .action)
+                                        viewModel.isShowingSettingsView = false
+                                    },
+                                    label: {
+                                        Text("Bloquer le profile")
+                                            .tokenFont(.Body_Inter_Medium_16)
+                                    })
+                                Spacer()
+                            }
+                            .padding(.leading, 12)
+                        }
                     }
-                    Spacer()
-                } else {
-                    PageViewEventFriends()
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.height(150)])
                 }
             }
-            .padding(.horizontal, 16)
+            .blur(radius: viewModel.isShowRemoveFriends ? 10 : 0)
+            .allowsHitTesting(!viewModel.isShowRemoveFriends)
             
-            .sheet(isPresented: $viewModel.isShowingSettingsView) {
-                ZStack {
-                    Color.black
-                        .ignoresSafeArea()
-                    
-                    Text("@@@ test")
-                        .foregroundColor(.white)
-                }
-                .presentationDragIndicator(.visible)
-                .presentationDetents([.height(300)])
+            if viewModel.isShowRemoveFriends {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation {
+                            viewModel.isShowRemoveFriends = false
+                            viewModel.statusFriend = .friend
+                        }
+                    }
+                    .zIndex(1)
+                
+                PopUpRemoveFromFriends(
+                    showPopup: $viewModel.isShowRemoveFriends,
+                    viewModel: viewModel
+                )
+                .zIndex(2)
             }
         }
-        .blur(radius: viewModel.isShowRemoveFriends ? 10 : 0)
-        .allowsHitTesting(!viewModel.isShowRemoveFriends)
-        
-        if viewModel.isShowRemoveFriends {
-            Color.black.opacity(0.4)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    withAnimation {
-                        viewModel.isShowRemoveFriends = false
-                    }
-                }
-                .zIndex(1)
+    }
+}
 
-            PopUpRemoveFromFriends(
-                showPopup: $viewModel.isShowRemoveFriends,
-                viewModel: viewModel
-            )
-            .zIndex(2)
+private struct PrivateEventShow: View {
+    var body: some View {
+        Spacer()
+        VStack() {
+            Image(.iconLock)
+                .resizable()
+                .frame(width: 44, height: 44)
+                .padding(.bottom, 16)
+                .foregroundColor(.white)
+            
+            Text("COMPTE PRIVÉ")
+                .tokenFont(.Body_Inter_Medium_16)
+        }
+        Spacer()
+    }
+}
+
+private struct AnswerFriendToTheProfile: View {
+    var viewModel: FriendProfileViewModel
+    var profileFriend: User
+
+    var body: some View {
+        HStack {
+            Text(profileFriend.pseudo + " " + StringsToken.Profile.AskAsFriend)
+                .tokenFont(.Title_Gigalypse_20)
+            Spacer()
+            Button(
+                action: {
+                    viewModel.becomeFriend(answer: true)
+                },
+                label: {
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 44, height: 44)
+                            .cornerRadius(10)
+                            .foregroundColor(viewModel.statusFriend.backgroungColorIcon)
+
+                        Image(.iconAccept)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.white)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(viewModel.statusFriend.strokeColor, lineWidth: 0.5)
+                                    .frame(width: 44, height: 44)
+                            }
+                    }
+                })
+            Button(
+                action: {
+                    viewModel.becomeFriend(answer: false)
+                },
+                label: {
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 44, height: 44)
+                            .cornerRadius(10)
+                            .foregroundColor(.clear)
+                        Image(.iconCross)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.white)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.white, lineWidth: 0.5)
+                                    .frame(width: 44, height: 44)
+                            }
+                    }
+                })
         }
     }
 }
@@ -229,7 +295,14 @@ struct PopUpRemoveFromFriends: View {
                             .tokenFont(.Label_Gigalypse_12)
                             .overlay {
                                 RoundedRectangle(cornerRadius: 15)
-                                    .stroke(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing), lineWidth: 5)
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: [.blue, .purple],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        ),
+                                            lineWidth: 5
+                                    )
                                     .frame(width: 130, height: 40)
                             }
                     })
@@ -314,50 +387,8 @@ struct PageViewEventFriends: View {
     }
 }
 
-private struct HeaderProfileFriend: View {
-    var body: some View {
-        HStack(alignment: .center) {
-            Button(
-                action: {},
-                label: {
-                    Image(.iconArrow)
-                        .foregroundColor(.white)
-                        .frame(width: 24, height: 24)
-                })
-            Spacer()
-            Button(
-                action: {},
-                label: {
-                    Image(.iconDots)
-                        .foregroundColor(.white)
-                        .frame(width: 24, height: 24)
-                })
-        }
+struct FriendProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        FriendProfileView(show: .constant(false))
     }
-}
-
-private struct HeaderProfileUser: View {
-    var viewModel: ProfileViewModel
-
-    var body: some View {
-        HStack(alignment: .center) {
-            Spacer()
-            Button(
-                action: {
-                    viewModel.isShowingSettingsView = true
-                },
-                label: {
-                    Image(.iconParametres)
-                        .foregroundColor(.white)
-                        .frame(width: 24, height: 24)
-                })
-        }
-    }
-}
-
-#Preview {
-    ZStack {
-        Color.black
-        FriendProfileView()
-    }.ignoresSafeArea()
 }

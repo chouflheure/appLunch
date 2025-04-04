@@ -2,7 +2,6 @@ import SwiftUI
 
 struct TeamView: View {
     @State var isSignFinish = false
-    @State private var showDetail = false
     @ObservedObject var coordinator: Coordinator
 
     var body: some View {
@@ -13,7 +12,7 @@ struct TeamView: View {
             }
             ScrollView(.vertical, showsIndicators: false) {
                 Button(action: {
-                    coordinator.showDetail = true
+                    coordinator.showDetailTeam = true
                 }) {
                     Image(.iconPlus)
                         .resizable()

@@ -21,7 +21,7 @@ struct SettingsView: View {
     @State private var showDetail = false
     @State private var selectedDestination: ScreensSettingsType? = nil
     @State private var showPopup = false
-    var firebase = FirebaseService()
+
     var viewModel = SettingsViewModel()
     var coordinator: Coordinator
     @Environment(\.dismiss) var dismiss
@@ -149,6 +149,7 @@ struct SettingsView: View {
                     .transition(.move(edge: .trailing))
                     .zIndex(1)
             }
+
         }.ignoresSafeArea()
     }
     

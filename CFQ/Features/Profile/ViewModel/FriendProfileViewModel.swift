@@ -5,8 +5,8 @@ class FriendProfileViewModel: ObservableObject {
     @Published var isShowingSettingsView: Bool = false
     @Published var isShowRemoveFriends: Bool = false
     @Published var hasfriendUserWithThisProfile: Bool = false
-    @Published var isPrivateAccount: Bool = true
-    @Published var isRequestedToBeFriendByTheUser: Bool = true
+    @Published var isPrivateAccount: Bool = false
+    @Published var isRequestedToBeFriendByTheUser: Bool = false
     
     @Published var statusFriend: UsersAreFriendsStatusType = .noFriend {
         didSet {
@@ -15,7 +15,6 @@ class FriendProfileViewModel: ObservableObject {
     }
 
     private func handleStatusChange() {
-        print("@@@ Status changed to: \(statusFriend)")
         if statusFriend != .friend {
             isPrivateAccount = true
         } else {

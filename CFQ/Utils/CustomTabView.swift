@@ -23,8 +23,9 @@ struct CustomTabView: View {
                     VStack {
                         Group {
                             if selectedTab == 0 {
-                                FeedView()
+                                FeedView(coordinator: coordinator)
                             } else if selectedTab == 1 {
+                                //FriendListScreen()
                                 Text("Map")
                                     .foregroundStyle(.white)
                             } else if selectedTab == 2 {
@@ -95,14 +96,26 @@ struct CustomTabView: View {
             }
             .overlay(
                 Group {
-                    if coordinator.showDetail {
-                        TeamFormView(showDetail: $coordinator.showDetail)
+                    if coordinator.showDetailTeam {
+                        TeamFormView(showDetail: $coordinator.showDetailTeam)
+                            .transition(.move(edge: .trailing))
+                    }
+                    if coordinator.showFriendList {
+                        FriendListScreen(
+                            coordinator: coordinator,
+                            show: $coordinator.showFriendList
+                        )
+                        .transition(.move(edge: .trailing))
+                    }
+                    
+                    if coordinator.showProfileFriend {
+                        FriendProfileView(show: $coordinator.showProfileFriend)
                             .transition(.move(edge: .trailing))
                     }
                 }
             )
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse
-            .animation(.easeInOut, value: coordinator.showDetail)
+            .animation(.easeInOut, value: coordinator.showDetailTeam)
         }
     }
 }

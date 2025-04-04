@@ -4,6 +4,8 @@ import SwiftUI
 struct ProfileView: View {
     var isUserProfile: Bool = true
     var coordinator: Coordinator
+    @State private var showFriendList = false
+
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1234567890",
@@ -53,7 +55,11 @@ struct ProfileView: View {
                 }
                 Spacer()
                 Button(
-                    action: {},
+                    action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            coordinator.showFriendList = true
+                        }
+                    },
                     label: {
                         Image(.iconUser)
                             .resizable()
@@ -66,10 +72,10 @@ struct ProfileView: View {
             PageViewEvent()
 
         }
+        .padding(.horizontal, 16)
         .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
             SettingsView(coordinator: coordinator)
         }
-        .padding(.horizontal, 16)
     }
 }
 

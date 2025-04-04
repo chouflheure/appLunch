@@ -2,8 +2,17 @@
 import SwiftUI
 
 struct FeedView: View {
-    @EnvironmentObject var user: User
-
+    @ObservedObject var coordinator: Coordinator
+    // @EnvironmentObject var user: User
+    var user = User(
+        uid: "1234567890",
+        name: "John",
+        firstName: "Doe",
+        pseudo: "johndoe",
+        location: ["Ici"],
+        friends: ["77MKZdb3FJX8EFvlRGotntxk6oi1"],
+        isPrivateAccount: false
+    )
     var body: some View {
         VStack {
             HStack {
@@ -33,11 +42,15 @@ struct FeedView: View {
                             viewModel: SwitchStatusUserProfileViewModel(user: user)
                         )
                         ForEach(0..<5) { index in
-                            CirclePictureStatus(isActive: true)
+                            CirclePictureStatus(isActive: false, onClick: {
+                                withAnimation {
+                                    coordinator.showProfileFriend = true
+                                }
+                            })
                                 .frame(width: 48, height: 48)
                                 .padding(.leading, 17)
                                 .onTapGesture {
-                                    print("@@@ ")
+                                    
                                 }
                         }.frame(height: 100)
                     }
@@ -59,6 +72,6 @@ struct FeedView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        FeedView()
+        FeedView(coordinator: .init())
     }.ignoresSafeArea()
 }
