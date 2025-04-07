@@ -114,7 +114,7 @@ struct FriendProfileView: View {
                     }
 
                     HStack {
-                        PreviewParticipants(pictures: [.profile, .profile, .profile, .profile])
+                        PreviewProfile(pictures: [.profile, .profile, .profile, .profile], previewProfileType: .userFriendInCommun)
                         Spacer()
                     }
                     
@@ -127,72 +127,86 @@ struct FriendProfileView: View {
                 .padding(.horizontal, 16)
                 
                 .sheet(isPresented: $viewModel.isShowingSettingsView) {
-                    ZStack {
-                        Color.black
-                            .ignoresSafeArea()
-                        VStack(alignment: .trailing, spacing: 30) {
-                            HStack(spacing: 15) {
-                                Image(.iconSignal)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.white)
-                                Button(
-                                    action: {
-                                        Logger.log("Profile signalé", level: .action)
-                                        viewModel.isShowingSettingsView = false
-                                    },
-                                    label: {
-                                        Text("Signaler le profile")
-                                            .tokenFont(.Body_Inter_Medium_16)
-                                    })
-                                Spacer()
-                            }
-                            .padding(.leading, 12)
-
-                            HStack {
-                                Image(.iconBlock)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.white)
-                                Button(
-                                    action: {
-                                        Logger.log("Profile bloqué", level: .action)
-                                        viewModel.isShowingSettingsView = false
-                                    },
-                                    label: {
-                                        Text("Bloquer le profile")
-                                            .tokenFont(.Body_Inter_Medium_16)
-                                    })
-                                Spacer()
-                            }
-                            .padding(.leading, 12)
-                        }
-                    }
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.height(150)])
+                    SignalAndBlockUserSheet(viewModel: viewModel)
+                        .presentationDragIndicator(.visible)
+                        .presentationDetents([.height(150)])
                 }
             }
             .blur(radius: viewModel.isShowRemoveFriends ? 10 : 0)
             .allowsHitTesting(!viewModel.isShowRemoveFriends)
-            
-            if viewModel.isShowRemoveFriends {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation {
-                            viewModel.isShowRemoveFriends = false
-                            viewModel.statusFriend = .friend
-                        }
-                    }
-                    .zIndex(1)
-                
-                PopUpRemoveFromFriends(
-                    showPopup: $viewModel.isShowRemoveFriends,
-                    viewModel: viewModel
-                )
-                .zIndex(2)
+        }
+        
+        if viewModel.isShowRemoveFriends {
+            PopUpRemoveFriendAlert(viewModel: viewModel)
+        }
+    }
+}
+
+struct PopUpRemoveFriendAlert: View {
+    @StateObject var viewModel: FriendProfileViewModel
+
+    var body: some View {
+        Color.black.opacity(0.4)
+            .ignoresSafeArea()
+            .onTapGesture {
+                viewModel.isShowRemoveFriends = false
+                viewModel.statusFriend = .friend
+            }
+            .zIndex(1)
+        
+        PopUpRemoveFromFriends(
+            showPopup: $viewModel.isShowRemoveFriends,
+            viewModel: viewModel
+        )
+        .zIndex(2)
+    }
+}
+
+private struct SignalAndBlockUserSheet: View {
+    @StateObject var viewModel: FriendProfileViewModel
+
+    var body: some View {
+        ZStack {
+            Color.black
+                .ignoresSafeArea()
+            VStack(alignment: .trailing, spacing: 30) {
+                HStack(spacing: 15) {
+                    Image(.iconSignal)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.white)
+                    Button(
+                        action: {
+                            Logger.log("Profile signalé", level: .action)
+                            viewModel.isShowingSettingsView = false
+                        },
+                        label: {
+                            Text("Signaler le profile")
+                                .tokenFont(.Body_Inter_Medium_16)
+                        })
+                    Spacer()
+                }
+                .padding(.leading, 12)
+
+                HStack {
+                    Image(.iconBlock)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.white)
+                    Button(
+                        action: {
+                            Logger.log("Profile bloqué", level: .action)
+                            viewModel.isShowingSettingsView = false
+                        },
+                        label: {
+                            Text("Bloquer le profile")
+                                .tokenFont(.Body_Inter_Medium_16)
+                        })
+                    Spacer()
+                }
+                .padding(.leading, 12)
             }
         }
     }
@@ -286,10 +300,8 @@ struct PopUpRemoveFromFriends: View {
                 
                 HStack(alignment: .center) {
                     Button(action: {
-                        withAnimation {
-                            showPopup = false
-                            viewModel.statusFriend = .friend
-                        }
+                        showPopup = false
+                        viewModel.statusFriend = .friend
                     }, label: {
                         Text("Non garder")
                             .tokenFont(.Label_Gigalypse_12)
@@ -310,10 +322,8 @@ struct PopUpRemoveFromFriends: View {
                     Spacer()
 
                     Button(action: {
-                        withAnimation {
-                            viewModel.statusFriend = .noFriend
-                            showPopup = false
-                        }
+                        viewModel.statusFriend = .noFriend
+                        showPopup = false
                     }, label: {
                         Text("Yes, retirer")
                             .tokenFont(.Label_Gigalypse_12)

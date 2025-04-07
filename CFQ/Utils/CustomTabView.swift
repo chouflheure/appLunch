@@ -112,6 +112,11 @@ struct CustomTabView: View {
                         FriendProfileView(show: $coordinator.showProfileFriend)
                             .transition(.move(edge: .trailing))
                     }
+                    
+                    if coordinator.showTeamDetail {
+                        TeamDetailView(show: $coordinator.showTeamDetail)
+                            .transition(.move(edge: .trailing))
+                    }
                 }
             )
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse

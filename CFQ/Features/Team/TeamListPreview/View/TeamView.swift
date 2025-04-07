@@ -23,7 +23,7 @@ struct TeamView: View {
                 }.padding(.vertical, 30)
 
                 ForEach(0..<3, id: \.self) { _ in
-                    CellTeamView()
+                    CellTeamView(coordinator: coordinator)
                         .padding(.bottom, 16)
                 }
             }
@@ -33,6 +33,8 @@ struct TeamView: View {
 }
 
 struct CellTeamView: View {
+    @ObservedObject var coordinator: Coordinator
+
     var body: some View {
         HStack(alignment: .center) {
             CirclePicture()
@@ -41,7 +43,7 @@ struct CellTeamView: View {
                 Text("CELL TEAM")
                     .foregroundColor(.white)
                     .bold()
-                PreviewParticipants(pictures: [.header])
+                PreviewProfile(pictures: [.header], previewProfileType: .userMemberTeam)
                     .frame(height: 24)
             }.padding(.horizontal, 16)
         }
@@ -53,7 +55,9 @@ struct CellTeamView: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            print("@@@ CellTeamView tapped")
+            withAnimation {
+                coordinator.showTeamDetail = true
+            }
         }
     }
 }

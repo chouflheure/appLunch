@@ -45,7 +45,7 @@ struct TitleTurnCardView: View {
                 }
                 ButtonParticipate(action: {})
             }
-                PreviewParticipants(pictures: [])
+            PreviewProfile(pictures: [], previewProfileType: .userComming)
                     .padding(.vertical, 8)
         }
     }
