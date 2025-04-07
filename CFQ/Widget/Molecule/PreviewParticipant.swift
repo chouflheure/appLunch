@@ -1,8 +1,9 @@
 
 import SwiftUI
 
-struct PreviewParticipants: View {
+struct PreviewProfile: View {
     var pictures: [UIImage]
+    var previewProfileType: PreviewProfileType
 
     var body: some View {
         HStack {
@@ -34,7 +35,7 @@ struct PreviewParticipants: View {
             Text("28")
                 .foregroundStyle(.white)
                 .bold()
-            Text("y vont")
+            Text(previewProfileType.rawValue)
                 .foregroundStyle(.white)
         }
     }
@@ -43,6 +44,6 @@ struct PreviewParticipants: View {
 #Preview {
     ZStack {
         Color.blue.edgesIgnoringSafeArea(.all)
-        PreviewParticipants(pictures: [.profile, .profile, .profile, .profile])
+        PreviewProfile(pictures: [.profile, .profile, .profile, .profile], previewProfileType: .userComming)
     }
 }

@@ -8,6 +8,7 @@ class Coordinator: ObservableObject {
     @Published var showDetailTeam = false
     @Published var showFriendList = false
     @Published var showProfileFriend = false
+    @Published var showTeamDetail = false
 
     func start() {
         /// when user has an id and an account

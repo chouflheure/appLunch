@@ -7,7 +7,7 @@ class FriendProfileViewModel: ObservableObject {
     @Published var hasfriendUserWithThisProfile: Bool = false
     @Published var isPrivateAccount: Bool = false
     @Published var isRequestedToBeFriendByTheUser: Bool = false
-    
+
     @Published var statusFriend: UsersAreFriendsStatusType = .noFriend {
         didSet {
             handleStatusChange()
