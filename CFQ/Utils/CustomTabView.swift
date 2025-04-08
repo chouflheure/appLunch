@@ -29,11 +29,14 @@ struct CustomTabView: View {
                                 Text("Map")
                                     .foregroundStyle(.white)
                             } else if selectedTab == 2 {
+                                TurnListScreen(coordinator: coordinator)
+                                /*
                                 TurnCardView(
                                     viewModel: TurnCardViewModel(),
                                     isShow: false,
                                     select: {selected in print("Card selected \(selected)")}
                                 )
+                                 */
                             } else if selectedTab == 3 {
                                 TeamView(coordinator: coordinator)
                                 // Screen()
@@ -96,8 +99,8 @@ struct CustomTabView: View {
             }
             .overlay(
                 Group {
-                    if coordinator.showDetailTeam {
-                        TeamFormView(showDetail: $coordinator.showDetailTeam)
+                    if coordinator.showCreateTeam {
+                        TeamFormView(showDetail: $coordinator.showCreateTeam)
                             .transition(.move(edge: .trailing))
                     }
                     if coordinator.showFriendList {
@@ -117,10 +120,16 @@ struct CustomTabView: View {
                         TeamDetailView(show: $coordinator.showTeamDetail)
                             .transition(.move(edge: .trailing))
                     }
+                    
+                    if coordinator.showTurnCardView {
+                        TurnCardView(isShow: $coordinator.showTurnCardView)
+                            .transition(.move(edge: .trailing))
+                    }
+                    
                 }
             )
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse
-            .animation(.easeInOut, value: coordinator.showDetailTeam)
+            .animation(.easeInOut, value: coordinator.showCreateTeam)
         }
     }
 }

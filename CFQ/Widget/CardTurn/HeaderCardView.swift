@@ -6,6 +6,8 @@ struct HeaderCardView: View {
     @StateObject var viewModel: TurnCardViewModel
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
+    @State private var isPhotoPickerPresented = false
+    var isPreviewCard: Bool
 
     var body: some View {
         ZStack() {
@@ -14,7 +16,7 @@ struct HeaderCardView: View {
                     selectedImage
                         .resizable()
                         .scaledToFill()
-                        .frame(height: 120)
+                        .frame(height: isPreviewCard ? 100 : 200)
                         .clipped()
                 } else {
                     Image(systemName: "photo")
@@ -34,15 +36,27 @@ struct HeaderCardView: View {
 
                 Spacer()
 
-                Text("Turn")
-                    .foregroundColor(.white)
-                    .bold()
-                    .textCase(.uppercase)
-                    .font(.system(size: 30))
+                if(isPreviewCard) {
+                    Text("Turn")
+                        .tokenFont(.Title_Gigalypse_24)
+                        .bold()
+                        .textCase(.uppercase)
+                        .font(.system(size: 30))
+                } else {
+                    Button(action: {
+                        withAnimation {
+                            viewModel.showDetailTurnCard = false
+                        }
+                    }) {
+                        Image(.iconCross)
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                }
             }
             .padding(.horizontal, 16)
         }
-        .frame(height: 100)
         .photosPicker(isPresented: $isPhotoPickerPresented, selection: $avatarPhotoItem, matching: .images)
         .task(id: avatarPhotoItem) {
             if let data = try? await avatarPhotoItem?.loadTransferable(type: Data.self),
@@ -50,9 +64,8 @@ struct HeaderCardView: View {
                 selectedImage = Image(uiImage: uiImage)
             }
         }
+        
     }
-
-    @State private var isPhotoPickerPresented = false
 
     private func showPhotoPicker() {
         Logger.log("Click on photo picker", level: .action)
