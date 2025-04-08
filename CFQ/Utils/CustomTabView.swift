@@ -100,11 +100,8 @@ struct CustomTabView: View {
             .overlay(
                 Group {
                     if coordinator.showCreateTeam {
-                        TeamFormView(
-                            showDetail: $coordinator.showCreateTeam,
-                            coordinator: coordinator
-                        )
-                        .transition(.move(edge: .trailing))
+                        TeamFormView(showDetail: $coordinator.showCreateTeam)
+                            .transition(.move(edge: .trailing))
                     }
                     if coordinator.showFriendList {
                         FriendListScreen(
@@ -128,12 +125,6 @@ struct CustomTabView: View {
                         TurnCardView(isShow: $coordinator.showTurnCardView)
                             .transition(.move(edge: .trailing))
                     }
-                    
-                    if coordinator.showInviteFriendView {
-                        ListFriendToAdd(showDetail: $coordinator.showInviteFriendView)
-                            .transition(.move(edge: .trailing))
-                    }
-                    
                 }
             )
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse

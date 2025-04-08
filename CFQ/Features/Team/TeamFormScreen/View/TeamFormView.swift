@@ -6,14 +6,13 @@ struct TeamFormView: View {
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
-    @State private var text = ""
-    @ObservedObject var coordinator: Coordinator
+    @StateObject var viewModel = TeamFormViewModel()
 
     var body: some View {
         DraggableView(isPresented: $showDetail) {
             SafeAreaContainer {
                 VStack {
-                    HStack{
+                    HStack {
                         Button(action: {
                             withAnimation {
                                 showDetail = false
@@ -23,12 +22,12 @@ struct TeamFormView: View {
                                 .foregroundStyle(.white)
                                 .frame(width: 24, height: 24)
                         }
-                        
+
                         Spacer()
-                        
+
                         Text("NOUVELLE TEAM")
                             .tokenFont(.Title_Gigalypse_24)
-                        
+
                         Spacer()
 
                     }
@@ -59,20 +58,31 @@ struct TeamFormView: View {
                     .onTapGesture {
                         showPhotoPicker()
                     }
-                    .photosPicker(isPresented: $isPhotoPickerPresented, selection: $avatarPhotoItem, matching: .images)
+                    .photosPicker(
+                        isPresented: $isPhotoPickerPresented,
+                        selection: $avatarPhotoItem,
+                        matching: .images
+                    )
                     .task(id: avatarPhotoItem) {
-                        if let data = try? await avatarPhotoItem?.loadTransferable(type: Data.self),
-                           let uiImage = UIImage(data: data) {
+                        if let data = try? await avatarPhotoItem?
+                            .loadTransferable(type: Data.self),
+                            let uiImage = UIImage(data: data)
+                        {
                             selectedImage = Image(uiImage: uiImage)
                         }
                     }
 
-                    CustomTextField(text: $text, keyBoardType: .default, placeHolder: "test", textFieldType: .sign)
-                        .padding(.horizontal, 16)
+                    CustomTextField(
+                        text: $viewModel.nameTeam,
+                        keyBoardType: .default,
+                        placeHolder: "test",
+                        textFieldType: .sign
+                    )
+                    .padding(.horizontal, 16)
 
                     Button(action: {
                         withAnimation {
-                            coordinator.showInviteFriendView = true
+                            viewModel.showFriendsList = true
                         }
                     }) {
                         Text("Ajouter des amis")
@@ -81,12 +91,22 @@ struct TeamFormView: View {
                     Spacer()
 
                     LargeButtonView(
-                        action: {},
+                        action: {
+                            print("@@@ \(viewModel.nameTeam)")
+                            print("@@@ \(viewModel.friendsAdd)")
+                            print("@@@ \(viewModel.friendsList)")
+                        },
                         title: "Créer la team",
                         largeButtonType: .teamCreate
                     )
                     .padding(.horizontal, 16)
                 }
+            }
+            .fullScreenCover(isPresented: $viewModel.showFriendsList) {
+                ListFriendToAdd(
+                    showDetail: $viewModel.showFriendsList,
+                    viewModel: viewModel
+                )
             }
             .padding(.top, 30)
             .padding(.bottom, 30)
@@ -98,43 +118,54 @@ struct TeamFormView: View {
     }
 }
 
-
 struct ListFriendToAdd: View {
     @Binding var showDetail: Bool
+    @ObservedObject var viewModel: TeamFormViewModel
 
     var body: some View {
-        DraggableView(isPresented: $showDetail) {
-            SafeAreaContainer {
-                HStack{
+        ZStack {
+            NeonBackgroundImage()
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    Text("QUI INVITER ?")
+                        .tokenFont(.Title_Gigalypse_24)
+                    
+                    Spacer()
+                    
                     Button(action: {
                         withAnimation {
                             showDetail = false
                         }
                     }) {
-                        Image(.iconArrow)
+                        Image(.iconCross)
                             .foregroundStyle(.white)
                             .frame(width: 24, height: 24)
                     }
-                    
-                    Spacer()
-                    
-                    Text("NOUVELLE TEAM")
-                        .tokenFont(.Title_Gigalypse_24)
-                    
-                    Spacer()
-                    
                 }
                 .padding(.horizontal, 16)
-                .padding(.bottom, 25)
                 .zIndex(100)
-                Bazar()
+                
+                Bazar(
+                    arrayPicture: $viewModel.friendsAdd,
+                    arrayFriends: $viewModel.friendsList,
+                    onRemove: { userRemoved in
+                        viewModel.removeFriendsFromList(user: userRemoved)
+                    },
+                    onAdd: { userAdd in
+                        print("@@@ here")
+                        viewModel.addFriendsToList(user: userAdd)
+                    }
+                )
             }
         }
     }
 }
+
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        TeamFormView(showDetail: .constant(true), coordinator: Coordinator())
+        TeamFormView(showDetail: .constant(true))
     }.ignoresSafeArea()
 }

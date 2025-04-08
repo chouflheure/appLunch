@@ -4,9 +4,6 @@ import SwiftUI
 struct CFQFormView: View {
     @State var text = String()
     @State var guestNumber = 0
-    var arrayPicture = [CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture()]
-
-    var arrayFriends = [CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd()]
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -52,7 +49,7 @@ struct CFQFormView: View {
                     .padding(.trailing, 16)
             }
 
-            Bazar()
+            // Bazar(arrayPicture: arrayPicture, arrayFriends: arrayFriends)
         }
 
     }
@@ -67,18 +64,47 @@ struct CFQFormView: View {
 
 
 struct CellFriendsAdd: View {
+    var name: String
+    var onAdd: (() -> Void)
+
     var body: some View {
         HStack(spacing: 0){
             CirclePicture()
                 .frame(width: 48, height: 48)
             HStack {
-                Text("les méchantes")
+                Text(name)
+                    .foregroundColor(.white)
+                    .padding(.leading, 8)
+                    .lineLimit(1)
+            }
+            Spacer()
+            Button(action: {
+                onAdd()
+            }) {
+                Image(systemName: "plus")
+                    .foregroundColor(.purpleText)
+                    .frame(width: 24, height: 24)
+            }
+        }.padding(.horizontal, 16)
+    }
+}
+
+struct CellTeamAdd: View {
+    var name: String
+    var teamNumber: Int
+
+    var body: some View {
+        HStack(spacing: 0){
+            CirclePicture()
+                .frame(width: 48, height: 48)
+            HStack {
+                Text(name)
                     .foregroundColor(.white)
                     .padding(.leading, 8)
                     .lineLimit(1)
                 Text("-")
                     .foregroundColor(.white)
-                Text("7 membres")
+                Text("\(teamNumber) membres")
                     .foregroundColor(.whiteSecondary)
             }
             Spacer()
@@ -94,6 +120,6 @@ struct CellFriendsAdd: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CellFriendsAdd()
+        // CellFriendsAdd()
     }.ignoresSafeArea()
 }

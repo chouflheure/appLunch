@@ -1,16 +1,11 @@
 import SwiftUI
 
 struct Bazar: View {
-    var arrayPicture = [
-        CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(),
-        CirclePicture(), CirclePicture(), CirclePicture(), CirclePicture(),
-    ]
-
-    var arrayFriends = [
-        CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(),
-        CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(), CellFriendsAdd(),
-    ]
-
+    @Binding var arrayPicture: Set<UserContact>
+    @Binding var arrayFriends: Set<UserContact>
+    var onRemove: ((UserContact) -> Void)
+    var onAdd: ((UserContact) -> Void)
+    
     var body: some View {
         // Recherche bar
         VStack(alignment: .leading) {
@@ -25,50 +20,76 @@ struct Bazar: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     VStack {
                         HStack {
-                            ForEach(arrayPicture.indices, id: \.self) { index in
-                                ZStack {
-                                    arrayPicture[index]
-                                        .frame(width: 48, height: 48)
-                                        .padding(.leading, 17)
-                                    Button(action: {
-                                        print("Bouton fermé")
-                                    }) {
-                                        Image(systemName: "xmark")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 8, height: 8)
-                                            .foregroundColor(.black)
-                                            .padding(6)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                    }
-                                    .offset(x: 35, y: -20)
-                                }.frame(height: 100)
-                            }
+                            ForEach(Array(arrayPicture), id: \.self) { user in
+                                CellPictureCanRemove(name: user.name) {
+                                    onRemove(user)
+                                }
+                            }.frame(height: 100)
                         }
                     }
                 }
             }
+            
+
             Divider()
                 .background(.white)
 
             VStack {
                 ScrollView(.vertical) {
                     VStack(alignment: .leading) {
-                        ForEach(arrayPicture.indices, id: \.self) { index in
-                            arrayFriends[index]
-                                .padding(.top, 30)
+                        ForEach(Array(arrayFriends), id: \.self) { user in
+                            CellFriendsAdd(name: user.name) {
+                                onAdd(user)
+                            }
                         }
+                        /*
+                        ForEach(arrayFriends.indices, id: \.self) { index in
+                            CellFriendsAdd(name: arrayFriends[index].name)
+                                .padding(.top, 10)
+                        }
+                         */
                     }
                 }
             }
         }
+        .background(.clear)
+    }
+}
+
+struct CellPictureCanRemove: View {
+    var name: String
+    var onRemove: (() -> Void)
+
+    var body: some View {
+        ZStack {
+            VStack(alignment: .center) {
+                CirclePicture()
+                    .frame(width: 48, height: 48)
+                Text(name)
+                    .tokenFont(.Body_Inter_Medium_12)
+            }
+            .padding(.leading, 17)
+
+            Button(action: {
+                onRemove()
+            }) {
+                Image(systemName: "xmark")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 8, height: 8)
+                    .foregroundColor(.black)
+                    .padding(6)
+                    .background(Color.white)
+                    .clipShape(Circle())
+            }
+            .offset(x: 35, y: -30)
+        }.background(.clear)
     }
 }
 
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        Bazar()
+        // CellPictureCanRemove(name: "name Test")
     }.ignoresSafeArea()
 }
