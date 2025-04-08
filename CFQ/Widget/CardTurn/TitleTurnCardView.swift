@@ -5,7 +5,15 @@ struct TitleTurnCardView: View {
     
     // TODO: Change with user
     var userProfileImage: UIImage = .profile
-    var userName: String = "Name"
+     
+    // @EnvironmentObject var user: User
+    var user = User(
+        uid: "1234567890",
+        name: "John",
+        firstName: "Doe",
+        pseudo: "johndoe",
+        location: ["Ici"]
+    )
 
     @FocusState private var isFocused: Bool
     @ObservedObject var viewModel: TurnCardViewModel
@@ -26,25 +34,31 @@ struct TitleTurnCardView: View {
             } else {
 
                 Text(viewModel.title)
-                    .font(.title)
+                    .tokenFont(.Title_Inter_semibold_24)
                     .padding(.bottom, 16)
-                    .foregroundColor(.white)
                     .bold()
                     .textCase(.uppercase)
             }
 
             HStack {
                 Image(uiImage: userProfileImage)
-                Text(userName)
-                    .foregroundColor(.white)
+                Text(user.pseudo)
+                    .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
+                
                 Spacer()
+                    .onTapGesture {
+                        print("@@@ here")
+                    }
+                
                 Button(action: {}) {
                     Image(systemName: "message")
                         .foregroundColor(.white)
                 }
+                
                 ButtonParticipate(action: {})
             }
+
             PreviewProfile(pictures: [], previewProfileType: .userComming)
                     .padding(.vertical, 8)
         }

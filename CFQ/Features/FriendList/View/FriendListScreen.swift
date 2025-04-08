@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct FriendListScreen: View {
-    var coordinator: Coordinator
+    @ObservedObject var coordinator: Coordinator
     @State var text = ""
     @Binding var show: Bool
     @State private var dragOffset: CGFloat = 0

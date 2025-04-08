@@ -5,10 +5,11 @@ class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
     private var firebase = FirebaseService()
     @Published var user = User()
-    @Published var showDetailTeam = false
     @Published var showFriendList = false
     @Published var showProfileFriend = false
     @Published var showTeamDetail = false
+    @Published var showCreateTeam = false
+    @Published var showTurnCardView = false
 
     func start() {
         /// when user has an id and an account
