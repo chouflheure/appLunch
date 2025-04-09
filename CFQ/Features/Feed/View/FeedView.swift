@@ -20,20 +20,29 @@ struct FeedView: View {
                     Image(.iconAddfriend)
                         .frame(width: 24, height: 24)
                         .foregroundColor(.white)
-                    
-                    Spacer()
-                    
-                    Image(.iconNotifs)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 16)
-                    
-                    Image(.iconMessagerie)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.white)
                 }
-                .padding(.horizontal, 16)
-            }
+
+                Spacer()
+
+                NotificationButtonIcon(
+                    numberNotificationUnRead: 0,
+                    icon: .iconNotifs,
+                    onTap: {
+                    withAnimation {
+                        coordinator.showNotificationScreen = true
+                    }
+                })
+
+                NotificationButtonIcon(
+                    numberNotificationUnRead: 10,
+                    icon: .iconMessagerie,
+                    onTap: {
+                    withAnimation {
+                        coordinator.showNotificationScreen = true
+                    }
+                })
+                
+            }.padding(.horizontal, 12)
 
             VStack(alignment: .leading) {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -74,4 +83,33 @@ struct FeedView: View {
         NeonBackgroundImage()
         FeedView(coordinator: .init())
     }.ignoresSafeArea()
+}
+
+
+struct NotificationButtonIcon: View {
+    var numberNotificationUnRead: Int
+    var icon: ImageResource
+    var onTap: ( () -> Void )
+    
+    var body: some View {
+        Button(action: {
+            withAnimation {
+                onTap()
+            }
+        }) {
+            ZStack {
+                Image(icon)
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                
+                if numberNotificationUnRead > 0 {
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 12, height: 12)
+                        .offset(x: 12, y: -12)
+                }
+            }
+        }
+    }
 }
