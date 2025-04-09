@@ -3,7 +3,7 @@ import SwiftUI
 
 struct ProfileView: View {
     var isUserProfile: Bool = true
-    var coordinator: Coordinator
+    @ObservedObject var coordinator: Coordinator
     @State private var showFriendList = false
 
     // @EnvironmentObject var user: User

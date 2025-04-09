@@ -4,7 +4,7 @@ import MapKit
 import FirebaseFirestore
 
 struct CustomTabView: View {
-    @State private var selectedTab = 0
+    // @State private var selectedTab = 0
     @State private var selectedEvent: MapLocationEventData? = nil
     @EnvironmentObject var user: User
 
@@ -22,13 +22,13 @@ struct CustomTabView: View {
                 } else {
                     VStack {
                         Group {
-                            if selectedTab == 0 {
+                            if coordinator.selectedTab == 0 {
                                 FeedView(coordinator: coordinator)
-                            } else if selectedTab == 1 {
+                            } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
                                 Text("Map")
                                     .foregroundStyle(.white)
-                            } else if selectedTab == 2 {
+                            } else if coordinator.selectedTab == 2 {
                                 TurnListScreen(coordinator: coordinator)
                                 /*
                                 TurnCardView(
@@ -37,7 +37,7 @@ struct CustomTabView: View {
                                     select: {selected in print("Card selected \(selected)")}
                                 )
                                  */
-                            } else if selectedTab == 3 {
+                            } else if coordinator.selectedTab == 3 {
                                 TeamView(coordinator: coordinator)
                                 // Screen()
                             } else {
@@ -52,39 +52,39 @@ struct CustomTabView: View {
                             
                             TabButton(iconUnselected: .iconNavHome,
                                       iconSelected: .iconNavHomeFilled,
-                                      isSelected: selectedTab == 0) {
-                                selectedTab = 0
+                                      isSelected: coordinator.selectedTab == 0) {
+                                coordinator.selectedTab = 0
                             }
                             
                             Spacer()
                             
                             TabButton(iconUnselected: .iconNavMap,
                                       iconSelected: .iconNavMapFilled,
-                                      isSelected: selectedTab == 1) {
-                                selectedTab = 1
+                                      isSelected: coordinator.selectedTab == 1) {
+                                coordinator.selectedTab = 1
                             }
                             
                             Spacer()
                             
                             CustomPlusButtonTabBar()
                                 .onTapGesture {
-                                    selectedTab = 2
+                                    coordinator.selectedTab = 2
                                 }
                             
                             Spacer()
                             
                             TabButton(iconUnselected: .iconNavTeam,
                                       iconSelected: .iconNavTeamFilled,
-                                      isSelected: selectedTab == 3) {
-                                selectedTab = 3
+                                      isSelected: coordinator.selectedTab == 3) {
+                                coordinator.selectedTab = 3
                             }
                             
                             Spacer()
                             
                             TabButton(iconUnselected: .iconNavProfile,
                                       iconSelected: .iconNavProfileFilled,
-                                      isSelected: selectedTab == 4) {
-                                selectedTab = 4
+                                      isSelected: coordinator.selectedTab == 4) {
+                                coordinator.selectedTab = 4
                             }
                             
                             Spacer()
@@ -117,15 +117,17 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showTeamDetail {
-                        TeamDetailView(show: $coordinator.showTeamDetail)
-                            .transition(.move(edge: .trailing))
+                        TeamDetailView(
+                            show: $coordinator.showTeamDetail,
+                            coordinator: coordinator
+                        )
+                        .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showTurnCardView {
                         TurnCardView(isShow: $coordinator.showTurnCardView)
                             .transition(.move(edge: .trailing))
                     }
-                    
                 }
             )
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse

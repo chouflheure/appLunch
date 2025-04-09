@@ -27,6 +27,12 @@ struct CollectionViewMoods: View {
         } else {
             viewModel.moods.insert(item)
         }
+        if item == .other {
+            viewModel.moods.removeAll()
+            viewModel.moods.insert(.other)
+        } else {
+            viewModel.moods.remove(.other)
+        }
     }
 }
 

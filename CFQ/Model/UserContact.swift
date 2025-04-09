@@ -4,20 +4,20 @@ class UserContact: Codable, Hashable {
     var uid: String
     var name: String
     var firstName: String
-    var username: String
+    var pseudo: String
     var profilePictureUrl: String
 
     init(
         uid: String,
         name: String,
         firstName: String,
-        username: String,
+        pseudo: String,
         profilePictureUrl: String
     ) {
         self.uid = uid
         self.name = name
         self.firstName = firstName
-        self.username = username
+        self.pseudo = pseudo
         self.profilePictureUrl = profilePictureUrl
     }
 
@@ -26,7 +26,7 @@ class UserContact: Codable, Hashable {
         return lhs.uid == rhs.uid &&
                lhs.name == rhs.name &&
                lhs.firstName == rhs.firstName &&
-               lhs.username == rhs.username &&
+               lhs.pseudo == rhs.pseudo &&
                lhs.profilePictureUrl == rhs.profilePictureUrl
     }
 
@@ -35,7 +35,7 @@ class UserContact: Codable, Hashable {
         hasher.combine(uid)
         hasher.combine(name)
         hasher.combine(firstName)
-        hasher.combine(username)
+        hasher.combine(pseudo)
         hasher.combine(profilePictureUrl)
     }
 }

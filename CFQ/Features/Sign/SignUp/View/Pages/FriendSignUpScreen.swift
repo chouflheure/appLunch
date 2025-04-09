@@ -24,7 +24,7 @@ struct FriendSignUpScreen: View {
                         
                         ForEach(viewModel.contacts, id: \.self) { contact in
                             HStack {
-                                FriendSignUpCell(pseudo: contact.username, name: contact.name, firstName: contact.firstName)
+                                FriendSignUpCell(pseudo: contact.pseudo, name: contact.name, firstName: contact.firstName)
                             }
                         }
                     }
