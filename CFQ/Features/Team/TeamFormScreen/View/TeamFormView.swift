@@ -81,12 +81,30 @@ struct TeamFormView: View {
                     .padding(.horizontal, 16)
 
                     Button(action: {
-                        withAnimation {
-                            viewModel.showFriendsList = true
-                        }
+                        viewModel.showFriendsList = true
                     }) {
                         Text("Ajouter des amis")
-                    }.padding(.top, 15)
+                            .tokenFont(.Body_Inter_Medium_16)
+                    }
+                    .padding()
+                    .overlay() {
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(.white, lineWidth: 1)
+                    }
+                    .padding(.top, 15)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        VStack {
+                            HStack {
+                                ForEach(Array(viewModel.friendsAdd), id: \.self) { user in
+                                    CellPictureCanRemove(name: user.name) {
+                                        viewModel.removeFriendsFromList(user: user)
+                                    }
+                                }.frame(height: 100)
+                            }
+                        }
+                    }
+                    .padding(.top, 15)
 
                     Spacer()
 
@@ -97,9 +115,11 @@ struct TeamFormView: View {
                             print("@@@ \(viewModel.friendsList)")
                         },
                         title: "Créer la team",
-                        largeButtonType: .teamCreate
+                        largeButtonType: .teamCreate,
+                        isDisabled: viewModel.friendsAdd.isEmpty || viewModel.nameTeam.isEmpty
                     )
                     .padding(.horizontal, 16)
+                    
                 }
             }
             .fullScreenCover(isPresented: $viewModel.showFriendsList) {
@@ -123,41 +143,47 @@ struct ListFriendToAdd: View {
     @ObservedObject var viewModel: TeamFormViewModel
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
+        SafeAreaContainer {
             VStack {
                 HStack {
-                    Spacer()
-                    
-                    Text("QUI INVITER ?")
-                        .tokenFont(.Title_Gigalypse_24)
-                    
-                    Spacer()
+                    CustomTextField(
+                        text: $viewModel.researchText,
+                        keyBoardType: .default,
+                        placeHolder: "recherche un ami",
+                        textFieldType: .searchBar,
+                        onRemoveText: {
+                            viewModel.removeText()
+                        },
+                        onTapResearch: {
+                            viewModel.researche()
+                        }
+                    )
                     
                     Button(action: {
-                        withAnimation {
-                            showDetail = false
-                        }
+                        showDetail = false
                     }) {
-                        Image(.iconCross)
+                        Image(.iconArrow)
+                            .resizable()
                             .foregroundStyle(.white)
                             .frame(width: 24, height: 24)
+                            .rotationEffect(Angle(degrees: -90))
                     }
                 }
                 .padding(.horizontal, 16)
+                .padding(.top, 50)
                 .zIndex(100)
-                
-                Bazar(
+
+                AddFriendsAndListView(
                     arrayPicture: $viewModel.friendsAdd,
                     arrayFriends: $viewModel.friendsList,
                     onRemove: { userRemoved in
                         viewModel.removeFriendsFromList(user: userRemoved)
                     },
                     onAdd: { userAdd in
-                        print("@@@ here")
                         viewModel.addFriendsToList(user: userAdd)
                     }
                 )
+                .padding(.top, 30)
             }
         }
     }

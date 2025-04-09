@@ -16,7 +16,8 @@ enum TextFieldType {
                 hasStoke: true,
                 titleCase: .lowercase,
                 titleCaseFunc: { $0.lowercased() },
-                cornerRadius: 8
+                cornerRadius: 8,
+                leadingPadding: 5
             )
         case .turn:
             return TextFieldData(
@@ -25,7 +26,8 @@ enum TextFieldType {
                 hasStoke: false,
                 titleCase: .uppercase,
                 titleCaseFunc: { $0.uppercased() },
-                cornerRadius: 0
+                cornerRadius: 0,
+                leadingPadding: 0
             )
         case .searchBar:
             return TextFieldData(
@@ -34,8 +36,10 @@ enum TextFieldType {
                 hasStoke: true,
                 titleCase: .lowercase,
                 titleCaseFunc: { $0.lowercased() },
-                iconSystem: "magnifyingglass",
-                cornerRadius: 30
+                iconResearch: "magnifyingglass",
+                iconCross: "xmark.circle",
+                cornerRadius: 30,
+                leadingPadding: 10
             )
         }
     }
@@ -47,17 +51,31 @@ struct TextFieldData {
     let hasStoke: Bool
     let titleCase: Text.Case
     let titleCaseFunc: (String) -> String
-    let iconSystem: String?
+    let iconResearch: String?
+    let iconCross: String?
     let cornerRadius: CGFloat
+    let leadingPadding: CGFloat
     
-    init(background: Color, foregroundColor: Color, hasStoke: Bool, titleCase: Text.Case, titleCaseFunc: @escaping (String) -> String, iconSystem: String? = nil, cornerRadius: CGFloat) {
+    init(
+        background: Color,
+        foregroundColor: Color,
+        hasStoke: Bool,
+        titleCase: Text.Case,
+        titleCaseFunc: @escaping (String) -> String,
+        iconResearch: String? = nil,
+        iconCross: String? = nil,
+        cornerRadius: CGFloat,
+        leadingPadding: CGFloat
+    ) {
         self.background = background
         self.foregroundColor = foregroundColor
         self.hasStoke = hasStoke
         self.titleCase = titleCase
         self.titleCaseFunc = titleCaseFunc
-        self.iconSystem = iconSystem
+        self.iconResearch = iconResearch
+        self.iconCross = iconCross
         self.cornerRadius = cornerRadius
+        self.leadingPadding = leadingPadding
     }
 }
 
@@ -66,29 +84,46 @@ struct CustomTextField: View {
     let keyBoardType: UIKeyboardType
     let placeHolder: String
     let textFieldType: TextFieldType
-    
+    var onRemoveText: (() -> Void)?
+    var onTapResearch: (() -> Void)?
+
     var body: some View {
         HStack {
-            Image(systemName: textFieldType.data.iconSystem ?? "")
+            Image(systemName: textFieldType.data.iconResearch ?? "")
                 .padding(.leading, 8)
                 .foregroundColor(.white)
-
+                .padding(.leading, textFieldType.data.leadingPadding)
+            
             TextField("", text: $text)
                 .placeholder(when: text.isEmpty) {
                     HStack {
-                        
                         Text(placeHolder)
                             .foregroundColor(.gray)
                             .textCase(textFieldType.data.titleCase)
                     }
             }.onChange(of: text) { newValue in
                 text = textFieldType.data.titleCaseFunc(newValue)
+                if textFieldType == .searchBar {
+                    onTapResearch?()
+                }
             }
             .foregroundColor(.white)
-            .padding(.all, textFieldType.data.hasStoke ? 12 : 0)
+            .padding(.all, textFieldType.data.hasStoke ? 10 : 5)
             .keyboardType(keyBoardType)
+            
+            if textFieldType == .searchBar && !text.isEmpty {
+                Button(action: {
+                    onRemoveText?()
+                }) {
+                    Image(systemName: textFieldType.data.iconCross ?? "")
+                        .padding(.leading, 8)
+                        .foregroundColor(.white)
+                        .padding(.trailing, 10)
+                }
+            }
         }
         .background(textFieldType.data.background)
+        .clipShape(RoundedRectangle(cornerRadius: textFieldType.data.cornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: textFieldType.data.cornerRadius)
                 .stroke(.white, lineWidth: textFieldType.data.hasStoke ? 0.5 : 0)
