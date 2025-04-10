@@ -13,10 +13,15 @@ struct FeedView: View {
         friends: ["77MKZdb3FJX8EFvlRGotntxk6oi1"],
         isPrivateAccount: false
     )
+
     var body: some View {
         VStack {
             HStack {
-                Button(action: {}) {
+                Button(action: {
+                    withAnimation {
+                        coordinator.showFriendListScreen = true
+                    }
+                }) {
                     Image(.iconAddfriend)
                         .frame(width: 24, height: 24)
                         .foregroundColor(.white)

@@ -135,6 +135,11 @@ struct CustomTabView: View {
                         )
                         .transition(.move(edge: .trailing))
                     }
+                    
+                    if coordinator.showFriendListScreen {
+                        AddFriendsScreen(isPresented: $coordinator.showFriendListScreen)
+                            .transition(.move(edge: .leading))
+                    }
                 }
             )
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse

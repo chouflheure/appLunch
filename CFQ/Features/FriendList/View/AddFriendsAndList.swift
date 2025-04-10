@@ -21,7 +21,7 @@ struct AddFriendsAndListView: View {
                     VStack {
                         HStack {
                             ForEach(Array(arrayPicture), id: \.self) { user in
-                                CellPictureCanRemove(name: user.name) {
+                                CellFriendCanRemove(name: user.name) {
                                     onRemove(user)
                                 }
                             }.frame(height: 100)

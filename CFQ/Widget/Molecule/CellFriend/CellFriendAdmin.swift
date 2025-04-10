@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct CellPictureAdmin: View {
+struct CellFriendAdmin: View {
     var name: String
     @Binding var isEditingAdmin: Bool
     @Binding var isAdmin: Bool
@@ -12,7 +12,6 @@ struct CellPictureAdmin: View {
                 .padding(.leading, 10)
             
             Button(action: {
-                print("@@@ click isAdmin = \(isAdmin)")
                 if isEditingAdmin {
                     isAdmin.toggle()
                 }
@@ -34,6 +33,6 @@ struct CellPictureAdmin: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CellPictureAdmin(name: "test", isEditingAdmin: .constant(false), isAdmin: .constant(false))
+        CellFriendAdmin(name: "test", isEditingAdmin: .constant(false), isAdmin: .constant(false))
     }
 }

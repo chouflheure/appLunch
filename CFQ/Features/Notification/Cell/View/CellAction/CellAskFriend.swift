@@ -77,3 +77,11 @@ struct CellAskFriend: View {
         }
     }
 }
+
+#Preview {
+    ZStack {
+        Color.black
+        CellAskFriend(isAskFriend: .constant(true), isAcceptedFriend: .constant(false))
+    }
+    .ignoresSafeArea()
+}
