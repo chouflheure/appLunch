@@ -97,9 +97,10 @@ struct TeamFormView: View {
                         VStack {
                             HStack {
                                 ForEach(Array(viewModel.friendsAdd), id: \.self) { user in
-                                    CellPictureCanRemove(name: user.name) {
+                                /*    CellPictureCanRemove(name: user.name) {
                                         viewModel.removeFriendsFromList(user: user)
                                     }
+                                 */
                                 }.frame(height: 100)
                             }
                         }
@@ -146,11 +147,8 @@ struct ListFriendToAdd: View {
         SafeAreaContainer {
             VStack {
                 HStack {
-                    CustomTextField(
+                    SearchBarView(
                         text: $viewModel.researchText,
-                        keyBoardType: .default,
-                        placeHolder: "recherche un ami",
-                        textFieldType: .searchBar,
                         onRemoveText: {
                             viewModel.removeText()
                         },

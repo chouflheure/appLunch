@@ -7,31 +7,7 @@ struct PreviewProfile: View {
 
     var body: some View {
         HStack {
-            HStack(spacing: -15) {
-                Image(.profile)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .clipShape(Circle())
-                
-                Image(.profile)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .clipShape(Circle())
-                
-                Image(.profile)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .clipShape(Circle())
-                
-                Image(.profile)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .clipShape(Circle())
-            }
+            PreviewMultiplePicture()
             Text("28")
                 .foregroundStyle(.white)
                 .bold()

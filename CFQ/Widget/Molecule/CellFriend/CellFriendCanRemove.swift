@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct CellPictureCanRemove: View {
+struct CellFriendCanRemove: View {
     var name: String
     var onRemove: (() -> Void)
 

@@ -17,6 +17,7 @@ enum FontToken {
     case Title_Gigalypse_20
     case Label_Inter_Semibold_16
     case Placeholder_Inter_Regular_16
+    case Placeholder_Inter_Regular_14
     case Label_Inter_Semibold_14
     case Label_Inter_Medium_12
     case Label_Gigalypse_12
@@ -41,6 +42,8 @@ enum FontToken {
             return .custom(FontType.InterSemiBold.rawValue, size: 16)
         case .Placeholder_Inter_Regular_16:
             return .custom(FontType.InterRegular.rawValue, size: 16)
+        case .Placeholder_Inter_Regular_14:
+            return .custom(FontType.InterRegular.rawValue, size: 14)
         case .Label_Inter_Semibold_14:
             return .custom(FontType.InterSemiBold.rawValue, size: 14)
         case .Label_Inter_Medium_12:
@@ -83,7 +86,7 @@ enum FontToken {
                 .Body_Inter_Semibold_12,
                 .Body_Inter_Regular_10 :
             return .whitePrimary
-        case .Placeholder_Inter_Regular_16, .Body_Inter_Regular_12:
+        case .Placeholder_Inter_Regular_16, .Placeholder_Inter_Regular_14, .Body_Inter_Regular_12:
             return .whiteTertiary
         }
     }

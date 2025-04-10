@@ -10,7 +10,9 @@ class Coordinator: ObservableObject {
     @Published var showTeamDetail = false
     @Published var showCreateTeam = false
     @Published var showTurnCardView = false
+    @Published var showNotificationScreen = false
     @Published var selectedTab = 0
+    @Published var showFriendListScreen = false
 
     func start() {
         /// when user has an id and an account

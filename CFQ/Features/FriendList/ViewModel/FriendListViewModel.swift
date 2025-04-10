@@ -1,12 +1,10 @@
+
 import Foundation
 
-class TeamFormViewModel: ObservableObject {
-    @Published var nameTeam = String()
+class FriendListViewModel: ObservableObject {
     @Published var researchText = String()
     @Published var showEditTeam: Bool = false
     @Published var showSheetSettingTeam: Bool = false
-    @Published var isAdminEditing: Bool = false
-    @Published var showSheetAddFriend: Bool = false
     
     // @EnvironmentObject var user: User
     var user = User(

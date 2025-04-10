@@ -51,6 +51,7 @@ struct EditProfileUserView: View {
                 
                 Divider()
                     .background(.white)
+
                 VStack(spacing: 20) {
                     
                     Button(action: {

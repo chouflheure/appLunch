@@ -102,7 +102,7 @@ struct TeamDetailView: View {
                                 VStack(spacing: 0) {
                                     HStack(spacing: 0) {
                                         ForEach(Array(viewModel.friendsAdd), id: \.self) { user in
-                                            CellPictureAdmin (
+                                            CellFriendAdmin (
                                                 name: user.name,
                                                 isEditingAdmin: $viewModel.isAdminEditing,
                                                 isAdmin: Binding(
