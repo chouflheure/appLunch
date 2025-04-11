@@ -23,7 +23,7 @@ struct HeaderBackLeftScreen: View {
             Spacer()
 
             Text(titleScreen)
-                .tokenFont(.Title_Inter_semibold_24)
+                .tokenFont(.Title_Gigalypse_24)
                 .textCase(.uppercase)
                 .padding(.leading, -24)
             
@@ -31,6 +31,9 @@ struct HeaderBackLeftScreen: View {
             
         }
         .padding(.horizontal, 12)
+        
+        Divider()
+            .background(.white)
     }
 }
 
@@ -46,7 +49,7 @@ struct HeaderBackRightScreen: View {
             Spacer()
             
             Text(titleScreen)
-                .tokenFont(.Title_Inter_semibold_24)
+                .tokenFont(.Title_Gigalypse_24)
                 .textCase(.uppercase)
                 .padding(.trailing, -24)
             

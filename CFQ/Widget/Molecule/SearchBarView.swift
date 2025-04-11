@@ -19,6 +19,7 @@ struct SearchBarView: View {
                 onTapResearch()
             }
         )
+        .padding(.horizontal, 16)
     }
 }
 

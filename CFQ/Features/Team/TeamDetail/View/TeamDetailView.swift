@@ -148,7 +148,7 @@ struct TeamDetailView: View {
                                 Divider()
                                     .overlay(.whitePrimary)
                                 
-                                CFQCollectionView()
+                                CFQCollectionView(coordinator: coordinator)
                                     .padding(.vertical, 10)
                                 
                                 Divider()

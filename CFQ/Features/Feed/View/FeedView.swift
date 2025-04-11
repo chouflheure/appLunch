@@ -74,7 +74,7 @@ struct FeedView: View {
             Divider()
                 .background(.white)
 
-            CFQCollectionView()
+            CFQCollectionView(coordinator: coordinator)
 
             Divider()
                 .background(.white)
