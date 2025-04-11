@@ -50,6 +50,7 @@ struct CFQFormView: View {
                                 
                                 SearchBarView(
                                     text: $viewModel.researchText,
+                                    placeholder: "recherche un ami",
                                     onRemoveText: {
                                         viewModel.removeText()
                                     },

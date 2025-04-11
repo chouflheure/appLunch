@@ -28,6 +28,7 @@ struct FriendListScreen: View {
                             VStack(alignment: .leading) {
                                 SearchBarView(
                                     text: $viewModel.researchText,
+                                    placeholder: "recherche un ami",
                                     onRemoveText: {
                                         viewModel.removeText()
                                     },

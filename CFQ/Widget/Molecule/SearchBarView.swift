@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SearchBarView: View {
     @Binding var text: String
+    var placeholder: String
     var onRemoveText: (() -> Void)
     var onTapResearch: (() -> Void)
     
@@ -10,7 +11,7 @@ struct SearchBarView: View {
         CustomTextField(
             text: $text,
             keyBoardType: .default,
-            placeHolder: "recherche un ami",
+            placeHolder: placeholder,
             textFieldType: .searchBar,
             onRemoveText: {
                 onRemoveText()
@@ -25,6 +26,6 @@ struct SearchBarView: View {
 
 #Preview {
     SafeAreaContainer {
-        SearchBarView(text: .constant(""), onRemoveText: {}, onTapResearch: {})
+        SearchBarView(text: .constant(""), placeholder: "recherche un ami", onRemoveText: {}, onTapResearch: {})
     }
 }

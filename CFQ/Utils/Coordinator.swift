@@ -14,6 +14,7 @@ class Coordinator: ObservableObject {
     @Published var selectedTab = 0
     @Published var showFriendListScreen = false
     @Published var showCFQScreen = false
+    @Published var showMessageScreen = false
 
     func start() {
         /// when user has an id and an account
