@@ -2,63 +2,87 @@
 import SwiftUI
 
 struct CFQFormView: View {
-    @State var text = String()
     @State var guestNumber = 0
-    
+    @Binding var isPresented: Bool
+    @ObservedObject var viewModel = CFQFormViewModel()
+
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .center, spacing: 0) {
-                Text("CFQ ?")
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.leading, 40)
-
-                Button(action: {
-                    Logger.log("Click to close CFQForm", level: .action)
-                }) {
-                    Image(.iconCross)
-                        .foregroundStyle(.white)
-                        .frame(width: 24, height: 24)
-                }.padding(.trailing, 16)
+        DraggableView(isPresented: $isPresented) {
+            SafeAreaContainer {
+                VStack(alignment: .leading) {
+                    HeaderBackLeftScreen(
+                        onClickBack: {
+                            withAnimation {
+                                isPresented = false
+                            }
+                        },
+                        titleScreen: "CFQ ?"
+                    )
+                    
+                    VStack {
+                        ScrollView(.vertical, showsIndicators: false) {
+                            VStack {
+                                HStack(alignment: .center, spacing: 12) {
+                                    Image(.header)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 50, height: 50)
+                                        .cornerRadius(100)
+                                    
+                                    CustomTextField(
+                                        text: $viewModel.titleCFQ,
+                                        keyBoardType: .default,
+                                        placeHolder: "Demain",
+                                        textFieldType: .cfq
+                                    )
+                                }
+                                .padding(.top, 16)
+                                .padding(.horizontal, 16)
+                                
+                                HStack {
+                                    Spacer()
+                                    PostEventButton(action: {
+                                        
+                                    })
+                                    .padding(.trailing, 16)
+                                }
+                                .padding(.top, 5)
+                                
+                                SearchBarView(
+                                    text: $viewModel.researchText,
+                                    onRemoveText: {
+                                        viewModel.removeText()
+                                    },
+                                    onTapResearch: {
+                                        viewModel.researche()
+                                    }
+                                )
+                                .padding(.top, 16)
+                                
+                                AddFriendsAndListView(
+                                    arrayPicture: $viewModel.friendsAdd,
+                                    arrayFriends: $viewModel.friendsList,
+                                    onRemove: { userRemoved in
+                                        viewModel.removeFriendsFromList(user: userRemoved)
+                                    },
+                                    onAdd: { userAdd in
+                                        viewModel.addFriendsToList(user: userAdd)
+                                    }
+                                )
+                                .padding(.top, 15)
+                            }
+                        }
+                    }
+                }
             }
-            .padding(.top, 50)
-            .padding(.bottom, 50)
-
-            Spacer()
-
-            HStack(spacing: 12) {
-                Image(.header)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 50, height: 50)
-                    .cornerRadius(100)
-                
-                CustomTextField(
-                    text: $text,
-                    keyBoardType: .default,
-                    placeHolder: "CFQ",
-                    textFieldType: .cfq
-                )
-            }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
-            
-            HStack {
-                Spacer()
-                PostEventButton(action: {})
-                    .padding(.trailing, 16)
-            }
-
-            // Bazar(arrayPicture: arrayPicture, arrayFriends: arrayFriends)
         }
-
     }
 }
 
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CFQFormView()
+        CFQFormView(isPresented: .constant(true))
     }.ignoresSafeArea()
 }
 

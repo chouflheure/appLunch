@@ -89,11 +89,20 @@ struct CustomTextField: View {
 
     var body: some View {
         HStack {
-            Image(systemName: textFieldType.data.iconResearch ?? "")
-                .padding(.leading, 8)
-                .foregroundColor(.white)
-                .padding(.leading, textFieldType.data.leadingPadding)
             
+            if textFieldType == .searchBar && text.isEmpty {
+                Image(systemName: textFieldType.data.iconResearch ?? "")
+                    .padding(.leading, 8)
+                    .foregroundColor(.white)
+                    .padding(.leading, textFieldType.data.leadingPadding)
+            }
+            
+            if textFieldType == .cfq {
+                Text("CFQ")
+                    .tokenFont(.Body_Inter_Medium_16)
+                    .padding(.leading, 15)
+            }
+
             TextField("", text: $text)
                 .placeholder(when: text.isEmpty) {
                     HStack {
@@ -109,6 +118,7 @@ struct CustomTextField: View {
             }
             .foregroundColor(.white)
             .padding(.all, textFieldType.data.hasStoke ? 10 : 5)
+            .padding(.leading, textFieldType == .cfq ? -10 : 0)
             .keyboardType(keyBoardType)
             
             if textFieldType == .searchBar && !text.isEmpty {
