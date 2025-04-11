@@ -19,7 +19,10 @@ struct PreviewProfile: View {
 
 #Preview {
     ZStack {
-        Color.blue.edgesIgnoringSafeArea(.all)
-        PreviewProfile(pictures: [.profile, .profile, .profile, .profile], previewProfileType: .userComming)
-    }
+        NeonBackgroundImage()
+        PreviewProfile(
+            pictures: [.profile, .profile, .profile, .profile],
+            previewProfileType: .userComming
+        )
+    }.ignoresSafeArea()
 }
