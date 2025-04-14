@@ -1,7 +1,7 @@
 
 import Foundation
 
-class MessageScreenViewModel: ObservableObject {
+class PreviewMessagerieScreenViewModel: ObservableObject {
     @Published var titleCFQ = String()
     @Published var researchText = String()
     @Published var showEditTeam: Bool = false

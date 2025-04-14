@@ -26,6 +26,6 @@ struct SearchBarView: View {
 
 #Preview {
     SafeAreaContainer {
-        SearchBarView(text: .constant(""), placeholder: "recherche un ami", onRemoveText: {}, onTapResearch: {})
+        SearchBarView(text: .constant(""), placeholder: StringsToken.SearchBar.placeholderFriend, onRemoveText: {}, onTapResearch: {})
     }
 }

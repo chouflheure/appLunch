@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CellMessagingView: View {
     var data: MessageCellModel
+    var onTap: ((String) -> Void)
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -27,7 +28,7 @@ struct CellMessagingView: View {
                         .tokenFont(.Body_Inter_Medium_14)
                         .lineLimit(1)
 
-                    Text(data.hasUnReadMessage ? "Nouveau Message" : data.messagePreview)
+                    Text(data.hasUnReadMessage ? StringsToken.Messaging.newMessagePreview : data.messagePreview)
                         .tokenFont(
                             data.hasUnReadMessage ?
                                 .Body_Inter_Medium_14 :
@@ -44,20 +45,24 @@ struct CellMessagingView: View {
             }
         }
         .padding(.horizontal, 12)
+        .onTapGesture {
+            onTap(data.uid)
+        }
     }
 }
 
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CellMessagingView(data:
-            MessageCellModel(
-                uid: "1",
-                titleConversation: "Charles",
-                messagePreview: "Coucou",
-                time: "4min",
-                hasUnReadMessage: true
-            )
+        CellMessagingView(
+            data: MessageCellModel(
+                    uid: "1",
+                    titleConversation: "Charles",
+                    messagePreview: "Coucou",
+                    time: "4min",
+                    hasUnReadMessage: true
+            ),
+            onTap: {_ in }
         )
     }.ignoresSafeArea()
 }

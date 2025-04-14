@@ -29,7 +29,7 @@ struct AddFriendsScreen: View {
                             VStack {
                                 SearchBarView(
                                     text: $viewModel.researchText,
-                                    placeholder: "recherche un ami",
+                                    placeholder: StringsToken.SearchBar.placeholderFriend,
                                     onRemoveText: {
                                         viewModel.removeText()
                                     },

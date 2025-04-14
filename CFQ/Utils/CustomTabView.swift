@@ -147,7 +147,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showMessageScreen {
-                        MessageScreenView(isPresented: $coordinator.showMessageScreen)
+                        PreviewMessagerieScreenView(isPresented: $coordinator.showMessageScreen)
                             .transition(.move(edge: .trailing))
                     }
                 }

@@ -1,9 +1,9 @@
 
 import SwiftUI
 
-struct MessageScreenView: View {
+struct PreviewMessagerieScreenView: View {
     @Binding var isPresented: Bool
-    @ObservedObject var viewModel = MessageScreenViewModel()
+    @ObservedObject var viewModel = PreviewMessagerieScreenViewModel()
 
     var body: some View {
         DraggableView(isPresented: $isPresented) {
@@ -15,14 +15,14 @@ struct MessageScreenView: View {
                                 isPresented = false
                             }
                         },
-                        titleScreen: "Messagerie"
+                        titleScreen: StringsToken.Messaging.titleScreen
                     )
                     
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading) {
                             SearchBarView(
                                 text: $viewModel.researchText,
-                                placeholder: "Recherche une conv",
+                                placeholder: StringsToken.SearchBar.placeholderConversation,
                                 onRemoveText: {
                                     viewModel.removeText()
                                 },
@@ -32,7 +32,9 @@ struct MessageScreenView: View {
                             ).padding(.top, 16)
                             
                             ForEach(Array(viewModel.messageList), id: \.self) { data in
-                                CellMessagingView(data: data)
+                                CellMessagingView(data: data) { _ in
+                                    print("@@@ tap on Cell message")
+                                }
                                     .padding(.top, 16)
                             }.padding(.horizontal, 16)
                         }
@@ -48,6 +50,6 @@ struct MessageScreenView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        MessageScreenView(isPresented: .constant(true))
+        PreviewMessagerieScreenView(isPresented: .constant(true))
     }.ignoresSafeArea()
 }

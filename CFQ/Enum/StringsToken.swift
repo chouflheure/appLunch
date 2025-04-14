@@ -87,12 +87,20 @@ enum StringsToken {
     
     enum Map {}
     
-    enum Messaging {}
+    enum Messaging {
+        static let titleScreen = "Messagerie"
+        static let newMessagePreview = "Nouveau message"
+    }
     
     enum Notification {}
     
     enum Team {}
     
     enum Turn {}
+    
+    enum SearchBar {
+        static let placeholderFriend = "Recherche un ami"
+        static let placeholderConversation = "Recherche une conv"
+    }
 }
 
