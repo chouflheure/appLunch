@@ -23,7 +23,8 @@ struct CustomTabView: View {
                     VStack {
                         Group {
                             if coordinator.selectedTab == 0 {
-                                FeedView(coordinator: coordinator)
+                                // FeedView(coordinator: coordinator)
+                                CellMessageView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
                                 Text("Map")

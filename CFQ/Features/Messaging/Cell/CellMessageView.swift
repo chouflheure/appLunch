@@ -15,13 +15,13 @@ struct ReponseMessage<Content: View>: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        if value.translation.width < 0 {
+                        if value.translation.width > 0 {
                             dragOffset = value.translation.width
                             print("@@@ drag max")
                         }
                     }
                     .onEnded { value in
-                        if value.translation.width < -150 {
+                        if value.translation.width > 150 {
                             withAnimation {
                                 // isPresented = false
                                 dragOffset = 0
@@ -36,13 +36,51 @@ struct ReponseMessage<Content: View>: View {
     }
 }
 
+import SwiftUI
+
+struct EmojiView: View {
+    let emojies = ["😘", "😀", "😆", "😅", "😄", "😃", "😋", "😂", "❤️"]
+    @State private var visibleIndexes: Set<Int> = []
+    private var dureactionAnimation = 0.02
+    var body: some View {
+        HStack {
+            ForEach(0..<emojies.count, id: \.self) { index in
+                Text(emojies[index])
+                    .font(.system(size: 15))
+                    .opacity(visibleIndexes.contains(index) ? 1 : 0)
+                    .offset(y: visibleIndexes.contains(index) ? 0 : -20) // 👈 chute du haut
+                    .animation(.easeOut(duration: 0.4).delay(Double(index) * dureactionAnimation), value: visibleIndexes)
+                    .onTapGesture {
+                        print("click on \(emojies[index])")
+                    }
+            }
+            Button(action: {
+                
+            }) {
+                Image(.iconPlus)
+                    .resizable()
+                    .scaledToFill()
+                    .foregroundColor(.white)
+                    .frame(width: 15, height: 15)
+            }
+        }
+        .onAppear {
+            for index in emojies.indices {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * dureactionAnimation) {
+                    visibleIndexes.insert(index)
+                }
+            }
+        }
+    }
+}
+
 
 
 
 struct CellMessageView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false
-    var emojies = ["😘", "😀", "😆", "😅", "😄", "😃", "😋", "😂", "❤️" ]
+    var emojies = ["😘", "😀", "😆", "😅", "😄", "😃", "😋", "😂", "❤️", "😅", "😄", "😃", "😋", "😂"]
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
@@ -130,26 +168,14 @@ struct CellMessageView: View {
                 
                 HStack(alignment: .top) {
                     VStack {
-                        ScrollView(.horizontal) {
-                            HStack {
-                                ForEach(0..<9) { index in
-                                    Button(emojies[index]) {
-                                        print("click on \(emojies[index])")
-                                    }
-                                }
-                                Button(action: {}) {
-                                    Image(.iconPlus)
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(.white)
-                                }
-                            }
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(.blackLight)
-                            .cornerRadius(20)
-                            .padding(.bottom, 5)
-                        }
+                        
+                            EmojiView()
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(.blackLight)
+                                .cornerRadius(20)
+                                .padding(.bottom, 5)
+                                .frame(alignment: .leading)
                         
                         Text("Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 😂")
                             .tokenFont(.Body_Inter_Medium_12)
