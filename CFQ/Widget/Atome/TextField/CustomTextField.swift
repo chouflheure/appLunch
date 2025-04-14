@@ -90,7 +90,7 @@ struct CustomTextField: View {
     var body: some View {
         HStack {
             
-            if textFieldType == .searchBar && text.isEmpty {
+            if textFieldType == .searchBar {
                 Image(systemName: textFieldType.data.iconResearch ?? "")
                     .padding(.leading, 8)
                     .foregroundColor(.white)

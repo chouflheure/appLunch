@@ -145,6 +145,11 @@ struct CustomTabView: View {
                         CFQFormView(isPresented: $coordinator.showCFQScreen)
                             .transition(.move(edge: .trailing))
                     }
+                    
+                    if coordinator.showMessageScreen {
+                        PreviewMessagerieScreenView(isPresented: $coordinator.showMessageScreen)
+                            .transition(.move(edge: .trailing))
+                    }
                 }
             )
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse

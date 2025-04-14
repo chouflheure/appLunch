@@ -149,6 +149,7 @@ struct ListFriendToAdd: View {
                 HStack {
                     SearchBarView(
                         text: $viewModel.researchText,
+                        placeholder: StringsToken.SearchBar.placeholderFriend,
                         onRemoveText: {
                             viewModel.removeText()
                         },

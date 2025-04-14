@@ -43,7 +43,7 @@ struct FeedView: View {
                     icon: .iconMessagerie,
                     onTap: {
                     withAnimation {
-                        coordinator.showNotificationScreen = true
+                        coordinator.showMessageScreen = true
                     }
                 })
                 
