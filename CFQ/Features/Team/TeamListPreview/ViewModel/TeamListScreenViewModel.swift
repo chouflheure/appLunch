@@ -5,8 +5,7 @@ import FirebaseFirestore
 class TeamListScreenViewModel: ObservableObject {
     var firebaseService = FirebaseService()
     @Published var teams = [Team]()
-    
-    
+
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1234567890",
@@ -14,13 +13,13 @@ class TeamListScreenViewModel: ObservableObject {
         firstName: "Doe",
         pseudo: "johndoe",
         location: ["Ici"],
-        teams: ["test", "Test"]
+        teams: ["test", "Test", "4A5DD7E4-32EB-42EB-B8A0-E48A1609384C", "42734BB3-074E-488C-8FAB-A83A700CD446"]
     )
-    
+
     init() {
         startListeningToTeams()
     }
-    
+
     func startListeningToTeams() {
         firebaseService.getDataByIDs(
             from: .teams,
