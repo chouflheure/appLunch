@@ -154,8 +154,10 @@ class TeamFormViewModel: ObservableObject {
 extension TeamFormViewModel {
     
     func pushNewTeamToFirebase() {
+        let uuid = UUID()
+        print("@@@ uuid = \(uuid.description)")
         let team = Team (
-            uid: "jgskhdfjs;:dkflsdfsdfsdfsdfsdfsdf",
+            uid: uuid.description,
             title: nameTeam,
             pictureUrlString: "",
             friends: Array(friendsAdd),
