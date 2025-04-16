@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 class TeamFormViewModel: ObservableObject {
     @Published var nameTeam = String()
@@ -7,7 +8,12 @@ class TeamFormViewModel: ObservableObject {
     @Published var showSheetSettingTeam: Bool = false
     @Published var isAdminEditing: Bool = false
     @Published var showSheetAddFriend: Bool = false
+    @Published var team: Team?
+    @Published var imageProfile: Image?
+
+    var firebaseService = FirebaseService()
     
+
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1",
@@ -37,6 +43,7 @@ class TeamFormViewModel: ObservableObject {
             )
         ]
     )
+
     @Published var friendsAdd = Set<UserContact>(
         [
             UserContact(
@@ -48,6 +55,7 @@ class TeamFormViewModel: ObservableObject {
             )
         ]
     )
+
     @Published var friendsList = Set<UserContact>(
         [
             UserContact(
@@ -117,6 +125,7 @@ class TeamFormViewModel: ObservableObject {
             profilePictureUrl: user.profilePictureUrl
         )
         allFriends = friendsList
+        
     }
     
     func removeFriendsFromList(user: UserContact) {
@@ -138,5 +147,28 @@ class TeamFormViewModel: ObservableObject {
     func researche() {
         friendsList = allFriends
         friendsList = filteredNames
+    }
+}
+
+// firebase functions
+extension TeamFormViewModel {
+    
+    func pushNewTeamToFirebase() {
+        let team = Team (
+            uid: "jgskhdfjs;:dkflsdfsdfsdfsdfsdfsdf",
+            title: nameTeam,
+            pictureUrlString: "",
+            friends: Array(friendsAdd),
+            admins: "string"
+        )
+
+        firebaseService.addData(data: team, to: .teams) { (result: Result<Void, Error>) in
+            switch result{
+            case .success():
+                print("@@@ success")
+            case .failure(let error):
+                print("@@@ error = \(error)")
+            }
+        }
     }
 }

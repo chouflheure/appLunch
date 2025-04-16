@@ -18,7 +18,7 @@ struct TeamDetailView: View {
     )
 
     var body: some View {
-        DraggableView(isPresented: $show) {
+        DraggableViewLeft(isPresented: $show) {
             SafeAreaContainer {
                 VStack {
                     HStack {

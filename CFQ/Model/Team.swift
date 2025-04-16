@@ -1,18 +1,34 @@
 
-class Team: Encodable, Decodable {
+class Team: Codable, Hashable {
     let uid: String
     let title: String
-    let pictureUrlStirng: String
-    let friends: [String]
-    let cfqs: [String]
-    let turns: [String]
-    
-    init(uid: String, title: String, pictureUrlStirng: String, friends: [String], cfqs: [String], turns: [String]) {
+    let pictureUrlString: String
+    let friends: [UserContact]
+    let admins: String
+
+    init(uid: String, title: String, pictureUrlString: String, friends: [UserContact], admins: String) {
         self.uid = uid
         self.title = title
-        self.pictureUrlStirng = pictureUrlStirng
+        self.pictureUrlString = pictureUrlString
         self.friends = friends
-        self.cfqs = cfqs
-        self.turns = turns
+        self.admins = admins
+    }
+    
+    // Conformité à Equatable
+    static func == (lhs: Team, rhs: Team) -> Bool {
+        return lhs.uid == rhs.uid &&
+               lhs.title == rhs.title &&
+               lhs.pictureUrlString == rhs.pictureUrlString &&
+               lhs.friends == rhs.friends &&
+               lhs.admins == rhs.admins
+    }
+
+    // Conformité à Hashable
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uid)
+        hasher.combine(title)
+        hasher.combine(pictureUrlString)
+        hasher.combine(friends)
+        hasher.combine(admins)
     }
 }

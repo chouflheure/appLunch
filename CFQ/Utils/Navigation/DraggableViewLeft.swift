@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct DraggableView<Content: View>: View {
+struct DraggableViewLeft<Content: View>: View {
     @Binding var isPresented: Bool
     @State private var dragOffset: CGFloat = 0
     let content: Content

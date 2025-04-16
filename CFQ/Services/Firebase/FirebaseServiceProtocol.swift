@@ -5,5 +5,5 @@ internal protocol FirebaseServiceProtocol {
     func getAllData<T: Codable>(from collection: CollectionFirebaseType, completion: @escaping (Result<[T], Error>) -> Void)
     func deleteDataByID(from collection: CollectionFirebaseType, at id: String, completion: @escaping (Result<Void, Error>) -> Void)
     func getDataByID<T: Codable>(from collection: CollectionFirebaseType, with id: String, completion: @escaping (Result<T, Error>) -> Void)
-    func getDataByIDs<T: Codable>(from collection: CollectionFirebaseType, with id: [String], completion: @escaping (Result<[T], Error>) -> Void)
+    
 }

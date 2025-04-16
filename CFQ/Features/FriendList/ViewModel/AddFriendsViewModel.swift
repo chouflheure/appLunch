@@ -8,7 +8,6 @@ class AddFriendsViewModel: ObservableObject {
     
     // @EnvironmentObject var user: User
     var user = User(
-        uid: "1",
         name: "Charles",
         firstName: "Charles",
         pseudo: "Charles",

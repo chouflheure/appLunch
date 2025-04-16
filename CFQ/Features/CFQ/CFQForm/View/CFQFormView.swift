@@ -7,7 +7,7 @@ struct CFQFormView: View {
     @ObservedObject var viewModel = CFQFormViewModel()
 
     var body: some View {
-        DraggableView(isPresented: $isPresented) {
+        DraggableViewLeft(isPresented: $isPresented) {
             SafeAreaContainer {
                 VStack(alignment: .leading) {
                     HeaderBackLeftScreen(

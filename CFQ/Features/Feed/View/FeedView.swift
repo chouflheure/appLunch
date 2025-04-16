@@ -5,7 +5,6 @@ struct FeedView: View {
     @ObservedObject var coordinator: Coordinator
     // @EnvironmentObject var user: User
     var user = User(
-        uid: "1234567890",
         name: "John",
         firstName: "Doe",
         pseudo: "johndoe",

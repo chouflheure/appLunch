@@ -8,7 +8,7 @@ struct FriendListScreen: View {
     @StateObject var viewModel = FriendListViewModel()
 
     var body: some View {
-        DraggableView(isPresented: $show) {
+        DraggableViewLeft(isPresented: $show) {
             SafeAreaContainer {
                 VStack {
                     HeaderBackLeftScreen(

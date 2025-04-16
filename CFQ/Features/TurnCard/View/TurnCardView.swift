@@ -17,7 +17,7 @@ struct TurnCardView: View {
     @StateObject var viewModel = TurnCardViewModel()
     
     var body : some View {
-        DraggableView(isPresented: $isShow) {
+        DraggableViewLeft(isPresented: $isShow) {
             SafeAreaContainer {
                 VStack {
                     HStack{

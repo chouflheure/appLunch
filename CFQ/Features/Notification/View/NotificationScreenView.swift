@@ -5,7 +5,7 @@ struct NotificationScreenView: View {
     @Binding var isPresented: Bool
 
     var body: some View {
-        DraggableView(isPresented: $isPresented) {
+        DraggableViewLeft(isPresented: $isPresented) {
             SafeAreaContainer {
                 VStack {
                     HStack(alignment: .center) {

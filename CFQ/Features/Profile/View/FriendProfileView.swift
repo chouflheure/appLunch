@@ -27,7 +27,7 @@ struct FriendProfileView: View {
     @StateObject var viewModel = FriendProfileViewModel()
 
     var body: some View {
-        DraggableView(isPresented: $show) {
+        DraggableViewLeft(isPresented: $show) {
             SafeAreaContainer {
                 VStack {
                     HStack(alignment: .center) {

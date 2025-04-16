@@ -9,7 +9,7 @@ struct TeamFormView: View {
     @StateObject var viewModel = TeamFormViewModel()
 
     var body: some View {
-        DraggableView(isPresented: $showDetail) {
+        DraggableViewLeft(isPresented: $showDetail) {
             SafeAreaContainer {
                 VStack {
                     HStack {
@@ -36,7 +36,7 @@ struct TeamFormView: View {
                     .zIndex(100)
 
                     ZStack(alignment: .bottom) {
-                        if let selectedImage = selectedImage {
+                        if let selectedImage = viewModel.imageProfile {
                             selectedImage
                                 .resizable()
                                 .scaledToFill()
@@ -68,7 +68,7 @@ struct TeamFormView: View {
                             .loadTransferable(type: Data.self),
                             let uiImage = UIImage(data: data)
                         {
-                            selectedImage = Image(uiImage: uiImage)
+                            viewModel.imageProfile = Image(uiImage: uiImage)
                         }
                     }
 
@@ -111,13 +111,13 @@ struct TeamFormView: View {
 
                     LargeButtonView(
                         action: {
-                            print("@@@ \(viewModel.nameTeam)")
-                            print("@@@ \(viewModel.friendsAdd)")
-                            print("@@@ \(viewModel.friendsList)")
+                            viewModel.pushNewTeamToFirebase()
                         },
                         title: "Créer la team",
                         largeButtonType: .teamCreate,
-                        isDisabled: viewModel.friendsAdd.isEmpty || viewModel.nameTeam.isEmpty
+                        isDisabled: viewModel.friendsAdd.isEmpty ||
+                            viewModel.nameTeam.isEmpty ||
+                            viewModel.imageProfile == nil
                     )
                     .padding(.horizontal, 16)
                     

@@ -6,7 +6,7 @@ struct PreviewMessagerieScreenView: View {
     @ObservedObject var viewModel = PreviewMessagerieScreenViewModel()
 
     var body: some View {
-        DraggableView(isPresented: $isPresented) {
+        DraggableViewLeft(isPresented: $isPresented) {
             SafeAreaContainer {
                 VStack {
                     HeaderBackLeftScreen(

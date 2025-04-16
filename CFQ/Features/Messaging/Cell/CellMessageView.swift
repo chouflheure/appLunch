@@ -83,6 +83,7 @@ struct EmojiView: View {
 struct CellMessageView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false
+    @State private var isShowPopover = false
 
     var body: some View {
         ZStack {
@@ -120,24 +121,34 @@ struct CellMessageView: View {
                     
                     HStack {
                         Spacer()
-                        Text("❤️ 😘 2")
-                            .foregroundColor(.white)
-                            .font(.system(size: 10))
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(.blackLight)
-                            .cornerRadius(20)
-                            .overlay() {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(lineWidth: 0.3)
-                                    .foregroundColor(.black)
-                            }
-                            .onTapGesture {
-                                print("@@@ ")
-                            }
+                        Button(action: {
+                            isShowPopover = true
+                        }) {
+                            Text("❤️ 😘 2")
+                                .foregroundColor(.white)
+                                .font(.system(size: 10))
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(.blackLight)
+                                .cornerRadius(20)
+                                .overlay() {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(lineWidth: 0.3)
+                                        .foregroundColor(.black)
+                                }
+                                .popover(isPresented: $isShowPopover, arrowEdge: .bottom,
+                                         content: {
+                                    Text("Hello, World!")
+                                        .padding()
+                                        .presentationCompactAdaptation(.none)
+                                })
+                                .zIndex(999)
+                        }
                     }
                     .padding(.trailing, 60)
                     .offset(y: -12)
+                    
+                    
                 }
 
                 ReponseMessage {
@@ -214,6 +225,14 @@ struct CellMessageView: View {
 }
 
 
+fileprivate
+struct PopoverDetailView: View {
+    var body: some View {
+        Text("Popover Content")
+            .padding()
+    }
+}
+
 struct ReactionMessageView {
     var body: some View {
         Text("")
@@ -226,3 +245,60 @@ struct ReactionMessageView {
         CellMessageView()
     }
 }
+
+
+
+import SwiftUI
+
+class P158_SubscriptionView {
+    
+    init() {}
+    @State private var count1: Double = 0
+    @State private var count2: Double = 0
+    
+    @State private var angle1 = Angle(degrees: 0)
+    @State private var angle2 = Angle(degrees: 0)
+    
+    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    
+    public var body: some View {
+        ZStack {
+            SubscriptionView(content:
+                                StrokeCapsuleView(color: Color.purple)
+                                .frame(width: 260, height: 100)
+                                .rotationEffect(angle1)
+                             , publisher: timer) { t in
+                self.count1 += 1
+                self.angle1 = Angle(degrees: self.count1 * 45)
+            }
+            StrokeCapsuleView(color: Color.orange)
+                .frame(width: 100, height: 260)
+                .rotationEffect(angle2)
+                .onReceive(timer) { t in
+                    self.count2 += 1
+                    self.angle2 = Angle(degrees: self.count1 * -45)
+                }
+        }
+        .animation(.easeOut, value: count1)
+        .animation(.easeOut, value: count2)
+    }
+}
+
+fileprivate
+extension P158_SubscriptionView {
+    struct StrokeCapsuleView: View {
+        let color: Color
+        var body: some View {
+            Capsule()
+                .stroke(lineWidth: 1)
+                .foregroundColor(color)
+        }
+    }
+}
+/*
+struct P158_SubscriptionView_Previews: PreviewProvider {
+    static var previews: some View {
+        P158_SubscriptionView()
+    }
+}
+*/

@@ -25,6 +25,7 @@ struct CustomTabView: View {
                             if coordinator.selectedTab == 0 {
                                 // FeedView(coordinator: coordinator)
                                 CellMessageView()
+                                // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
                                 Text("Map")

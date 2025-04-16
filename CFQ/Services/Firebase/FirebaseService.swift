@@ -2,7 +2,12 @@
 import Firebase
 import FirebaseStorage
 
+enum ListenerType: String {
+    case team_group_listener = "team_group_listener"
+}
+
 class FirebaseService: FirebaseServiceProtocol {
+    private var listeners: [String: ListenerRegistration] = [:]
     let db = Firestore.firestore()
 
     func addData<T: Codable>(data: T, to collection: CollectionFirebaseType, completion: @escaping (Result<Void, Error>) -> (Void)) {
@@ -82,6 +87,55 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
 
+    func getDataByIDs<T: Codable>(
+        from collection: CollectionFirebaseType,
+        with ids: [String],
+        listenerKeyPrefix: ListenerType? = nil,
+        onUpdate: @escaping (Result<[T], Error>) -> Void
+    ) {
+        let collectionName = collection.rawValue
+        var currentData: [String: T] = [:]
+        var firstLoadCompleted = Set<String>() // Pour ne notifier que quand tous les premiers loads sont faits
+
+        for id in ids {
+            let documentRef = db.collection(collectionName).document(id)
+
+            let registration = documentRef.addSnapshotListener { documentSnapshot, error in
+                if let error = error {
+                    onUpdate(.failure(error))
+                    return
+                }
+
+                guard let document = documentSnapshot, document.exists else {
+                    onUpdate(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Document \(id) non trouvé."])))
+                    return
+                }
+
+                do {
+                    let data = try document.data(as: T.self)
+                    currentData[id] = data
+                    firstLoadCompleted.insert(id)
+
+                    // Si tous les documents ont été chargés au moins une fois, on peut émettre le tableau
+                    if firstLoadCompleted.count == ids.count {
+                        let orderedResults = ids.compactMap { currentData[$0] }
+                        onUpdate(.success(orderedResults))
+                    }
+
+                } catch {
+                    onUpdate(.failure(error))
+                }
+            }
+
+            // Stocke le listener si un préfixe est fourni
+            if let keyPrefix = listenerKeyPrefix {
+                let key = "\(keyPrefix)_\(id)"
+                listeners[key] = registration
+            }
+        }
+    }
+    
+/*
     func getDataByIDs<T: Codable>(from collection: CollectionFirebaseType, with ids: [String], completion: @escaping (Result<[T], Error>) -> Void) {
         let collectionName = collection.rawValue
             let dispatchGroup = DispatchGroup()
@@ -122,7 +176,7 @@ class FirebaseService: FirebaseServiceProtocol {
                 }
             }
     }
-
+*/
     
     func getAllData<T: Codable>(from collection: CollectionFirebaseType, completion: @escaping (Result<[T], Error>) -> Void) {
         let collectionName = collection.rawValue
