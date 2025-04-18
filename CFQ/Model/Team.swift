@@ -1,12 +1,12 @@
 
 class Team: Codable, Hashable {
-    let uid: String?
+    let uid: String
     let title: String
     let pictureUrlString: String
     let friends: [UserContact]
     let admins: String
 
-    init(uid: String?, title: String, pictureUrlString: String, friends: [UserContact], admins: String) {
+    init(uid: String, title: String, pictureUrlString: String, friends: [UserContact], admins: String) {
         self.uid = uid
         self.title = title
         self.pictureUrlString = pictureUrlString

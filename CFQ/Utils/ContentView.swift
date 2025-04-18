@@ -2,8 +2,6 @@
 import SwiftUI
 import FirebaseAuth
 
-
-
 struct ContentView: View {
     @StateObject var coordinator = Coordinator()
 

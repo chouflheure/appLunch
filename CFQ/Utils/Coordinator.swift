@@ -15,8 +15,11 @@ class Coordinator: ObservableObject {
     @Published var showFriendListScreen = false
     @Published var showCFQScreen = false
     @Published var showMessageScreen = false
+    @Published var dataApp = DataApp()
+    @Published var teamDetail: Team?
 
     func start() {
+        catchDataAppToStart()
         /// when user has an id and an account
         if let user = Auth.auth().currentUser {
             firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
@@ -80,6 +83,22 @@ class Coordinator: ObservableObject {
                 SignScreen(coordinator: self)
             }
         )
+    }
+
+    func catchDataAppToStart() {
+        firebase.getDataByID(from: .dataApp, with: "dataApp") { (result: Result<DataApp, Error>) in
+            switch result {
+            case .success(let data):
+                print("@@@ data = \(data.version)")
+                print("@@@ data = \(data.isNeedToUpdateApp)")
+                self.dataApp = data
+            /// when user has an id but not account
+            case .failure( let e):
+                print("@@@ e = \(e)")
+                
+            }
+            
+        }
     }
 
     func gotoCustomTabView(user: User) {

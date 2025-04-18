@@ -3,7 +3,8 @@ import SwiftUI
 struct TeamView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel = TeamListScreenViewModel()
-    
+    @State var selectedTeam: Int = 0
+
     var body: some View {
         VStack {
             HStack(alignment: .center) {
@@ -23,15 +24,24 @@ struct TeamView: View {
                         .frame(width: 40, height: 40)
                 }.padding(.vertical, 30)
 
-                ForEach(Array(viewModel.teams), id: \.self) { team in
+                ForEach(Array(viewModel.teams.indices), id: \.self) { index in
                     CellTeamView(
                         coordinator: coordinator,
-                        team: team
+                        team: viewModel.teams[index],
+                        onClick: {
+                            selectedTeam = index
+                            coordinator.teamDetail = viewModel.teams[selectedTeam]
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                coordinator.showTeamDetail = true
+                            }
+                        }
                     )
                     .padding(.bottom, 16)
                 }
             }
             .padding(.horizontal, 12)
+        }.onChange(of: viewModel.teams) { _ in
+            coordinator.teamDetail = viewModel.teams[selectedTeam]
         }
     }
 }
@@ -39,6 +49,7 @@ struct TeamView: View {
 struct CellTeamView: View {
     @ObservedObject var coordinator: Coordinator
     var team: Team
+    var onClick: (() -> Void)
 
     var body: some View {
         HStack(alignment: .center) {
@@ -63,7 +74,8 @@ struct CellTeamView: View {
         .contentShape(Rectangle())
         .onTapGesture {
             withAnimation {
-                coordinator.showTeamDetail = true
+                onClick()
+                // coordinator.showTeamDetail = true
             }
         }
     }

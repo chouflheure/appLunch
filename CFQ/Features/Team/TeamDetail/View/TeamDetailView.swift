@@ -6,6 +6,7 @@ struct TeamDetailView: View {
 
     var title = "GIRLS ONLY"
     @StateObject var viewModel = TeamFormViewModel()
+    // @StateObject var viewModel2: TeamListScreenViewModel
     var edit = false
 
     // @EnvironmentObject var user: User
@@ -33,8 +34,8 @@ struct TeamDetailView: View {
                         }
                         
                         Spacer()
-                        
-                        Text(title)
+
+                        Text(coordinator.teamDetail?.title ?? "Nop")
                             .foregroundColor(.white)
                             .tokenFont(.Title_Gigalypse_24)
                         
@@ -277,6 +278,6 @@ private struct SettingsTeamDetailSheet: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        TeamDetailView(show: .constant(true), coordinator: Coordinator())
+        // TeamDetailView(show: .constant(true), coordinator: Coordinator())
     }.ignoresSafeArea()
 }
