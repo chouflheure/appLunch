@@ -7,7 +7,9 @@ struct CustomTabView: View {
     // @State private var selectedTab = 0
     @State private var selectedEvent: MapLocationEventData? = nil
     @EnvironmentObject var user: User
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 
+    
   
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
@@ -19,7 +21,11 @@ struct CustomTabView: View {
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 if !hasAlreadyOnboarded {
                     OnboardingView()
-                } else {
+                }
+                if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
+                    // Show pop 
+                }
+                else {
                     VStack {
                         Group {
                             if coordinator.selectedTab == 0 {
@@ -117,7 +123,7 @@ struct CustomTabView: View {
                         FriendProfileView(show: $coordinator.showProfileFriend)
                             .transition(.move(edge: .trailing))
                     }
-                    
+                    /*
                     if coordinator.showTeamDetail {
                         TeamDetailView(
                             show: $coordinator.showTeamDetail,
@@ -125,7 +131,12 @@ struct CustomTabView: View {
                         )
                         .transition(.move(edge: .trailing))
                     }
+                    */
                     
+                    if coordinator.showTeamDetail {
+                        destinationView(isShow: $coordinator.showTeamDetail)
+                    }
+
                     if coordinator.showTurnCardView {
                         TurnCardView(isShow: $coordinator.showTurnCardView)
                             .transition(.move(edge: .trailing))
@@ -157,6 +168,12 @@ struct CustomTabView: View {
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse
             .animation(.easeInOut, value: coordinator.showCreateTeam)
         }
+    }
+    
+    @ViewBuilder
+    func destinationView(isShow: Binding<Bool>) -> some View {
+        TeamEditViewScreen(show: isShow, coordinator: coordinator)
+            .transition(.move(edge: .trailing))
     }
 }
 
