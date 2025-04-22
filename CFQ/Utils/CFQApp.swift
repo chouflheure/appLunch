@@ -137,7 +137,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         
         if let notificationType = userInfo["notificationType"] as? String {
             if notificationType == "daily_reminder" {
-                print("@@@ here")
+                // print("@@@ here")
                 // Gérer la notification de rappel quotidien
             }
         }
@@ -177,7 +177,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         }
         
         if response.notification.request.content.categoryIdentifier == "NO_ACTION" {
-            print("@@@ here")
+            // print("@@@ here")
             return
         } else {
             completionHandler()

@@ -29,8 +29,8 @@ struct CustomTabView: View {
                     VStack {
                         Group {
                             if coordinator.selectedTab == 0 {
-                                // FeedView(coordinator: coordinator)
-                                CellMessageView()
+                                FeedView(coordinator: coordinator)
+                                // CellMessageView()
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
@@ -123,20 +123,17 @@ struct CustomTabView: View {
                         FriendProfileView(show: $coordinator.showProfileFriend)
                             .transition(.move(edge: .trailing))
                     }
-                    /*
-                    if coordinator.showTeamDetail {
-                        TeamDetailView(
-                            show: $coordinator.showTeamDetail,
-                            coordinator: coordinator
-                        )
-                        .transition(.move(edge: .trailing))
-                    }
-                    */
                     
                     if coordinator.showTeamDetail {
-                        destinationView(isShow: $coordinator.showTeamDetail)
+                        TeamDetailView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
                     }
 
+                    if coordinator.showTeamDetailEdit {
+                        TeamEditViewScreen(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+                    
                     if coordinator.showTurnCardView {
                         TurnCardView(isShow: $coordinator.showTurnCardView)
                             .transition(.move(edge: .trailing))
@@ -168,12 +165,6 @@ struct CustomTabView: View {
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse
             .animation(.easeInOut, value: coordinator.showCreateTeam)
         }
-    }
-    
-    @ViewBuilder
-    func destinationView(isShow: Binding<Bool>) -> some View {
-        TeamEditViewScreen(show: isShow, coordinator: coordinator)
-            .transition(.move(edge: .trailing))
     }
 }
 

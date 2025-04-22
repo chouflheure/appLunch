@@ -160,8 +160,8 @@ extension TeamFormViewModel {
             uid: uuid.description,
             title: nameTeam,
             pictureUrlString: "",
-            friends: Array(friendsAdd),
-            admins: "string"
+            friends: [""],
+            admins: ["string"]
         )
 
         firebaseService.addData(data: team, to: .teams) { (result: Result<Void, Error>) in

@@ -83,6 +83,8 @@ struct TurnCardView: View {
                     .padding(.bottom, 30)
                     .zIndex(1)
                     
+                    Spacer()
+
                     HStack(spacing: 30) {
                         Button(action: {}, label: {
                             HStack {

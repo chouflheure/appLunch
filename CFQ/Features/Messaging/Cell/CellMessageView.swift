@@ -17,7 +17,6 @@ struct ReponseMessage<Content: View>: View {
                     .onChanged { value in
                         if value.translation.width > 0 {
                             dragOffset = value.translation.width
-                            print("@@@ drag max")
                         }
                     }
                     .onEnded { value in

@@ -14,6 +14,7 @@ struct CellFriendAdmin: View {
             Button(action: {
                 if isEditingAdmin {
                     isAdmin.toggle()
+                    print("@@@ tap")
                 }
             }) {
                 Image(.iconCrown)

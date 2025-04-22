@@ -15,8 +15,11 @@ class Coordinator: ObservableObject {
     @Published var showFriendListScreen = false
     @Published var showCFQScreen = false
     @Published var showMessageScreen = false
+    @Published var showTeamDetailEdit = false
+
     @Published var dataApp = DataApp()
-    @Published var teamDetail: Team?
+    @Published var teamDetail: TeamGlobal?
+    @Published var turnSelected: Turn?
 
     func start() {
         catchDataAppToStart()
@@ -57,18 +60,6 @@ class Coordinator: ObservableObject {
             )
             Logger.log("User not connected and not account ", level: .info)
         }
-
-/*
-        // ##### TEST ####
-
-        let view = CustomTabView(coordinator: .init())
-        currentView = AnyView(
-            NavigationView {
-                view
-            }
-        )
-        // #### TEST ####
- */
     }
 
     func logOutUser() {
@@ -89,8 +80,6 @@ class Coordinator: ObservableObject {
         firebase.getDataByID(from: .dataApp, with: "dataApp") { (result: Result<DataApp, Error>) in
             switch result {
             case .success(let data):
-                print("@@@ data = \(data.version)")
-                print("@@@ data = \(data.isNeedToUpdateApp)")
                 self.dataApp = data
             /// when user has an id but not account
             case .failure( let e):

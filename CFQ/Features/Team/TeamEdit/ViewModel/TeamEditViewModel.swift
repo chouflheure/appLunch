@@ -3,18 +3,22 @@ import Foundation
 import SwiftUI
 
 class TeamEditViewModel: ObservableObject {
-    @Published var nameTeam = String()
-    @Published var uuidTeam = String()
+
     @Published var researchText = String()
     @Published var showEditTeam: Bool = false
     @Published var showSheetSettingTeam: Bool = false
     @Published var isAdminEditing: Bool = false
     @Published var showSheetAddFriend: Bool = false
     @Published var imageProfile: Image?
+    
+    @Published var uuidTeam = String()
+    @Published var titleTeam = String()
+    @Published var pictureUrlString = String()
+    @Published var setFriends = Set<UserContact>()
+    @Published var setAdmins = Set<UserContact>()
 
     var firebaseService = FirebaseService()
     
-
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1",
@@ -23,15 +27,6 @@ class TeamEditViewModel: ObservableObject {
         pseudo: "Charles",
         profilePictureUrl: ""
     )
-    
-    let userContact: UserContact
-
-    var isUserAdmin: Bool {
-        get {
-            adminList.contains(userContact)
-        }
-        set {}
-    }
 
     @Published var adminList = Set<UserContact>(
         [
@@ -118,15 +113,7 @@ class TeamEditViewModel: ObservableObject {
     }
 
     init() {
-        userContact = UserContact(
-            uid: user.uid,
-            name: user.name,
-            firstName: user.firstName,
-            pseudo: user.pseudo,
-            profilePictureUrl: user.profilePictureUrl
-        )
         allFriends = friendsList
-        
     }
     
     func removeFriendsFromList(user: UserContact) {
@@ -153,17 +140,36 @@ class TeamEditViewModel: ObservableObject {
 
 extension TeamEditViewModel {
     
-    func pushEditTeamToFirebase() {
-        print("@@@ uuidTeam = \(uuidTeam)" )
-        let team = Team (
-            uid: uuidTeam,
-            title: nameTeam,
-            pictureUrlString: "",
-            friends: Array(friendsAdd),
-            admins: "string"
-        )
+    func pushEditTeamToFirebase(uuidTeam: String) {
+        var friendsUUID = [String]()
+        var adminsUUID = [String]()
+        
+        setFriends.forEach({
+            friendsUUID.append($0.uid)
+            print("@@@ friendsUUID = \($0.uid )")
+        })
+        
+        setAdmins.forEach({
+            adminsUUID.append($0.uid)
+            print("@@@ adminsUUID = \($0.uid )")
+        })
 
-        firebaseService.updateDataByID(data: ["title": nameTeam], to: .teams, at: uuidTeam)
+        firebaseService.updateDataByID(
+            data: ["admins": adminsUUID, "title": titleTeam, "friends": friendsUUID],
+            to: .teams,
+            at: uuidTeam
+        )
+/*
+        if titleTeam.isEmpty || !pictureUrlString.isEmpty || !friendsUUID.isEmpty || !adminsUUID.isEmpty {
+            firebaseService.updateDataByID(
+                data: ["title": titleTeam, "admins": adminsUUID, "friends": friendsUUID, "pictureUrlString": "pictureUrlString"],
+                to: .teams,
+                at: uuidTeam
+            )
+        } else {
+            print("@@@ No send")
+        }
+ */
     }
 }
 

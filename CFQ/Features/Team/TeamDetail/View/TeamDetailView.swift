@@ -1,13 +1,8 @@
 import SwiftUI
 
 struct TeamDetailView: View {
-    @Binding var show: Bool
     @ObservedObject var coordinator: Coordinator
-
-    var title = "GIRLS ONLY"
     @StateObject var viewModel = TeamFormViewModel()
-    // @StateObject var viewModel2: TeamListScreenViewModel
-    var edit = false
 
     // @EnvironmentObject var user: User
     var user = User(
@@ -18,14 +13,20 @@ struct TeamDetailView: View {
         profilePictureUrl: ""
     )
 
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        if self.coordinator.teamDetail == nil {
+            self.coordinator.showTeamDetail = false
+        }
+    }
     var body: some View {
-        DraggableViewLeft(isPresented: $show) {
+        DraggableViewLeft(isPresented: $coordinator.showTeamDetail) {
             SafeAreaContainer {
                 VStack {
                     HStack {
                         Button(action: {
                             withAnimation {
-                                show = false
+                                coordinator.showTeamDetail = false
                             }
                         }) {
                             Image(.iconArrow)
@@ -72,7 +73,7 @@ struct TeamDetailView: View {
                             HStack {
                                 Button(action: {
                                     withAnimation {
-                                        show = false
+                                        coordinator.showTeamDetail = false
                                         coordinator.selectedTab = 2
                                     }
                                 }) {
@@ -102,22 +103,23 @@ struct TeamDetailView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 VStack(spacing: 0) {
                                     HStack(spacing: 0) {
-                                        ForEach(Array(viewModel.friendsAdd), id: \.self) { user in
+                                        ForEach(coordinator.teamDetail?.friends ?? UserContact().userContactDefault(), id: \.self) { user in
                                             CellFriendAdmin (
-                                                name: user.name,
-                                                isEditingAdmin: $viewModel.isAdminEditing,
+                                                name: user.pseudo,
+                                                isEditingAdmin: .constant(false),
                                                 isAdmin: Binding(
-                                                            get: {
-                                                                viewModel.adminList.contains(user)
-                                                            },
-                                                            set: { newValue in
-                                                                if newValue {
-                                                                    viewModel.adminList.insert(user)
-                                                                } else {
-                                                                    viewModel.adminList.remove(user)
-                                                                }
-                                                            }
-                                                        )
+                                                    get: {
+                                                        coordinator.teamDetail?.admins.contains(user) ?? false
+                                                    },
+                                                    set: { newValue in
+                                                        if newValue {
+                                                            coordinator.teamDetail?.admins.append(user)
+                                                        } else {
+                                                            coordinator.teamDetail?.admins.remove(at: 0)
+
+                                                        }
+                                                    }
+                                                )
                                             ).padding(.trailing, 12)
                                         }
                                         .frame(height: 110)
@@ -161,123 +163,15 @@ struct TeamDetailView: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $viewModel.showEditTeam) {
-            TeamFormView(showDetail: $viewModel.showEditTeam, viewModel: viewModel)
-        }
-
-        .fullScreenCover(isPresented: $viewModel.showFriendsList) {
-            ListFriendToAdd(
-                showDetail: $viewModel.showFriendsList,
-                viewModel: viewModel
-            )
-        }
-
         .sheet(isPresented: $viewModel.showSheetSettingTeam) {
             SettingsTeamDetailSheet(
-                viewModel: viewModel,
-                isAdmin: $viewModel.isUserAdmin
+                coordinator: coordinator,
+                isAdmin: $viewModel.isUserAdmin// ,
+                // viewModel: viewModel
             )
             .presentationDragIndicator(.visible)
             .presentationDetents([.height(250)])
                 
         }
     }
-}
-
-private struct SettingsTeamDetailSheet: View {
-    @StateObject var viewModel: TeamFormViewModel
-    @Binding var isAdmin: Bool
-    
-    var body: some View {
-        ZStack {
-            Color.black
-                .ignoresSafeArea()
-            VStack(alignment: .trailing, spacing: 30) {
-                if isAdmin {
-                    HStack {
-                        Image(.iconAdduser)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
-                        Button(
-                            action: {
-                                Logger.log("Ajouter des membres", level: .action)
-                                viewModel.showSheetSettingTeam = false
-                                viewModel.showFriendsList = true
-                            },
-                            label: {
-                                Text("Ajouter des membres")
-                                    .tokenFont(.Body_Inter_Medium_16)
-                            })
-                        Spacer()
-                    }
-                    
-                    HStack {
-                        Image(.iconCrown)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
-                        Button(
-                            action: {
-                                Logger.log("Edit Admin", level: .action)
-                                viewModel.showSheetSettingTeam = false
-                                viewModel.isAdminEditing = true
-                            },
-                            label: {
-                                Text("Modifier les admins")
-                                    .tokenFont(.Body_Inter_Medium_16)
-                            })
-                        Spacer()
-                    }
-                    
-                    HStack {
-                        Image(.iconEdit)
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.white)
-                            .frame(width: 20)
-                        Button(
-                            action: {
-                                Logger.log("Modifier la team", level: .action)
-                                viewModel.showSheetSettingTeam = false
-                                viewModel.showEditTeam = true
-                            },
-                            label: {
-                                Text("Modifier la team")
-                                    .tokenFont(.Body_Inter_Medium_16)
-                            })
-                        Spacer()
-                    }
-                }
-                HStack {
-                    Image(.iconTrash)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.white)
-                    Button(
-                        action: {
-                            Logger.log("Quitter la team", level: .action)
-                            viewModel.showSheetSettingTeam = false
-                        },
-                        label: {
-                            Text("Quitter la team")
-                                .tokenFont(.Body_Inter_Medium_16)
-                        })
-                    Spacer()
-                }
-            }
-            .padding(.leading, 12)
-        }
-    }
-}
-
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        // TeamDetailView(show: .constant(true), coordinator: Coordinator())
-    }.ignoresSafeArea()
 }

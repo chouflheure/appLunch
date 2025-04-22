@@ -48,7 +48,7 @@ struct TitleTurnCardView: View {
                 
                 Spacer()
                     .onTapGesture {
-                        print("@@@ here")
+                        // print("@@@ here")
                     }
                 
                 Button(action: {}) {

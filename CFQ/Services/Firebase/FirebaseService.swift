@@ -4,6 +4,7 @@ import FirebaseStorage
 
 enum ListenerType: String {
     case team_group_listener = "team_group_listener"
+    case team_user = "team_user"
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -90,7 +91,7 @@ class FirebaseService: FirebaseServiceProtocol {
     func getDataByIDs<T: Codable>(
         from collection: CollectionFirebaseType,
         with ids: [String],
-        listenerKeyPrefix: ListenerType? = nil,
+        listenerKeyPrefix: String? = nil,
         onUpdate: @escaping (Result<[T], Error>) -> Void
     ) {
         let collectionName = collection.rawValue
@@ -131,6 +132,8 @@ class FirebaseService: FirebaseServiceProtocol {
             if let keyPrefix = listenerKeyPrefix {
                 let key = "\(keyPrefix)_\(id)"
                 listeners[key] = registration
+            } else {
+                print("@@@ NOP")
             }
         }
     }
@@ -206,6 +209,18 @@ class FirebaseService: FirebaseServiceProtocol {
             completion(.success(dataArray))
         }
     }
+
+    /// Pour arrêter un listener
+    func removeListener(for key: String) {
+        listeners[key]?.remove()
+        listeners.removeValue(forKey: key)
+    }
+
+    /// Pour les arrêter tous (par ex. à la déconnexion)
+    func removeAllListeners() {
+        listeners.values.forEach { $0.remove() }
+        listeners.removeAll()
+    }
 }
 
 
@@ -249,4 +264,98 @@ extension FirebaseService {
             }
         }
     }
+}
+
+
+extension FirebaseService {
+/*
+    // Modifiez la fonction getDataByIDs pour inclure un callback supplémentaire
+    func getDataByIDs<T: Codable>(
+        from collection: CollectionFirebaseType,
+        with ids: [String],
+        listenerKeyPrefix: ListenerType? = nil,
+        onUpdate: @escaping (Result<[T], Error>) -> Void,
+        onAllDataFetched: @escaping (Result<[T], Error>) -> Void // Nouveau callback
+    ) {
+        let collectionName = collection.rawValue
+        var currentData: [String: T] = [:]
+        var firstLoadCompleted = Set<String>()
+
+        for id in ids {
+            let documentRef = db.collection(collectionName).document(id)
+
+            let registration = documentRef.addSnapshotListener { documentSnapshot, error in
+                if let error = error {
+                    onUpdate(.failure(error))
+                    return
+                }
+
+                guard let document = documentSnapshot, document.exists else {
+                    onUpdate(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Document \(id) non trouvé."])))
+                    return
+                }
+
+                do {
+                    let data = try document.data(as: T.self)
+                    currentData[id] = data
+                    firstLoadCompleted.insert(id)
+
+                    if firstLoadCompleted.count == ids.count {
+                        let orderedResults = ids.compactMap { currentData[$0] }
+                        onUpdate(.success(orderedResults))
+                        onAllDataFetched(.success(orderedResults)) // Appeler le nouveau callback
+                    }
+
+                } catch {
+                    onUpdate(.failure(error))
+                }
+            }
+
+            if let keyPrefix = listenerKeyPrefix {
+                let key = "\(keyPrefix)_\(id)"
+                listeners[key] = registration
+            }
+        }
+    }
+
+    // Utilisation de la fonction pour récupérer les équipes et les utilisateurs
+    func fetchTeamsAndUsers(ids: [String]) {
+        getDataByIDs(from: .teams, with: ids, onUpdate: { (result: Result<[Team], Error>) in
+            switch result {
+            case .success(let teams):
+                // Transformer les teams en TeamGlobal
+                for team in teams {
+                    var teamGlobal = TeamGlobal(uid: team.uid, title: team.title, pictureUrlString: team.pictureUrlString, friends: [], admins: team.admins)
+
+                    // Récupérer les utilisateurs pour chaque équipe
+                    fetchUsers(with: team.friends) { (userResult: Result<[UserContact], Error>) in
+                        switch userResult {
+                        case .success(let users):
+                            teamGlobal.friends = users
+                            // Vous pouvez maintenant utiliser teamGlobal avec les utilisateurs récupérés
+                            print(teamGlobal)
+                        case .failure(let error):
+                            print("Erreur lors de la récupération des utilisateurs : \(error)")
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("Erreur lors de la récupération des équipes : \(error)")
+            }
+        }, onAllDataFetched: { _ in })
+    }
+
+    // Fonction pour récupérer les utilisateurs
+    func fetchUsers(with ids: [String], completion: @escaping (Result<[UserContact], Error>) -> Void) {
+        getDataByIDs(from: .usersPreviews, with: ids, onUpdate: { (result: Result<[UserContact], Error>) in
+            switch result {
+            case .success(let users):
+                completion(.success(users))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }, onAllDataFetched: { _ in })
+    }
+*/
+
 }
