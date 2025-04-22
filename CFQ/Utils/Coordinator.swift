@@ -20,6 +20,9 @@ class Coordinator: ObservableObject {
     @Published var dataApp = DataApp()
     @Published var teamDetail: TeamGlobal?
     @Published var turnSelected: Turn?
+    
+    @Published var userFriends: [User] = []
+    
 
     func start() {
         catchDataAppToStart()

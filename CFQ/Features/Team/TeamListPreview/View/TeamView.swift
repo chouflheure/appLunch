@@ -30,7 +30,7 @@ struct TeamView: View {
                         team: viewModel.teams[index],
                         onClick: {
                             selectedTeam = index
-                            coordinator.teamDetail = viewModel.teamsGlobal[selectedTeam] //viewModel.teams[selectedTeam]
+                            coordinator.teamDetail = viewModel.teamsGlobal[selectedTeam]
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 coordinator.showTeamDetail = true
                             }

@@ -108,7 +108,7 @@ struct CellMessageView: View {
                             .background(.blackLight)
                             .cornerRadius(20)
                             .onLongPressGesture(perform: {
-                                print("@@@ tap")
+                                
                             })
                             .onTapGesture(count: 2) {
                                 withAnimation {
@@ -159,7 +159,7 @@ struct CellMessageView: View {
                             .background(.blackLight)
                             .cornerRadius(20)
                             .onLongPressGesture(perform: {
-                                print("@@@ tap")
+                                
                             })
                     }
                     .padding(.leading, 40)
@@ -203,7 +203,7 @@ struct CellMessageView: View {
                             .lineLimit(10)
                             .cornerRadius(20)
                             .onLongPressGesture(perform: {
-                                print("@@@ tap")
+                                
                             })
                             .onTapGesture(count: 2) {
                                 withAnimation {

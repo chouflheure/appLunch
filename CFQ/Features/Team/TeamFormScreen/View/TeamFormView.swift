@@ -2,20 +2,22 @@ import PhotosUI
 import SwiftUI
 
 struct TeamFormView: View {
-    @Binding var showDetail: Bool
+    // @Binding var showDetail: Bool
+    @ObservedObject var coordinator: Coordinator
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
     @StateObject var viewModel = TeamFormViewModel()
 
     var body: some View {
-        DraggableViewLeft(isPresented: $showDetail) {
+        DraggableViewLeft(isPresented: $coordinator.showCreateTeam) {
             SafeAreaContainer {
                 VStack {
                     HStack {
                         Button(action: {
                             withAnimation {
-                                showDetail = false
+                                coordinator.showCreateTeam = false
+                                // showDetail = false
                             }
                         }) {
                             Image(.iconArrow)
@@ -125,8 +127,9 @@ struct TeamFormView: View {
             }
             .fullScreenCover(isPresented: $viewModel.showFriendsList) {
                 ListFriendToAdd(
-                    showDetail: $viewModel.showFriendsList,
-                    viewModel: viewModel
+                    isPresented: $viewModel.showFriendsList,
+                    viewModel: viewModel,
+                    coordinator: coordinator
                 )
             }
             .padding(.top, 30)
@@ -139,9 +142,37 @@ struct TeamFormView: View {
     }
 }
 
+class ListFriendToAddViewModel: ObservableObject {
+    @Published var friendsOnTeam: [UserContact] = []
+    @Published var userFriends: [UserContact] = []
+    @Published var coordinator: Coordinator
+
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+    }
+    
+    func sortListFriendOnTeam() {
+        if let friendsOnTeam = coordinator.teamDetail?.friends {
+            self.friendsOnTeam = friendsOnTeam
+        }
+        
+        let set1 = Set(self.friendsOnTeam)
+        let userFriends = userFriends.filter { !set1.contains($0) }
+    }
+}
+
 struct ListFriendToAdd: View {
-    @Binding var showDetail: Bool
+    @Binding var isPresented: Bool
     @ObservedObject var viewModel: TeamFormViewModel
+    @ObservedObject var coordinator: Coordinator
+    @StateObject private var viewModel2: ListFriendToAddViewModel
+
+    init(isPresented: Binding<Bool>, viewModel: TeamFormViewModel, coordinator: Coordinator) {
+        self._isPresented = isPresented
+        self.viewModel = viewModel
+        self.coordinator = coordinator
+        self._viewModel2 = StateObject(wrappedValue: ListFriendToAddViewModel(coordinator: coordinator))
+    }
 
     var body: some View {
         SafeAreaContainer {
@@ -159,7 +190,7 @@ struct ListFriendToAdd: View {
                     )
                     
                     Button(action: {
-                        showDetail = false
+                        isPresented = false
                     }) {
                         Image(.iconArrow)
                             .resizable()
@@ -191,6 +222,6 @@ struct ListFriendToAdd: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        TeamFormView(showDetail: .constant(true))
+        // TeamFormView(showDetail: .constant(true))
     }.ignoresSafeArea()
 }

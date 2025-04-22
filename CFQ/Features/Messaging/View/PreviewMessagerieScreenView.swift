@@ -33,7 +33,7 @@ struct PreviewMessagerieScreenView: View {
                             
                             ForEach(Array(viewModel.messageList), id: \.self) { data in
                                 CellMessagingView(data: data) { _ in
-                                    print("@@@ tap on Cell message")
+                                    
                                 }
                                     .padding(.top, 16)
                             }.padding(.horizontal, 16)

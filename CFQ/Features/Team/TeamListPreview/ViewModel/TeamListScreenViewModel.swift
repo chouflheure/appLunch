@@ -5,7 +5,16 @@ import FirebaseFirestore
 class TeamListScreenViewModel: ObservableObject {
     var firebaseService = FirebaseService()
     @Published var teams = [Team]()
-    @Published var teamsGlobal = [TeamGlobal(uid: "", title: "", pictureUrlString: "", friends: [UserContact()], admins: [UserContact()])]
+
+    @Published var teamsGlobal = [
+        TeamGlobal(
+            uid: "",
+            title: "",
+            pictureUrlString: "",
+            friends: [UserContact()],
+            admins: [UserContact()]
+        )
+    ]
 
     var user = User(
         uid: "1234567890",
@@ -13,6 +22,7 @@ class TeamListScreenViewModel: ObservableObject {
         firstName: "Doe",
         pseudo: "johndoe",
         location: ["Ici"],
+        friends: ["EMZGTTeqJ1dv9SX0YaNOExaLjjw1", "77MKZdb3FJX8EFvlRGotntxk6oi1", "ziOs7jn3d5hZ0tgkTQdCNGQqlB33"],
         teams: ["1"]
     )
 

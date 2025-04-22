@@ -4,13 +4,11 @@ import MapKit
 import FirebaseFirestore
 
 struct CustomTabView: View {
-    // @State private var selectedTab = 0
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    
     @State private var selectedEvent: MapLocationEventData? = nil
     @EnvironmentObject var user: User
-    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 
-    
-  
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
 
@@ -108,7 +106,7 @@ struct CustomTabView: View {
             .overlay(
                 Group {
                     if coordinator.showCreateTeam {
-                        TeamFormView(showDetail: $coordinator.showCreateTeam)
+                        TeamFormView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     if coordinator.showFriendList {
