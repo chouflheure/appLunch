@@ -2,11 +2,12 @@ import SwiftUI
 
 struct TeamDetailView: View {
     @ObservedObject var coordinator: Coordinator
-    @StateObject var viewModel = TeamFormViewModel()
+    @StateObject var viewModel = TeamDetailViewModel()
+    @State var isPresentedSeetings = false
 
     // @EnvironmentObject var user: User
     var user = User(
-        uid: "1",
+        uid: "JtISdWec8JV4Od1WszEGXkqEVAI2",
         name: "Charles",
         firstName: "Charles",
         pseudo: "Charles",
@@ -16,9 +17,10 @@ struct TeamDetailView: View {
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
         if self.coordinator.teamDetail == nil {
-            self.coordinator.showTeamDetail = false
+            coordinator.showTeamDetail = false
         }
     }
+
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showTeamDetail) {
             SafeAreaContainer {
@@ -36,7 +38,7 @@ struct TeamDetailView: View {
                         
                         Spacer()
 
-                        Text(coordinator.teamDetail?.title ?? "Nop")
+                        Text(dataTeam())
                             .foregroundColor(.white)
                             .tokenFont(.Title_Gigalypse_24)
                         
@@ -44,7 +46,7 @@ struct TeamDetailView: View {
 
                         Button(action: {
                             withAnimation {
-                                viewModel.showSheetSettingTeam = true
+                                isPresentedSeetings = true
                             }
                         }) {
                             Image(.iconDots)
@@ -163,15 +165,24 @@ struct TeamDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: $viewModel.showSheetSettingTeam) {
+        .sheet(isPresented: $isPresentedSeetings) {
             SettingsTeamDetailSheet(
                 coordinator: coordinator,
-                isAdmin: $viewModel.isUserAdmin// ,
-                // viewModel: viewModel
+                isAdmin: viewModel.isAdmin(userUUID: user.uid, admins: coordinator.teamDetail?.admins),
+                isPresented: $isPresentedSeetings
             )
             .presentationDragIndicator(.visible)
-            .presentationDetents([.height(250)])
+            .presentationDetents([.height(120)])
                 
         }
     }
+
+    private func dataTeam() -> String {
+        guard let data = coordinator.teamDetail else {
+            coordinator.showTeamDetail = false
+            return "Error"
+        }
+        return data.title
+    }
+
 }

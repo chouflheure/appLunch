@@ -3,7 +3,8 @@ import SwiftUI
 
 struct SettingsTeamDetailSheet: View {
     @StateObject var coordinator: Coordinator
-    @Binding var isAdmin: Bool
+    var isAdmin: Bool
+    @Binding var isPresented: Bool
     // @StateObject var viewModel: TeamFormViewModel
     
     var body: some View {
@@ -21,6 +22,7 @@ struct SettingsTeamDetailSheet: View {
                         Button(
                             action: {
                                 Logger.log("Modifier la team", level: .action)
+                                isPresented = false
                                 // viewModel.showSheetSettingTeam = false
                                 withAnimation {
                                     coordinator.showTeamDetailEdit = true
@@ -42,6 +44,7 @@ struct SettingsTeamDetailSheet: View {
                     Button(
                         action: {
                             Logger.log("Quitter la team", level: .action)
+                            isPresented = false
                             // viewModel.showSheetSettingTeam = false
                         },
                         label: {

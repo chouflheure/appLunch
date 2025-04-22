@@ -3,7 +3,6 @@ import SwiftUI
 
 struct TeamEditViewScreen: View {
     @ObservedObject var coordinator: Coordinator
-    @State var text: String = ""
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
