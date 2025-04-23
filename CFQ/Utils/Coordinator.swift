@@ -82,11 +82,14 @@ class Coordinator: ObservableObject {
     }
 
     func catchDataAppToStart() {
-        firebaseService.getDataByID(from: .dataApp, with: "dataApp") { (result: Result<DataApp, Error>) in
+        firebaseService.getDataByID(
+            from: .dataApp,
+            with: CollectionFirebaseType.dataApp.rawValue
+        ) { (result: Result<DataApp, Error>) in
             switch result {
             case .success(let data):
                 self.dataApp = data
-            /// when user has an id but not account
+
             case .failure( let e):
                 print("@@@ e = \(e)")
                 
@@ -104,9 +107,7 @@ class Coordinator: ObservableObject {
             switch result {
                 case .success(let userContact):
                     DispatchQueue.main.async {
-                        print("@@@ friends = \(userContact)")
                         self.userFriends = userContact
-                        // completion(userContact, nil)
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")

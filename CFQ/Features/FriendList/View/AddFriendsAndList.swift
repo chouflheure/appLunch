@@ -7,13 +7,11 @@ struct AddFriendsAndListView: View {
     var onAdd: ((UserContact) -> Void)
     
     var body: some View {
-
         VStack(alignment: .leading) {
-            
             HStack {
                 Text("Invités")
                     .foregroundColor(.white)
-                Text("(\(arrayPicture.count))")
+                Text(arrayPicture.count.description)
                     .foregroundColor(.white)
             }.padding(.horizontal, 16)
 
@@ -30,7 +28,6 @@ struct AddFriendsAndListView: View {
                     }
                 }
             }
-            
 
             Divider()
                 .background(.white)

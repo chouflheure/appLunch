@@ -5,7 +5,7 @@ struct CellFriendPseudoNoAction: View {
     var pseudo: String
     var coordinator: Coordinator
     var isSelected: Bool = false
-
+    
     var body: some View {
         HStack(spacing: 0) {
             HStack {

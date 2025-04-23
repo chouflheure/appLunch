@@ -6,6 +6,7 @@ class UserContact: Codable, Hashable {
     var firstName: String
     var pseudo: String
     var profilePictureUrl: String
+    var isActive: Bool?
 
     init(
         uid: String = "",
