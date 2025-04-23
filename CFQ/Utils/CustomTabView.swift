@@ -109,6 +109,7 @@ struct CustomTabView: View {
                         TeamFormView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
+
                     if coordinator.showFriendList {
                         FriendListScreen(
                             coordinator: coordinator,
@@ -138,10 +139,8 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showNotificationScreen {
-                        NotificationScreenView(
-                            isPresented: $coordinator.showNotificationScreen
-                        )
-                        .transition(.move(edge: .trailing))
+                        NotificationScreenView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showFriendListScreen {
@@ -149,13 +148,13 @@ struct CustomTabView: View {
                             .transition(.move(edge: .leading))
                     }
                     
-                    if coordinator.showCFQScreen {
-                        CFQFormView(isPresented: $coordinator.showCFQScreen)
+                    if coordinator.showCFQForm {
+                        CFQFormView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showMessageScreen {
-                        PreviewMessagerieScreenView(isPresented: $coordinator.showMessageScreen)
+                        PreviewMessagerieScreenView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                 }

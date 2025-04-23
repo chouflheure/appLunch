@@ -1,14 +1,24 @@
-
 import Foundation
 
 class CFQFormViewModel: ObservableObject {
-    @Published var titleCFQ = String()
+    // @Published var titleCFQ = String()
     @Published var researchText = String()
     @Published var showEditTeam: Bool = false
     @Published var showSheetSettingTeam: Bool = false
-    @Published var isAdminEditing: Bool = false
     @Published var showSheetAddFriend: Bool = false
-    
+    @Published var friendsList = Set<UserContact>()
+    private var allFriends = Set<UserContact>()
+
+    var firebaseService = FirebaseService()
+
+    @Published var titleCFQ: String = "" {
+        didSet {
+            isEnableButton = !titleCFQ.isEmpty
+        }
+    }
+
+    @Published var isEnableButton: Bool = false
+
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1",
@@ -17,17 +27,8 @@ class CFQFormViewModel: ObservableObject {
         pseudo: "Charles",
         profilePictureUrl: ""
     )
-    
-    let userContact: UserContact
 
-    var isUserAdmin: Bool {
-        get {
-            adminList.contains(userContact)
-        }
-        set {}
-    }
-
-    @Published var adminList = Set<UserContact>(
+    @Published var friendsAddToCFQ = Set<UserContact>(
         [
             UserContact(
                 uid: "1",
@@ -38,18 +39,8 @@ class CFQFormViewModel: ObservableObject {
             )
         ]
     )
-    @Published var friendsAdd = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            )
-        ]
-    )
-    @Published var friendsList = Set<UserContact>(
+
+    @Published var friendsListTest = Set<UserContact>(
         [
             UserContact(
                 uid: "1",
@@ -97,8 +88,6 @@ class CFQFormViewModel: ObservableObject {
         ]
     )
 
-    @Published var showFriendsList: Bool = false
-    private var allFriends = Set<UserContact>()
 
     var filteredNames: Set<UserContact> {
         let searchWords = researchText.lowercased().split(separator: " ")
@@ -109,25 +98,19 @@ class CFQFormViewModel: ObservableObject {
         }
     }
 
-    init() {
-        userContact = UserContact(
-            uid: user.uid,
-            name: user.name,
-            firstName: user.firstName,
-            pseudo: user.pseudo,
-            profilePictureUrl: user.profilePictureUrl
-        )
+    init(coordinator: Coordinator) {
+        // friendsList = Set(coordinator.userFriends)
         allFriends = friendsList
     }
-    
+
     func removeFriendsFromList(user: UserContact) {
-        friendsAdd.remove(user)
+        friendsAddToCFQ.remove(user)
         friendsList.insert(user)
         allFriends.insert(user)
     }
 
     func addFriendsToList(user: UserContact) {
-        friendsAdd.insert(user)
+        friendsAddToCFQ.insert(user)
         friendsList.remove(user)
         allFriends.remove(user)
     }
@@ -139,5 +122,29 @@ class CFQFormViewModel: ObservableObject {
     func researche() {
         friendsList = allFriends
         friendsList = filteredNames
+    }
+}
+
+extension CFQFormViewModel {
+
+    func pushCFQ() {
+        print("@@@ val = \(isEnableButton)")
+        let uuid = UUID()
+
+        firebaseService.addData(
+            data: CFQ(
+                uid: uuid.description, title: titleCFQ, admin: user.pseudo,
+                messagerieUUID: "", users: [""]),
+            to: .cfqs,
+            completion: { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    print("@@@ result yes")
+                case .failure(let error):
+                    print("@@@ error = \(error)")
+                }
+            }
+        )
+
     }
 }

@@ -6,6 +6,7 @@ enum ListenerType: String {
     case team_group_listener = "team_group_listener"
     case team_user = "team_user"
     case friends = "friends"
+    case cfq = "cfq"
 }
 
 class FirebaseService: FirebaseServiceProtocol {

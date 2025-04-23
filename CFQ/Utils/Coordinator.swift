@@ -13,7 +13,7 @@ class Coordinator: ObservableObject {
     @Published var showNotificationScreen = false
     @Published var selectedTab = 0
     @Published var showFriendListScreen = false
-    @Published var showCFQScreen = false
+    @Published var showCFQForm = false
     @Published var showMessageScreen = false
     @Published var showTeamDetailEdit = false
 
@@ -22,6 +22,7 @@ class Coordinator: ObservableObject {
     @Published var turnSelected: Turn?
     
     @Published var userFriends: [UserContact] = []
+    @Published var userCFQ: [CFQ] = []
 
     func start() {
         /// when user has an id and an account
@@ -37,6 +38,7 @@ class Coordinator: ObservableObject {
                     
                     self.catchDataAppToStart()
                     self.catchAllUsersFriend(user: user)
+                    self.catchAllUserCFQ(user: user)
                     
                     self.currentView = AnyView(
                         NavigationView {
@@ -96,6 +98,25 @@ class Coordinator: ObservableObject {
             }
             
         }
+    }
+    
+    func catchAllUserCFQ(user: User) {
+        firebaseService.getDataByIDs(
+            from: .cfqs,
+            with: user.invitedCfqs ?? [""],
+            listenerKeyPrefix: ListenerType.cfq.rawValue
+        ){ (result: Result<[CFQ], Error>) in
+            switch result {
+                case .success(let cfq):
+                    print("@@@ user CFQ : \(cfq)")
+                    DispatchQueue.main.async {
+                        self.userCFQ = cfq
+                    }
+                case .failure(let error):
+                    print("👎 Erreur : \(error.localizedDescription)")
+
+                }
+            }
     }
     
     func catchAllUsersFriend(user: User) {
