@@ -15,6 +15,32 @@ class TeamEditViewModel: ObservableObject {
     @Published var setAdmins = Set<UserContact>()
     @Published var showFriendsList: Bool = false
 
+    @Published var allFriends = Set<UserContact>(
+        [
+            UserContact(
+                uid: "77MKZdb3FJX8EFvlRGotntxk6oi1",
+                name: "name1",
+                firstName: "firstName1",
+                pseudo: "pseudo1",
+                profilePictureUrl: ""
+            ),
+            UserContact(
+                uid: "EMZGTTeqJ1dv9SX0YaNOExaLjjw1",
+                name: "name2",
+                firstName: "firstName2",
+                pseudo: "pseudo2",
+                profilePictureUrl: ""
+            ),
+            UserContact(
+                uid: "ziOs7jn3d5hZ0tgkTQdCNGQqlB33",
+                name: "name3",
+                firstName: "firstName3",
+                pseudo: "pseudo3",
+                profilePictureUrl: ""
+            ),
+        ]
+    )
+
     var firebaseService = FirebaseService()
     
     // @EnvironmentObject var user: User
@@ -38,7 +64,8 @@ extension TeamEditViewModel {
             onUpdate: {(result: Result<[UserContact], Error>) in
                 switch result {
                 case .success(let friends):
-                   print("@@@ friends= \n\(friends)")
+                    self.allFriends = Set(friends)
+                    print("@@@ friends= \n\(friends)")
                 case .failure(let error):
                     print("@@@ error = \n\(error)")
                 }
@@ -52,12 +79,10 @@ extension TeamEditViewModel {
         
         setFriends.forEach({
             friendsUUID.append($0.uid)
-            print("@@@ friendsUUID = \($0.uid )")
         })
         
         setAdmins.forEach({
             adminsUUID.append($0.uid)
-            print("@@@ adminsUUID = \($0.uid )")
         })
 
         if !titleTeam.isEmpty || !pictureUrlString.isEmpty || !friendsUUID.isEmpty || !adminsUUID.isEmpty {

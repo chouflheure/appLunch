@@ -7,7 +7,6 @@ struct TeamEditViewScreen: View {
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
     @ObservedObject var viewModel = TeamEditViewModel()
-    @State var viewModel2 = TeamFormViewModel()
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
@@ -15,8 +14,8 @@ struct TeamEditViewScreen: View {
             viewModel.uuidTeam = coordinator.teamDetail?.uid ?? ""
             viewModel.titleTeam = coordinator.teamDetail?.title ?? ""
             viewModel.pictureUrlString = coordinator.teamDetail?.pictureUrlString ?? ""
-            viewModel.setFriends = Set(coordinator.teamDetail!.friends)
-            viewModel.setAdmins = Set(coordinator.teamDetail!.admins)
+            viewModel.setFriends = Set(coordinator.teamDetail?.friends ?? [UserContact()])
+            viewModel.setAdmins = Set(coordinator.teamDetail?.admins ?? [UserContact()])
         } else {
             withAnimation {
                 coordinator.showTeamDetailEdit = false
@@ -197,8 +196,9 @@ struct TeamEditViewScreen: View {
         .fullScreenCover(isPresented: $viewModel.showFriendsList) {
             ListFriendToAdd(
                 isPresented: $viewModel.showFriendsList,
-                viewModel: viewModel2,
-                coordinator: coordinator
+                coordinator: coordinator,
+                friendsOnTeam: $viewModel.setFriends,
+                allFriends: $viewModel.allFriends
             )
         }
         .padding(.top, 30)

@@ -125,13 +125,14 @@ struct TeamFormView: View {
                     
                 }
             }
+            /*
             .fullScreenCover(isPresented: $viewModel.showFriendsList) {
                 ListFriendToAdd(
                     isPresented: $viewModel.showFriendsList,
-                    viewModel: viewModel,
                     coordinator: coordinator
                 )
             }
+             */
             .padding(.top, 30)
             .padding(.bottom, 30)
         }
@@ -143,35 +144,87 @@ struct TeamFormView: View {
 }
 
 class ListFriendToAddViewModel: ObservableObject {
-    @Published var friendsOnTeam: [UserContact] = []
-    @Published var userFriends: [UserContact] = []
-    @Published var coordinator: Coordinator
+    // @Published var friendsOnTeam = Set<UserContact>()
 
-    init(coordinator: Coordinator) {
+    @Published var coordinator: Coordinator
+    @Published var researchText = ""
+    // @Published var userFriends = Set<UserContact>()
+    @Binding var friendsOnTeam: Set<UserContact>
+    @Binding var allFriends: Set<UserContact>
+    private var allFriendstemps = Set<UserContact>()
+
+
+    
+
+
+    init(coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>, allFriends: Binding<Set<UserContact>>) {
         self.coordinator = coordinator
+        self._friendsOnTeam = friendsOnTeam
+        self._allFriends = allFriends
+        sortListFriendOnTeam()
+        allFriendstemps = friendsOnTeam.wrappedValue
     }
     
     func sortListFriendOnTeam() {
-        if let friendsOnTeam = coordinator.teamDetail?.friends {
-            self.friendsOnTeam = friendsOnTeam
+        /*
+        if let friendsOnTeamFromCoordinator = coordinator.teamDetail?.friends {
+            friendsOnTeam = Set(friendsOnTeamFromCoordinator)
         }
-        
-        let set1 = Set(self.friendsOnTeam)
-        let userFriends = userFriends.filter { !set1.contains($0) }
+         
+         */
+        // friendsOnTeam = friends
+        allFriends = allFriends.filter { !friendsOnTeam.contains($0) }
+    }
+    
+    
+
+    var filteredNames: Set<UserContact> {
+        let searchWords = researchText.lowercased().split(separator: " ")
+        return allFriendstemps.filter { name in
+            searchWords.allSatisfy { word in
+                name.name.lowercased().hasPrefix(word)
+            }
+        }
+    }
+
+    
+    func removeFriendsFromList(user: UserContact) {
+        friendsOnTeam.remove(user)
+        allFriends.insert(user)
+        allFriendstemps.insert(user)
+    }
+
+    func addFriendsToList(user: UserContact) {
+        friendsOnTeam.insert(user)
+        allFriends.remove(user)
+        allFriendstemps.remove(user)
+    }
+
+    func removeText() {
+        researchText.removeAll()
+    }
+
+    func researche() {
+        allFriends = allFriendstemps
+        allFriends = filteredNames
     }
 }
 
 struct ListFriendToAdd: View {
     @Binding var isPresented: Bool
-    @ObservedObject var viewModel: TeamFormViewModel
     @ObservedObject var coordinator: Coordinator
-    @StateObject private var viewModel2: ListFriendToAddViewModel
+    @StateObject private var viewModel: ListFriendToAddViewModel
+    @Binding var friendsOnTeam: Set<UserContact>
+    @Binding var allFriends: Set<UserContact>
 
-    init(isPresented: Binding<Bool>, viewModel: TeamFormViewModel, coordinator: Coordinator) {
+    // @Binding var allfriends: Set<UserContact>
+
+    init(isPresented: Binding<Bool>, coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>, allFriends: Binding<Set<UserContact>>) {
         self._isPresented = isPresented
-        self.viewModel = viewModel
         self.coordinator = coordinator
-        self._viewModel2 = StateObject(wrappedValue: ListFriendToAddViewModel(coordinator: coordinator))
+        self._viewModel = StateObject(wrappedValue: ListFriendToAddViewModel(coordinator: coordinator, friendsOnTeam: friendsOnTeam, allFriends: allFriends))
+        self._friendsOnTeam = friendsOnTeam
+        self._allFriends = allFriends
     }
 
     var body: some View {
@@ -202,10 +255,10 @@ struct ListFriendToAdd: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 50)
                 .zIndex(100)
-
+/*
                 AddFriendsAndListView(
-                    arrayPicture: $viewModel.friendsAdd,
-                    arrayFriends: $viewModel.friendsList,
+                    arrayPicture: $friendsOnTeam,
+                    arrayFriends: $viewModel.userFriends,
                     onRemove: { userRemoved in
                         viewModel.removeFriendsFromList(user: userRemoved)
                     },
@@ -213,6 +266,7 @@ struct ListFriendToAdd: View {
                         viewModel.addFriendsToList(user: userAdd)
                     }
                 )
+ */
                 .padding(.top, 30)
             }
         }

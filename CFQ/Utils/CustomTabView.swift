@@ -21,7 +21,7 @@ struct CustomTabView: View {
                     OnboardingView()
                 }
                 if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
-                    // Show pop 
+                    // Show pop
                 }
                 else {
                     VStack {
