@@ -3,7 +3,7 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
-    private var firebaseService = FirebaseService()
+    @Published var selectedTab = 0
     @Published var user = User()
     @Published var showFriendList = false
     @Published var showProfileFriend = false
@@ -11,7 +11,6 @@ class Coordinator: ObservableObject {
     @Published var showCreateTeam = false
     @Published var showTurnCardView = false
     @Published var showNotificationScreen = false
-    @Published var selectedTab = 0
     @Published var showFriendListScreen = false
     @Published var showCFQForm = false
     @Published var showMessageScreen = false
@@ -23,6 +22,8 @@ class Coordinator: ObservableObject {
     
     @Published var userFriends: [UserContact] = []
     @Published var userCFQ: [CFQ] = []
+
+    private var firebaseService = FirebaseService()
 
     func start() {
         /// when user has an id and an account
@@ -108,7 +109,6 @@ class Coordinator: ObservableObject {
         ){ (result: Result<[CFQ], Error>) in
             switch result {
                 case .success(let cfq):
-                    print("@@@ user CFQ : \(cfq)")
                     DispatchQueue.main.async {
                         self.userCFQ = cfq
                     }

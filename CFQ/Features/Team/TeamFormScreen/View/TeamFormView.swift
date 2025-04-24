@@ -153,10 +153,6 @@ class ListFriendToAddViewModel: ObservableObject {
     @Binding var allFriends: Set<UserContact>
     private var allFriendstemps = Set<UserContact>()
 
-
-    
-
-
     init(coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>, allFriends: Binding<Set<UserContact>>) {
         self.coordinator = coordinator
         self._friendsOnTeam = friendsOnTeam

@@ -149,8 +149,11 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showCFQForm {
-                        CFQFormView(coordinator: coordinator)
-                            .transition(.move(edge: .trailing))
+                        CFQFormView(
+                            coordinator: coordinator,
+                            user: user
+                        )
+                        .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showMessageScreen {

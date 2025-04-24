@@ -4,8 +4,13 @@ import SwiftUI
 struct CFQFormView: View {
 
     @ObservedObject var coordinator: Coordinator
-    @ObservedObject var viewModel = CFQFormViewModel()
+    @StateObject var viewModel: CFQFormViewModel
 
+    init(coordinator: Coordinator, user: User) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: CFQFormViewModel(coordinator: coordinator, user: user))
+    }
+    
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showCFQForm) {
             SafeAreaContainer {
@@ -85,7 +90,7 @@ struct CFQFormView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CFQFormView(coordinator: Coordinator())
+        CFQFormView(coordinator: Coordinator(), user: User())
     }.ignoresSafeArea()
 }
 

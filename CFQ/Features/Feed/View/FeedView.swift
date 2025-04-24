@@ -71,6 +71,8 @@ struct FeedView: View {
 
             Divider()
                 .background(.white)
+            
+            Spacer()
         }
     }
 }
