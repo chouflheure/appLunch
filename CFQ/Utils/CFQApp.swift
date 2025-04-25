@@ -6,6 +6,7 @@ import FirebaseMessaging
 import UserNotifications
 import Firebase
 
+//@main
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
     
     private var firebaseService: FirebaseService?
@@ -14,12 +15,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
 
         FirebaseApp.configure()
         
-        firebaseService = FirebaseService()
+        // firebaseService = FirebaseService()
 
         Messaging.messaging().delegate = self
         
-        requestNotificationPermission(application)
-        registerNotificationCategories()
+        // requestNotificationPermission(application)
+        // registerNotificationCategories()
         return true
     }
 
