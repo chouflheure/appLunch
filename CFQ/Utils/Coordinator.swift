@@ -24,11 +24,12 @@ class Coordinator: ObservableObject {
     @Published var userFriends: [UserContact] = []
     @Published var profileOtherUser: User = User()
 
+    private var auth = Auth.auth()
     private var firebaseService = FirebaseService()
 
     func start() {
         /// when user has an id and an account
-        if let user = Auth.auth().currentUser {
+        if let user = auth.currentUser {
             firebaseService.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
@@ -72,9 +73,33 @@ class Coordinator: ObservableObject {
         print("@@@ here with user = \(user.pseudo)")
     }
 
+    func removeAllInformationToCoordinator() {
+        selectedTab = 0
+        user = User()
+        showFriendList = false
+        showProfileFriend = false
+        showTeamDetail = false
+        showCreateTeam = false
+        showTurnCardView = false
+        showNotificationScreen = false
+        showFriendListScreen = false
+        showCFQForm = false
+        showMessageScreen = false
+        showTeamDetailEdit = false
+        dataApp = DataApp()
+        turnSelected = nil
+        firebaseService.removeAllListeners()
+    }
+
     func logOutUser() {
         do {
-            try Auth.auth().signOut()
+            try self.auth.signOut()
+            self.removeAllInformationToCoordinator()
+            self.currentView = AnyView(
+                NavigationView {
+                    SignScreen(coordinator: self)
+                }
+            )
             print("User successfully signed out.")
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)

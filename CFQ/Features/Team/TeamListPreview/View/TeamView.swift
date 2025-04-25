@@ -4,6 +4,7 @@ struct TeamView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel = TeamListScreenViewModel()
     @State var selectedTeam: Int = 0
+    @EnvironmentObject var user: User
 
     var body: some View {
         VStack {

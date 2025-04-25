@@ -27,8 +27,7 @@ struct CustomTabView: View {
                     VStack {
                         Group {
                             if coordinator.selectedTab == 0 {
-                                TestNotif()
-                                // FeedView(coordinator: coordinator)
+                                FeedView(coordinator: coordinator)
                                 // CellMessageView()
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
