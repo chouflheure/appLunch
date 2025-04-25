@@ -134,14 +134,13 @@ class SignUpPageViewModel: ObservableObject {
         }
     }
     
-    
     private func uploadDataUser() {
         user.uid = uidUser
         user.tokenFCM = UserDefaults.standard.string(forKey: "fcmToken") ?? ""
         user.profilePictureUrl = urlProfilePicture
         
         firebase.addData(data: user, to: .users) { (result: Result<Void, Error>) in
-            switch result {
+            switch result{
             case .success():
                 self.coordinator?.gotoCustomTabView(user: self.user)
             case .failure(let error):

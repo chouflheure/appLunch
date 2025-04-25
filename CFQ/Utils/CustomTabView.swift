@@ -27,7 +27,8 @@ struct CustomTabView: View {
                     VStack {
                         Group {
                             if coordinator.selectedTab == 0 {
-                                FeedView(coordinator: coordinator)
+                                TestNotif()
+                                // FeedView(coordinator: coordinator)
                                 // CellMessageView()
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
@@ -112,8 +113,7 @@ struct CustomTabView: View {
 
                     if coordinator.showFriendList {
                         FriendListScreen(
-                            coordinator: coordinator,
-                            show: $coordinator.showFriendList
+                            coordinator: coordinator
                         )
                         .transition(.move(edge: .trailing))
                     }

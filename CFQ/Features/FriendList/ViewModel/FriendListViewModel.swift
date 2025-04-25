@@ -4,7 +4,8 @@ import Foundation
 class FriendListViewModel: ObservableObject {
     @Published var researchText = String()
     @Published var showEditTeam: Bool = false
-    @Published var showSheetSettingTeam: Bool = false
+
+    var firebaseService = FirebaseService()
     
     // @EnvironmentObject var user: User
     var user = User(
@@ -14,85 +15,8 @@ class FriendListViewModel: ObservableObject {
         pseudo: "Charles",
         profilePictureUrl: ""
     )
-    
-    let userContact: UserContact
 
-    var isUserAdmin: Bool {
-        get {
-            adminList.contains(userContact)
-        }
-        set {}
-    }
-
-    @Published var adminList = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            )
-        ]
-    )
-    @Published var friendsAdd = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            )
-        ]
-    )
-    @Published var friendsList = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "2",
-                name: "Lisa",
-                firstName: "Lisa",
-                pseudo: "Lisa",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "3",
-                name: "Thibault",
-                firstName: "Thibault",
-                pseudo: "Thibault",
-                profilePictureUrl: ""
-            ),
-
-            UserContact(
-                uid: "4",
-                name: "Nanou",
-                firstName: "Nanou",
-                pseudo: "Nanou",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "5",
-                name: "Clemence",
-                firstName: "Clemence",
-                pseudo: "Clemence",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "6",
-                name: "Nil",
-                firstName: "Nil",
-                pseudo: "Nil",
-                profilePictureUrl: ""
-            ),
-        ]
-    )
+    @Published var friendsList = Set<UserContact>()
 
     @Published var showFriendsList: Bool = false
     private var allFriends = Set<UserContact>()
@@ -106,25 +30,18 @@ class FriendListViewModel: ObservableObject {
         }
     }
 
-    init() {
-        userContact = UserContact(
-            uid: user.uid,
-            name: user.name,
-            firstName: user.firstName,
-            pseudo: user.pseudo,
-            profilePictureUrl: user.profilePictureUrl
-        )
+    
+    init(coordinator: Coordinator) {
+        friendsList = Set(coordinator.userFriends)
         allFriends = friendsList
     }
     
     func removeFriendsFromList(user: UserContact) {
-        friendsAdd.remove(user)
         friendsList.insert(user)
         allFriends.insert(user)
     }
 
     func addFriendsToList(user: UserContact) {
-        friendsAdd.insert(user)
         friendsList.remove(user)
         allFriends.remove(user)
     }
@@ -136,5 +53,12 @@ class FriendListViewModel: ObservableObject {
     func researche() {
         friendsList = allFriends
         friendsList = filteredNames
+    }
+}
+
+extension FriendListViewModel {
+    
+    func removeFriend(user: UserContact) {
+        // TODO: do remove element by id dans une ligne particulière
     }
 }

@@ -19,9 +19,10 @@ class Coordinator: ObservableObject {
     @Published var dataApp = DataApp()
     @Published var teamDetail: TeamGlobal?
     @Published var turnSelected: Turn?
-    
-    @Published var userFriends: [UserContact] = []
+
     @Published var userCFQ: [CFQ] = []
+    @Published var userFriends: [UserContact] = []
+    @Published var profileOtherUser: User = User()
 
     private var firebaseService = FirebaseService()
 
@@ -68,6 +69,7 @@ class Coordinator: ObservableObject {
             )
             Logger.log("User not connected and not account ", level: .info)
         }
+        print("@@@ here with user = \(user.pseudo)")
     }
 
     func logOutUser() {

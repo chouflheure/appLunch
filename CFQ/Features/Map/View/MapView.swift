@@ -77,6 +77,7 @@ struct Test: View {
     }
 }
 
+/*
 #Preview {
     @State var selectedEvent: MapLocationEventData? = nil
     Test(selectedEvent: $selectedEvent)
@@ -84,6 +85,7 @@ struct Test: View {
             EventDetailView(event: event)
         }
 }
+*/
 
 struct MapView: UIViewRepresentable {
     let locations: [MapLocationEventData]

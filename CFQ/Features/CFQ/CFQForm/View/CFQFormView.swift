@@ -49,7 +49,7 @@ struct CFQFormView: View {
                                     PostEventButton(
                                         action: {
                                             viewModel.pushCFQ()
-                                        }, isEnabled: $viewModel.isEnableButton
+                                        }, isEnable: $viewModel.isEnableButton
                                     )
                                     .padding(.trailing, 16)
                                 }

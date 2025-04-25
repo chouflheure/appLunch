@@ -222,6 +222,7 @@ struct TurnCardViewAnimation: View {
     }
 }
 
+/*
 struct Screen: View {
     @State var selectedCradId: UUID? = nil
     var cards: [TurnCard] = [
@@ -264,3 +265,4 @@ struct Screen: View {
 #Preview {
     Screen()
 }
+*/

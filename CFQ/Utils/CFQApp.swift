@@ -87,8 +87,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-
-        TestNotif().scheduleNotification()
+        let notifService = NotifService()
+        
+        notifService.scheduleNotification()
 
         if let category = userInfo["aps"] as? [String: Any],
            let categoryIdentifier = category["category"] as? String,
@@ -102,7 +103,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
                let body = alert["body"] as? String {
 
                 // Planifiez une notification locale
-                TestNotif().scheduleNotification()
+                notifService.scheduleNotification()
             }
 
         if let category = userInfo["aps"] as? [String: Any],
@@ -207,62 +208,5 @@ struct CFQApp: App {
             ContentView()
         }
     }
-}
-
-class NotifService {
-    
-    func scheduleNotification() {
-        let content = UNMutableNotificationContent()
-
-        // Définir les actions pour les boutons
-        let firstAction = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER",
-                                               title: "💃 Ça sort !",
-                                               options: [])
-
-        let secondAction = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER",
-                                                title: "🥱 Ça dort ce soir",
-                                                options: [])
-
-        let firstAction1 = UNNotificationAction(identifier: "FIRST_BUTTON_IDENTIFIER1",
-                                               title: "rep 1",
-                                               options: [])
-
-        let secondAction1 = UNNotificationAction(identifier: "SECOND_BUTTON_IDENTIFIER1",
-                                                title: "rep 2",
-                                                options: [])
-        
-        // Créer une catégorie pour les actions
-        let category = UNNotificationCategory(
-            identifier: "CUSTOM_CATEGORY",
-            actions: [firstAction, secondAction],
-            intentIdentifiers: [],
-            options: []
-        )
-
-        let category1 = UNNotificationCategory(
-            identifier: "",
-            actions: [firstAction1, secondAction1],
-            intentIdentifiers: [],
-            options: []
-        )
-
-        // Enregistrer la catégorie
-        UNUserNotificationCenter.current().setNotificationCategories([category, category1])
-
-        // Assigner la catégorie au contenu de la notification
-        content.categoryIdentifier = "CUSTOM_CATEGORY"
-
-        // Définir le déclencheur pour la notification (par exemple, 5 secondes après l'appel)
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
-
-        // Ajouter la notification
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Erreur lors de l'ajout de la notification: \(error.localizedDescription)")
-            }
-        }
-    }
-    
 }
 

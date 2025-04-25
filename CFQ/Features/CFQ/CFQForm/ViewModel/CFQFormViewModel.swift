@@ -3,7 +3,7 @@ import Foundation
 class CFQFormViewModel: ObservableObject {
 
     @Published var researchText = String()
-    @Published var isEnableButton: Bool = false
+    // @Published var isEnableButton: Bool = false
     @Published var friendsList = Set<UserContact>()
     @Published var friendsAddToCFQ = Set<UserContact>()
     
@@ -11,12 +11,15 @@ class CFQFormViewModel: ObservableObject {
     var firebaseService = FirebaseService()
     private var allFriends = Set<UserContact>()
 
-    @Published var titleCFQ: String = "" {
-        didSet {
-            isEnableButton = !titleCFQ.isEmpty
-        }
-    }
+    @Published var titleCFQ: String = ""
 
+    var isEnableButton: Bool {
+        get {
+            !friendsAddToCFQ.isEmpty && !titleCFQ.isEmpty
+        }
+        set {}
+    }
+    
     var filteredNames: Set<UserContact> {
         let searchWords = researchText.lowercased().split(separator: " ")
         return allFriends.filter { name in
@@ -60,7 +63,9 @@ extension CFQFormViewModel {
         
         let uuid = UUID()
         let messagerieUUID = UUID()
-        var adminUUIDs = [""]
+        var adminUUIDs = [String]()
+        
+        friendsAddToCFQ.forEach({ adminUUIDs.append($0.uid) })
 
         firebaseService.addData(
             data: CFQ(

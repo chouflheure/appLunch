@@ -97,8 +97,7 @@ struct NotificationsListView: View {
 }
 
 #Preview {
-    @State var isPresented: Bool = true
-    NotificationsListView(showDetail: $isPresented)
+    NotificationsListView(showDetail: .constant(true))
 }
 
 

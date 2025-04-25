@@ -153,6 +153,5 @@ struct IssueReportView: View {
 }
 
 #Preview {
-    @State var isPresented: Bool = true
-    IssueReportView(showDetail: $isPresented)
+    IssueReportView(showDetail: .constant(true))
 }
