@@ -94,7 +94,9 @@ enum StringsToken {
     
     enum Notification {}
     
-    enum Team {}
+    enum Team {
+        static let teamTitle = "MES TEAMs"
+    }
     
     enum Turn {}
     

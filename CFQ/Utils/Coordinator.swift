@@ -3,7 +3,7 @@ import SwiftUI
 
 class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
-    private var firebase = FirebaseService()
+    @Published var selectedTab = 0
     @Published var user = User()
     @Published var showFriendList = false
     @Published var showProfileFriend = false
@@ -11,25 +11,38 @@ class Coordinator: ObservableObject {
     @Published var showCreateTeam = false
     @Published var showTurnCardView = false
     @Published var showNotificationScreen = false
-    @Published var selectedTab = 0
     @Published var showFriendListScreen = false
-    @Published var showCFQScreen = false
+    @Published var showCFQForm = false
     @Published var showMessageScreen = false
+    @Published var showTeamDetailEdit = false
+
     @Published var dataApp = DataApp()
-    @Published var teamDetail: Team?
+    @Published var teamDetail: TeamGlobal?
+    @Published var turnSelected: Turn?
+
+    @Published var userCFQ: [CFQ] = []
+    @Published var userFriends: [UserContact] = []
+    @Published var profileOtherUser: User = User()
+
+    private var auth = Auth.auth()
+    private var firebaseService = FirebaseService()
 
     func start() {
-        catchDataAppToStart()
         /// when user has an id and an account
-        if let user = Auth.auth().currentUser {
-            firebase.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
+        if let user = auth.currentUser {
+            firebaseService.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
                     UserDefaults.standard.set(user.uid, forKey: "userUID")
 
                     if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
-                        self.firebase.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
+                        self.firebaseService.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
                     }
+                    
+                    self.catchDataAppToStart()
+                    self.catchAllUsersFriend(user: user)
+                    self.catchAllUserCFQ(user: user)
+                    
                     self.currentView = AnyView(
                         NavigationView {
                             CustomTabView(coordinator: self)
@@ -57,23 +70,36 @@ class Coordinator: ObservableObject {
             )
             Logger.log("User not connected and not account ", level: .info)
         }
+        print("@@@ here with user = \(user.pseudo)")
+    }
 
-/*
-        // ##### TEST ####
-
-        let view = CustomTabView(coordinator: .init())
-        currentView = AnyView(
-            NavigationView {
-                view
-            }
-        )
-        // #### TEST ####
- */
+    func removeAllInformationToCoordinator() {
+        selectedTab = 0
+        user = User()
+        showFriendList = false
+        showProfileFriend = false
+        showTeamDetail = false
+        showCreateTeam = false
+        showTurnCardView = false
+        showNotificationScreen = false
+        showFriendListScreen = false
+        showCFQForm = false
+        showMessageScreen = false
+        showTeamDetailEdit = false
+        dataApp = DataApp()
+        turnSelected = nil
+        firebaseService.removeAllListeners()
     }
 
     func logOutUser() {
         do {
-            try Auth.auth().signOut()
+            try self.auth.signOut()
+            self.removeAllInformationToCoordinator()
+            self.currentView = AnyView(
+                NavigationView {
+                    SignScreen(coordinator: self)
+                }
+            )
             print("User successfully signed out.")
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
@@ -86,19 +112,56 @@ class Coordinator: ObservableObject {
     }
 
     func catchDataAppToStart() {
-        firebase.getDataByID(from: .dataApp, with: "dataApp") { (result: Result<DataApp, Error>) in
+        firebaseService.getDataByID(
+            from: .dataApp,
+            with: CollectionFirebaseType.dataApp.rawValue
+        ) { (result: Result<DataApp, Error>) in
             switch result {
             case .success(let data):
-                print("@@@ data = \(data.version)")
-                print("@@@ data = \(data.isNeedToUpdateApp)")
                 self.dataApp = data
-            /// when user has an id but not account
+
             case .failure( let e):
                 print("@@@ e = \(e)")
                 
             }
             
         }
+    }
+    
+    func catchAllUserCFQ(user: User) {
+        firebaseService.getDataByIDs(
+            from: .cfqs,
+            with: user.invitedCfqs ?? [""],
+            listenerKeyPrefix: ListenerType.cfq.rawValue
+        ){ (result: Result<[CFQ], Error>) in
+            switch result {
+                case .success(let cfq):
+                    DispatchQueue.main.async {
+                        self.userCFQ = cfq
+                    }
+                case .failure(let error):
+                    print("👎 Erreur : \(error.localizedDescription)")
+
+                }
+            }
+    }
+    
+    func catchAllUsersFriend(user: User) {
+        firebaseService.getDataByIDs(
+            from: .users,
+            with: user.friends,
+            listenerKeyPrefix: ListenerType.friends.rawValue
+        ){ (result: Result<[UserContact], Error>) in
+            switch result {
+                case .success(let userContact):
+                    DispatchQueue.main.async {
+                        self.userFriends = userContact
+                    }
+                case .failure(let error):
+                    print("👎 Erreur : \(error.localizedDescription)")
+
+                }
+            }
     }
 
     func gotoCustomTabView(user: User) {

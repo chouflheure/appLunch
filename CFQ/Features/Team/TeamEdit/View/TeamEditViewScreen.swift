@@ -2,41 +2,35 @@ import PhotosUI
 import SwiftUI
 
 struct TeamEditViewScreen: View {
-    @Binding var show: Bool
     @ObservedObject var coordinator: Coordinator
-    @State var text: String = ""
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
-    @StateObject var viewModel = TeamEditViewModel()
-    @StateObject var viewModel2 = TeamFormViewModel()
-    
-    var edit = false
+    @ObservedObject var viewModel = TeamEditViewModel()
 
-    init(show: Binding<Bool>, coordinator: Coordinator) {
-        self._show = show
-        self._coordinator = ObservedObject(initialValue: coordinator)
-        self._viewModel = StateObject(wrappedValue: TeamEditViewModel())
-        self.text = coordinator.teamDetail?.title ?? ""
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        if coordinator.teamDetail != nil {
+            viewModel.uuidTeam = coordinator.teamDetail?.uid ?? ""
+            viewModel.titleTeam = coordinator.teamDetail?.title ?? ""
+            viewModel.pictureUrlString = coordinator.teamDetail?.pictureUrlString ?? ""
+            viewModel.setFriends = Set(coordinator.teamDetail?.friends ?? [UserContact()])
+            viewModel.setAdmins = Set(coordinator.teamDetail?.admins ?? [UserContact()])
+        } else {
+            withAnimation {
+                coordinator.showTeamDetailEdit = false
+            }
+        }
     }
-    
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1",
-        name: "Charles",
-        firstName: "Charles",
-        pseudo: "Charles",
-        profilePictureUrl: ""
-    )
 
     var body: some View {
-        DraggableViewLeft(isPresented: $show) {
+        DraggableViewLeft(isPresented: $coordinator.showTeamDetailEdit) {
             SafeAreaContainer {
                 VStack {
                     HStack {
                         Button(action: {
                             withAnimation {
-                                show = false
+                                coordinator.showTeamDetailEdit = false
                             }
                         }) {
                             Image(.iconArrow)
@@ -47,10 +41,10 @@ struct TeamEditViewScreen: View {
                         Spacer()
 
                         CustomTextField(
-                            text: $viewModel.nameTeam,
+                            text: $viewModel.titleTeam,
                             keyBoardType: .default,
-                            placeHolder: coordinator.teamDetail?.title ?? "",
-                            textFieldType: .editProfile
+                            placeHolder: "Titre team",
+                            textFieldType: .sign
                         )
                     }
                     .padding(.horizontal, 16)
@@ -59,7 +53,6 @@ struct TeamEditViewScreen: View {
                         Button(action: {
                             showPhotoPicker()
                         }) {
-
                             Image(.header)
                                 .resizable()
                                 .scaledToFill()
@@ -89,22 +82,22 @@ struct TeamEditViewScreen: View {
                             VStack(spacing: 0) {
                                 HStack(spacing: 0) {
                                     ForEach(
-                                        Array(viewModel.friendsAdd), id: \.self
+                                        Array(viewModel.setFriends), id: \.self
                                     ) { user in
                                         CellFriendAdmin(
                                             name: user.name,
                                             isEditingAdmin: .constant(true),
                                             isAdmin: Binding(
                                                 get: {
-                                                    viewModel.adminList
+                                                    viewModel.setAdmins
                                                         .contains(user)
                                                 },
-                                                set: { newValue in
-                                                    if newValue {
-                                                        viewModel.adminList
+                                                set: { isAdmin in
+                                                    if isAdmin {
+                                                        viewModel.setAdmins
                                                             .insert(user)
                                                     } else {
-                                                        viewModel.adminList
+                                                        viewModel.setAdmins
                                                             .remove(user)
                                                     }
                                                 }
@@ -122,6 +115,7 @@ struct TeamEditViewScreen: View {
 
                         Button(action: {
                             viewModel.showFriendsList = true
+                            // coordinator.userFriends = viewModel.listFriendsOnTeamAndToAdd()
                         }) {
                             Text("Ajouter des amis")
                                 .tokenFont(.Body_Inter_Medium_16)
@@ -141,7 +135,7 @@ struct TeamEditViewScreen: View {
                         Button(
                             action: {
                                 withAnimation {
-                                    show = false
+                                    coordinator.showTeamDetailEdit = false
                                 }
                             },
                             label: {
@@ -171,8 +165,10 @@ struct TeamEditViewScreen: View {
 
                         Button(
                             action: {
-                                viewModel.uuidTeam = coordinator.teamDetail?.uid ?? ""
-                                viewModel.pushEditTeamToFirebase()
+                                withAnimation {
+                                    coordinator.showTeamDetailEdit = false
+                                    viewModel.pushEditTeamToFirebase(uuidTeam: coordinator.teamDetail?.uid ?? "")
+                                }
                             },
                             label: {
                                 HStack {
@@ -199,8 +195,10 @@ struct TeamEditViewScreen: View {
         }
         .fullScreenCover(isPresented: $viewModel.showFriendsList) {
             ListFriendToAdd(
-                showDetail: $viewModel.showFriendsList,
-                viewModel: viewModel2
+                isPresented: $viewModel.showFriendsList,
+                coordinator: coordinator,
+                friendsOnTeam: $viewModel.setFriends,
+                allFriends: $viewModel.allFriends
             )
         }
         .padding(.top, 30)
@@ -215,6 +213,6 @@ struct TeamEditViewScreen: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        TeamEditViewScreen(show: .constant(true), coordinator: Coordinator())
+        // TeamEditViewScreen(coordinator: Coordinator())
     }.ignoresSafeArea()
 }

@@ -46,6 +46,7 @@ struct TurnListScreen: View {
                         Button(
                             action: {
                                 withAnimation {
+                                    
                                     coordinator.showTurnCardView = true
                                 }
                             },

@@ -4,13 +4,11 @@ import MapKit
 import FirebaseFirestore
 
 struct CustomTabView: View {
-    // @State private var selectedTab = 0
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    
     @State private var selectedEvent: MapLocationEventData? = nil
     @EnvironmentObject var user: User
-    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 
-    
-  
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
 
@@ -23,14 +21,14 @@ struct CustomTabView: View {
                     OnboardingView()
                 }
                 if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
-                    // Show pop 
+                    // Show pop
                 }
                 else {
                     VStack {
                         Group {
                             if coordinator.selectedTab == 0 {
-                                // FeedView(coordinator: coordinator)
-                                CellMessageView()
+                                FeedView(coordinator: coordinator)
+                                // CellMessageView()
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
@@ -108,13 +106,13 @@ struct CustomTabView: View {
             .overlay(
                 Group {
                     if coordinator.showCreateTeam {
-                        TeamFormView(showDetail: $coordinator.showCreateTeam)
+                        TeamFormView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
+
                     if coordinator.showFriendList {
                         FriendListScreen(
-                            coordinator: coordinator,
-                            show: $coordinator.showFriendList
+                            coordinator: coordinator
                         )
                         .transition(.move(edge: .trailing))
                     }
@@ -123,30 +121,25 @@ struct CustomTabView: View {
                         FriendProfileView(show: $coordinator.showProfileFriend)
                             .transition(.move(edge: .trailing))
                     }
-                    /*
-                    if coordinator.showTeamDetail {
-                        TeamDetailView(
-                            show: $coordinator.showTeamDetail,
-                            coordinator: coordinator
-                        )
-                        .transition(.move(edge: .trailing))
-                    }
-                    */
                     
                     if coordinator.showTeamDetail {
-                        destinationView(isShow: $coordinator.showTeamDetail)
+                        TeamDetailView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
                     }
 
+                    if coordinator.showTeamDetailEdit {
+                        TeamEditViewScreen(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+                    
                     if coordinator.showTurnCardView {
                         TurnCardView(isShow: $coordinator.showTurnCardView)
                             .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showNotificationScreen {
-                        NotificationScreenView(
-                            isPresented: $coordinator.showNotificationScreen
-                        )
-                        .transition(.move(edge: .trailing))
+                        NotificationScreenView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showFriendListScreen {
@@ -154,13 +147,16 @@ struct CustomTabView: View {
                             .transition(.move(edge: .leading))
                     }
                     
-                    if coordinator.showCFQScreen {
-                        CFQFormView(isPresented: $coordinator.showCFQScreen)
-                            .transition(.move(edge: .trailing))
+                    if coordinator.showCFQForm {
+                        CFQFormView(
+                            coordinator: coordinator,
+                            user: user
+                        )
+                        .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showMessageScreen {
-                        PreviewMessagerieScreenView(isPresented: $coordinator.showMessageScreen)
+                        PreviewMessagerieScreenView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                 }
@@ -168,12 +164,6 @@ struct CustomTabView: View {
             .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse
             .animation(.easeInOut, value: coordinator.showCreateTeam)
         }
-    }
-    
-    @ViewBuilder
-    func destinationView(isShow: Binding<Bool>) -> some View {
-        TeamEditViewScreen(show: isShow, coordinator: coordinator)
-            .transition(.move(edge: .trailing))
     }
 }
 

@@ -83,6 +83,8 @@ struct TurnCardView: View {
                     .padding(.bottom, 30)
                     .zIndex(1)
                     
+                    Spacer()
+
                     HStack(spacing: 30) {
                         Button(action: {}, label: {
                             HStack {
@@ -220,6 +222,7 @@ struct TurnCardViewAnimation: View {
     }
 }
 
+/*
 struct Screen: View {
     @State var selectedCradId: UUID? = nil
     var cards: [TurnCard] = [
@@ -262,3 +265,4 @@ struct Screen: View {
 #Preview {
     Screen()
 }
+*/

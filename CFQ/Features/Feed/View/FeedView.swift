@@ -3,15 +3,7 @@ import SwiftUI
 
 struct FeedView: View {
     @ObservedObject var coordinator: Coordinator
-    // @EnvironmentObject var user: User
-    var user = User(
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: ["Ici"],
-        friends: ["77MKZdb3FJX8EFvlRGotntxk6oi1"],
-        isPrivateAccount: false
-    )
+    @EnvironmentObject var user: User
 
     var body: some View {
         VStack {
@@ -50,33 +42,37 @@ struct FeedView: View {
 
             VStack(alignment: .leading) {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack() {
+                    HStack {
                         SwitchStatusUserProfile(
                             viewModel: SwitchStatusUserProfileViewModel(user: user)
                         )
-                        ForEach(0..<5) { index in
-                            CirclePictureStatus(isActive: false, onClick: {
-                                withAnimation {
-                                    coordinator.showProfileFriend = true
+                        ForEach(coordinator.userFriends, id: \.self) { friend in
+                            CirclePictureStatusAndPseudo(
+                                pseudo: friend.pseudo,
+                                isActive: friend.isActive ?? false,
+                                onClick: {
+                                    withAnimation {
+                                        coordinator.showProfileFriend = true
+                                    }
                                 }
-                            })
-                                .frame(width: 48, height: 48)
-                                .padding(.leading, 17)
-                                .onTapGesture {
-                                    
-                                }
-                        }.frame(height: 100)
+                            )
+                            .frame(width: 60, height: 60)
+                            .padding(.leading, 17)
+                        }
+                        .frame(height: 100)
                     }
                 }
             }
             
             Divider()
                 .background(.white)
-
+            
             CFQCollectionView(coordinator: coordinator)
 
             Divider()
                 .background(.white)
+            
+            Spacer()
         }
     }
 }

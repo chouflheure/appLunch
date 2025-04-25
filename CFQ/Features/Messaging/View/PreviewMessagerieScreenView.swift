@@ -2,17 +2,17 @@
 import SwiftUI
 
 struct PreviewMessagerieScreenView: View {
-    @Binding var isPresented: Bool
+    @ObservedObject var coordinator: Coordinator
     @ObservedObject var viewModel = PreviewMessagerieScreenViewModel()
-
+    
     var body: some View {
-        DraggableViewLeft(isPresented: $isPresented) {
+        DraggableViewLeft(isPresented: $coordinator.showMessageScreen) {
             SafeAreaContainer {
                 VStack {
                     HeaderBackLeftScreen(
                         onClickBack: {
                             withAnimation {
-                                isPresented = false
+                                coordinator.showMessageScreen = false
                             }
                         },
                         titleScreen: StringsToken.Messaging.titleScreen
@@ -33,7 +33,7 @@ struct PreviewMessagerieScreenView: View {
                             
                             ForEach(Array(viewModel.messageList), id: \.self) { data in
                                 CellMessagingView(data: data) { _ in
-                                    print("@@@ tap on Cell message")
+                                    
                                 }
                                     .padding(.top, 16)
                             }.padding(.horizontal, 16)
@@ -50,6 +50,6 @@ struct PreviewMessagerieScreenView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        PreviewMessagerieScreenView(isPresented: .constant(true))
+        PreviewMessagerieScreenView(coordinator: Coordinator())
     }.ignoresSafeArea()
 }

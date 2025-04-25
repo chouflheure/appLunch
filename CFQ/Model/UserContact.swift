@@ -6,13 +6,14 @@ class UserContact: Codable, Hashable {
     var firstName: String
     var pseudo: String
     var profilePictureUrl: String
+    var isActive: Bool?
 
     init(
-        uid: String,
-        name: String,
-        firstName: String,
-        pseudo: String,
-        profilePictureUrl: String
+        uid: String = "",
+        name: String = "",
+        firstName: String = "",
+        pseudo: String = "",
+        profilePictureUrl: String = ""
     ) {
         self.uid = uid
         self.name = name
@@ -37,5 +38,17 @@ class UserContact: Codable, Hashable {
         hasher.combine(firstName)
         hasher.combine(pseudo)
         hasher.combine(profilePictureUrl)
+    }
+    
+    func userContactDefault() -> [UserContact] {
+        return [
+            UserContact(
+                uid: "",
+                name: "",
+                firstName: "",
+                pseudo: "",
+                profilePictureUrl: ""
+            )
+        ]
     }
 }

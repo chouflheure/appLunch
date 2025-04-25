@@ -11,7 +11,7 @@ class User: ObservableObject, Encodable, Decodable {
     // @Published var birthDate: Date?
     @Published var isActive: Bool
     @Published var favorite: [String]?
-    @Published var friends: Set<String>
+    @Published var friends: [String]
     @Published var invitedCfqs: [String]?
     @Published var invitedTurns: [String]?
     @Published var notificationsChannelId: String?
@@ -34,7 +34,7 @@ class User: ObservableObject, Encodable, Decodable {
         // birthDate: Date? = nil,
         isActive: Bool = true,
         favorite: [String] = [""] ,
-        friends: Set<String> = [""],
+        friends: [String] = [""],
         invitedCfqs: [String] = [""],
         invitedTurns: [String] = [""],
         notificationsChannelId: String = "",
@@ -102,7 +102,7 @@ class User: ObservableObject, Encodable, Decodable {
         location = try values.decode(Set<String>.self, forKey: .location)
         // birthDate = try values.decode(Date.self, forKey: .birthDate)
         favorite = try values.decode([String].self, forKey: .favorite)
-        friends = try values.decode(Set<String>.self, forKey: .friends)
+        friends = try values.decode([String].self, forKey: .friends)
         invitedCfqs = try values.decode([String].self, forKey: .invitedCfqs)
         invitedTurns = try values.decode([String].self, forKey: .invitedTurns)
         notificationsChannelId = try values.decode(String.self, forKey: .notificationsChannelId)

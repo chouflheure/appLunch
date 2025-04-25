@@ -1,16 +1,21 @@
 
 import SwiftUI
 
+
 struct TestNotif: View {
+    let notifService = NotifService()
     var body: some View {
         VStack {
             Button(action: {
-                scheduleNotification()
+                notifService.scheduleNotification()
             }) {
                 Text("Send Notification")
             }
         }
     }
+}
+
+class NotifService {
     
     func scheduleNotification() {
         let content = UNMutableNotificationContent()
@@ -33,7 +38,7 @@ struct TestNotif: View {
                                                 title: "rep 2",
                                                 options: [])
         // Créer une catégorie pour les actions
-        let category = UNNotificationCategory(identifier: "CUSTOM_CATEGORY", actions: [firstAction, secondAction], intentIdentifiers: [], options: [])
+        let category = UNNotificationCategory(identifier: "daily_ask_turn", actions: [firstAction, secondAction], intentIdentifiers: [], options: [])
 
         let category1 = UNNotificationCategory(identifier: "", actions: [firstAction1, secondAction1], intentIdentifiers: [], options: [])
         
@@ -41,7 +46,7 @@ struct TestNotif: View {
         UNUserNotificationCenter.current().setNotificationCategories([category, category1])
 
         // Assigner la catégorie au contenu de la notification
-        content.categoryIdentifier = "CUSTOM_CATEGORY"
+        content.categoryIdentifier = "daily_ask_turn"
 
         // Définir le déclencheur pour la notification (par exemple, 5 secondes après l'appel)
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)

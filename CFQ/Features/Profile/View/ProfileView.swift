@@ -6,14 +6,17 @@ struct ProfileView: View {
     @ObservedObject var coordinator: Coordinator
     @State private var showFriendList = false
 
-    // @EnvironmentObject var user: User
+    @EnvironmentObject var user: User
+    /*
     var user = User(
         uid: "1234567890",
         name: "John",
         firstName: "Doe",
         pseudo: "johndoe",
-        location: ["Ici"]
+        location: "Ici"
     )
+     */
+    
     @StateObject var viewModel = ProfileViewModel()
 
     var body: some View {

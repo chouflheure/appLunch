@@ -4,11 +4,12 @@ struct TeamView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel = TeamListScreenViewModel()
     @State var selectedTeam: Int = 0
+    @EnvironmentObject var user: User
 
     var body: some View {
         VStack {
             HStack(alignment: .center) {
-                Text("MES TEAMs")
+                Text(StringsToken.Team.teamTitle)
                     .tokenFont(.Title_Gigalypse_24)
             }
 
@@ -30,7 +31,7 @@ struct TeamView: View {
                         team: viewModel.teams[index],
                         onClick: {
                             selectedTeam = index
-                            coordinator.teamDetail = viewModel.teams[selectedTeam]
+                            coordinator.teamDetail = viewModel.teamsGlobal[selectedTeam]
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 coordinator.showTeamDetail = true
                             }
@@ -40,43 +41,8 @@ struct TeamView: View {
                 }
             }
             .padding(.horizontal, 12)
-        }.onChange(of: viewModel.teams) { _ in
-            coordinator.teamDetail = viewModel.teams[selectedTeam]
-        }
-    }
-}
-
-struct CellTeamView: View {
-    @ObservedObject var coordinator: Coordinator
-    var team: Team
-    var onClick: (() -> Void)
-
-    var body: some View {
-        HStack(alignment: .center) {
-            CirclePicture()
-                .frame(width: 50, height: 50)
-            VStack(alignment: .leading, spacing: 10) {
-                Text(team.title)
-                    .foregroundColor(.white)
-                    .bold()
-                PreviewProfile(
-                    pictures: [.header],
-                    previewProfileType: .userMemberTeam
-                ).frame(height: 24)
-            }.padding(.horizontal, 16)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.white, lineWidth: 1)
-        )
-        .contentShape(Rectangle())
-        .onTapGesture {
-            withAnimation {
-                onClick()
-                // coordinator.showTeamDetail = true
-            }
+        }.onChange(of: viewModel.teamsGlobal) { _ in
+            coordinator.teamDetail = viewModel.teamsGlobal[selectedTeam]
         }
     }
 }

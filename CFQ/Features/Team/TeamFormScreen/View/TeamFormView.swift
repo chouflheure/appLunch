@@ -2,20 +2,22 @@ import PhotosUI
 import SwiftUI
 
 struct TeamFormView: View {
-    @Binding var showDetail: Bool
+    // @Binding var showDetail: Bool
+    @ObservedObject var coordinator: Coordinator
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
     @StateObject var viewModel = TeamFormViewModel()
 
     var body: some View {
-        DraggableViewLeft(isPresented: $showDetail) {
+        DraggableViewLeft(isPresented: $coordinator.showCreateTeam) {
             SafeAreaContainer {
                 VStack {
                     HStack {
                         Button(action: {
                             withAnimation {
-                                showDetail = false
+                                coordinator.showCreateTeam = false
+                                // showDetail = false
                             }
                         }) {
                             Image(.iconArrow)
@@ -123,12 +125,14 @@ struct TeamFormView: View {
                     
                 }
             }
+            /*
             .fullScreenCover(isPresented: $viewModel.showFriendsList) {
                 ListFriendToAdd(
-                    showDetail: $viewModel.showFriendsList,
-                    viewModel: viewModel
+                    isPresented: $viewModel.showFriendsList,
+                    coordinator: coordinator
                 )
             }
+             */
             .padding(.top, 30)
             .padding(.bottom, 30)
         }
@@ -139,9 +143,85 @@ struct TeamFormView: View {
     }
 }
 
+class ListFriendToAddViewModel: ObservableObject {
+    // @Published var friendsOnTeam = Set<UserContact>()
+
+    @Published var coordinator: Coordinator
+    @Published var researchText = ""
+    // @Published var userFriends = Set<UserContact>()
+    @Binding var friendsOnTeam: Set<UserContact>
+    @Binding var allFriends: Set<UserContact>
+    private var allFriendstemps = Set<UserContact>()
+
+    init(coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>, allFriends: Binding<Set<UserContact>>) {
+        self.coordinator = coordinator
+        self._friendsOnTeam = friendsOnTeam
+        self._allFriends = allFriends
+        sortListFriendOnTeam()
+        allFriendstemps = friendsOnTeam.wrappedValue
+    }
+    
+    func sortListFriendOnTeam() {
+        /*
+        if let friendsOnTeamFromCoordinator = coordinator.teamDetail?.friends {
+            friendsOnTeam = Set(friendsOnTeamFromCoordinator)
+        }
+         
+         */
+        // friendsOnTeam = friends
+        allFriends = allFriends.filter { !friendsOnTeam.contains($0) }
+    }
+    
+    
+
+    var filteredNames: Set<UserContact> {
+        let searchWords = researchText.lowercased().split(separator: " ")
+        return allFriendstemps.filter { name in
+            searchWords.allSatisfy { word in
+                name.name.lowercased().hasPrefix(word)
+            }
+        }
+    }
+
+    
+    func removeFriendsFromList(user: UserContact) {
+        friendsOnTeam.remove(user)
+        allFriends.insert(user)
+        allFriendstemps.insert(user)
+    }
+
+    func addFriendsToList(user: UserContact) {
+        friendsOnTeam.insert(user)
+        allFriends.remove(user)
+        allFriendstemps.remove(user)
+    }
+
+    func removeText() {
+        researchText.removeAll()
+    }
+
+    func researche() {
+        allFriends = allFriendstemps
+        allFriends = filteredNames
+    }
+}
+
 struct ListFriendToAdd: View {
-    @Binding var showDetail: Bool
-    @ObservedObject var viewModel: TeamFormViewModel
+    @Binding var isPresented: Bool
+    @ObservedObject var coordinator: Coordinator
+    @StateObject private var viewModel: ListFriendToAddViewModel
+    @Binding var friendsOnTeam: Set<UserContact>
+    @Binding var allFriends: Set<UserContact>
+
+    // @Binding var allfriends: Set<UserContact>
+
+    init(isPresented: Binding<Bool>, coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>, allFriends: Binding<Set<UserContact>>) {
+        self._isPresented = isPresented
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: ListFriendToAddViewModel(coordinator: coordinator, friendsOnTeam: friendsOnTeam, allFriends: allFriends))
+        self._friendsOnTeam = friendsOnTeam
+        self._allFriends = allFriends
+    }
 
     var body: some View {
         SafeAreaContainer {
@@ -159,7 +239,7 @@ struct ListFriendToAdd: View {
                     )
                     
                     Button(action: {
-                        showDetail = false
+                        isPresented = false
                     }) {
                         Image(.iconArrow)
                             .resizable()
@@ -171,10 +251,10 @@ struct ListFriendToAdd: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 50)
                 .zIndex(100)
-
+/*
                 AddFriendsAndListView(
-                    arrayPicture: $viewModel.friendsAdd,
-                    arrayFriends: $viewModel.friendsList,
+                    arrayPicture: $friendsOnTeam,
+                    arrayFriends: $viewModel.userFriends,
                     onRemove: { userRemoved in
                         viewModel.removeFriendsFromList(user: userRemoved)
                     },
@@ -182,6 +262,7 @@ struct ListFriendToAdd: View {
                         viewModel.addFriendsToList(user: userAdd)
                     }
                 )
+ */
                 .padding(.top, 30)
             }
         }
@@ -191,6 +272,6 @@ struct ListFriendToAdd: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        TeamFormView(showDetail: .constant(true))
+        // TeamFormView(showDetail: .constant(true))
     }.ignoresSafeArea()
 }

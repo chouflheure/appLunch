@@ -2,17 +2,17 @@
 import SwiftUI
 
 struct NotificationScreenView: View {
-    @Binding var isPresented: Bool
+    @ObservedObject var coordinator: Coordinator
 
     var body: some View {
-        DraggableViewLeft(isPresented: $isPresented) {
+        DraggableViewLeft(isPresented: $coordinator.showNotificationScreen) {
             SafeAreaContainer {
                 VStack {
                     HStack(alignment: .center) {
                         Button(
                             action: {
                                 withAnimation {
-                                    isPresented = false
+                                    coordinator.showNotificationScreen = false
                                 }
                             },
                             label: {
@@ -65,6 +65,6 @@ struct NotificationScreenView: View {
 
 #Preview {
     SafeAreaContainer {
-        NotificationScreenView(isPresented: .constant(true))
+        NotificationScreenView(coordinator: Coordinator())
     }
 }

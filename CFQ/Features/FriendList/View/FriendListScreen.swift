@@ -3,25 +3,25 @@ import SwiftUI
 
 struct FriendListScreen: View {
     @ObservedObject var coordinator: Coordinator
-    @Binding var show: Bool
-    @State private var dragOffset: CGFloat = 0
-    @StateObject var viewModel = FriendListViewModel()
+    @StateObject var viewModel: FriendListViewModel
+
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: FriendListViewModel(coordinator: coordinator))
+    }
 
     var body: some View {
-        DraggableViewLeft(isPresented: $show) {
+        DraggableViewLeft(isPresented: $coordinator.showFriendList) {
             SafeAreaContainer {
                 VStack {
                     HeaderBackLeftScreen(
                         onClickBack: {
                             withAnimation {
-                                show = false
+                                coordinator.showFriendList = false
                             }
                         },
                         titleScreen: StringsToken.Profile.Friends
                     )
-
-                    Divider()
-                        .background(.white)
 
                     VStack(alignment: .leading) {
                         ScrollView(.vertical, showsIndicators: false) {
@@ -37,7 +37,7 @@ struct FriendListScreen: View {
                                     }
                                 )
                                 .padding(.top, 15)
-
+                                
                                 ForEach(Array(viewModel.friendsList), id: \.self) { user in
                                     CellFriendPseudoNameAction(
                                         pseudo: user.pseudo,
@@ -61,6 +61,6 @@ struct FriendListScreen: View {
 
 struct FriendListScreen_Previews: PreviewProvider {
     static var previews: some View {
-        FriendListScreen(coordinator: .init(), show: .constant(false))
+        FriendListScreen(coordinator: .init())
     }
 }

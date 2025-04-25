@@ -17,7 +17,6 @@ struct ReponseMessage<Content: View>: View {
                     .onChanged { value in
                         if value.translation.width > 0 {
                             dragOffset = value.translation.width
-                            print("@@@ drag max")
                         }
                     }
                     .onEnded { value in
@@ -109,7 +108,7 @@ struct CellMessageView: View {
                             .background(.blackLight)
                             .cornerRadius(20)
                             .onLongPressGesture(perform: {
-                                print("@@@ tap")
+                                
                             })
                             .onTapGesture(count: 2) {
                                 withAnimation {
@@ -160,7 +159,7 @@ struct CellMessageView: View {
                             .background(.blackLight)
                             .cornerRadius(20)
                             .onLongPressGesture(perform: {
-                                print("@@@ tap")
+                                
                             })
                     }
                     .padding(.leading, 40)
@@ -204,7 +203,7 @@ struct CellMessageView: View {
                             .lineLimit(10)
                             .cornerRadius(20)
                             .onLongPressGesture(perform: {
-                                print("@@@ tap")
+                                
                             })
                             .onTapGesture(count: 2) {
                                 withAnimation {

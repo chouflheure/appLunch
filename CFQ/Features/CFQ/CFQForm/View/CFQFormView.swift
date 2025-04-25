@@ -2,18 +2,23 @@
 import SwiftUI
 
 struct CFQFormView: View {
-    @State var guestNumber = 0
-    @Binding var isPresented: Bool
-    @ObservedObject var viewModel = CFQFormViewModel()
 
+    @ObservedObject var coordinator: Coordinator
+    @StateObject var viewModel: CFQFormViewModel
+
+    init(coordinator: Coordinator, user: User) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: CFQFormViewModel(coordinator: coordinator, user: user))
+    }
+    
     var body: some View {
-        DraggableViewLeft(isPresented: $isPresented) {
+        DraggableViewLeft(isPresented: $coordinator.showCFQForm) {
             SafeAreaContainer {
                 VStack(alignment: .leading) {
                     HeaderBackLeftScreen(
                         onClickBack: {
                             withAnimation {
-                                isPresented = false
+                                coordinator.showCFQForm = false
                             }
                         },
                         titleScreen: "CFQ ?"
@@ -41,9 +46,11 @@ struct CFQFormView: View {
                                 
                                 HStack {
                                     Spacer()
-                                    PostEventButton(action: {
-                                        
-                                    })
+                                    PostEventButton(
+                                        action: {
+                                            viewModel.pushCFQ()
+                                        }, isEnable: $viewModel.isEnableButton
+                                    )
                                     .padding(.trailing, 16)
                                 }
                                 .padding(.top, 5)
@@ -61,7 +68,7 @@ struct CFQFormView: View {
                                 .padding(.top, 16)
                                 
                                 AddFriendsAndListView(
-                                    arrayPicture: $viewModel.friendsAdd,
+                                    arrayPicture: $viewModel.friendsAddToCFQ,
                                     arrayFriends: $viewModel.friendsList,
                                     onRemove: { userRemoved in
                                         viewModel.removeFriendsFromList(user: userRemoved)
@@ -83,7 +90,7 @@ struct CFQFormView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CFQFormView(isPresented: .constant(true))
+        CFQFormView(coordinator: Coordinator(), user: User())
     }.ignoresSafeArea()
 }
 
