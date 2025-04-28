@@ -39,8 +39,6 @@ class AuthViewModel: ObservableObject {
         handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
             self?.isAuthenticated = (user != nil)
             self?.userUID = user?.uid
-            print("@@@ user Optionnel UUID = \(user?.uid)")
-            print("@@@ user Optionnel UUID = \(self?.userUID)")
         }
     }
 
