@@ -4,6 +4,7 @@ import SwiftUI
 struct TurnCardView: View {
     
     @Binding var isShow: Bool
+    @StateObject var viewModel = TurnCardViewModel()
 
     // @EnvironmentObject var user: User
     var user = User(
@@ -14,31 +15,18 @@ struct TurnCardView: View {
         location: ["Ici"]
     )
     
-    @StateObject var viewModel = TurnCardViewModel()
-    
-    var body : some View {
+    var body: some View {
         DraggableViewLeft(isPresented: $isShow) {
             SafeAreaContainer {
                 VStack {
-                    HStack{
-                        Button(action: {
+                    HeaderBackLeftScreen(
+                        onClickBack: {
                             withAnimation {
                                 isShow = false
                             }
-                        }) {
-                            Image(.iconArrow)
-                                .foregroundStyle(.white)
-                                .frame(width: 24, height: 24)
-                        }
-                        
-                        Spacer()
-                        
-                        Text("TURN")
-                            .tokenFont(.Title_Gigalypse_24)
-                        
-                        Spacer()
-
-                        Button(action: {
+                        },
+                        titleScreen: StringsToken.Turn.titleTurn,
+                        thirdElement: AnyView(Button(action: {
                             viewModel.showDetailTurnCard = true
                         }) {
                             Image(.iconEdit)
@@ -46,31 +34,31 @@ struct TurnCardView: View {
                                 .scaledToFit()
                                 .foregroundColor(.white)
                                 .frame(width: 24)
-                        }
-                    }
+                        }),
+                        isShowDivider: false
+                    )
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 25)
-                    .zIndex(100)
-                    
+                    .zIndex(2)
+
                     ZStack {
                         GradientCardView()
-                        
+
                         VStack {
-                            // Header
-                            HeaderCardView(viewModel: viewModel, isPreviewCard: true)
+                            // Header ( Date / Picture / TURN )
+                            HeaderCardPreviewView(viewModel: viewModel)
                                 .padding(.bottom, 15)
                                 .frame(height: 100)
                             
-                            // Title
-                            TitleTurnCardView(viewModel: viewModel)
+                            // Title ( Title / Guest )
+                            TitleTurnCardPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
                             
-                            // Informations
-                            MainInformationsView(viewModel: viewModel)
+                            // Informations ( Mood / Date / Loc )
+                            MainInformationsPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
                             
-                            // Description
-                            DescriptionTurnCard(viewModel: viewModel, isPreviewCard: true)
+                            // Description ( Bio event )
+                            DescriptionTurnCardPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
                             
                             Spacer()
@@ -144,7 +132,7 @@ struct TurnCardView: View {
 
 
 
-
+/*
 
 struct TurnCardViewAnimation: View {
     @StateObject var viewModel = TurnCardViewModel()
@@ -168,20 +156,20 @@ struct TurnCardViewAnimation: View {
 
             VStack {
                 // Header
-                HeaderCardView(viewModel: viewModel, isPreviewCard: true)
+                HeaderCardPreviewView(viewModel: viewModel)
                     .padding(.bottom, 15)
                     .frame(height: 100)
 
                 // Title
-                TitleTurnCardView(viewModel: viewModel)
+                TitleTurnCardPreviewView(viewModel: viewModel)
                     .padding(.horizontal, 16)
 
                 // Informations
-                MainInformationsView(viewModel: viewModel)
+                MainInformationsPreviewView(viewModel: viewModel)
                     .padding(.horizontal, 16)
 
                 // Description
-                DescriptionTurnCard(viewModel: viewModel, isPreviewCard: true)
+                DescriptionTurnCardPreviewView(viewModel: viewModel)
                     .padding(.horizontal, 16)
 
                 Spacer()
@@ -221,7 +209,7 @@ struct TurnCardViewAnimation: View {
         }
     }
 }
-
+*/
 /*
 struct Screen: View {
     @State var selectedCradId: UUID? = nil

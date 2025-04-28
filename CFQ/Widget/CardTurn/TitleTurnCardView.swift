@@ -1,11 +1,59 @@
-
 import SwiftUI
 
-struct TitleTurnCardView: View {
-    
+// PreviewView
+
+struct TitleTurnCardPreviewView: View {
+
     // TODO: Change with user
     var userProfileImage: UIImage = .profile
-     
+
+    // @EnvironmentObject var user: User
+    var user = User(
+        uid: "1234567890",
+        name: "John",
+        firstName: "Doe",
+        pseudo: "johndoe",
+        location: ["Ici"]
+    )
+
+    @ObservedObject var viewModel: TurnCardViewModel
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(viewModel.title.isEmpty ? "Titre du TURN" : viewModel.title)
+                .tokenFont(.Title_Inter_semibold_24)
+                .padding(.bottom, 16)
+                .bold()
+                .textCase(.uppercase)
+
+            HStack {
+                Image(uiImage: userProfileImage)
+
+                Text(user.pseudo)
+                    .tokenFont(.Body_Inter_Medium_16)
+                    .lineLimit(1)
+
+                Spacer()
+
+                Button(action: {}) {
+                    Image(systemName: "message")
+                        .foregroundColor(.white)
+                }
+
+                ButtonParticipate(action: {})
+            }
+
+            PreviewProfile(pictures: [], previewProfileType: .userComming)
+                .padding(.vertical, 8)
+        }
+    }
+}
+
+struct TitleTurnCardDetailView: View {
+
+    // TODO: Change with user
+    var userProfileImage: UIImage = .profile
+
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1234567890",
@@ -20,47 +68,45 @@ struct TitleTurnCardView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            
-            if viewModel.isEditing {
-                CustomTextField(
-                    text: $viewModel.title,
-                    keyBoardType: .default,
-                    placeHolder: StringsToken.TurnCardInformation.PlaceholderTitle,
-                    textFieldType: .turn
-                )
-                .focused($isFocused)
-                .padding(.bottom, 16)
-                
-            } else {
 
-                Text(viewModel.title)
-                    .tokenFont(.Title_Inter_semibold_24)
-                    .padding(.bottom, 16)
-                    .bold()
-                    .textCase(.uppercase)
-            }
+            CustomTextField(
+                text: $viewModel.title,
+                keyBoardType: .default,
+                placeHolder: StringsToken.TurnCardInformation.PlaceholderTitle,
+                textFieldType: .turn
+            )
+            .focused($isFocused)
+            .padding(.bottom, 16)
 
             HStack {
                 Image(uiImage: userProfileImage)
+
                 Text(user.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
-                
+
                 Spacer()
-                    .onTapGesture {
-                        // print("@@@ here")
-                    }
-                
+                    .onTapGesture {}
+
                 Button(action: {}) {
                     Image(systemName: "message")
                         .foregroundColor(.white)
                 }
-                
+
                 ButtonParticipate(action: {})
             }
 
-            PreviewProfile(pictures: [], previewProfileType: .userComming)
-                    .padding(.vertical, 8)
+            Button(action: {}) {
+                HStack {
+                    Image(.iconAddfriend)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.white)
+
+                    Text("Ajoute tes amis à l'évent")
+                        .tokenFont(.Body_Inter_Medium_16)
+                }
+            }.padding(.vertical, 10)
         }
     }
 }
@@ -69,6 +115,6 @@ struct TitleTurnCardView: View {
     ZStack {
         NeonBackgroundImage()
             .ignoresSafeArea()
-        TitleTurnCardView(viewModel: TurnCardViewModel())
+        //    TitleTurnCardView(viewModel: TurnCardViewModel())
     }
 }

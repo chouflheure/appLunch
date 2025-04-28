@@ -10,21 +10,22 @@ struct TurnCardDetailsView: View {
             
             ScrollView {
                 VStack {
-                    // Header
-                    HeaderCardView(viewModel: viewModel, isPreviewCard: false)
+                    // Header ( Date / Picture / TURN )
+                    HeaderCardViewDetail(viewModel: viewModel)
                         .padding(.bottom, 15)
                         .frame(height: 200)
                     
-                    // Title
-                    TitleTurnCardView(viewModel: viewModel)
+                    // Title ( Title / Guest )
+                    TitleTurnCardDetailView(viewModel: viewModel)
+                        .padding(.horizontal, 16)
+                        .zIndex(2)
+                    
+                    // Informations ( Mood / Date / Loc )
+                    MainInformationsDetailView(viewModel: viewModel)
                         .padding(.horizontal, 16)
                     
-                    // Informations
-                    MainInformationsView(viewModel: viewModel)
-                        .padding(.horizontal, 16)
-                    
-                    // Description
-                    DescriptionTurnCard(viewModel: viewModel, isPreviewCard: false)
+                    // Description ( Bio event )
+                    DescriptionTurnCardDetailView(viewModel: viewModel)
                         .padding(.horizontal, 16)
                     
                     Spacer()

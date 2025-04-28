@@ -98,7 +98,9 @@ enum StringsToken {
         static let teamTitle = "MES TEAMs"
     }
     
-    enum Turn {}
+    enum Turn {
+        static let titleTurn = "TURN"
+    }
     
     enum SearchBar {
         static let placeholderFriend = "Recherche un ami"
