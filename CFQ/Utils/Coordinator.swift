@@ -4,7 +4,7 @@ import SwiftUI
 class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
     @Published var selectedTab = 0
-    @Published var user = User()
+    @Published var user: User?
     @Published var showFriendList = false
     @Published var showProfileFriend = false
     @Published var showTeamDetail = false
@@ -27,10 +27,9 @@ class Coordinator: ObservableObject {
     private var auth = Auth.auth()
     private var firebaseService = FirebaseService()
 
-    func start() {
-        /// when user has an id and an account
-        if let user = auth.currentUser {
-            firebaseService.getDataByID(from: .users, with: user.uid) { (result: Result<User, Error>) in
+    func start(userUID: String?) {
+        if let userUID = userUID {
+            firebaseService.getDataByID(from: .users, with: userUID) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
                     UserDefaults.standard.set(user.uid, forKey: "userUID")
@@ -50,8 +49,8 @@ class Coordinator: ObservableObject {
                         }
                     )
                     Logger.log("User connected and have account ", level: .info)
-                
-                /// when user has an id but not account
+                    
+                    /// when user has an id but not account
                 case .failure(_):
                     self.currentView = AnyView(
                         NavigationView {
@@ -61,16 +60,17 @@ class Coordinator: ObservableObject {
                     Logger.log("User connected but not account ", level: .info)
                 }
             }
-        /// when user hasn't an id and no account
+            
         } else {
+            
             currentView = AnyView(
                 NavigationView {
                     SignScreen(coordinator: self)
                 }
             )
             Logger.log("User not connected and not account ", level: .info)
+            /// when user hasn't an id and no account
         }
-        print("@@@ here with user = \(user.pseudo)")
     }
 
     func removeAllInformationToCoordinator() {
@@ -129,39 +129,48 @@ class Coordinator: ObservableObject {
     }
     
     func catchAllUserCFQ(user: User) {
-        firebaseService.getDataByIDs(
-            from: .cfqs,
-            with: user.invitedCfqs ?? [""],
-            listenerKeyPrefix: ListenerType.cfq.rawValue
-        ){ (result: Result<[CFQ], Error>) in
-            switch result {
+        user.invitedCfqs = removeEmptyIdInArray(data: user.invitedCfqs ?? [""])
+
+        if let invitedCfqs = user.invitedCfqs, !invitedCfqs.isEmpty {
+            firebaseService.getDataByIDs(
+                from: .cfqs,
+                with: invitedCfqs,
+                listenerKeyPrefix: ListenerType.cfq.rawValue
+            ){ (result: Result<[CFQ], Error>) in
+                switch result {
                 case .success(let cfq):
                     DispatchQueue.main.async {
                         self.userCFQ = cfq
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")
-
+                    
                 }
             }
+        }
     }
     
     func catchAllUsersFriend(user: User) {
-        firebaseService.getDataByIDs(
-            from: .users,
-            with: user.friends,
-            listenerKeyPrefix: ListenerType.friends.rawValue
-        ){ (result: Result<[UserContact], Error>) in
-            switch result {
+        user.friends = removeEmptyIdInArray(data: user.friends)
+        
+        if !user.friends.isEmpty {
+             
+            firebaseService.getDataByIDs(
+                from: .users,
+                with: user.friends,
+                listenerKeyPrefix: ListenerType.friends.rawValue
+            ){ (result: Result<[UserContact], Error>) in
+                switch result {
                 case .success(let userContact):
                     DispatchQueue.main.async {
                         self.userFriends = userContact
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")
-
+                    
                 }
             }
+        }
     }
 
     func gotoCustomTabView(user: User) {
@@ -171,5 +180,16 @@ class Coordinator: ObservableObject {
                     .environmentObject(user)
             }
         )
+    }
+    
+    private func removeEmptyIdInArray(data: [String]) -> [String] {
+        var data = data
+        data.indices.forEach({ index in
+            if data[index] == "" {
+                data.remove(at: index)
+            }
+        })
+
+        return data
     }
 }

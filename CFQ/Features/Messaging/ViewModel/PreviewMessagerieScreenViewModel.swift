@@ -1,14 +1,12 @@
 
 import Foundation
+import Firebase
 
 class PreviewMessagerieScreenViewModel: ObservableObject {
-    @Published var titleCFQ = String()
-    @Published var researchText = String()
-    @Published var showEditTeam: Bool = false
-    @Published var showSheetSettingTeam: Bool = false
-    @Published var isAdminEditing: Bool = false
-    @Published var showSheetAddFriend: Bool = false
     
+    @Published var researchText = String()
+    private var firebaseService = FirebaseService()
+
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1",

@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct ReponseMessage<Content: View>: View {
@@ -12,22 +11,29 @@ struct ReponseMessage<Content: View>: View {
     var body: some View {
         content
             .offset(x: dragOffset)
-            .gesture(
+            .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        if value.translation.width > 0 {
-                            dragOffset = value.translation.width
+                        if abs(value.translation.width)
+                            > abs(value.translation.height)
+                        {
+                            if value.translation.width > 0 {
+                                dragOffset = value.translation.width
+                            }
                         }
                     }
                     .onEnded { value in
-                        if value.translation.width > 150 {
-                            withAnimation {
-                                // isPresented = false
-                                dragOffset = 0
-                            }
-                        } else {
-                            withAnimation {
-                                dragOffset = 0
+                        if abs(value.translation.width)
+                            > abs(value.translation.height)
+                        {
+                            if value.translation.width > 150 {
+                                withAnimation {
+                                    dragOffset = 0
+                                }
+                            } else {
+                                withAnimation {
+                                    dragOffset = 0
+                                }
                             }
                         }
                     }
@@ -35,11 +41,9 @@ struct ReponseMessage<Content: View>: View {
     }
 }
 
-import SwiftUI
-
 struct EmojiView: View {
     let emojies = ["😘", "😀", "😆", "😅", "😄", "😃", "😋", "😂", "❤️"]
-    var onTapOnEmojie: ((String) -> Void )
+    var onTapOnEmojie: ((String) -> Void)
 
     @State private var visibleIndexes: Set<Int> = []
     var dureactionAnimation = 0.02
@@ -50,14 +54,18 @@ struct EmojiView: View {
                 Text(emojies[index])
                     .font(.system(size: 15))
                     .opacity(visibleIndexes.contains(index) ? 1 : 0)
-                    .offset(y: visibleIndexes.contains(index) ? 0 : -20) // 👈 chute du haut
-                    .animation(.easeOut(duration: 0.4).delay(Double(index) * dureactionAnimation), value: visibleIndexes)
+                    .offset(y: visibleIndexes.contains(index) ? 0 : -20)  // 👈 chute du haut
+                    .animation(
+                        .easeOut(duration: 0.4).delay(
+                            Double(index) * dureactionAnimation),
+                        value: visibleIndexes
+                    )
                     .onTapGesture {
                         onTapOnEmojie(emojies[index])
                     }
             }
             Button(action: {
-                
+
             }) {
                 Image(.iconPlus)
                     .resizable()
@@ -68,7 +76,9 @@ struct EmojiView: View {
         }
         .onAppear {
             for index in emojies.indices {
-                DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * dureactionAnimation) {
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + Double(index) * dureactionAnimation
+                ) {
                     visibleIndexes.insert(index)
                 }
             }
@@ -76,48 +86,48 @@ struct EmojiView: View {
     }
 }
 
-
-
-
 struct CellMessageView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false
     @State private var isShowPopover = false
-
+    
     var body: some View {
-        ZStack {
-            VStack(alignment: .leading) {
-                ReponseMessage {
-                    
+        VStack {
+            ZStack {
+                VStack(alignment: .leading) {
+
+                    // ReponseMessage {
+
                     Text("Charles")
                         .tokenFont(.Placeholder_Inter_Regular_14)
                         .padding(.leading, 50)
-                    
+
                     HStack(alignment: .top) {
                         Image(.header)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 32, height: 32)
                             .clipShape(Circle())
-                        
-                        
-                        Text("Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 😂 Chaud d’un verre dans le ")
-                            .tokenFont(.Body_Inter_Medium_12)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(.blackLight)
-                            .cornerRadius(20)
-                            .onLongPressGesture(perform: {
-                                
-                            })
-                            .onTapGesture(count: 2) {
-                                withAnimation {
-                                    showReaction = true
-                                }
+
+                        Text(
+                            "Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 😂 Chaud d’un verre dans le "
+                        )
+                        .tokenFont(.Body_Inter_Medium_12)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .background(.blackLight)
+                        .cornerRadius(20)
+                        .onLongPressGesture(perform: {
+
+                        })
+                        .onTapGesture(count: 2) {
+                            withAnimation {
+                                showReaction = true
                             }
+                        }
                     }
                     .padding(.trailing, 30)
-                    
+
                     HStack {
                         Spacer()
                         Button(action: {
@@ -130,102 +140,270 @@ struct CellMessageView: View {
                                 .padding(.horizontal, 12)
                                 .background(.blackLight)
                                 .cornerRadius(20)
-                                .overlay() {
+                                .overlay {
                                     RoundedRectangle(cornerRadius: 20)
                                         .stroke(lineWidth: 0.3)
                                         .foregroundColor(.black)
                                 }
-                                .popover(isPresented: $isShowPopover, arrowEdge: .bottom,
-                                         content: {
-                                    Text("Hello, World!")
-                                        .padding()
-                                        .presentationCompactAdaptation(.none)
-                                })
+                                .popover(
+                                    isPresented: $isShowPopover,
+                                    arrowEdge: .bottom,
+                                    content: {
+                                        Text("Hello, World!")
+                                            .padding()
+                                            .presentationCompactAdaptation(
+                                                .none)
+                                    }
+                                )
                                 .zIndex(999)
                         }
                     }
                     .padding(.trailing, 60)
                     .offset(y: -12)
-                    
-                    
-                }
 
-                ReponseMessage {
-                    HStack(alignment: .top) {
-                        Text("Chaud d’un verre dans le 18 💩")
-                            .tokenFont(.Body_Inter_Medium_12)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(.blackLight)
-                            .cornerRadius(20)
-                            .onLongPressGesture(perform: {
-                                
-                            })
-                    }
-                    .padding(.leading, 40)
-                    .padding(.trailing, 30)
+                    // }
+
+                }
+                .blur(radius: showReaction ? 10 : 0)
+                .allowsHitTesting(!showReaction)
+
+                if showReaction {
+                    ReactionPreviewView(showReaction: $showReaction)
                 }
             }
-            .blur(radius: showReaction ? 10 : 0)
-            .allowsHitTesting(!showReaction)
-            
-            if showReaction {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation {
-                            showReaction = false
-                        }
-                    }
-                    .zIndex(1)
-                
-                HStack(alignment: .top) {
-                    VStack {
-                        
-                        EmojiView() { emojie in
-                            print("@@@ emojie tap = \(emojie)")
-                            withAnimation {
-                                showReaction = false
-                            }
-                        }
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
-                        .background(.blackLight)
-                        .cornerRadius(20)
-                        .padding(.bottom, 5)
-                        .frame(alignment: .leading)
-                        
-                        Text("Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 😂")
-                            .tokenFont(.Body_Inter_Medium_12)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(.blackLight)
-                            .lineLimit(10)
-                            .cornerRadius(20)
-                            .onLongPressGesture(perform: {
-                                
-                            })
-                            .onTapGesture(count: 2) {
-                                withAnimation {
-                                    // showReaction = true
-                                }
-                            }
+            .ignoresSafeArea()
+        }
+    }
+}
+
+
+struct ReactionPreviewView: View {
+    @Binding var showReaction: Bool
+
+    var body: some View {
+        Color.black.opacity(0.4)
+            .ignoresSafeArea()
+            .onTapGesture {
+                withAnimation {
+                    showReaction = false
+                }
+            }
+            .zIndex(1)
+
+        HStack(alignment: .top) {
+            VStack {
+                EmojiView { emojie in
+                    print("@@@ emojie tap = \(emojie)")
+                    withAnimation {
+                        showReaction = false
                     }
                 }
-                
-                .padding(.leading, 40)
-                .padding(.trailing, 30)
-                .zIndex(2)
-                .ignoresSafeArea()
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .background(.blackLight)
+                .cornerRadius(20)
+                .padding(.bottom, 5)
+                .frame(alignment: .leading)
+
+                Text(
+                    "Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 😂"
+                )
+                .tokenFont(.Body_Inter_Medium_12)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .background(.blackLight)
+                .lineLimit(10)
+                .cornerRadius(20)
+                .onLongPressGesture(perform: {
+
+                })
+                .onTapGesture(count: 2) {
+                    withAnimation {
+                        // showReaction = true
+                    }
+                }
             }
         }
+
+        .padding(.leading, 40)
+        .padding(.trailing, 30)
+        .zIndex(2)
         .ignoresSafeArea()
     }
 }
 
 
-fileprivate
-struct PopoverDetailView: View {
+struct CellMessageSendByTheUserView: View {
+    @State private var dragOffset: CGFloat = 0
+    @State private var showReaction: Bool = false
+    @State private var isShowPopover = false
+    @Binding var textMessage: String
+    var onDoubleTap: () -> Void
+
+    var body: some View {
+        VStack {
+            VStack(alignment: .trailing) {
+
+                ReponseMessage {
+
+                    Text(textMessage)
+                        .tokenFont(.Body_Inter_Medium_12)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .background(.blackLight)
+                        .cornerRadius(20)
+                        .simultaneousGesture(
+                            LongPressGesture()
+                                .onEnded { _ in
+                                    print("@@@ long Tap")
+                                    showReaction = true
+                                }
+                        )
+                        .simultaneousGesture(
+                            TapGesture(count: 2)
+                                .onEnded {
+                                    onDoubleTap()
+                                    print("@@@ double Tap")
+                                    // showReaction = true
+                                }
+                        )
+
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            isShowPopover = true
+                        }) {
+                            Text("❤️ 😘 2")
+                                .foregroundColor(.white)
+                                .font(.system(size: 10))
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(.blackLight)
+                                .cornerRadius(20)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(lineWidth: 0.3)
+                                        .foregroundColor(.black)
+                                }
+                                .popover(
+                                    isPresented: $isShowPopover,
+                                    arrowEdge: .bottom,
+                                    content: {
+                                        Text("Hello, World!")
+                                            .padding()
+                                            .presentationCompactAdaptation(
+                                                .none)
+                                    }
+                                )
+                                .zIndex(999)
+                        }
+                        
+                    }
+                    .padding(.trailing, 20)
+                    .offset(y: -12)
+
+                }
+
+            }
+            .padding(.trailing, 15)
+        }
+    }
+}
+
+struct CellMessageView2: View {
+    @State private var dragOffset: CGFloat = 0
+    @State private var showReaction: Bool = false
+    @State private var isShowPopover = false
+    @Binding var textMessage: String
+
+    var body: some View {
+        VStack {
+            VStack(alignment: .leading) {
+
+                ReponseMessage {
+
+                    Text("Charles")
+                        .tokenFont(.Placeholder_Inter_Regular_14)
+                        .padding(.leading, 50)
+
+                    HStack(alignment: .top) {
+                        Image(.header)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 32, height: 32)
+                            .clipShape(Circle())
+                            .overlay {
+                                Circle()
+                                    .stroke(Color.black, lineWidth: 1)
+                                    .frame(width: 34, height: 34)
+                            }
+
+                        Text(textMessage)
+                            .tokenFont(.Body_Inter_Medium_12)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .background(.blackLight)
+                            .cornerRadius(20)
+                            .simultaneousGesture(
+                                LongPressGesture()
+                                    .onEnded { _ in
+                                        print("@@@ long Tap")
+                                        showReaction = true
+                                    }
+                            )
+                            .simultaneousGesture(
+                                TapGesture(count: 2)
+                                    .onEnded {
+                                        print("@@@ double Tap")
+                                        showReaction = true
+                                    }
+                            )
+                    }
+                    .padding(.trailing, 30)
+
+                    HStack {
+                        Button(action: {
+                            isShowPopover = true
+                        }) {
+                            Text("❤️ 😘 2")
+                                .foregroundColor(.white)
+                                .font(.system(size: 10))
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(.blackLight)
+                                .cornerRadius(20)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(lineWidth: 0.3)
+                                        .foregroundColor(.black)
+                                }
+                                .popover(
+                                    isPresented: $isShowPopover,
+                                    arrowEdge: .bottom,
+                                    content: {
+                                        Text("Hello, World!")
+                                            .padding()
+                                            .presentationCompactAdaptation(
+                                                .none)
+                                    }
+                                )
+                                .zIndex(999)
+                        }
+                        Spacer()
+                    }
+                    .padding(.leading, 40)
+                    .offset(y: -12)
+
+                }
+
+            }
+        }
+    }
+}
+
+private
+    struct PopoverDetailView: View
+{
     var body: some View {
         Text("Popover Content")
             .padding()
@@ -241,32 +419,29 @@ struct ReactionMessageView {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CellMessageView()
+        // CellMessageView()
     }
 }
 
-
-
-import SwiftUI
-
 class P158_SubscriptionView {
-    
+
     init() {}
     @State private var count1: Double = 0
     @State private var count2: Double = 0
-    
+
     @State private var angle1 = Angle(degrees: 0)
     @State private var angle2 = Angle(degrees: 0)
-    
+
     let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
-    
+
     public var body: some View {
         ZStack {
-            SubscriptionView(content:
-                                StrokeCapsuleView(color: Color.purple)
-                                .frame(width: 260, height: 100)
-                                .rotationEffect(angle1)
-                             , publisher: timer) { t in
+            SubscriptionView(
+                content:
+                    StrokeCapsuleView(color: Color.purple)
+                    .frame(width: 260, height: 100)
+                    .rotationEffect(angle1), publisher: timer
+            ) { t in
                 self.count1 += 1
                 self.angle1 = Angle(degrees: self.count1 * 45)
             }
@@ -283,9 +458,8 @@ class P158_SubscriptionView {
     }
 }
 
-fileprivate
 extension P158_SubscriptionView {
-    struct StrokeCapsuleView: View {
+    fileprivate struct StrokeCapsuleView: View {
         let color: Color
         var body: some View {
             Capsule()

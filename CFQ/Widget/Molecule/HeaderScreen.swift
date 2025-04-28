@@ -31,7 +31,7 @@ struct HeaderBackLeftScreen: View {
             
         }
         .padding(.horizontal, 12)
-        .padding(.top, 12)
+        .padding(.vertical, 12)
         
         Divider()
             .background(.white)

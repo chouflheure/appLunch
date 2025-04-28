@@ -4,6 +4,7 @@ import SwiftUI
 struct DraggableViewLeft<Content: View>: View {
     @Binding var isPresented: Bool
     @State private var dragOffset: CGFloat = 0
+    @State private var isDraggingAllowed: Bool = false
     let content: Content
 
     init(isPresented: Binding<Bool>, @ViewBuilder content: () -> Content) {
@@ -17,20 +18,28 @@ struct DraggableViewLeft<Content: View>: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        if value.translation.width > 0 {
-                            dragOffset = value.translation.width
+                        if value.startLocation.x <= 100 {
+                            isDraggingAllowed = true
+                        }
+                        if isDraggingAllowed {
+                            if value.translation.width > 0 {
+                                dragOffset = value.translation.width
+                            }
                         }
                     }
                     .onEnded { value in
-                        if value.translation.width > 150 {
-                            withAnimation {
-                                isPresented = false
-                            }
-                        } else {
-                            withAnimation {
-                                dragOffset = 0
+                        if isDraggingAllowed {
+                            if value.translation.width > 150 {
+                                withAnimation {
+                                    isPresented = false
+                                }
+                            } else {
+                                withAnimation {
+                                    dragOffset = 0
+                                }
                             }
                         }
+                        isDraggingAllowed = false // Reset pour le prochain drag
                     }
             )
     }

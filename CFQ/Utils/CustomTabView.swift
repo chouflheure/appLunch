@@ -17,12 +17,15 @@ struct CustomTabView: View {
             ZStack {
                 NeonBackgroundImage()
                     .frame(width: geometry.size.width, height: geometry.size.height)
+
                 if !hasAlreadyOnboarded {
                     OnboardingView()
                 }
+
                 if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
                     // Show pop
                 }
+
                 else {
                     VStack {
                         Group {
