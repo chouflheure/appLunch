@@ -21,8 +21,10 @@ struct CustomTabView: View {
                     OnboardingView()
                 }
 
-                if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
-                    // Show pop
+                if !(coordinator.dataApp.version != appVersion) && !coordinator.dataApp.isNeedToUpdateApp {
+                    PopUpMAJView()
+                    // TextShimmer(text: "Hello Test")
+                    // PopUpMAJView()
                 }
 
                 else {
