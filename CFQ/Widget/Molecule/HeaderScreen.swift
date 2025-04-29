@@ -4,7 +4,9 @@ import SwiftUI
 struct HeaderBackLeftScreen: View {
     var onClickBack: (() -> Void)
     var titleScreen: String
-    var onClickDots: (() -> Void)?
+    // var onClickDots: (() -> Void)?
+    var thirdElement: AnyView?
+    var isShowDivider: Bool?
 
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
@@ -29,12 +31,17 @@ struct HeaderBackLeftScreen: View {
             
             Spacer()
             
+            if let thirdElement = thirdElement {
+                thirdElement
+            }
+            
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
         
         Divider()
             .background(.white)
+            .opacity(isShowDivider ?? true ? 1 : 0)
     }
 }
 

@@ -21,7 +21,9 @@ struct SettingsView: View {
     @State private var showDetail = false
     @State private var selectedDestination: ScreensSettingsType? = nil
     @State private var showPopup = false
-
+    
+    @Environment(\.requestReview) var requestReview
+    
     var viewModel = SettingsViewModel()
     var coordinator: Coordinator
     @Environment(\.dismiss) var dismiss
@@ -32,16 +34,19 @@ struct SettingsView: View {
             label: StringsToken.Settings.headereditMyProfil,
             screen: .editProfile
         ),
+
         ScreenSettingsData(
             icon: .iconPlus,
             label: StringsToken.Settings.onboardingPreview,
             screen: .onboarding
         ),
+
         ScreenSettingsData(
             icon: .iconBug,
             label: StringsToken.Settings.aBugTellUs,
             screen: .bugReport
         ),
+
         ScreenSettingsData(
             icon: .iconNotifs,
             label: StringsToken.Settings.notifications,
@@ -109,7 +114,21 @@ struct SettingsView: View {
                         )
                         .padding(12)
                     }
-
+                    
+                    SettingCellView(
+                        data: ScreenSettingsData(
+                            icon: .iconStar,
+                            label: StringsToken.Settings.noteTheApp,
+                            screen: .notifications
+                        ),
+                        onClick: {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                requestReview()
+                            }
+                        }
+                    )
+                    .padding(12)
+                    
                     ForEach(arrayIconTitleForPopUp, id: \.icon) { data in
                         SettingCellView(
                             data: data,
@@ -143,7 +162,7 @@ struct SettingsView: View {
                 destinationView(for: screen)
                     .zIndex(2)
             }
-            
+
             if showDetail, let screen = selectedDestination {
                 destinationView(for: screen)
                     .transition(.move(edge: .trailing))

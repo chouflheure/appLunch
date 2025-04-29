@@ -2,16 +2,39 @@
 import SwiftUI
 
 struct SheetDatePicker: View {
-    @StateObject var viewModel: TurnCardViewModel
+    @ObservedObject var viewModel: TurnCardViewModel
     var onClose: () -> Void
-
+    
     var body: some View {
         VStack {
-            DatePicker("", selection: $viewModel.date, in: Date.now..., displayedComponents: .date)
-                .datePickerStyle(GraphicalDatePickerStyle())
-                .environment(\.locale, Locale.init(identifier: "fr_FR"))
-                .tint(.white)
-                .colorScheme(.dark)
+            DatePicker(
+                "",
+                selection: Binding(
+                    get: { viewModel.dateEvent ?? Date() },
+                    set: { viewModel.dateEvent = $0 }
+                ),
+                in: Date.now...,
+                displayedComponents: .date
+            )
+            .datePickerStyle(GraphicalDatePickerStyle())
+            .environment(\.locale, Locale.init(identifier: "fr_FR"))
+            .tint(.white)
+            .colorScheme(.dark)
+            
+            DatePicker(
+                "",
+                selection: Binding(
+                    get: { viewModel.starthours ?? Date() },
+                    set: { viewModel.starthours = $0 }
+                ),
+                in: Date.now...,
+                displayedComponents: .hourAndMinute
+            )
+            .datePickerStyle(GraphicalDatePickerStyle())
+            .environment(\.locale, Locale.init(identifier: "fr_FR"))
+            .tint(.white)
+            .colorScheme(.dark)
+
             Button(action: onClose, label: {
                 Text("Done")
                     .foregroundColor(.white)
@@ -25,7 +48,7 @@ struct SheetDatePicker: View {
                     )
                 
             })
-        }
+         }
     }
 }
 

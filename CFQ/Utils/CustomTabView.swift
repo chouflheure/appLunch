@@ -5,10 +5,9 @@ import FirebaseFirestore
 
 struct CustomTabView: View {
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    
+
     @State private var selectedEvent: MapLocationEventData? = nil
     @EnvironmentObject var user: User
-
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
 

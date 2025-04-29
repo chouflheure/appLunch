@@ -1,9 +1,72 @@
 
 import SwiftUI
 
-struct MainInformationsView: View {
+struct MainInformationsPreviewView: View {
     @State private var showMoods = false
-    @StateObject var viewModel: TurnCardViewModel
+    @ObservedObject var viewModel: TurnCardViewModel
+
+    var body: some View {
+            VStack(alignment: .leading, spacing: 20) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        if viewModel.moods.isEmpty {
+                            MoodTemplateView()
+                        } else {
+                            ForEach(Array(viewModel.moods), id: \.self) { mood in
+                                Mood().data(for: mood)
+                                    
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 12)
+                
+                HStack {
+
+                    Image(.iconDate)
+                        .resizable()
+                        .frame(width: 20, height: 16)
+                        .foregroundColor(.white)
+                        .padding(.leading, 12)
+                    
+                    Text(viewModel.textFormattedLongFormat.isEmpty ? "Date" : viewModel.textFormattedLongFormat)
+                        .tokenFont(viewModel.textFormattedLongFormat.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+
+                    Text(" | ")
+                        .foregroundColor(.white)
+
+                    Text(viewModel.textFormattedHours.isEmpty ? "Heure de début" : viewModel.textFormattedHours)
+                        .tokenFont(viewModel.textFormattedHours.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+                }
+
+                HStack(alignment: .top) {
+                    
+                    Image(systemName: "mappin")
+                        .foregroundColor(.white)
+                    
+                    Text("Lieu")
+                        .foregroundColor(.white)
+                        
+                    Text("|")
+                        .foregroundColor(.white)
+                    
+                    Text("92240 Malakoff ")
+                        .foregroundColor(.white)
+                }
+                .padding(.horizontal, 12)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 15)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white, lineWidth: 0.8)
+            )
+        }
+}
+
+struct MainInformationsDetailView: View {
+    @State private var showMoods = false
+    @ObservedObject var viewModel: TurnCardViewModel
 
     var body: some View {
             VStack(alignment: .leading, spacing: 20) {
@@ -52,15 +115,20 @@ struct MainInformationsView: View {
                     .padding(.horizontal, 12)
 
                 HStack(alignment: .top) {
-                        Image(systemName: "mappin")
-                            .foregroundColor(.white)
-                        Text("Chez moi")
-                            .foregroundColor(.white)
-                        Text("|")
-                        Text("92240 Malakoff ")
-                            .foregroundColor(.white)
-                    }
-                    .padding(.horizontal, 12)
+
+                    Image(systemName: "mappin")
+                        .foregroundColor(.white)
+
+                    Text("Chez moi")
+                        .foregroundColor(.white)
+
+                    Text("|")
+                        .foregroundColor(.white)
+
+                    Text("92240 Malakoff ")
+                        .foregroundColor(.white)
+                }
+                .padding(.horizontal, 12)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 15)
@@ -74,6 +142,6 @@ struct MainInformationsView: View {
 #Preview {
     ZStack {
         Color.blue.edgesIgnoringSafeArea(.all)
-        MainInformationsView(viewModel: TurnCardViewModel())
+        // MainInformationsView(viewModel: TurnCardViewModel())
     }
 }

@@ -60,6 +60,7 @@ enum StringsToken {
         static let adressForMail = "cfq.hq.25@gmail.com"
         static let headerABug = "Un bug, une remarque"
         static let headerNotifications = "Notifications"
+        static let noteTheApp = "Note l'app"
     }
     
     enum ButtonTitle {
@@ -98,7 +99,9 @@ enum StringsToken {
         static let teamTitle = "MES TEAMs"
     }
     
-    enum Turn {}
+    enum Turn {
+        static let titleTurn = "TURN"
+    }
     
     enum SearchBar {
         static let placeholderFriend = "Recherche un ami"
