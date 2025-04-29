@@ -22,11 +22,11 @@ struct SettingsView: View {
     @State private var selectedDestination: ScreensSettingsType? = nil
     @State private var showPopup = false
     
+    @EnvironmentObject var user: User
     @Environment(\.requestReview) var requestReview
-    
-    var viewModel = SettingsViewModel()
-    var coordinator: Coordinator
     @Environment(\.dismiss) var dismiss
+
+    var coordinator: Coordinator
 
     var arrayIconTitleForNextScreen: [ScreenSettingsData] = [
         ScreenSettingsData(
@@ -171,12 +171,12 @@ struct SettingsView: View {
 
         }.ignoresSafeArea()
     }
-    
+
     @ViewBuilder
         private func destinationView(for screen: ScreensSettingsType) -> some View {
             switch screen {
             case .editProfile:
-                EditProfileUserView(showDetail: $showDetail, viewModel: viewModel)
+                EditProfileUserView(showDetail: $showDetail, user: user)
             case .onboarding:
                 OnboardingPreviewSettingsView(showDetail: $showDetail)
             case .bugReport:

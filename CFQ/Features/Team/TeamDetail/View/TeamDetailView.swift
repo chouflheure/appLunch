@@ -5,14 +5,7 @@ struct TeamDetailView: View {
     @StateObject var viewModel = TeamDetailViewModel()
     @State var isPresentedSeetings = false
 
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "JtISdWec8JV4Od1WszEGXkqEVAI2",
-        name: "Charles",
-        firstName: "Charles",
-        pseudo: "Charles",
-        profilePictureUrl: ""
-    )
+    @EnvironmentObject var user: User
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
