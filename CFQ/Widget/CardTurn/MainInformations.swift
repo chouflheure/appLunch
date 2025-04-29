@@ -35,30 +35,23 @@ struct MainInformationsPreviewView: View {
                     Text(" | ")
                         .foregroundColor(.white)
 
-                    Text(viewModel.starthours.isEmpty ? "Debut" : viewModel.starthours)
-                        .tokenFont(viewModel.starthours.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
-                    
-                    Text(" ~ ")
-                        .foregroundColor(.white)
-                    
-                    Text(viewModel.endhours.isEmpty ? "Fin" : viewModel.endhours)
-                        .tokenFont(viewModel.endhours.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+                    Text(viewModel.textFormattedHours.isEmpty ? "Heure de début" : viewModel.textFormattedHours)
+                        .tokenFont(viewModel.textFormattedHours.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
                 }
-                // DatePickerMainInformations(viewModel: viewModel)
 
                 HStack(alignment: .top) {
                     
                     Image(systemName: "mappin")
-                            .foregroundColor(.white)
+                        .foregroundColor(.white)
                     
                     Text("Lieu")
-                            .foregroundColor(.white)
+                        .foregroundColor(.white)
                         
                     Text("|")
-                            .foregroundColor(.white)
+                        .foregroundColor(.white)
                     
                     Text("92240 Malakoff ")
-                            .foregroundColor(.white)
+                        .foregroundColor(.white)
                 }
                 .padding(.horizontal, 12)
             }
@@ -122,15 +115,20 @@ struct MainInformationsDetailView: View {
                     .padding(.horizontal, 12)
 
                 HStack(alignment: .top) {
-                        Image(systemName: "mappin")
-                            .foregroundColor(.white)
-                        Text("Chez moi")
-                            .foregroundColor(.white)
-                        Text("|")
-                        Text("92240 Malakoff ")
-                            .foregroundColor(.white)
-                    }
-                    .padding(.horizontal, 12)
+
+                    Image(systemName: "mappin")
+                        .foregroundColor(.white)
+
+                    Text("Chez moi")
+                        .foregroundColor(.white)
+
+                    Text("|")
+                        .foregroundColor(.white)
+
+                    Text("92240 Malakoff ")
+                        .foregroundColor(.white)
+                }
+                .padding(.horizontal, 12)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 15)

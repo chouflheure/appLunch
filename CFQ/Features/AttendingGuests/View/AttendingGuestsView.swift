@@ -69,6 +69,8 @@ struct CollectionViewParticipant: View {
     ]
 
     var body: some View {
+        Text("")
+        /*
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(times, id: \.self) { time in
@@ -85,11 +87,12 @@ struct CollectionViewParticipant: View {
             }
             .padding()
         }.scrollIndicators(.hidden)
+         */
     }
 
     private func toggleSelection(of item: String) {
         selectedItems = item
-        viewModel.starthours = item
+        // viewModel.starthours = item
     }
 }
 

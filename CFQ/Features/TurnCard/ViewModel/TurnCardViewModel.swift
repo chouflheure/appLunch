@@ -10,12 +10,15 @@ class TurnCardViewModel: ObservableObject {
     @Published var date: Date?
     @Published var moods = Set<MoodType>()
     @Published var adresse = String()
-    @Published var starthours = String()
-    @Published var endhours = String()
+    @Published var starthours: Date?
+    @Published var endhours: Date?
     @Published var showDetailTurnCard: Bool = false
     @Published var imageSelected: Image?
     @Published var isPhotoPickerPresented: Bool = false
 
+    @Published var hourSelection = 0
+    @Published var minuteSelection = 0
+    
     @Published var description = "Diner entre \ngirls <3 Ramenez \njuste à boire! Diner \nentre girls <3 \nRamenez juste \nà boire! Diner \nentre girls <3 \nRamenez juste à boire\n! Ramenez juste \nà boire"
 
     var dateEvent: String {
@@ -38,6 +41,13 @@ class TurnCardViewModel: ObservableObject {
         return ""
     }
 
+    var textFormattedHours: String {
+        if let time = starthours {
+            return time.formatted(date: .omitted, time: .shortened)
+        }
+        return ""
+    }
+    
     func textFormattedShortFormat() -> (jour: String, mois: String) {
         let formatter = DateFormatter()
         var jour = ""
