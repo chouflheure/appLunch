@@ -7,7 +7,7 @@ class User: ObservableObject, Encodable, Decodable {
     @Published var firstName: String
     @Published var pseudo: String
     @Published var profilePictureUrl: String
-    @Published var location: Set<String>
+    @Published var location: String
     // @Published var birthDate: Date?
     @Published var isActive: Bool
     @Published var favorite: [String]?
@@ -30,7 +30,7 @@ class User: ObservableObject, Encodable, Decodable {
         firstName: String = "",
         pseudo: String = "",
         profilePictureUrl: String = "",
-        location: Set<String> = [""],
+        location: String = "",
         // birthDate: Date? = nil,
         isActive: Bool = true,
         favorite: [String] = [""] ,
@@ -99,7 +99,7 @@ class User: ObservableObject, Encodable, Decodable {
         pseudo = try values.decode(String.self, forKey: .pseudo)
         profilePictureUrl = try values.decode(String.self, forKey: .profilePictureUrl)
         isActive = try values.decode(Bool.self, forKey: .isActive)
-        location = try values.decode(Set<String>.self, forKey: .location)
+        location = try values.decode(String.self, forKey: .location)
         // birthDate = try values.decode(Date.self, forKey: .birthDate)
         favorite = try values.decode([String].self, forKey: .favorite)
         friends = try values.decode([String].self, forKey: .friends)

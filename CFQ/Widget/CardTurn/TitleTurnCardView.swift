@@ -13,7 +13,7 @@ struct TitleTurnCardPreviewView: View {
         name: "John",
         firstName: "Doe",
         pseudo: "johndoe",
-        location: ["Ici"]
+        location: "Ici"
     )
 
     @ObservedObject var viewModel: TurnCardViewModel
@@ -60,7 +60,7 @@ struct TitleTurnCardDetailView: View {
         name: "John",
         firstName: "Doe",
         pseudo: "johndoe",
-        location: ["Ici"]
+        location: "Ici"
     )
 
     @FocusState private var isFocused: Bool

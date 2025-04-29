@@ -12,7 +12,7 @@ struct TurnCardView: View {
         name: "John",
         firstName: "Doe",
         pseudo: "johndoe",
-        location: ["Ici"]
+        location: "Ici"
     )
     
     var body: some View {

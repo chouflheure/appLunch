@@ -9,7 +9,7 @@ struct FriendProfileView: View {
         name: "John",
         firstName: "Doe",
         pseudo: "johndoe",
-        location: ["Ici"],
+        location: "Ici",
         friends: ["77MKZdb3FJX8EFvlRGotntxk6oi1"],
         isPrivateAccount: false
     )
@@ -19,7 +19,7 @@ struct FriendProfileView: View {
         name: "Profile",
         firstName: "Friend",
         pseudo: "Charles",
-        location: ["Ici"],
+        location: "Ici",
         isPrivateAccount: true,
         requestsFriends: ["1234567890"]
     )

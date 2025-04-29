@@ -52,7 +52,7 @@ struct ProfileView: View {
                             .resizable()
                             .frame(width: 16, height: 16)
                             .foregroundColor(.white)
-                        Text("\(user.location)")
+                        Text(user.location)
                             .tokenFont(.Body_Inter_Medium_16)
                     }
                 }

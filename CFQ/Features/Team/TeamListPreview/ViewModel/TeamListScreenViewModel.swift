@@ -21,7 +21,7 @@ class TeamListScreenViewModel: ObservableObject {
         name: "John",
         firstName: "Doe",
         pseudo: "johndoe",
-        location: ["Ici"],
+        location: "Ici",
         friends: ["EMZGTTeqJ1dv9SX0YaNOExaLjjw1", "77MKZdb3FJX8EFvlRGotntxk6oi1", "ziOs7jn3d5hZ0tgkTQdCNGQqlB33"],
         teams: ["1"]
     )
