@@ -20,7 +20,7 @@ struct TitleTurnCardPreviewView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(viewModel.title.isEmpty ? "Titre du TURN" : viewModel.title)
+            Text(viewModel.titleEvent.isEmpty ? "Titre du TURN" : viewModel.titleEvent)
                 .tokenFont(.Title_Inter_semibold_24)
                 .padding(.bottom, 16)
                 .bold()
@@ -70,7 +70,7 @@ struct TitleTurnCardDetailView: View {
         VStack(alignment: .leading) {
 
             CustomTextField(
-                text: $viewModel.title,
+                text: $viewModel.titleEvent,
                 keyBoardType: .default,
                 placeHolder: StringsToken.TurnCardInformation.PlaceholderTitle,
                 textFieldType: .turn

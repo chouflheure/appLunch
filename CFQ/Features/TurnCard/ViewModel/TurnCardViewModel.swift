@@ -4,35 +4,26 @@ import Combine
 import SwiftUI
 
 class TurnCardViewModel: ObservableObject {
-    
-    @Published var isEditing: Bool = true
-    @Published var title = String()
-    @Published var date: Date?
+
+    @Published var titleEvent = String()
+    @Published var dateEvent: Date?
     @Published var moods = Set<MoodType>()
     @Published var adresse = String()
     @Published var starthours: Date?
-    @Published var endhours: Date?
     @Published var showDetailTurnCard: Bool = false
     @Published var imageSelected: Image?
     @Published var isPhotoPickerPresented: Bool = false
-
-    @Published var hourSelection = 0
-    @Published var minuteSelection = 0
     
     @Published var description = "Diner entre \ngirls <3 Ramenez \njuste à boire! Diner \nentre girls <3 \nRamenez juste \nà boire! Diner \nentre girls <3 \nRamenez juste à boire\n! Ramenez juste \nà boire"
 
-    var dateEvent: String {
-        if let date = date {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "EEEE  d  MMMM"
-            formatter.locale = Locale(identifier: "fr_FR")
-            return formatter.string(from: date).capitalized
-        }
-        return ""
+    var firebaseService = FirebaseService()
+    
+    var disableButtonSend: Bool {
+        return titleEvent.isEmpty || dateEvent == nil || moods.isEmpty || starthours == nil || imageSelected == nil || description.isEmpty
     }
 
     var textFormattedLongFormat: String {
-        if let date = date {
+        if let date = dateEvent {
             let formatter = DateFormatter()
             formatter.dateFormat = "EEEE  d  MMMM"
             formatter.locale = Locale(identifier: "fr_FR")
@@ -53,7 +44,7 @@ class TurnCardViewModel: ObservableObject {
         var jour = ""
         var mois = ""
         
-        if let date = date {
+        if let date = dateEvent {
             formatter.dateFormat = "d"
             formatter.locale = Locale(identifier: "fr_FR")
             jour = formatter.string(from: date).capitalized
@@ -76,6 +67,26 @@ class TurnCardViewModel: ObservableObject {
 
 extension TurnCardViewModel {
     func pushDataTurn() {
+
+        print("@@@ here push")
+
+        let uid = UUID()
+        let turn = Turn(
+            uid: uid.description,
+            title: titleEvent,
+            date: dateEvent ?? Date(),
+            pictureUrlString: "",
+            friends: [""]
+        )
+
         
+        firebaseService.addData(data: turn, to: .turns) { (result: Result<Void, Error>) in
+            switch result{
+            case .success():
+                print("@@@ success")
+            case .failure(let error):
+                print("@@@ error = \(error)")
+            }
+        }
     }
 }

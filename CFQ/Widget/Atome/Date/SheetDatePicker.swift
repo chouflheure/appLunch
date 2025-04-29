@@ -10,8 +10,8 @@ struct SheetDatePicker: View {
             DatePicker(
                 "",
                 selection: Binding(
-                    get: { viewModel.date ?? Date() },
-                    set: { viewModel.date = $0 }
+                    get: { viewModel.dateEvent ?? Date() },
+                    set: { viewModel.dateEvent = $0 }
                 ),
                 in: Date.now...,
                 displayedComponents: .date

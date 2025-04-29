@@ -98,24 +98,27 @@ struct TurnCardView: View {
                                 .background(.clear)
                         }
                         
-                        Button(action: {}, label: {
+                        Button(action: {
+                            viewModel.pushDataTurn()
+                        }, label: {
                             HStack {
                                 Image(.iconSend)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
                                     .font(.system(size: 10, weight: .bold))
 
                                 Text("Publier")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
                                     .font(.system(size: 15, weight: .bold))
                             }
                         })
                         .frame(width: 150)
-                        .background(Color(hex: "B098E6"))
+                        .background(Color(hex: "B098E6").opacity(viewModel.disableButtonSend ? 0.5 : 1))
                         .cornerRadius(10)
+                        .disabled(viewModel.disableButtonSend)
                     }
                 }
             }
