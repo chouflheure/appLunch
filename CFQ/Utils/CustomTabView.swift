@@ -10,7 +10,8 @@ struct CustomTabView: View {
     @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
-
+    @State private var isShowPopUp: Bool = true
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -21,8 +22,8 @@ struct CustomTabView: View {
                     OnboardingView()
                 }
 
-                if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
-                    // Show pop
+                if !(coordinator.dataApp.version != appVersion) && !coordinator.dataApp.isNeedToUpdateApp {
+                    PopUpMAJView()
                 }
 
                 else {

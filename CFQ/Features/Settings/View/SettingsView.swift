@@ -2,6 +2,7 @@
 import SwiftUI
 import PhotosUI
 import MessageUI
+import StoreKit
 
 class ScreenSettingsData {
     var icon: ImageResource
