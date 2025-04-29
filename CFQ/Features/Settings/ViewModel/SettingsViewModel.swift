@@ -8,7 +8,7 @@ class SettingsViewModel: ObservableObject {
     @Published var pseudo: String = ""
     @Published var firstName: String = ""
     var picture = UIImage()
-    @Published var localisation: Set<String> = []
+    @Published var localisation: String = ""
     
     private var profilePictureUrl: String = ""
     private var firebase = FirebaseService()

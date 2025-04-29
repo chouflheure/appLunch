@@ -3,7 +3,8 @@ import SwiftUI
 struct CollectionViewLocalisations: View {
     var items = LocalisationType.allCases
 
-    @Binding var selectedItems: Set<String>
+    @Binding var selectedItem: String
+    var scrollDisabled: Bool? = false
 
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -16,7 +17,7 @@ struct CollectionViewLocalisations: View {
                 ForEach(items, id: \.self) { item in
                     ItemViewLocalisation(
                         city: item.title,
-                        isSelected: selectedItems.contains(item.title)
+                        isSelected: selectedItem == item.title // selectedItems.contains(item.title)
                     )
                     .onTapGesture {
                         toggleSelection(of: item)
@@ -24,14 +25,12 @@ struct CollectionViewLocalisations: View {
                 }
             }
             .padding()
-        }
+        }.scrollDisabled(scrollDisabled ?? false)
     }
 
     func toggleSelection(of item: LocalisationType) {
-        if selectedItems.contains(item.title) {
-            selectedItems.remove(item.title)
-        } else {
-            selectedItems.insert(item.title)
+        if selectedItem != item.title {
+            selectedItem = item.title
         }
     }
 }

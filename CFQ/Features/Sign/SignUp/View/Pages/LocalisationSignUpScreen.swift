@@ -19,7 +19,7 @@ struct LocalisationSignUpScreen: View {
                         .textCase(.uppercase)
                         .padding(.bottom, 20)
 
-                    CollectionViewLocalisations(selectedItems: $viewModel.user.location)
+                    CollectionViewLocalisations(selectedItem: $viewModel.user.location)
                 }
 
                 Spacer()
