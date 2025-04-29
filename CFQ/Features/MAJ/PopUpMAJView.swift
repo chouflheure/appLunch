@@ -34,6 +34,7 @@ struct PopUpMAJView: View {
                 .frame(width: 150)
                 .background(Color(hex: "B098E6"))
                 .cornerRadius(10)
+                .padding(.top, 20)
             }
             .frame(width: 300, height: 400)
             .background(.blackCard)
