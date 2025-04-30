@@ -1,4 +1,6 @@
+
 import SwiftUI
+import Lottie
 
 struct SignScreen: View {
     @StateObject private var viewModel = SignInViewModel()
@@ -6,15 +8,14 @@ struct SignScreen: View {
     var coordinator: Coordinator
     @EnvironmentObject var user: User
     @State var isSignFinish = false
-    
+    @State private var isLoadingSendButton = false
+
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
+        SafeAreaContainer {
             VStack {
                 Image(.whiteLogo)
                     .resizable()
                     .scaledToFit()
-                    .padding(.top, 30)
 
                 VStack {
                     Text(
@@ -38,37 +39,49 @@ struct SignScreen: View {
                 Spacer()
 
                 VStack {
-                    LargeButtonView(
-                        action: {
-                            viewModel.sendVerificationCode {
-                                success, message in
-                                if !success {
-                                    toast = Toast(
-                                        style: .error, message: message)
+                    if isLoadingSendButton {
+                        LottieView(animation: .named(StringsToken.Animation.loaderHand))
+                            .playing()
+                            .looping()
+                    } else {
+                        LargeButtonView(
+                            action: {
+                                withAnimation {
+                                    isLoadingSendButton = true
                                 }
-                            }
-                        },
-                        title: viewModel.hasAlreadyAccount
+                                viewModel.sendVerificationCode {
+                                    success, message in
+                                    if !success {
+                                        toast = Toast(
+                                            style: .error,
+                                            message: message
+                                        )
+                                        isLoadingSendButton = false
+                                    }
+                                }
+                            },
+                            title: viewModel.hasAlreadyAccount
                             ? StringsToken.Sign.SendConfirmCode
                             : StringsToken.Sign.Inscritpion,
-                        largeButtonType: .signNext,
-                        isDisabled: viewModel.phoneNumber.isEmpty
-                    )
-
-                    LargeButtonView(
-                        action: {
-                            viewModel.toggleHasAlreadyAccount()
-                        },
-                        title: viewModel.hasAlreadyAccount
+                            largeButtonType: .signNext,
+                            isDisabled: viewModel.phoneNumber.isEmpty
+                        )
+                        
+                        LargeButtonView(
+                            action: {
+                                viewModel.toggleHasAlreadyAccount()
+                            },
+                            title: viewModel.hasAlreadyAccount
                             ? StringsToken.Sign.NoAccount
                             : StringsToken.Sign.AlreadyAccount,
-                        largeButtonType: .signBack
-                    )
+                            largeButtonType: .signBack
+                        )
+                    }
                 }
-                .padding(.bottom, 100)
+                .padding(.bottom, 20)
             }
             .padding(.horizontal, 16)
-            .sheet(isPresented: $viewModel.isConfirmScreenActive) {
+            .fullScreenCover(isPresented: $viewModel.isConfirmScreenActive) {
                 ConfirmCodeScreen(
                     viewModel: viewModel,
                     verificationID: viewModel.verificationID,
@@ -86,6 +99,9 @@ struct SignScreen: View {
             }
         }
         .toastView(toast: $toast)
+        .onAppear() {
+            isLoadingSendButton = false
+        }
         .onTapGesture {
             UIApplication.shared.endEditing(true)
         }

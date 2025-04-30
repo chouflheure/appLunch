@@ -14,13 +14,11 @@ struct NameSignUpScreen: View {
     var onDismiss: () -> Void
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
-
+        SafeAreaContainer {
             VStack {
                 ProgressBar(index: $viewModel.index)
-                    .padding(.vertical, 50)
-
+                    .padding(.bottom, 30)
+                
                 VStack {
                     Text(StringsToken.Sign.TitleWhichIsYourIdentifier)
                         .tokenFont(.Title_Gigalypse_24)
@@ -91,11 +89,14 @@ struct NameSignUpScreen: View {
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
-                .padding(.bottom, 100)
             }
         }
         .onTapGesture {
             UIApplication.shared.endEditing(true)
         }
     }
+}
+
+#Preview {
+    NameSignUpScreen(viewModel: SignUpPageViewModel(uidUser: "")) {}
 }

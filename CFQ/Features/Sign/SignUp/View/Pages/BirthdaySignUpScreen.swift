@@ -4,13 +4,11 @@ struct BirthdaySignUpScreen: View {
     @ObservedObject var viewModel: SignUpPageViewModel
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
-
+        SafeAreaContainer {
             VStack {
                 ProgressBar(index: $viewModel.index)
                     .padding(.vertical, 50)
-                    .padding(.top, 30)
+                    .padding(.bottom, 30)
 
                 VStack {
                     Text(StringsToken.Sign.TitleWhichIsYourBirthday)
@@ -43,7 +41,7 @@ struct BirthdaySignUpScreen: View {
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
-                .padding(.bottom, 100)
+                // .padding(.bottom, 100)
             }
         }
     }

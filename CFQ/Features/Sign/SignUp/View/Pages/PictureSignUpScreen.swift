@@ -7,12 +7,11 @@ struct PictureSignUpScreen: View {
     @State private var selectedImage: UIImage?
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
+        SafeAreaContainer {
 
             VStack {
                 ProgressBar(index: $viewModel.index)
-                    .padding(.vertical, 50)
+                    .padding(.bottom, 30)
 
                 VStack {
                     Text(StringsToken.Sign.TitleAddPicture)
@@ -70,7 +69,6 @@ struct PictureSignUpScreen: View {
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
-                .padding(.bottom, 100)
             }
             .photosPicker(isPresented: $isPhotoPickerPresented, selection: $avatarPhotoItem, matching: .images)
             .task(id: avatarPhotoItem) {

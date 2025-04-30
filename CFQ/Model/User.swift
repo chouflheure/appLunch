@@ -138,4 +138,9 @@ class User: ObservableObject, Encodable, Decodable {
         try container.encode(isPrivateAccount, forKey: .isPrivateAccount)
         try container.encode(requestsFriends, forKey: .requestsFriends)
     }
+    
+    // TODO: - For debug
+    var printObject: String {
+          return "uid : \(uid) | name : \(name) | firstName : \(firstName) | pseudo : \(pseudo) | profilePictureUrl : \(profilePictureUrl) | location : \(location)"
+       }
 }

@@ -22,7 +22,7 @@ struct CustomTabView: View {
                     OnboardingView()
                 }
 
-                if !(coordinator.dataApp.version != appVersion) && !coordinator.dataApp.isNeedToUpdateApp {
+                if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
                     PopUpMAJView()
                 }
 

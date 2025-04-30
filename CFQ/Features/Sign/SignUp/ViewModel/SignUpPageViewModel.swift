@@ -17,10 +17,20 @@ class SignUpPageViewModel: ObservableObject {
     @Published var isDoneUpdateUser = false
     @Published var friends: [String] = []
     @Published var contacts: [UserContact] = []
-    var coordinator: Coordinator?
     
+    // isLoadingPictureUpload
+    @Published var isLoadingPictureUpload: Bool = false
+    @Published var isLoadingPictureUploadDone: Bool = false
+    @Published var isLoadingPictureUploadError: Bool = false
+    
+    // isLoadingCreateUser
+    @Published var isLoadingCreateUser: Bool = false
+    @Published var isLoadingCreateUserDone: Bool = false
+    @Published var isLoadingCreateUserNone: Bool = false
+    
+    var coordinator: Coordinator?
     private var urlProfilePicture = String()
-    private let firebase = FirebaseService()
+    private let firebaseService = FirebaseService()
     
 
     @Published var user = User(
@@ -117,7 +127,7 @@ class SignUpPageViewModel: ObservableObject {
 
     // TODO: - Update error messages
     private func uploadImageToDataBase() {
-        firebase.uploadImage(picture: picture, uidUser: uidUser) { result in
+        firebaseService.uploadImage(picture: picture, uidUser: uidUser) { result in
             switch result {
             case .success(let urlString):
                 DispatchQueue.main.async {
@@ -125,25 +135,40 @@ class SignUpPageViewModel: ObservableObject {
                         self.user.tokenFCM = fcmToken
                     }
                     self.urlProfilePicture = urlString
+                    self.isLoadingPictureUpload = false
+                    self.isLoadingPictureUploadDone = true
                     self.uploadDataUser()
                 }
             case .failure(let error):
+                print("@@@ failure ")
                 print("Erreur lors du téléversement de l'image : \(error.localizedDescription)")
+                
                 // TODO: Gérer l'erreur de manière appropriée
+                self.isLoadingPictureUpload = false
+                self.isLoadingPictureUploadError = true
             }
         }
+        self.isLoadingPictureUploadDone = false
+        self.isLoadingPictureUploadError = false
     }
     
+
     private func uploadDataUser() {
         user.uid = uidUser
         user.tokenFCM = UserDefaults.standard.string(forKey: "fcmToken") ?? ""
         user.profilePictureUrl = urlProfilePicture
         
-        firebase.addData(data: user, to: .users) { (result: Result<Void, Error>) in
-            switch result{
+        isLoadingCreateUser = true
+        
+        // TODO: - gérer erreur et isLoadingCreateUser
+
+        firebaseService.addData(data: user, to: .users) { (result: Result<Void, Error>) in
+            switch result {
             case .success():
+                self.isLoadingCreateUser = false
                 self.coordinator?.gotoCustomTabView(user: self.user)
             case .failure(let error):
+                self.isLoadingCreateUser = false
                 print("@@@ error = \(error)")
             }
         }
@@ -152,7 +177,7 @@ class SignUpPageViewModel: ObservableObject {
     private func fetchDataContactUser(
         completion: @escaping ([UserContact]) -> Void
     ) {
-        firebase.getAllData(from: .usersPreviews) {
+        firebaseService.getAllData(from: .usersPreviews) {
             (result: Result<[UserContact], Error>) in
             switch result {
             case .success(let users):
@@ -162,13 +187,10 @@ class SignUpPageViewModel: ObservableObject {
             }
         }
     }
-    
-    private func updateProfilePictureURL() {
-        firebase.updateDataByID(data: ["profilePictureUrl": urlProfilePicture], to: .users, at: uidUser)
-    }
 
     func addUserDataOnDataBase(coordinator: Coordinator, completion: @escaping (Bool, String) -> Void) {
         self.coordinator = coordinator
+        isLoadingPictureUpload = true
         uploadImageToDataBase()
     }
 

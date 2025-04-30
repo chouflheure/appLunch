@@ -6,12 +6,11 @@ struct LocalisationSignUpScreen: View {
     @State var selectedItems: String = ""
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
+        SafeAreaContainer {
 
             VStack {
                 ProgressBar(index: $viewModel.index)
-                    .padding(.vertical, 50)
+                    .padding(.bottom, 30)
 
                 VStack {
                     Text(StringsToken.Sign.TitleWhichIsYourLocalisation)
@@ -38,7 +37,6 @@ struct LocalisationSignUpScreen: View {
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
-                .padding(.bottom, 100)
             }
         }
     }

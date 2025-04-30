@@ -107,5 +107,13 @@ enum StringsToken {
         static let placeholderFriend = "Recherche un ami"
         static let placeholderConversation = "Recherche une conv"
     }
+    
+    enum Animation {
+        static let rocketMAJ = "rocketMAJ"
+        static let rocketMAJ_WithoutSmoke = "rocketMAJ_WithoutSmoke"
+        static let loaderHand = "loaderHand"
+        static let loaderUpdatePicture = "loaderUpdatePicture"
+        static let loaderError = "loaderError"
+    }
 }
 

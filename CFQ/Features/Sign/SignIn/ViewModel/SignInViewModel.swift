@@ -90,11 +90,15 @@ class SignInViewModel: ObservableObject {
 
             if let authResult = authResult {
                 let isNewUser = authResult.additionalUserInfo?.isNewUser ?? false
+                print("@@@ isNewUser = \(isNewUser)")
+                print("@@@ authResult.additionalUserInfo?.providerID = \(authResult.additionalUserInfo?.providerID)")
+                print("@@@ authResult.user.uid = \(authResult.user.uid)")
                 if isNewUser {
                     self.uidUser = authResult.user.uid
                     self.isUserExist = false
                     self.closeConfirmScreen()
                 } else {
+                    self.uidUser = authResult.user.uid
                     self.getUserWithIDConnexion(uid: authResult.user.uid)
                 }
             }
