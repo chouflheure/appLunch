@@ -80,7 +80,10 @@ struct ContentView: View {
 
 struct LoadingFirstView: View {
     var body: some View {
-        Text("Loading... Test")
+        SafeAreaContainer {
+            Text("Loading... Test")
+                .foregroundColor(.white)
+        }
     }
 }
 

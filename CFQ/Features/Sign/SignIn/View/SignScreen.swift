@@ -1,13 +1,13 @@
-
-import SwiftUI
 import Lottie
+import SwiftUI
 
 struct SignScreen: View {
+    @ObservedObject var coordinator: Coordinator
     @StateObject private var viewModel = SignInViewModel()
-    @State private var toast: Toast? = nil
-    var coordinator: Coordinator
     @EnvironmentObject var user: User
+
     @State var isSignFinish = false
+    @State private var toast: Toast? = nil
     @State private var isLoadingSendButton = false
 
     var body: some View {
@@ -16,7 +16,7 @@ struct SignScreen: View {
                 Image(.whiteLogo)
                     .resizable()
                     .scaledToFit()
-
+                
                 VStack {
                     Text(
                         viewModel.hasAlreadyAccount
@@ -40,9 +40,13 @@ struct SignScreen: View {
 
                 VStack {
                     if isLoadingSendButton {
-                        LottieView(animation: .named(StringsToken.Animation.loaderHand))
-                            .playing()
-                            .looping()
+                        LottieView(
+                            animation: .named(
+                                StringsToken.Animation.loaderCircle)
+                        )
+                        .playing()
+                        .looping()
+                        .frame(width: 150, height: 150)
                     } else {
                         LargeButtonView(
                             action: {
@@ -61,24 +65,24 @@ struct SignScreen: View {
                                 }
                             },
                             title: viewModel.hasAlreadyAccount
-                            ? StringsToken.Sign.SendConfirmCode
-                            : StringsToken.Sign.Inscritpion,
+                                ? StringsToken.Sign.SendConfirmCode
+                                : StringsToken.Sign.Inscritpion,
                             largeButtonType: .signNext,
                             isDisabled: viewModel.phoneNumber.isEmpty
                         )
-                        
+
                         LargeButtonView(
                             action: {
                                 viewModel.toggleHasAlreadyAccount()
                             },
                             title: viewModel.hasAlreadyAccount
-                            ? StringsToken.Sign.NoAccount
-                            : StringsToken.Sign.AlreadyAccount,
+                                ? StringsToken.Sign.NoAccount
+                                : StringsToken.Sign.AlreadyAccount,
                             largeButtonType: .signBack
                         )
                     }
                 }
-                .padding(.bottom, 20)
+                // .padding(.bottom, 20)
             }
             .padding(.horizontal, 16)
             .fullScreenCover(isPresented: $viewModel.isConfirmScreenActive) {
@@ -94,13 +98,16 @@ struct SignScreen: View {
                     CustomTabView(coordinator: coordinator)
                         .environmentObject(user)
                 } else {
-                    SignUpPageView(viewModel: SignUpPageViewModel(uidUser: viewModel.uidUser), coordinator: coordinator)
+                    SignUpPageView(
+                        viewModel: SignUpPageViewModel(
+                            uidUser: viewModel.uidUser),
+                        coordinator: coordinator)
                 }
             }
         }
         .toastView(toast: $toast)
-        .onAppear() {
-            isLoadingSendButton = false
+        .onChange(of: viewModel.isConfirmScreenActive) {
+            isLoadingSendButton = $0
         }
         .onTapGesture {
             UIApplication.shared.endEditing(true)

@@ -44,7 +44,7 @@ struct FriendSignUpScreen: View {
                     // TODO: - Edit le success et l'erreur
                     VStack {
                         if isLoadingUserUpload {
-                            LottieView(animation: .named(StringsToken.Animation.loaderHand))
+                            LottieView(animation: .named(StringsToken.Animation.loaderCircle))
                                 .playing()
                                 .looping()
                         } else {

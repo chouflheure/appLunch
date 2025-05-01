@@ -7,12 +7,17 @@ class SignInViewModel: ObservableObject {
     @Published var uidUser = String()
     @Published var phoneNumber = String()
     @Published var verificationID = String()
+    @Published var user: User? = nil
     @Published var isUserExist = false
     @Published var isSignFinish = false
     @Published var hasAlreadyAccount = false
     @Published var isConfirmScreenActive = false
+    @Published var isEnabledResendCode: Bool = false
+    @Published var numberTapResendCode: Int = 0
+
+    @State private var timer: Timer? = nil
+
     private let firebaseService = FirebaseService()
-    @Published var user: User? = nil
 
     func toggleHasAlreadyAccount() {
         hasAlreadyAccount.toggle()
@@ -67,6 +72,7 @@ class SignInViewModel: ObservableObject {
                     forKey: "authVerificationID"
                 )
                 self.isConfirmScreenActive = true
+                completion(true, "")
             }
         }
     }
@@ -90,9 +96,6 @@ class SignInViewModel: ObservableObject {
 
             if let authResult = authResult {
                 let isNewUser = authResult.additionalUserInfo?.isNewUser ?? false
-                print("@@@ isNewUser = \(isNewUser)")
-                print("@@@ authResult.additionalUserInfo?.providerID = \(authResult.additionalUserInfo?.providerID)")
-                print("@@@ authResult.user.uid = \(authResult.user.uid)")
                 if isNewUser {
                     self.uidUser = authResult.user.uid
                     self.isUserExist = false
@@ -105,11 +108,39 @@ class SignInViewModel: ObservableObject {
         }
     }
 
+    
+    
     func dontReciveVerificationCode(
         completion: @escaping (Bool, String) -> Void
     ) {
-        sendVerificationCode { (success, message) in
-            completion(success, message)
+        if numberTapResendCode >= 3 {
+            startTimerLock10m()
+            completion(false, "Vous avez tenté de réenvoyer le code 3 fois. Veuillez patienter 10 minutes avant de réessayer.")
+            return
+        } else {
+            sendVerificationCode { (success, message) in
+                if success {
+                    self.numberTapResendCode += 1
+                }
+                completion(success, message)
+            }
+        }
+    }
+
+    func startTimerLock10m() {
+        isEnabledResendCode = false
+        let delay = 600.0
+        timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
+            self.isEnabledResendCode = true
+            self.numberTapResendCode = 0
+        }
+    }
+
+    func startTimer10s() {
+        isEnabledResendCode = false
+        let delay = 10.0
+        timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
+            self.isEnabledResendCode = true
         }
     }
 
