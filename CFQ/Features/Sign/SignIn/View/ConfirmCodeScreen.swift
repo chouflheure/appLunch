@@ -11,20 +11,37 @@ struct ConfirmCodeScreen: View {
     @State var viewModel: SignInViewModel
     var verificationID: String
     var mobileNumber: String
-    @State private var isEnabledResendCode = false
-    @State private var timer: Timer? = nil
     @State private var isLoadingSendButton = false
-
+    
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         SafeAreaContainer {
 
             VStack {
-                Image(.whiteLogo)
-                    .resizable()
-                    .scaledToFit()
-                    // .padding(.top, 30)
+                ZStack(alignment: .top) {
+                    Image(.whiteLogo)
+                        .resizable()
+                        .scaledToFit()
+                    
+                    HStack {
+                        Spacer()
+
+                        Button(action: {
+                            dismiss()
+                            viewModel.isConfirmScreenActive = false
+                        }) {
+                            Image(.iconCross)
+                                .foregroundColor(.white)
+                                .frame(width: 20, height: 20)
+                                .padding(.all, 3)
+                                .overlay {
+                                    Circle()
+                                        .stroke(Color.white, lineWidth: 0.5)
+                                }
+                        }
+                    }
+                }
 
                 VStack {
                     Text(StringsToken.Sign.ConfirmationCode)
@@ -44,12 +61,14 @@ struct ConfirmCodeScreen: View {
 
                 VStack {
                     if isLoadingSendButton {
-                        LottieView(animation: .named(StringsToken.Animation.loaderHand))
+                        LottieView(animation: .named(StringsToken.Animation.loaderCircle))
                             .playing()
                             .looping()
+                            .frame(width: 150, height: 150)
                     } else {
                         LargeButtonView(
                             action: {
+                                isLoadingSendButton = true
                                 viewModel.verifyCode(for: otpCode) {
                                     success, message in
                                     if success {
@@ -60,6 +79,8 @@ struct ConfirmCodeScreen: View {
                                             message: message ?? "Error not found"
                                         )
                                     }
+
+                                    isLoadingSendButton = false
                                 }
                             },
                             title: StringsToken.Sign.CheckConfirmCode,
@@ -74,7 +95,9 @@ struct ConfirmCodeScreen: View {
                                     if success {
                                         toast = Toast(
                                             style: .success,
-                                            message: "Le code a été renvoyé")
+                                            message: "Le code a été renvoyé"
+                                        )
+                                        viewModel.startTimer10s()
                                     } else {
                                         toast = Toast(
                                             style: .error, message: message)
@@ -83,7 +106,7 @@ struct ConfirmCodeScreen: View {
                             },
                             title: StringsToken.Sign.DontReceiveCode,
                             largeButtonType: .signBack,
-                            isDisabled: !isEnabledResendCode
+                            isDisabled: !viewModel.isEnabledResendCode
                         )
                         .padding(.horizontal, 20)
                     }
@@ -92,7 +115,7 @@ struct ConfirmCodeScreen: View {
             .padding(.horizontal, 16)
         }
         .onAppear {
-            startTimer()
+            viewModel.startTimer10s()
             isLoadingSendButton = false
         }
         .toastView(toast: $toast)
@@ -101,11 +124,9 @@ struct ConfirmCodeScreen: View {
         }
     }
     
-    func startTimer() {
-            // Définir le délai en secondes (par exemple, 5 secondes)
-        let delay = 10.0
-        timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
-            isEnabledResendCode = true
-        }
-    }
+    
+}
+
+#Preview {
+    ConfirmCodeScreen(viewModel: SignInViewModel(), verificationID: "", mobileNumber: "")
 }
