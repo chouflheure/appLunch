@@ -17,7 +17,8 @@ class SignUpPageViewModel: ObservableObject {
     @Published var isDoneUpdateUser = false
     @Published var friends: [String] = []
     @Published var contacts: [UserContact] = []
-    
+    @Published var isFetchingContacts: Bool = false
+
     // isLoadingPictureUpload
     @Published var isLoadingPictureUpload: Bool = false
     @Published var isLoadingPictureUploadDone: Bool = false
@@ -74,6 +75,7 @@ class SignUpPageViewModel: ObservableObject {
     }
 
     func fetchContacts() {
+        isFetchingContacts = true
         DispatchQueue.global(qos: .userInitiated).async {
             let store = CNContactStore()
             var phoneNumberIds: [String] = []
@@ -110,7 +112,6 @@ class SignUpPageViewModel: ObservableObject {
                                     }
                                 }
                                 self?.contacts = Array(Set(arrayUsersContact))
-                                print("@@@ contacts: \(self?.contacts ?? [])")
                             }
                         }
                     } catch {
@@ -121,6 +122,7 @@ class SignUpPageViewModel: ObservableObject {
                 }
             }
         }
+        isFetchingContacts = false
     }
 
     // TODO: - Update error messages

@@ -31,7 +31,18 @@ struct FriendSignUpScreen: View {
                             
                             ForEach(viewModel.contacts, id: \.self) { contact in
                                 HStack {
-                                    FriendSignUpCell(pseudo: contact.pseudo, name: contact.name, firstName: contact.firstName)
+                                    if viewModel.isFetchingContacts {
+                                        LottieView(
+                                            animation: .named(
+                                                StringsToken.Animation.loaderCircle
+                                            )
+                                        )
+                                        .playing()
+                                        .looping()
+                                        .frame(width: 150, height: 150)
+                                    } else {
+                                        FriendSignUpCell(pseudo: contact.pseudo, name: contact.name, firstName: contact.firstName)
+                                    }
                                 }
                             }
                         }
@@ -94,7 +105,6 @@ struct FriendSignUpScreen: View {
                 .onChange(of: viewModel.isLoadingCreateUser) { isLoading in
                     isLoadingUserUpload = isLoading
                 }
-
                 .toastView(toast: $toast)
 
                 .onAppear {
