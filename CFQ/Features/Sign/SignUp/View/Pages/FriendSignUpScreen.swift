@@ -98,7 +98,7 @@ struct FriendSignUpScreen: View {
                 .toastView(toast: $toast)
 
                 .onAppear {
-                    // viewModel.fetchContacts()
+                    viewModel.fetchContacts()
                 }
 
                 if isLoadingPictureUpload {

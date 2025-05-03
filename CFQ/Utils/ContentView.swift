@@ -48,7 +48,7 @@ struct ContentView: View {
             if let currentView = coordinator.currentView {
                 currentView
             } else {
-                LoadingFirstView(isFinishToLoad: $isFinishToLoad)
+                LoadingFirstView()
             }
         }
         .onAppear {
@@ -79,46 +79,24 @@ struct ContentView: View {
     }
 }
 
-
-struct LoadingFirst: View {
-
-    var body: some View {
-        ZStack {
-            NeonBackgroundImage()
-            VStack {
-                Image(.whiteLogo)
-                    .resizable()
-                    .scaledToFit()
-                
-                
-                LottieView(
-                    animation: .named(
-                        StringsToken.Animation.loaderCircle
-                    )
-                )
-                .playing()
-                .looping()
-                .frame(width: 150, height: 150)
-            }
-        }
-
-    }
-}
-
 struct LoadingFirstView: View {
-    @Binding var isFinishToLoad: Bool
+    // @Binding var isFinishToLoad: Bool
 
     var body: some View {
-        ZStack {
-            NeonBackgroundImage()
-            VStack {
-                Spacer() // Pousse le contenu vers le bas
+            ZStack {
+                Image(.backgroundNeon)
+                    .resizable()
+                    .scaledToFill()
+                    .padding(.top, 0)
+                    .padding(.bottom, 0)
+                    .padding(.leading, 0)
+                    .padding(.trailing, 0)
+
                 Image(.whiteLogo)
                     .resizable()
-                    .scaledToFit()
-                    .padding(.horizontal, 25)
-                Spacer() // Pousse le contenu vers le haut
-/*
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.horizontal, 30)
+                    
                 LottieView(
                     animation: .named(
                         StringsToken.Animation.loaderCircle
@@ -127,14 +105,8 @@ struct LoadingFirstView: View {
                 .playing()
                 .looping()
                 .frame(width: 150, height: 150)
- */
+                .padding(.top, 350)
             }
-        }
-
     }
 }
 
-
-#Preview {
-    LoadingFirstView(isFinishToLoad: .constant(true))
-}

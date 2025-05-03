@@ -74,53 +74,51 @@ class SignUpPageViewModel: ObservableObject {
     }
 
     func fetchContacts() {
-        let store = CNContactStore()
-        var phoneNumberIds: [String] = []
+        DispatchQueue.global(qos: .userInitiated).async {
+            let store = CNContactStore()
+            var phoneNumberIds: [String] = []
 
-        // Demander l'autorisation d'accéder aux contacts
-        store.requestAccess(for: .contacts) {
-            [weak self] (isAuthorized, error) in
-            if isAuthorized {
-                // Accéder aux contacts si l'autorisation est donnée
-                let keysToFetch: [CNKeyDescriptor] = [
-                    CNContactGivenNameKey as CNKeyDescriptor,
-                    CNContactFamilyNameKey as CNKeyDescriptor,
-                    CNContactPhoneNumbersKey as CNKeyDescriptor,
-                ]
+            // Demander l'autorisation d'accéder aux contacts
+            store.requestAccess(for: .contacts) {
+                [weak self] (isAuthorized, error) in
+                if isAuthorized {
+                    // Accéder aux contacts si l'autorisation est donnée
+                    let keysToFetch: [CNKeyDescriptor] = [
+                        CNContactGivenNameKey as CNKeyDescriptor,
+                        CNContactFamilyNameKey as CNKeyDescriptor,
+                        CNContactPhoneNumbersKey as CNKeyDescriptor,
+                    ]
 
-                let fetchRequest = CNContactFetchRequest(
-                    keysToFetch: keysToFetch)
+                    let fetchRequest = CNContactFetchRequest(keysToFetch: keysToFetch)
 
-                do {
-                    try store.enumerateContacts(with: fetchRequest) {
-                        (contact, stop) in
-                        if let phoneNumber = contact.phoneNumbers.first?.value
-                            .stringValue
-                        {
-                            let formattedPhoneNumber =
-                                phoneNumber.replacingOccurrences(
-                                    of: " ", with: ""
-                                ).replacingOccurrences(of: "+", with: "")
-                            phoneNumberIds.append(formattedPhoneNumber)
-                        }
-                    }
-
-                    self?.fetchDataContactUser { users in
-                        var arrayUsersContact: [UserContact] = []
-                        DispatchQueue.main.async {
-                            for user in users {
-                                if phoneNumberIds.contains(user.uid) {
-                                    arrayUsersContact.append(user)
-                                }
+                    do {
+                        try store.enumerateContacts(with: fetchRequest) {
+                            (contact, stop) in
+                            if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
+                                let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
+                                phoneNumberIds.append(formattedPhoneNumber)
+                                print("@@@ formattedPhoneNumber: \(formattedPhoneNumber)")
                             }
-                            self?.contacts = Array(Set(arrayUsersContact))
                         }
+
+                        self?.fetchDataContactUser { users in
+                            var arrayUsersContact: [UserContact] = []
+                            DispatchQueue.main.async {
+                                for user in users {
+                                    if phoneNumberIds.contains(user.uid) {
+                                        arrayUsersContact.append(user)
+                                    }
+                                }
+                                self?.contacts = Array(Set(arrayUsersContact))
+                                print("@@@ contacts: \(self?.contacts ?? [])")
+                            }
+                        }
+                    } catch {
+                        print("@@@ Error fetching contacts: \(error)")
                     }
-                } catch {
-                    print("Error fetching contacts: \(error)")
+                } else {
+                    print("Access denied to contacts.")
                 }
-            } else {
-                print("Access denied to contacts.")
             }
         }
     }
@@ -174,11 +172,8 @@ class SignUpPageViewModel: ObservableObject {
         }
     }
 
-    private func fetchDataContactUser(
-        completion: @escaping ([UserContact]) -> Void
-    ) {
-        firebaseService.getAllData(from: .usersPreviews) {
-            (result: Result<[UserContact], Error>) in
+    private func fetchDataContactUser(completion: @escaping ([UserContact]) -> Void) {
+        firebaseService.getAllData(from: .usersPreviews) { (result: Result<[UserContact], Error>) in
             switch result {
             case .success(let users):
                 completion(users)

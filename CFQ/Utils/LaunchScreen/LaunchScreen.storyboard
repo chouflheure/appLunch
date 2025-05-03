@@ -16,24 +16,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" image="backgroundNeon" highlightedImage="backgroundNeon" translatesAutoresizingMaskIntoConstraints="NO" id="ucl-6c-ztB">
-                                <rect key="frame" x="-43" y="-26" width="465" height="903"/>
+                            <imageView autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="backgroundNeon" highlightedImage="backgroundNeon" translatesAutoresizingMaskIntoConstraints="NO" id="ucl-6c-ztB">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="White_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="3No-Nw-k4Z">
-                                <rect key="frame" x="20" y="362" width="353" height="154"/>
+                            <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="White_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="3No-Nw-k4Z">
+                                <rect key="frame" x="36" y="40" width="321" height="772"/>
                             </imageView>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
+                        <viewLayoutGuide key="safeArea" id="zhe-u0-QDN"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="3No-Nw-k4Z" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="20" id="U4O-Lo-RCC"/>
-                            <constraint firstItem="ucl-6c-ztB" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" constant="-26" id="UaI-ym-QuG"/>
-                            <constraint firstItem="ucl-6c-ztB" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="-43" id="XMk-Fe-fUs"/>
+                            <constraint firstItem="ucl-6c-ztB" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="UaI-ym-QuG"/>
+                            <constraint firstItem="ucl-6c-ztB" firstAttribute="leading" secondItem="zhe-u0-QDN" secondAttribute="leading" id="XMk-Fe-fUs"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3No-Nw-k4Z" secondAttribute="trailing" constant="20" id="b1s-YB-w0E"/>
-                            <constraint firstAttribute="bottom" secondItem="ucl-6c-ztB" secondAttribute="bottom" constant="-25" id="jRl-PY-Zku"/>
+                            <constraint firstAttribute="bottom" secondItem="ucl-6c-ztB" secondAttribute="bottom" id="jRl-PY-Zku"/>
                             <constraint firstItem="3No-Nw-k4Z" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="rLx-3h-XNk"/>
-                            <constraint firstItem="3No-Nw-k4Z" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="vpU-6E-UyF"/>
-                            <constraint firstAttribute="trailing" secondItem="ucl-6c-ztB" secondAttribute="trailing" constant="-29" id="zpT-nF-HLj"/>
+                            <constraint firstItem="3No-Nw-k4Z" firstAttribute="centerX" secondItem="zhe-u0-QDN" secondAttribute="centerX" id="vpU-6E-UyF"/>
+                            <constraint firstItem="zhe-u0-QDN" firstAttribute="trailing" secondItem="ucl-6c-ztB" secondAttribute="trailing" id="zpT-nF-HLj"/>
                         </constraints>
                     </view>
                 </viewController>

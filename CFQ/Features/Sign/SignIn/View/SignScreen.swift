@@ -93,7 +93,8 @@ struct SignScreen: View {
                     SignUpPageView(
                         viewModel: SignUpPageViewModel(
                             uidUser: viewModel.uidUser),
-                        coordinator: coordinator)
+                        coordinator: coordinator
+                    )
                 }
             }
         }
