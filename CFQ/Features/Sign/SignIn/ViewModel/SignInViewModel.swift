@@ -19,8 +19,10 @@ class SignInViewModel: ObservableObject {
 
     private let firebaseService = FirebaseService()
 
-    func toggleHasAlreadyAccount() {
-        hasAlreadyAccount.toggle()
+    func signInGuestMode() {
+        isSignFinish = true
+        isUserExist = true
+        user = User().guestMode
     }
 
     private func closeConfirmScreen() {
@@ -108,8 +110,6 @@ class SignInViewModel: ObservableObject {
         }
     }
 
-    
-    
     func dontReciveVerificationCode(
         completion: @escaping (Bool, String) -> Void
     ) {

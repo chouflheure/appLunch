@@ -10,6 +10,7 @@ enum StringsToken {
         static let NoAccount = "Pas encore de compte ?"
         static let AlreadyAccount = "T’as déjà un compte ?"
         static let PlaceholderPhoneNumber = "06 ..."
+        static let GuestMode = "Mode invité"
 
         // ConfirmCodeScreen
         static let PlaceholderConfimCode = "123456"
@@ -54,6 +55,7 @@ enum StringsToken {
         static let aBugTellUs = "Un bug, une remarque ? Dis nous tout !"
         static let notifications = "Gérer mes notifs"
         static let logOut = "Se deconnecter"
+        static let SignIn = "Se connecter"
         static let deleteAccount = "Supprimer mon compte"
         static let shareReport = "Envoyer vos retours 💌"
         static let subject = "Feedback"

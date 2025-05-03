@@ -22,54 +22,18 @@ struct SettingsView: View {
     @State private var showDetail = false
     @State private var selectedDestination: ScreensSettingsType? = nil
     @State private var showPopup = false
-    
     @EnvironmentObject var user: User
     @Environment(\.requestReview) var requestReview
     @Environment(\.dismiss) var dismiss
 
+    var viewModel: SettingsViewModel
     var coordinator: Coordinator
 
-    var arrayIconTitleForNextScreen: [ScreenSettingsData] = [
-        ScreenSettingsData(
-            icon: .iconNavProfile,
-            label: StringsToken.Settings.headereditMyProfil,
-            screen: .editProfile
-        ),
-
-        ScreenSettingsData(
-            icon: .iconPlus,
-            label: StringsToken.Settings.onboardingPreview,
-            screen: .onboarding
-        ),
-
-        ScreenSettingsData(
-            icon: .iconBug,
-            label: StringsToken.Settings.aBugTellUs,
-            screen: .bugReport
-        ),
-
-        ScreenSettingsData(
-            icon: .iconNotifs,
-            label: StringsToken.Settings.notifications,
-            screen: .notifications
-        )
-    ]
+    init(coordinator: Coordinator, viewModel: SettingsViewModel) {
+        self.viewModel = viewModel
+        self.coordinator = coordinator
+    }
     
-    var arrayIconTitleForPopUp: [ScreenSettingsData] = [
-        ScreenSettingsData(
-            icon: .iconDoor,
-            label: StringsToken.Settings.logOut,
-            screen: .logout,
-            color: .purpleDark
-        ),
-        ScreenSettingsData(
-            icon: .iconCross,
-            label: StringsToken.Settings.deleteAccount,
-            screen: .removeAccount,
-            color: .red
-        ),
-    ]
-
     var body: some View {
         ZStack {
             Color.black
@@ -102,8 +66,8 @@ struct SettingsView: View {
                     .background(.white)
                 
                 VStack(alignment: .leading) {
-
-                    ForEach(arrayIconTitleForNextScreen, id: \.icon) { data in
+                    
+                    ForEach(viewModel.getArrayIconTitleForNextScreen, id: \.icon) { data in
                         SettingCellView(
                             data: data,
                             onClick: {
@@ -116,21 +80,7 @@ struct SettingsView: View {
                         .padding(12)
                     }
                     
-                    SettingCellView(
-                        data: ScreenSettingsData(
-                            icon: .iconStar,
-                            label: StringsToken.Settings.noteTheApp,
-                            screen: .notifications
-                        ),
-                        onClick: {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                requestReview()
-                            }
-                        }
-                    )
-                    .padding(12)
-                    
-                    ForEach(arrayIconTitleForPopUp, id: \.icon) { data in
+                    ForEach(viewModel.getArrayIconTitleForPopUp, id: \.icon) { data in
                         SettingCellView(
                             data: data,
                             onClick: {
@@ -170,7 +120,8 @@ struct SettingsView: View {
                     .zIndex(1)
             }
 
-        }.ignoresSafeArea()
+        }
+        .ignoresSafeArea()
     }
 
     @ViewBuilder
@@ -188,6 +139,8 @@ struct SettingsView: View {
                 PopUpSettings(showPopup: $showPopup, popupType: .logout, coordinator: coordinator)
             case .removeAccount:
                 PopUpSettings(showPopup: $showPopup, popupType: .removeProfile, coordinator: coordinator)
+            case .signIn:
+                PopUpSettings(showPopup: $showPopup, popupType: .logout, coordinator: coordinator)
             }
         }
 }
@@ -214,5 +167,5 @@ private struct SettingCellView: View {
 }
 
 #Preview {
-    SettingsView(coordinator: .init())
+    // SettingsView(coordinator: .init())
 }

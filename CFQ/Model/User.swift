@@ -138,7 +138,31 @@ class User: ObservableObject, Encodable, Decodable {
         try container.encode(isPrivateAccount, forKey: .isPrivateAccount)
         try container.encode(requestsFriends, forKey: .requestsFriends)
     }
-    
+
+    var guestMode: User {
+       return User(
+        uid: "Guest",
+        name: "Guest",
+        firstName: "Guest",
+        pseudo: "Guest",
+        profilePictureUrl: "",
+        location: "Ta loc",
+        // birthDate: Date? = nil,
+        isActive: true,
+        favorite: [""] ,
+        friends: [""],
+        invitedCfqs: [""],
+        invitedTurns: [""],
+        notificationsChannelId: "",
+        postedCfqs: [""],
+        postedTurns: [""],
+        teams: [""],
+        tokenFCM: "",
+        unreadNotificationsCount: 0,
+        isPrivateAccount: true,
+        requestsFriends: [""]
+       )
+    }
     // TODO: - For debug
     var printObject: String {
           return "uid : \(uid) | name : \(name) | firstName : \(firstName) | pseudo : \(pseudo) | profilePictureUrl : \(profilePictureUrl) | location : \(location)"

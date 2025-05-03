@@ -16,16 +16,12 @@ struct SignScreen: View {
                 Image(.whiteLogo)
                     .resizable()
                     .scaledToFit()
-                
+
                 VStack {
-                    Text(
-                        viewModel.hasAlreadyAccount
-                            ? StringsToken.Sign.Connexion
-                            : StringsToken.Sign.Inscritpion
-                    )
-                    .tokenFont(.Title_Gigalypse_24)
-                    .textCase(.uppercase)
-                    .padding(.bottom, 20)
+                    Text(StringsToken.Sign.Connexion)
+                        .tokenFont(.Title_Gigalypse_24)
+                        .textCase(.uppercase)
+                        .padding(.bottom, 20)
 
                     CustomTextField(
                         text: $viewModel.phoneNumber,
@@ -42,7 +38,8 @@ struct SignScreen: View {
                     if isLoadingSendButton {
                         LottieView(
                             animation: .named(
-                                StringsToken.Animation.loaderCircle)
+                                StringsToken.Animation.loaderCircle
+                            )
                         )
                         .playing()
                         .looping()
@@ -64,25 +61,20 @@ struct SignScreen: View {
                                     }
                                 }
                             },
-                            title: viewModel.hasAlreadyAccount
-                                ? StringsToken.Sign.SendConfirmCode
-                                : StringsToken.Sign.Inscritpion,
+                            title: StringsToken.Sign.Connexion,
                             largeButtonType: .signNext,
                             isDisabled: viewModel.phoneNumber.isEmpty
                         )
 
                         LargeButtonView(
                             action: {
-                                viewModel.toggleHasAlreadyAccount()
+                                viewModel.signInGuestMode()
                             },
-                            title: viewModel.hasAlreadyAccount
-                                ? StringsToken.Sign.NoAccount
-                                : StringsToken.Sign.AlreadyAccount,
+                            title: StringsToken.Sign.GuestMode,
                             largeButtonType: .signBack
                         )
                     }
                 }
-                // .padding(.bottom, 20)
             }
             .padding(.horizontal, 16)
             .fullScreenCover(isPresented: $viewModel.isConfirmScreenActive) {
@@ -106,7 +98,7 @@ struct SignScreen: View {
             }
         }
         .toastView(toast: $toast)
-        .onChange(of: viewModel.isConfirmScreenActive) {
+        .onChange(of: viewModel.isConfirmScreenActive || viewModel.isSignFinish) {
             isLoadingSendButton = $0
         }
         .onTapGesture {

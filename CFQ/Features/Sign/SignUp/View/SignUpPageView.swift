@@ -8,7 +8,7 @@ struct SignUpPageView: View {
     var body: some View {
         TabView(selection: $viewModel.index) {
              NameSignUpScreen(viewModel: viewModel) {
-             dismiss()
+                 dismiss()
              }.tag(0)
              
              LocalisationSignUpScreen(viewModel: viewModel)
