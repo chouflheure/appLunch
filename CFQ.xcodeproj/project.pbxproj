@@ -107,7 +107,6 @@
 				A38F7E712D4BCBD700EE9536 /* FirebaseStorage */,
 				A39B98A12D760826005E983B /* FirebaseMessaging */,
 				A33B0AA12DC11F270065DF7E /* Lottie */,
-				A33B0AA32DC11F270065DF7E /* Lottie-Dynamic */,
 			);
 			productName = CFQ;
 			productReference = A3DDB2242D3524FA00060C79 /* CFQ.app */;
@@ -419,11 +418,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A33B0AA02DC11F270065DF7E /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
-		};
-		A33B0AA32DC11F270065DF7E /* Lottie-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A33B0AA02DC11F270065DF7E /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = "Lottie-Dynamic";
 		};
 		A38F7E6B2D4BCBD700EE9536 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;

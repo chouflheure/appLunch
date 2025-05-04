@@ -6,4 +6,5 @@ enum ScreensSettingsType {
     case notifications
     case logout
     case removeAccount
+    case signIn
 }

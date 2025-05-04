@@ -7,16 +7,6 @@ struct ProfileView: View {
     @State private var showFriendList = false
 
     @EnvironmentObject var user: User
-    /*
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
-     */
-    
     @StateObject var viewModel = ProfileViewModel()
 
     var body: some View {
@@ -77,7 +67,7 @@ struct ProfileView: View {
         }
         .padding(.horizontal, 16)
         .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
-            SettingsView(coordinator: coordinator)
+            SettingsView(coordinator: coordinator, viewModel: SettingsViewModel(isGuestMode: user.uid == "Guest"))
         }
     }
 }

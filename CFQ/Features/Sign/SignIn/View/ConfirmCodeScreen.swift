@@ -8,7 +8,8 @@ struct ConfirmCodeScreen: View {
     @State private var hasAlreadyAccount = true
     @State private var toast: Toast? = nil
 
-    @State var viewModel: SignInViewModel
+    @ObservedObject var viewModel: SignInViewModel
+
     var verificationID: String
     var mobileNumber: String
     @State private var isLoadingSendButton = false
@@ -34,7 +35,7 @@ struct ConfirmCodeScreen: View {
                             Image(.iconCross)
                                 .foregroundColor(.white)
                                 .frame(width: 20, height: 20)
-                                .padding(.all, 3)
+                                .padding(.all, 7)
                                 .overlay {
                                     Circle()
                                         .stroke(Color.white, lineWidth: 0.5)

@@ -12,15 +12,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     private var firebaseService: FirebaseService?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-
         FirebaseApp.configure()
-        
-        // firebaseService = FirebaseService()
-
+        firebaseService = FirebaseService()
         Messaging.messaging().delegate = self
-        
-        // requestNotificationPermission(application)
-        // registerNotificationCategories()
+        requestNotificationPermission(application)
+        registerNotificationCategories()
         return true
     }
 
@@ -199,10 +195,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     }
 }
 
-
 @main
 struct CFQApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @State private var isActive = false
 
     var body: some Scene {
         WindowGroup {

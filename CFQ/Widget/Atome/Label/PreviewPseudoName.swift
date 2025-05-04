@@ -10,7 +10,7 @@ struct PreviewPseudoName: View {
         HStack {
             Text(pseudo)
                 .tokenFont(.Body_Inter_Medium_16)
-            Text("~ " + name + " " + firstName.first!.uppercased() + ".")
+            Text("~ " + name + " " + (firstName.first?.uppercased() ?? "") + ".")
                 .tokenFont(.Placeholder_Inter_Regular_16)
         }
     }

@@ -31,4 +31,14 @@ class CFQ: Codable, Hashable {
         hasher.combine(messagerieUUID)
         hasher.combine(users)
     }
+    
+    func mockCFQ() -> CFQ {
+        return CFQ(
+            uid: "MockCFQ",
+            title: "CFQ Demo",
+            admin: "MockUser",
+            messagerieUUID: "MockConv",
+            users: ["MockUser"]
+        )
+    }
 }

@@ -2,6 +2,7 @@
 import SwiftUI
 import FirebaseAuth
 import Combine
+import Lottie
 
 enum StatusConnexion {
     case wait
@@ -40,7 +41,7 @@ class AuthViewModel: ObservableObject {
 struct ContentView: View {
     @StateObject var coordinator = Coordinator()
     @ObservedObject private var authViewModel = AuthViewModel()
-    // @ObservedObject private var authViewModel2 = AuthViewModel2()
+    @State var isFinishToLoad: Bool = true
 
     var body: some View {
         Group {
@@ -79,71 +80,33 @@ struct ContentView: View {
 }
 
 struct LoadingFirstView: View {
-    var body: some View {
-        SafeAreaContainer {
-            Text("Loading... Test")
-                .foregroundColor(.white)
-        }
-    }
-}
-
-/*
-class AuthViewModel2: ObservableObject {
-    @Published var isAuthenticated: Bool = false
-    @Published var userUID: String?
-
-    func checkAuthenticationStatus(completion: @escaping (String?) -> Void) {
-        if Auth.auth().currentUser != nil {
-            completion(Auth.auth().currentUser?.uid)
-        } else {
-            completion(nil)
-        }
-    }
-}
- */
-
-
-/*
-struct ContentView: View {
-    @StateObject private var authViewModel = AuthViewModel()
+    // @Binding var isFinishToLoad: Bool
 
     var body: some View {
-        Group {
-            
-            if authViewModel.isAuthenticated {
-                Text("Auth")
-            } else {
-                Text("No auth")
+            ZStack {
+                Image(.backgroundNeon)
+                    .resizable()
+                    .scaledToFill()
+                    .padding(.top, 0)
+                    .padding(.bottom, 0)
+                    .padding(.leading, 0)
+                    .padding(.trailing, 0)
+
+                Image(.whiteLogo)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.horizontal, 30)
+                    
+                LottieView(
+                    animation: .named(
+                        StringsToken.Animation.loaderCircle
+                    )
+                )
+                .playing()
+                .looping()
+                .frame(width: 150, height: 150)
+                .padding(.top, 350)
             }
-        }
-        .onAppear {
-            authViewModel.isAuthenticated = (Auth.auth().currentUser != nil)
-            print("@@@ authViewModel.isAuthenticated = \(authViewModel.isAuthenticated)")
-        }
-    }
-}
-*/
-
-/*
-struct ContentView: View {
-    @StateObject var coordinator = Coordinator()
-    @StateObject private var authViewModel = AuthViewModel()
-
-    var body: some View {
-        Group {
-            if let currentView = coordinator.currentView {
-                currentView
-            } else {
-                Text("Loading...")
-            }
-        }
-        .onAppear {
-            coordinator.start()
-        }
     }
 }
 
-#Preview {
-    ContentView()
-}
-*/
