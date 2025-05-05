@@ -6,8 +6,6 @@ struct LocalisationSignUpScreen: View {
     @State var selectedItems: String = ""
 
     var body: some View {
-        SafeAreaContainer {
-
             VStack {
                 ProgressBar(index: $viewModel.index)
                     .padding(.bottom, 30)
@@ -38,7 +36,7 @@ struct LocalisationSignUpScreen: View {
                     ).padding(.horizontal, 20)
                 }
             }
-        }
+            .fullBackground(imageName: "backgroundNeon")
     }
 }
 

@@ -29,6 +29,7 @@ class SignUpPageViewModel: ObservableObject {
     @Published var isLoadingCreateUserDone: Bool = false
     @Published var isLoadingCreateUserNone: Bool = false
     
+    
     var coordinator: Coordinator?
     private var urlProfilePicture = String()
     private let firebaseService = FirebaseService()

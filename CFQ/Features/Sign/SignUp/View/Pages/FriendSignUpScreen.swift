@@ -15,7 +15,7 @@ struct FriendSignUpScreen: View {
     @State var isLoadingUserUpload = false
 
     var body: some View {
-        SafeAreaContainer {
+        
             ZStack {
                 VStack {
                     ProgressBar(index: $viewModel.index)
@@ -126,7 +126,7 @@ struct FriendSignUpScreen: View {
                         .zIndex(3)
                 }
             }
-        }
+            .fullBackground(imageName: "backgroundNeon")
     }
 
     func startAnimationTimer(totalFrames: Int) {

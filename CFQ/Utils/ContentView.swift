@@ -80,33 +80,32 @@ struct ContentView: View {
 }
 
 struct LoadingFirstView: View {
-    // @Binding var isFinishToLoad: Bool
 
     var body: some View {
-            ZStack {
-                Image(.backgroundNeon)
-                    .resizable()
-                    .scaledToFill()
-                    .padding(.top, 0)
-                    .padding(.bottom, 0)
-                    .padding(.leading, 0)
-                    .padding(.trailing, 0)
+        ZStack {
+            NeonBackgroundImage()
 
+            VStack {
                 Image(.whiteLogo)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding(.horizontal, 30)
-                    
-                LottieView(
-                    animation: .named(
-                        StringsToken.Animation.loaderCircle
-                    )
+            }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+            LottieView(
+                animation: .named(
+                    StringsToken.Animation.loaderCircle
                 )
-                .playing()
-                .looping()
-                .frame(width: 150, height: 150)
-                .padding(.top, 350)
-            }
+            )
+            .playing()
+            .looping()
+            .frame(width: 150, height: 150)
+            .padding(.top, 350)
+
+        }.ignoresSafeArea()
     }
 }
 
+#Preview {
+    LoadingFirstView()
+}

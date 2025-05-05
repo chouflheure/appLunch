@@ -41,7 +41,6 @@ struct BirthdaySignUpScreen: View {
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
-                // .padding(.bottom, 100)
             }
         }
     }

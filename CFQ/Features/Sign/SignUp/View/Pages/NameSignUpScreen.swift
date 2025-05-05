@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 private enum Field {
@@ -14,86 +13,87 @@ struct NameSignUpScreen: View {
     var onDismiss: () -> Void
 
     var body: some View {
-        SafeAreaContainer {
+        VStack {
+            ProgressBar(index: $viewModel.index)
+                .padding(.bottom, 30)
+
             VStack {
-                ProgressBar(index: $viewModel.index)
-                    .padding(.bottom, 30)
-                
-                VStack {
-                    Text(StringsToken.Sign.TitleWhichIsYourIdentifier)
-                        .tokenFont(.Title_Gigalypse_24)
-                        .textCase(.uppercase)
-                        .padding(.bottom, 50)
+                Text(StringsToken.Sign.TitleWhichIsYourIdentifier)
+                    .tokenFont(.Title_Gigalypse_24)
+                    .textCase(.uppercase)
+                    .padding(.bottom, 50)
 
-                    CustomTextField(
-                        text: $viewModel.user.firstName,
-                        keyBoardType: .default,
-                        placeHolder: "Prenom",
-                        textFieldType: .sign
-                    )
-                    .focused($focusedField, equals: .name)
-                    .submitLabel(.next)
-                    .padding(.bottom, 20)
-                    .padding(.horizontal, 20)
+                CustomTextField(
+                    text: $viewModel.user.firstName,
+                    keyBoardType: .default,
+                    placeHolder: "Prenom",
+                    textFieldType: .sign
+                )
+                .focused($focusedField, equals: .name)
+                .submitLabel(.next)
+                .padding(.bottom, 20)
+                .padding(.horizontal, 20)
 
-                    CustomTextField(
-                        text: $viewModel.user.name,
-                        keyBoardType: .default,
-                        placeHolder: "Nom",
-                        textFieldType: .sign
-                    )
-                    .focused($focusedField, equals: .firstName)
-                    .submitLabel(.next)
-                    .padding(.bottom, 20)
-                    .padding(.horizontal, 20)
-                    
-                    CustomTextField(
-                        text: $viewModel.user.pseudo,
-                        keyBoardType: .default,
-                        placeHolder: "Pseudo",
-                        textFieldType: .sign
-                    )
-                    .focused($focusedField, equals: .pseudo)
-                    .submitLabel(.return)
-                    .padding(.bottom, 20)
-                    .padding(.horizontal, 20)
+                CustomTextField(
+                    text: $viewModel.user.name,
+                    keyBoardType: .default,
+                    placeHolder: "Nom",
+                    textFieldType: .sign
+                )
+                .focused($focusedField, equals: .firstName)
+                .submitLabel(.next)
+                .padding(.bottom, 20)
+                .padding(.horizontal, 20)
+
+                CustomTextField(
+                    text: $viewModel.user.pseudo,
+                    keyBoardType: .default,
+                    placeHolder: "Pseudo",
+                    textFieldType: .sign
+                )
+                .focused($focusedField, equals: .pseudo)
+                .submitLabel(.return)
+                .padding(.bottom, 20)
+                .padding(.horizontal, 20)
+            }
+            .onSubmit {
+                switch focusedField {
+                case .name:
+                    focusedField = .firstName
+                case .firstName:
+                    focusedField = .pseudo
+                case .pseudo:
+                    focusedField = .none
+                case .none:
+                    focusedField = .none
                 }
-                .onSubmit {
-                    switch focusedField {
-                    case .name:
-                        focusedField = .firstName
-                    case .firstName:
-                        focusedField = .pseudo
-                    case .pseudo:
-                        focusedField = .none
-                    case .none:
-                        focusedField = .none
-                    }
-                }
+            }
 
-                Spacer()
+            Spacer()
 
-                VStack {
-                    LargeButtonView(
-                        action: {
-                            viewModel.goNext()
-                        },
-                        title: StringsToken.Sign.Next,
-                        largeButtonType: .signNext,
-                        isDisabled: viewModel.user.name.isEmpty || viewModel.user.firstName.isEmpty || viewModel.user.pseudo.isEmpty
-                    ).padding(.horizontal, 20)
+            VStack {
+                LargeButtonView(
+                    action: {
+                        viewModel.goNext()
+                    },
+                    title: StringsToken.Sign.Next,
+                    largeButtonType: .signNext,
+                    isDisabled: viewModel.user.name.isEmpty
+                        || viewModel.user.firstName.isEmpty
+                        || viewModel.user.pseudo.isEmpty
+                ).padding(.horizontal, 20)
 
-                    LargeButtonView(
-                        action: {onDismiss()},
-                        title: StringsToken.Sign.BackToSign,
-                        largeButtonType: .signBack
-                    ).padding(.horizontal, 20)
-                }
+                LargeButtonView(
+                    action: { onDismiss() },
+                    title: StringsToken.Sign.BackToSign,
+                    largeButtonType: .signBack
+                ).padding(.horizontal, 20)
             }
         }
         .onTapGesture {
             UIApplication.shared.endEditing(true)
         }
+        .fullBackground(imageName: "backgroundNeon")
     }
 }
 
