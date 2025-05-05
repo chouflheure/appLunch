@@ -8,7 +8,7 @@ struct CellTeamView: View {
 
     var body: some View {
         HStack(alignment: .center) {
-            CirclePicture()
+            CirclePicture(urlStringImage: team.pictureUrlString)
                 .frame(width: 50, height: 50)
             VStack(alignment: .leading, spacing: 10) {
                 Text(team.title)

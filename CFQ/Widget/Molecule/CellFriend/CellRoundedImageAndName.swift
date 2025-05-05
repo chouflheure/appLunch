@@ -2,13 +2,13 @@
 import SwiftUI
 
 struct CellRoundedImageAndName: View {
-    var name: String
+    var userPreview: UserContact
 
     var body: some View {
         VStack(alignment: .center) {
-            CirclePicture()
+            CirclePicture(urlStringImage: userPreview.profilePictureUrl)
                 .frame(width: 56, height: 56)
-            Text(name)
+            Text(userPreview.pseudo)
                 .tokenFont(.Body_Inter_Medium_12)
         }
         .padding(.leading, 17)

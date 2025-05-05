@@ -2,13 +2,13 @@
 import SwiftUI
 
 struct CellFriendAdmin: View {
-    var name: String
+    var userPreview: UserContact
     @Binding var isEditingAdmin: Bool
     @Binding var isAdmin: Bool
 
     var body: some View {
         ZStack {
-            CellRoundedImageAndName(name: name)
+            CellRoundedImageAndName(userPreview: userPreview)
                 .padding(.leading, 10)
             
             Button(action: {
@@ -33,6 +33,6 @@ struct CellFriendAdmin: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CellFriendAdmin(name: "test", isEditingAdmin: .constant(false), isAdmin: .constant(false))
+        // CellFriendAdmin(name: "test", isEditingAdmin: .constant(false), isAdmin: .constant(false))
     }
 }

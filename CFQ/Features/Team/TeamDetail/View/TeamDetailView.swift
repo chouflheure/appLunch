@@ -100,7 +100,7 @@ struct TeamDetailView: View {
                                     HStack(spacing: 0) {
                                         ForEach(coordinator.teamDetail?.friends ?? UserContact().userContactDefault(), id: \.self) { user in
                                             CellFriendAdmin (
-                                                name: user.pseudo,
+                                                userPreview: user,
                                                 isEditingAdmin: .constant(false),
                                                 isAdmin: Binding(
                                                     get: {

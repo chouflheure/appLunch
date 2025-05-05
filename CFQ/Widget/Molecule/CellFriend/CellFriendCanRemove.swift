@@ -2,12 +2,12 @@
 import SwiftUI
 
 struct CellFriendCanRemove: View {
-    var name: String
+    var userPreview: UserContact
     var onRemove: (() -> Void)
 
     var body: some View {
         ZStack {
-            CellRoundedImageAndName(name: name)
+            CellRoundedImageAndName(userPreview: userPreview)
             .padding(.leading, 17)
 
             Button(action: {

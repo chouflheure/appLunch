@@ -57,10 +57,11 @@ struct FriendProfileView: View {
                     .padding(.bottom, 32)
                     
                     HStack {
+                        /*
                         CirclePictureStatus(isActive: true, onClick: {})
                             .frame(width: 70, height: 70)
                             .padding(.trailing, 12)
-                        
+                        */
                         VStack(alignment: .leading, spacing: 12) {
                             PreviewPseudoName(
                                 name: profileFriend.name,

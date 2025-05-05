@@ -4,7 +4,7 @@ import SwiftUI
 struct CFQMolecule: View {
     @State var name: String
     @State var title: String
-
+    
     let gradientBackground = LinearGradient(
         gradient: Gradient(
             colors: [

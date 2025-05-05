@@ -266,7 +266,7 @@ struct FriendSignUpCell: View {
 
     var body: some View {
         HStack(spacing: 15) {
-            CirclePicture()
+            CirclePicture(urlStringImage: "")
                 .frame(width: 40, height: 40)
             Text(pseudo)
                 .tokenFont(.Body_Inter_Medium_16)

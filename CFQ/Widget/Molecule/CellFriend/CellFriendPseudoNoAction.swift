@@ -9,7 +9,7 @@ struct CellFriendPseudoNoAction: View {
     var body: some View {
         HStack(spacing: 0) {
             HStack {
-                CirclePicture()
+                CirclePicture(urlStringImage: "")
                     .frame(width: 48, height: 48)
                 
                 Text(pseudo)
