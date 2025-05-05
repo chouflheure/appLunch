@@ -41,7 +41,9 @@ struct FriendSignUpScreen: View {
                                         .looping()
                                         .frame(width: 150, height: 150)
                                     } else {
-                                        FriendSignUpCell(pseudo: contact.pseudo, name: contact.name, firstName: contact.firstName)
+                                        FriendSignUpCell(
+                                            userPreview: contact
+                                        )
                                     }
                                 }
                             }
@@ -258,19 +260,16 @@ struct UploadPictureOnDataBase: View {
 
 
 struct FriendSignUpCell: View {
-    
-    let pseudo: String
-    let name: String
-    let firstName: String
+    let userPreview: UserContact
     @State var isSelected: Bool = false
 
     var body: some View {
         HStack(spacing: 15) {
-            CirclePicture(urlStringImage: "")
+            CirclePicture(urlStringImage: userPreview.profilePictureUrl)
                 .frame(width: 40, height: 40)
-            Text(pseudo)
+            Text(userPreview.pseudo)
                 .tokenFont(.Body_Inter_Medium_16)
-            Text("~ " + name + " " + firstName.first!.uppercased() + ".")
+            Text("~ " + userPreview.name + " " + userPreview.firstName.first!.uppercased() + ".")
                 .tokenFont(.Placeholder_Inter_Regular_16)
 
             Spacer()
@@ -296,12 +295,5 @@ struct FriendSignUpCell: View {
         }
         .frame(maxWidth: .infinity, alignment: .init(horizontal: .leading, vertical: .top))
         .padding(.horizontal, 16)
-    }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        FriendSignUpCell(pseudo: "merou", name: "Meredith", firstName: "VVVVVV")
     }
 }

@@ -81,11 +81,9 @@ class SignUpPageViewModel: ObservableObject {
             let store = CNContactStore()
             var phoneNumberIds: [String] = []
 
-            // Demander l'autorisation d'accéder aux contacts
             store.requestAccess(for: .contacts) {
                 [weak self] (isAuthorized, error) in
                 if isAuthorized {
-                    // Accéder aux contacts si l'autorisation est donnée
                     let keysToFetch: [CNKeyDescriptor] = [
                         CNContactGivenNameKey as CNKeyDescriptor,
                         CNContactFamilyNameKey as CNKeyDescriptor,
@@ -100,8 +98,8 @@ class SignUpPageViewModel: ObservableObject {
                             if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
                                 let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
                                 phoneNumberIds.append(formattedPhoneNumber)
-                                print("@@@ formattedPhoneNumber: \(formattedPhoneNumber)")
                             }
+                            print("@@@ contact = \(contact)")
                         }
 
                         self?.fetchDataContactUser { users in

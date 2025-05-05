@@ -1,4 +1,5 @@
 import SwiftUI
+import Lottie
 
 private class ImageCache {
     static private var cache: [URL: Image] = [:]
@@ -12,7 +13,7 @@ private class ImageCache {
     }
 }
 
-public struct CachedAsyncImage<Content>: View where Content: View {
+private struct CachedAsyncImage<Content>: View where Content: View {
 
     private let url: URL?
     private let scale: CGFloat
@@ -63,5 +64,37 @@ public struct CachedAsyncImage<Content>: View where Content: View {
             ImageCache[url] = image
         }
         return content(phase)
+    }
+}
+
+struct CachedAsyncImageView: View {
+    let urlString: String
+    let animation = LottieView(animation: .named(StringsToken.Animation.loaderPicture))
+
+    var body: some View {
+        CachedAsyncImage(url: URL(string: urlString) ?? URL(string: "")) { phase in
+            switch phase {
+            case .empty:
+                animation
+                    .playing()
+                    .looping()
+
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(Circle())
+
+            case .failure(_):
+                animation
+                    .playing()
+                    .looping()
+
+            @unknown default:
+                animation
+                    .playing()
+                    .looping()
+            }
+        }
     }
 }

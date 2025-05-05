@@ -1,14 +1,11 @@
 
 import SwiftUI
-import Lottie
 
 struct CFQFormView: View {
 
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: CFQFormViewModel
     @EnvironmentObject var user: User
-    
-    let animation = LottieView(animation: .named(StringsToken.Animation.loaderPicture))
     
     init(coordinator: Coordinator, user: User) {
         self.coordinator = coordinator
@@ -32,31 +29,9 @@ struct CFQFormView: View {
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
                                 HStack(alignment: .center, spacing: 12) {
-                                    CachedAsyncImage(url: URL(string: user.profilePictureUrl) ?? URL(string: " ")!) { phase in
-                                        switch phase {
-                                        case .empty:
-                                            animation
-                                                .playing()
-                                                .looping()
-                                                
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 50, height: 50)
-                                                .cornerRadius(100)
-                                        case .failure(_):
-                                            animation
-                                                .playing()
-                                                .looping()
-                                        @unknown default:
-                                            animation
-                                                .playing()
-                                                .looping()
-                                        }
-                                    }
-                                    .frame(width: 50, height: 50)
-                                    .cornerRadius(100)
+                                    CachedAsyncImageView(urlString: user.profilePictureUrl)
+                                        .frame(width: 50, height: 50)
+                                        .cornerRadius(100)
                                     
                                     CustomTextField(
                                         text: $viewModel.titleCFQ,

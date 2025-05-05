@@ -8,29 +8,7 @@ struct CirclePicture: View {
 
     var body: some View {
         ZStack {
-            CachedAsyncImage(url: URL(string: urlStringImage) ?? URL(string: " ")) { phase in
-                switch phase {
-                case .empty:
-                    animation
-                        .playing()
-                        .looping()
-                        
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .clipShape(Circle())
-
-                case .failure(_):
-                    animation
-                        .playing()
-                        .looping()
-                @unknown default:
-                    animation
-                        .playing()
-                        .looping()
-                }
-            }
+            CachedAsyncImageView(urlString: urlStringImage)
         }
     }
 }
