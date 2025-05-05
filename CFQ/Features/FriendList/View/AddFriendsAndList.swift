@@ -20,7 +20,7 @@ struct AddFriendsAndListView: View {
                     VStack {
                         HStack {
                             ForEach(Array(arrayPicture), id: \.self) { user in
-                                CellFriendCanRemove(name: user.name) {
+                                CellFriendCanRemove(userPreview: user) {
                                     onRemove(user)
                                 }
                             }.frame(height: 100)
@@ -36,7 +36,7 @@ struct AddFriendsAndListView: View {
                 ScrollView(.vertical) {
                     VStack(alignment: .leading) {
                         ForEach(Array(arrayFriends), id: \.self) { user in
-                            CellFriendsAdd(name: user.name) {
+                            CellFriendsAdd(userPreview: user) {
                                 onAdd(user)
                             }
                             .padding(.top, 15)

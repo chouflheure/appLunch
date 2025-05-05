@@ -1,6 +1,7 @@
 
 import SwiftUI
 import FirebaseFirestore
+import Lottie
 
 struct CFQCollectionView: View {
     @ObservedObject var coordinator: Coordinator
@@ -17,7 +18,7 @@ struct CFQCollectionView: View {
                             Logger.log("Click on Add CFQ", level: .action)
                         },
                         label: {
-                            Image("icon-plus")
+                            Image(.iconPlus)
                                 .resizable()
                                 .frame(width: 40, height: 40)
                                 .foregroundColor(.white)
@@ -39,6 +40,6 @@ struct CFQCollectionView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CFQCollectionView(coordinator: Coordinator())
+        // CFQCollectionView(coordinator: Coordinator())
     }.ignoresSafeArea()
 }

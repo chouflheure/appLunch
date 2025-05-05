@@ -1,11 +1,15 @@
 
 import SwiftUI
+import Lottie
 
 struct CFQFormView: View {
 
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: CFQFormViewModel
-
+    @EnvironmentObject var user: User
+    
+    let animation = LottieView(animation: .named(StringsToken.Animation.loaderPicture))
+    
     init(coordinator: Coordinator, user: User) {
         self.coordinator = coordinator
         self._viewModel = StateObject(wrappedValue: CFQFormViewModel(coordinator: coordinator, user: user))
@@ -28,11 +32,31 @@ struct CFQFormView: View {
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
                                 HStack(alignment: .center, spacing: 12) {
-                                    Image(.header)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 50, height: 50)
-                                        .cornerRadius(100)
+                                    CachedAsyncImage(url: URL(string: user.profilePictureUrl) ?? URL(string: " ")!) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            animation
+                                                .playing()
+                                                .looping()
+                                                
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 50, height: 50)
+                                                .cornerRadius(100)
+                                        case .failure(_):
+                                            animation
+                                                .playing()
+                                                .looping()
+                                        @unknown default:
+                                            animation
+                                                .playing()
+                                                .looping()
+                                        }
+                                    }
+                                    .frame(width: 50, height: 50)
+                                    .cornerRadius(100)
                                     
                                     CustomTextField(
                                         text: $viewModel.titleCFQ,
@@ -96,15 +120,16 @@ struct CFQFormView: View {
 
 
 struct CellFriendsAdd: View {
-    var name: String
+    // var name: String
+    var userPreview: UserContact
     var onAdd: (() -> Void)
 
     var body: some View {
         HStack(spacing: 0){
-            CirclePicture()
+            CirclePicture(urlStringImage: userPreview.profilePictureUrl)
                 .frame(width: 48, height: 48)
             HStack {
-                Text(name)
+                Text(userPreview.pseudo)
                     .foregroundColor(.white)
                     .padding(.leading, 8)
                     .lineLimit(1)
@@ -121,6 +146,7 @@ struct CellFriendsAdd: View {
     }
 }
 
+/*
 struct CellTeamAdd: View {
     var name: String
     var teamNumber: Int
@@ -148,6 +174,7 @@ struct CellTeamAdd: View {
         }.padding(.horizontal, 16)
     }
 }
+*/
 
 #Preview {
     ZStack {

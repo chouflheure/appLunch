@@ -11,6 +11,12 @@ private struct TestAnimationView: View {
                 .tokenFont(.Title_Gigalypse_24)
             
             ScrollView {
+                
+                LottieView(animation: .named(StringsToken.Animation.loaderPicture))
+                    .playing()
+                    .looping()
+                    .frame(width: 150, height: 150)
+                
                 LottieView(animation: .named(StringsToken.Animation.loaderHand))
                     .playing()
                     .looping()

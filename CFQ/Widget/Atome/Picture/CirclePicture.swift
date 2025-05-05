@@ -1,20 +1,36 @@
 
 import SwiftUI
+import Lottie
 
 struct CirclePicture: View {
-    @State var image: Image?
+    var urlStringImage: String
+    let animation = LottieView(animation: .named(StringsToken.Animation.loaderPicture))
 
     var body: some View {
         ZStack {
-            Image(.header)
-                .resizable()
-                .scaledToFill()
-                .clipShape(Circle())
+            CachedAsyncImage(url: URL(string: urlStringImage) ?? URL(string: " ")) { phase in
+                switch phase {
+                case .empty:
+                    animation
+                        .playing()
+                        .looping()
+                        
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+
+                case .failure(_):
+                    animation
+                        .playing()
+                        .looping()
+                @unknown default:
+                    animation
+                        .playing()
+                        .looping()
+                }
+            }
         }
     }
-}
-
-#Preview {
-    CirclePicture()
-        .frame(width: 30, height: 30)
 }

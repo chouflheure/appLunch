@@ -85,7 +85,7 @@ struct TeamEditViewScreen: View {
                                         Array(viewModel.setFriends), id: \.self
                                     ) { user in
                                         CellFriendAdmin(
-                                            name: user.name,
+                                            userPreview: user,
                                             isEditingAdmin: .constant(true),
                                             isAdmin: Binding(
                                                 get: {

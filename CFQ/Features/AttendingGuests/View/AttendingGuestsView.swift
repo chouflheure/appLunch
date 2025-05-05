@@ -96,6 +96,7 @@ struct CollectionViewParticipant: View {
     }
 }
 
+/*
 private struct ItemView: View {
     let participantPicture: String
     let participantName: String
@@ -110,3 +111,4 @@ private struct ItemView: View {
         }
     }
 }
+*/

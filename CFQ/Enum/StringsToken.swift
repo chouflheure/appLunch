@@ -117,6 +117,7 @@ enum StringsToken {
         static let loaderUpdatePicture = "loaderUpdatePicture"
         static let loaderError = "loaderError"
         static let loaderCircle = "loaderCircle"
+        static let loaderPicture = "loaderPicture"
     }
 }
 

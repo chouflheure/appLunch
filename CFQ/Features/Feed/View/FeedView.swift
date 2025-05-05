@@ -48,8 +48,7 @@ struct FeedView: View {
                         )
                         ForEach(coordinator.userFriends, id: \.self) { friend in
                             CirclePictureStatusAndPseudo(
-                                pseudo: friend.pseudo,
-                                isActive: friend.isActive ?? false,
+                                userPreview: friend,
                                 onClick: {
                                     withAnimation {
                                         coordinator.showProfileFriend = true
