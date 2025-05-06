@@ -1,6 +1,7 @@
 
 import Firebase
 import FirebaseStorage
+import Network
 
 enum ListenerType: String {
     case team_group_listener = "team_group_listener"
@@ -236,36 +237,153 @@ enum ImageUploadError: Error {
 // Firebase Storage
 extension FirebaseService {
     
+    /*
     func uploadImage(picture: UIImage, uidUser: String, completion: @escaping (Result<String, Error>) -> Void ) {
+        print("@@@ uploadImage in ")
         guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
+            print("@@@ error 1")
             completion(.failure(ImageUploadError.imageConversionFailed))
             return
         }
 
         let storageRef = Storage.storage().reference().child("images/\(uidUser).jpg")
         let metadata = StorageMetadata()
-        
         metadata.contentType = "image/jpeg"
-
+        print("@@@ here 1")
+        
         storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+            print("@@@ here 2")
             if let error = error {
+                print("@@@ error 2")
+                // Handle different types of errors
+                var userFriendlyErrorMessage = "An unknown error occurred."
+
+                if let errCode = (error as NSError?)?.code {
+                    switch errCode {
+                    case -1009: // NSURLErrorNotConnectedToInternet
+                        userFriendlyErrorMessage = "No internet connection. Please check your network settings."
+                    case -1001: // NSURLErrorTimedOut
+                        userFriendlyErrorMessage = "The request timed out. Please try again later."
+                    case -1004: // NSURLErrorCannotConnectToHost
+                        userFriendlyErrorMessage = "Cannot connect to the server. Please try again later."
+                    default:
+                        userFriendlyErrorMessage = "An error occurred: \(error.localizedDescription)"
+                    }
+                    print("@@@ error = \(errCode)")
+                }
+
+                print("@@@ Error uploading image: \(userFriendlyErrorMessage)")
                 completion(.failure(error))
                 return
             }
 
+            print("@@@ here 3")
+
             storageRef.downloadURL { (url, error) in
+                print("@@@ here 4")
                 if let error = error {
-                    print("Error getting download URL: \(error.localizedDescription)")
+                    print("@@@ error 3")
+                    print("@@@ Error getting download URL: \(error.localizedDescription)")
+                    completion(.failure(error))
                     return
                 }
-
+                print("@@@ here 5")
                 if let url = url {
                     print("@@ Download URL: \(url.absoluteString)")
                     completion(.success(url.absoluteString))
+                    print("@@@ here 6")
                 }
             }
         }
+        print("@@@ uploadImage out ")
     }
+     */
+    
+    
+
+    func uploadImage(picture: UIImage, uidUser: String, completion: @escaping (Result<String, Error>) -> Void ) {
+        print("@@@ uploadImage in ")
+
+        guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
+            print("@@@ error 1")
+            completion(.failure(ImageUploadError.imageConversionFailed))
+            return
+        }
+
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        var hasConnection = false
+
+        monitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                hasConnection = true
+            } else {
+                hasConnection = false
+                print("@@@ No internet connection")
+                completion(.failure(NSError(domain: "NoInternet", code: -1, userInfo: [NSLocalizedDescriptionKey: "No internet connection"])))
+            }
+            monitor.cancel()
+        }
+        monitor.start(queue: queue)
+
+        // Wait a short period to check connectivity
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            if !hasConnection {
+                return
+            }
+
+            let storageRef = Storage.storage().reference().child("images/\(uidUser).jpg")
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpeg"
+            print("@@@ here 1")
+
+            storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+                print("@@@ here 2")
+                if let error = error {
+                    print("@@@ error 2")
+                    var userFriendlyErrorMessage = "An unknown error occurred."
+
+                    if let errCode = (error as NSError?)?.code {
+                        switch errCode {
+                        case -1009:
+                            userFriendlyErrorMessage = "No internet connection. Please check your network settings."
+                        case -1001:
+                            userFriendlyErrorMessage = "The request timed out. Please try again later."
+                        case -1004:
+                            userFriendlyErrorMessage = "Cannot connect to the server. Please try again later."
+                        default:
+                            userFriendlyErrorMessage = "An error occurred: \(error.localizedDescription)"
+                        }
+                        print("@@@ error = \(errCode)")
+                    }
+
+                    print("@@@ Error uploading image: \(userFriendlyErrorMessage)")
+                    completion(.failure(error))
+                    return
+                }
+
+                print("@@@ here 3")
+
+                storageRef.downloadURL { (url, error) in
+                    print("@@@ here 4")
+                    if let error = error {
+                        print("@@@ error 3")
+                        print("@@@ Error getting download URL: \(error.localizedDescription)")
+                        completion(.failure(error))
+                        return
+                    }
+                    print("@@@ here 5")
+                    if let url = url {
+                        print("@@ Download URL: \(url.absoluteString)")
+                        completion(.success(url.absoluteString))
+                        print("@@@ here 6")
+                    }
+                }
+            }
+            print("@@@ uploadImage out ")
+        }
+    }
+
 }
 
 

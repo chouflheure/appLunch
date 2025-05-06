@@ -6,13 +6,13 @@ struct FriendSignUpScreen: View {
     @ObservedObject var viewModel: SignUpPageViewModel
     @State private var toast: Toast? = nil
     @State private var isLoadingSendButton = false
-    var coordinator: Coordinator
-    var onDismiss: () -> Void
     @State var isLoadingPictureUpload = false
     @State var isLoadingPictureUploadDone = false
     @State var isLoadingPictureUploadError = false
-
     @State var isLoadingUserUpload = false
+    
+    var coordinator: Coordinator
+    var onDismiss: () -> Void
 
     var body: some View {
         
@@ -95,12 +95,12 @@ struct FriendSignUpScreen: View {
                 }
 
                 .onChange(of: viewModel.isLoadingPictureUploadError) { isLoading in
-                    startAnimationTimer(totalFrames: ResponseUploadType.error.totalFrames)
+                    // startAnimationTimer(totalFrames: ResponseUploadType.error.totalFrames)
                     isLoadingPictureUploadError = isLoading
                 }
 
                 .onChange(of: viewModel.isLoadingPictureUploadDone) { isLoading in
-                    startAnimationTimer(totalFrames: ResponseUploadType.done.totalFrames)
+                    // startAnimationTimer(totalFrames: ResponseUploadType.done.totalFrames)
                     isLoadingPictureUploadDone = isLoading
                 }
                 
@@ -144,6 +144,7 @@ struct FriendSignUpScreen: View {
             isLoadingPictureUploadError = false
             print("Animation terminée")
         }
+        
     }
 }
 
@@ -163,6 +164,24 @@ enum ResponseUploadType {
             return 150-130
         }
     }
+}
+
+struct FrameTest: View {
+    var body: some View {
+        LottieView(animation: .named(StringsToken.Animation.loaderUpdatePicture))
+            .playbackMode(.playing(
+                .fromFrame(
+                    95,
+                    toFrame: 180,
+                    loopMode: .loop
+                )
+            ))
+            .frame(width: 120, height: 120)
+    }
+}
+
+#Preview {
+    FrameTest()
 }
 
 struct UploadPictureOnDataBaseResponse: View {
@@ -195,7 +214,7 @@ struct UploadPictureOnDataBaseResponse: View {
                             .fromFrame(
                                 95,
                                 toFrame: 180,
-                                loopMode: .loop
+                                loopMode: .repeat(0)
                             )
                         ))
                         .frame(width: 120, height: 120)
@@ -205,7 +224,7 @@ struct UploadPictureOnDataBaseResponse: View {
                             .fromFrame(
                                 90,
                                 toFrame: 151,
-                                loopMode: .loop
+                                loopMode: .repeat(0)
                             )
                         ))
                         .frame(width: 120, height: 120)

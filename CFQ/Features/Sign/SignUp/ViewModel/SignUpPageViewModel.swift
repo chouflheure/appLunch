@@ -99,7 +99,6 @@ class SignUpPageViewModel: ObservableObject {
                                 let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
                                 phoneNumberIds.append(formattedPhoneNumber)
                             }
-                            print("@@@ contact = \(contact)")
                         }
 
                         self?.fetchDataContactUser { users in
@@ -127,30 +126,29 @@ class SignUpPageViewModel: ObservableObject {
     // TODO: - Update error messages
     private func uploadImageToDataBase() {
         firebaseService.uploadImage(picture: picture, uidUser: uidUser) { result in
-            switch result {
-            case .success(let urlString):
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self.isLoadingPictureUpload = false
+                switch result {
+                case .success(let urlString):
                     if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
                         self.user.tokenFCM = fcmToken
                     }
                     self.urlProfilePicture = urlString
-                    self.isLoadingPictureUpload = false
+                    self.isLoadingPictureUploadError = false
                     self.isLoadingPictureUploadDone = true
+                    print("@@@ here success")
                     self.uploadDataUser()
+
+                case .failure(let error):
+                    print("@@@ failure ")
+                    print("@@@ Erreur lors du téléversement de l'image : \(error.localizedDescription)")
+                    self.isLoadingPictureUploadDone = false
+                    self.isLoadingPictureUploadError = true
+                    // TODO: Gérer l'erreur de manière appropriée
                 }
-            case .failure(let error):
-                print("@@@ failure ")
-                print("Erreur lors du téléversement de l'image : \(error.localizedDescription)")
-                
-                // TODO: Gérer l'erreur de manière appropriée
-                self.isLoadingPictureUpload = false
-                self.isLoadingPictureUploadError = true
             }
         }
-        self.isLoadingPictureUploadDone = false
-        self.isLoadingPictureUploadError = false
     }
-    
 
     private func uploadDataUser() {
         user.uid = uidUser

@@ -32,26 +32,6 @@ struct SignUpPageView: View {
             .tag(3)
         }
     }
-
-    @ViewBuilder
-    func destinationView(for screen: Int) -> some View {
-        switch screen {
-        case 0:
-            NameSignUpScreen(viewModel: viewModel) { dismiss() }
-
-        case 1:
-            LocalisationSignUpScreen(viewModel: viewModel)
-            
-        case 2:
-            PictureSignUpScreen(viewModel: viewModel)
-            
-        case 3:
-            FriendSignUpScreen(viewModel: viewModel, coordinator: coordinator) { dismiss() }
-
-        default:
-            NameSignUpScreen(viewModel: viewModel) { dismiss() }
-        }
-    }
 }
 
 #Preview {
