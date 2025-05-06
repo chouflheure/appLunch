@@ -7,11 +7,18 @@ struct CustomTabView: View {
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 
     @State private var selectedEvent: MapLocationEventData? = nil
-    @EnvironmentObject var user: User
+    @State private var isShowPopUp: Bool = true
+
+    // @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
-    @State private var isShowPopUp: Bool = true
-    
+    var user = User(
+        uid: "1234567890",
+        name: "John",
+        firstName: "Doe",
+        pseudo: "johndoe",
+        location: "Ici"
+    )
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -35,8 +42,12 @@ struct CustomTabView: View {
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
-                                Text("Map")
-                                    .foregroundStyle(.white)
+                                TestMap(
+                                    selectedEvent: $selectedEvent,
+                                    coordinator: coordinator
+                                )
+                                .offset(y: -30)
+                                .padding(.bottom, -30)
                             } else if coordinator.selectedTab == 2 {
                                 TurnListScreen(coordinator: coordinator)
                                 /*
@@ -103,7 +114,11 @@ struct CustomTabView: View {
                     }
                     .padding(.top, 15)// geometry.safeAreaInsets.top) // Respecte la safe area en haut
                     .padding(.bottom, geometry.safeAreaInsets.bottom)
+                    // .edgesIgnoringSafeArea(coordinator.selectedTab == 1 ? .all : .bottom)
                     .edgesIgnoringSafeArea(.bottom)
+                    .fullScreenCover(isPresented: $coordinator.showMapFullScreen) {
+                        TestMap(selectedEvent: $selectedEvent, coordinator: coordinator)
+                    }
                 }
             }
             .overlay(
@@ -164,7 +179,7 @@ struct CustomTabView: View {
                     }
                 }
             )
-            .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse
+            .frame(width: geometry.size.width, height: geometry.size.height)
             .animation(.easeInOut, value: coordinator.showCreateTeam)
         }
     }
