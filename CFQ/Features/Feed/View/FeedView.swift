@@ -4,6 +4,7 @@ import SwiftUI
 struct FeedView: View {
     @ObservedObject var coordinator: Coordinator
     @EnvironmentObject var user: User
+    var viewModel = FeedViewModel()
 
     var body: some View {
         VStack {
@@ -40,38 +41,48 @@ struct FeedView: View {
                 
             }.padding(.horizontal, 12)
 
-            VStack(alignment: .leading) {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        SwitchStatusUserProfile(
-                            viewModel: SwitchStatusUserProfileViewModel(user: user)
-                        )
-                        ForEach(coordinator.userFriends, id: \.self) { friend in
-                            CirclePictureStatusAndPseudo(
-                                userPreview: friend,
-                                onClick: {
-                                    withAnimation {
-                                        coordinator.showProfileFriend = true
-                                    }
-                                }
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            SwitchStatusUserProfile(
+                                viewModel: SwitchStatusUserProfileViewModel(user: user)
                             )
-                            .frame(width: 60, height: 60)
-                            .padding(.leading, 17)
+                            ForEach(coordinator.userFriends, id: \.self) { friend in
+                                CirclePictureStatusAndPseudo(
+                                    userPreview: friend,
+                                    onClick: {
+                                        withAnimation {
+                                            coordinator.showProfileFriend = true
+                                        }
+                                    }
+                                )
+                                .frame(width: 60, height: 60)
+                                .padding(.leading, 17)
+                            }
+                            .frame(height: 100)
                         }
-                        .frame(height: 100)
                     }
                 }
-            }
-            
-            Divider()
-                .background(.white)
-            
-            CFQCollectionView(coordinator: coordinator)
+                
+                Divider()
+                    .background(.white)
+                
+                CFQCollectionView(coordinator: coordinator)
+                
+                Divider()
+                    .background(.white)
+                
+                /*
+                viewModel.turns.forEach { turn in
+                    TurnCardView(turn: turn)
+                }
+                 */
 
-            Divider()
-                .background(.white)
-            
-            Spacer()
+                Spacer()
+            }
+        }.onAppear() {
+            viewModel.catchTurns()
         }
     }
 }

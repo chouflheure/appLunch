@@ -68,17 +68,26 @@ class TurnCardViewModel: ObservableObject {
 extension TurnCardViewModel {
     func pushDataTurn() {
 
-        print("@@@ here push")
+        // TODO => Remove brouillon
 
+        print("@@@ here push")
         let uid = UUID()
         let turn = Turn(
             uid: uid.description,
-            title: titleEvent,
+            titleEvent: titleEvent,
             date: dateEvent ?? Date(),
-            pictureUrlString: "",
-            friends: [""]
+            pictureURLString: "", // push Image on Data base
+            admin: "", // userID
+            description: description,
+            invited: [""],
+            participants:  [""],
+            mood: [0],
+            messagerieUUID: "",
+            placeTitle: "",
+            placeAdresse: "",
+            placeLatitude: 1.1,
+            placeLongitude: 1.2
         )
-
         
         firebaseService.addData(data: turn, to: .turns) { (result: Result<Void, Error>) in
             switch result{

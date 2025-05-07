@@ -36,5 +36,5 @@ struct TurnCardDetailsView: View {
 }
 
 #Preview {
-    TurnCardDetailsView(viewModel: TurnCardViewModel())
+    // TurnCardDetailsView(viewModel: TurnCardViewModel())
 }

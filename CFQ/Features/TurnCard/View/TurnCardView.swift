@@ -130,7 +130,7 @@ struct TurnCardView: View {
 }
 
 #Preview {
-    TurnCardView(isShow: .constant(true))
+    // TurnCardView(isShow: .constant(true))
 }
 
 

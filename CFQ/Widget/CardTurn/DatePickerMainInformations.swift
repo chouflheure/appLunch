@@ -52,6 +52,6 @@ struct DatePickerMainInformations: View {
 #Preview {
     ZStack {
         Color.blue.ignoresSafeArea()
-        DatePickerMainInformations(viewModel: TurnCardViewModel())
+        // DatePickerMainInformations(viewModel: TurnCardViewModel())
     }
 }

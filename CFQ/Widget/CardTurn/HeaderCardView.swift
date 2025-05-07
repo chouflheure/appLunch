@@ -105,6 +105,6 @@ struct HeaderCardPreviewView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        HeaderCardViewDetail(viewModel: TurnCardViewModel())
+        // HeaderCardViewDetail(viewModel: TurnCardViewModel())
     }
 }
