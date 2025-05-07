@@ -1,9 +1,4 @@
 //
-//  Untitled 3.swift
-//  CFQ
-//
-//  Created by Calvignac Charles on 07/05/2025.
-//
 
 import SwiftUI
 

@@ -23,7 +23,7 @@ struct TitleTurnCardFeedView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(turn.titleEvent.isEmpty ? "Titre du TURN" : turn.titleEvent)
+            Text(turn.titleEvent)
                 .tokenFont(.Title_Inter_semibold_24)
                 .padding(.bottom, 16)
                 .bold()

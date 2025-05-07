@@ -73,8 +73,11 @@ struct FeedView: View {
                 Divider()
                     .background(.white)
 
-                TurnCardFeedView(turn: viewModel.turns)
-                
+                LazyVStack(spacing: 20) {
+                    ForEach(viewModel.turns, id: \.self) { turn in
+                        TurnCardFeedView(turn: turn)
+                    }
+                }
             }
         }.onAppear() {
             // viewModel.catchTurns()

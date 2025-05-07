@@ -15,11 +15,9 @@ struct TurnCardFeedView: View {
 
                 VStack {
                     // Header ( Date / Picture / TURN )
-                    
                     HeaderCardNotEditableView(turn: turn)
                         .padding(.bottom, 15)
                         .frame(height: 100)
-                   
                     
                     // Title ( Title / Guest )
                     TitleTurnCardFeedView(turn: turn)

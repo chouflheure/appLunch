@@ -10,28 +10,26 @@ struct HeaderCardNotEditableView: View {
     }
 
     var body: some View {
-        VStack {
-            ZStack {
-                ZStack(alignment: .bottom) {
-
-                    Image(.header)
+        VStack(spacing: 0) {
+            ZStack(alignment: .leading) {
+                GeometryReader { geometry in
+                    Image(.background1)
                         .resizable()
-                        .scaledToFit()
-                        .contentShape(Rectangle())
-                        .frame(height: 200)
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: 100)
                         .clipped()
-                    
-                    HStack(alignment: .center) {
-                        DateLabel(
-                            dayEventString: turn.date?.description ?? "",
-                            monthEventString: turn.date?.description ?? ""
-                        ).padding(.top, 20)
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal, 16)
                 }
+                
+                DateLabel(
+                    dayEventString: "12",
+                    monthEventString: "Juin"
+                )
+                .padding(.top, 20)
+                .padding(.leading, 16)
             }
+            .frame(height: 100)
+            .contentShape(Rectangle()) // Définit explicitement la forme interactive
         }
+        .frame(maxWidth: .infinity)
     }
 }
