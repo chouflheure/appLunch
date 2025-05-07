@@ -29,6 +29,7 @@ struct DescriptionTurnCardDetailView: View {
                 lastText = newValue
                 viewModel.description = newValue
             }
+             
         }
         /*
             Text("Diner entre girls <3 Ramenez juste à boire! Diner entre girls <3 Ramenez juste à boire! Diner entre girls <3 Ramenez juste à boire! Ramenez juste à boire")
@@ -132,6 +133,60 @@ struct AutoGrowingTextView: UIViewRepresentable {
         }
     }
 }
+
+
+import SwiftUI
+
+struct AutoSizingTextView: UIViewRepresentable {
+    @Binding var text: String
+    @Binding var height: CGFloat
+    let minHeight: CGFloat
+    let maxHeight: CGFloat
+    let onFocusChange: ((Bool) -> Void)? = nil
+
+    func makeUIView(context: Context) -> UITextView {
+        let textView = UITextView()
+        textView.isScrollEnabled = false
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.backgroundColor = UIColor.clear
+        textView.delegate = context.coordinator
+        textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return textView
+    }
+
+    func updateUIView(_ uiView: UITextView, context: Context) {
+        uiView.text = text
+        DispatchQueue.main.async {
+            let size = uiView.sizeThatFits(CGSize(width: uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude))
+            height = min(max(size.height, minHeight), maxHeight)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, UITextViewDelegate {
+        var parent: AutoSizingTextView
+
+        init(_ parent: AutoSizingTextView) {
+            self.parent = parent
+        }
+
+        func textViewDidChange(_ textView: UITextView) {
+            parent.text = textView.text
+        }
+
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            parent.onFocusChange?(true)
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            parent.onFocusChange?(false)
+        }
+    }
+}
+
 
 struct AutoGrowingTextView2: UIViewRepresentable {
     @Binding var text: String

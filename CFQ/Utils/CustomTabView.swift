@@ -3,15 +3,110 @@ import SwiftUI
 import MapKit
 import FirebaseFirestore
 
+
+struct TestTextEditor: View {
+    @Binding var text: String
+    @FocusState private var isFocused : Bool
+    
+    var body: some View {
+        Spacer()
+        
+        TextEditor(text: $text)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Button(action: {
+                        isFocused = false
+                    }, label: {
+                        Image(systemName: "keyboard.chevron.compact.down.fill")
+                    })
+                    
+                    Spacer()
+                    
+                    Button(action: {}, label: {
+                        Image(systemName: "photo.badge.plus")
+                    })
+                    
+                    Button(action: {}, label: {
+                        Image(systemName: "folder.badge.plus")
+                    })
+                }
+            }
+            .tint(.purple)
+            .focused($isFocused)
+    }
+}
+
+import SwiftUI
+
+struct ContentViewTestKeyBoard: View {
+    @State private var text: String = ""
+    @FocusState private var isFocused: Bool
+    @State private var keyboardHeight: CGFloat = 0
+
+    var body: some View {
+        VStack {
+            Spacer()
+            
+            TextEditor(text: $text)
+                .padding(.bottom, keyboardHeight)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Button(action: {
+                            isFocused = false
+                        }, label: {
+                            Image(systemName: "keyboard.chevron.compact.down.fill")
+                        })
+                        
+                        Spacer()
+                        
+                        Button(action: {}, label: {
+                            Image(systemName: "photo.badge.plus")
+                        })
+                        
+                        Button(action: {}, label: {
+                            Image(systemName: "folder.badge.plus")
+                        })
+                    }
+                }
+                .tint(.purple)
+                .focused($isFocused)
+        }
+        .onAppear {
+            // Ajouter les observers pour le clavier
+            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
+                if let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+                    keyboardHeight = frame.height
+                }
+            }
+
+            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
+                keyboardHeight = 0
+            }
+        }
+        .onDisappear {
+            // Nettoyer les observers
+            NotificationCenter.default.removeObserver(self)
+        }
+    }
+}
+
 struct CustomTabView: View {
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 
     @State private var selectedEvent: MapLocationEventData? = nil
-    @EnvironmentObject var user: User
+    @State private var isShowPopUp: Bool = true
+
+    // @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
-    @State private var isShowPopUp: Bool = true
-    
+    var user = User(
+        uid: "1234567890",
+        name: "John",
+        firstName: "Doe",
+        pseudo: "johndoe",
+        location: "Ici"
+    )
+    @State var text = ""
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -35,8 +130,17 @@ struct CustomTabView: View {
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
-                                Text("Map")
-                                    .foregroundStyle(.white)
+                                // TestTextEditor(text: $text)
+                                
+                                // ContentViewExpandableTextEditor(text: $text)
+                                
+                                TestMap(
+                                    selectedEvent: $selectedEvent,
+                                    coordinator: coordinator
+                                )
+                                .offset(y: -30)
+                                .padding(.bottom, -30)
+                                 
                             } else if coordinator.selectedTab == 2 {
                                 TurnListScreen(coordinator: coordinator)
                                 /*
@@ -103,7 +207,11 @@ struct CustomTabView: View {
                     }
                     .padding(.top, 15)// geometry.safeAreaInsets.top) // Respecte la safe area en haut
                     .padding(.bottom, geometry.safeAreaInsets.bottom)
+                    // .edgesIgnoringSafeArea(coordinator.selectedTab == 1 ? .all : .bottom)
                     .edgesIgnoringSafeArea(.bottom)
+                    .fullScreenCover(isPresented: $coordinator.showMapFullScreen) {
+                        TestMap(selectedEvent: $selectedEvent, coordinator: coordinator)
+                    }
                 }
             }
             .overlay(
@@ -164,7 +272,7 @@ struct CustomTabView: View {
                     }
                 }
             )
-            .frame(width: geometry.size.width, height: geometry.size.height) // Évite que la vue se rétrécisse
+            .frame(width: geometry.size.width, height: geometry.size.height)
             .animation(.easeInOut, value: coordinator.showCreateTeam)
         }
     }
