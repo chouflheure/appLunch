@@ -2,7 +2,7 @@
 import Foundation
 
 class Turn: Codable, Hashable {
-    let uid: String
+    var uid: String
     var titleEvent: String
     var date: Date?
     var pictureURLString: String

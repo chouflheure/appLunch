@@ -21,7 +21,7 @@ class Coordinator: ObservableObject {
     @Published var dataApp = DataApp()
     @Published var teamDetail: TeamGlobal?
     @Published var turnSelected: Turn?
-
+    
     @Published var userCFQ: [CFQ] = []
     @Published var userFriends: [UserContact] = []
     @Published var profileOtherUser: User = User()

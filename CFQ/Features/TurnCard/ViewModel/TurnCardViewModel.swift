@@ -10,16 +10,16 @@ class TurnCardViewModel: ObservableObject {
     @Published var moods = Set<MoodType>()
     @Published var adresse = String()
     @Published var starthours: Date?
-    @Published var showDetailTurnCard: Bool = false
     @Published var imageSelected: Image?
+    @Published var showDetailTurnCard: Bool = false
     @Published var isPhotoPickerPresented: Bool = false
-    
-    @Published var description = "Diner entre \ngirls <3 Ramenez \njuste à boire! Diner \nentre girls <3 \nRamenez juste \nà boire! Diner \nentre girls <3 \nRamenez juste à boire\n! Ramenez juste \nà boire"
+    @Published var description = String()
 
+    var turn: Turn
     var firebaseService = FirebaseService()
     
     var disableButtonSend: Bool {
-        return titleEvent.isEmpty || dateEvent == nil || moods.isEmpty || starthours == nil || imageSelected == nil || description.isEmpty
+        return turn.titleEvent.isEmpty || turn.date == nil || moods.isEmpty || starthours == nil || imageSelected == nil || turn.description.isEmpty
     }
 
     var textFormattedLongFormat: String {
@@ -37,6 +37,14 @@ class TurnCardViewModel: ObservableObject {
             return time.formatted(date: .omitted, time: .shortened)
         }
         return ""
+    }
+    
+    init(turn: Turn) {
+        self.turn = turn
+        titleEvent = turn.titleEvent
+        dateEvent = turn.date
+        adresse = turn.placeTitle
+        description = turn.description
     }
     
     func textFormattedShortFormat() -> (jour: String, mois: String) {

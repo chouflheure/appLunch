@@ -244,7 +244,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showTurnCardView {
-                        TurnCardView(isShow: $coordinator.showTurnCardView)
+                        TurnCardView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     

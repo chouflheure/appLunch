@@ -2,10 +2,21 @@
 import SwiftUI
 
 struct TurnCardView: View {
+    @ObservedObject var coordinator: Coordinator
+    @StateObject var viewModel: TurnCardViewModel
     
-    @Binding var isShow: Bool
-    @StateObject var viewModel = TurnCardViewModel()
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
 
+        let turn = coordinator.turnSelected ?? Turn(
+            uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "",
+            invited: [""], participants: [""], mood: [0], messagerieUUID: "",
+            placeTitle: "", placeAdresse: "", placeLatitude: 1.1, placeLongitude: 1.2
+        )
+
+        _viewModel = StateObject(wrappedValue: TurnCardViewModel(turn: turn))
+    }
+    
     // @EnvironmentObject var user: User
     var user = User(
         uid: "1234567890",
@@ -16,13 +27,14 @@ struct TurnCardView: View {
     )
     
     var body: some View {
-        DraggableViewLeft(isPresented: $isShow) {
+        DraggableViewLeft(isPresented: $coordinator.showTurnCardView) {
             SafeAreaContainer {
                 VStack {
                     HeaderBackLeftScreen(
                         onClickBack: {
                             withAnimation {
-                                isShow = false
+                                coordinator.showTurnCardView = false
+                                coordinator.turnSelected = nil
                             }
                         },
                         titleScreen: StringsToken.Turn.titleTurn,

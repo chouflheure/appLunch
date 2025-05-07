@@ -1,7 +1,5 @@
 import SwiftUI
 
-// PreviewView
-
 struct TitleTurnCardPreviewView: View {
 
     // TODO: Change with user
@@ -15,12 +13,12 @@ struct TitleTurnCardPreviewView: View {
         pseudo: "johndoe",
         location: "Ici"
     )
-
+    
     @ObservedObject var viewModel: TurnCardViewModel
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(viewModel.titleEvent.isEmpty ? "Titre du TURN" : viewModel.titleEvent)
+            Text(viewModel.turn.titleEvent.isEmpty ? "Titre du TURN" : viewModel.turn.titleEvent)
                 .tokenFont(.Title_Inter_semibold_24)
                 .padding(.bottom, 16)
                 .bold()
@@ -70,7 +68,7 @@ struct TitleTurnCardDetailView: View {
         VStack(alignment: .leading) {
 
             CustomTextField(
-                text: $viewModel.titleEvent,
+                text: $viewModel.turn.titleEvent,
                 keyBoardType: .default,
                 placeHolder: StringsToken.TurnCardInformation.PlaceholderTitle,
                 textFieldType: .turn

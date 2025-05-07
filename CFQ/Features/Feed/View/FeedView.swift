@@ -72,17 +72,12 @@ struct FeedView: View {
                 
                 Divider()
                     .background(.white)
-                
-                /*
-                viewModel.turns.forEach { turn in
-                    TurnCardView(turn: turn)
-                }
-                 */
 
-                Spacer()
+                TurnCardFeedView(turn: viewModel.turns)
+                
             }
         }.onAppear() {
-            viewModel.catchTurns()
+            // viewModel.catchTurns()
         }
     }
 }
