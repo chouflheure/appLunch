@@ -103,6 +103,7 @@ enum StringsToken {
     
     enum Turn {
         static let titleTurn = "TURN"
+        static let titleTurnPreview = "TURN Preview"
     }
     
     enum SearchBar {

@@ -1,16 +1,35 @@
 
 import SwiftUI
 
-enum MoodType: CaseIterable {
-    case party
-    case concert
-    case nightclub
-    case after
-    case before
-    case dinner
-    case bar
-    case street
-    case other
+enum MoodType: Int, CaseIterable {
+    case party = 0
+    case concert = 1
+    case nightclub = 2
+    case after = 3
+    case before = 4
+    case dinner = 5
+    case bar = 6
+    case street = 7
+    case other = 8
+    
+    func convertMoodTypeToInt() -> Int {
+        switch self {
+        case .party: return 0
+        case .concert: return 1
+        case .nightclub: return 2
+        case .after: return 3
+        case .before: return 4
+        case .dinner: return 5
+        case .bar: return 6
+        case .street: return 7
+        case .other: return 8
+        }
+    }
+    
+    static func convertIntToMoodType(_ value: Int) -> MoodType {
+        return MoodType(rawValue: value) ?? .other
+    }
+
 }
 
 struct Mood {

@@ -29,8 +29,8 @@ class CFQFormViewModel: ObservableObject {
         }
     }
 
-    init(coordinator: Coordinator, user: User) {
-        self.user = user
+    init(coordinator: Coordinator) {
+        self.user = coordinator.user ?? User(uid: "")
         friendsList = Set(coordinator.userFriends)
         allFriends = friendsList
     }

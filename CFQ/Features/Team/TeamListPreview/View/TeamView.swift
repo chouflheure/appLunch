@@ -2,9 +2,14 @@ import SwiftUI
 
 struct TeamView: View {
     @ObservedObject var coordinator: Coordinator
-    @StateObject var viewModel = TeamListScreenViewModel()
+    @StateObject var viewModel: TeamListScreenViewModel
     @State var selectedTeam: Int = 0
     @EnvironmentObject var user: User
+
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: TeamListScreenViewModel(coordinator: coordinator))
+    }
 
     var body: some View {
         VStack {
@@ -50,6 +55,6 @@ struct TeamView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        TeamView(coordinator: .init())
+
     }.ignoresSafeArea()
 }

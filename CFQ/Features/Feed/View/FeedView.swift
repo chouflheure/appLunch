@@ -6,6 +6,10 @@ struct FeedView: View {
     @EnvironmentObject var user: User
     @StateObject var viewModel = FeedViewModel()
 
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+    }
+
     var body: some View {
         VStack {
             HStack {
@@ -38,7 +42,6 @@ struct FeedView: View {
                         coordinator.showMessageScreen = true
                     }
                 })
-                
             }.padding(.horizontal, 12)
 
             ScrollView(.vertical, showsIndicators: false) {
@@ -72,7 +75,7 @@ struct FeedView: View {
                     HStack {
                         Text("CFQ")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.white)
+                            .foregroundColor(.gray)
                             .background(.black)
                             .padding(.leading, 20)
 
@@ -89,7 +92,7 @@ struct FeedView: View {
                     HStack {
                         Text("TURN")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.white)
+                            .foregroundColor(.gray)
                             .background(.black)
                             .padding(.leading, 20)
 
@@ -103,8 +106,6 @@ struct FeedView: View {
                     }
                 }
             }
-        }.onAppear() {
-            // viewModel.catchTurns()
         }
     }
 }

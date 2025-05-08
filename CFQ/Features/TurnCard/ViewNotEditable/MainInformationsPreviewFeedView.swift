@@ -10,6 +10,7 @@ import SwiftUI
 struct MainInformationsPreviewFeedView: View {
     
     var turn: Turn
+    let formattedDateAndTime = FormattedDateAndTime()
 
     init(turn: Turn) {
         self.turn = turn
@@ -19,7 +20,14 @@ struct MainInformationsPreviewFeedView: View {
             VStack(alignment: .leading, spacing: 20) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        MoodTemplateView()
+                        if turn.mood.isEmpty {
+                            MoodTemplateView()
+                        } else {
+                            ForEach(Array(turn.mood), id: \.self) { moodIndex in
+                                Mood().data(for: MoodType(rawValue: moodIndex) ?? .other)
+                                    
+                            }
+                        }
                     }
                 }
                 .padding(.horizontal, 12)
@@ -32,13 +40,13 @@ struct MainInformationsPreviewFeedView: View {
                         .foregroundColor(.white)
                         .padding(.leading, 12)
                     
-                    Text("Date")
+                    Text(formattedDateAndTime.textFormattedLongFormat(date: turn.date))
                         .tokenFont(.Body_Inter_Medium_16)
 
                     Text(" | ")
                         .foregroundColor(.white)
 
-                    Text("Heure de début")
+                    Text(formattedDateAndTime.textFormattedHours(hours: turn.date))
                         .tokenFont(.Body_Inter_Medium_16)
                 }
 

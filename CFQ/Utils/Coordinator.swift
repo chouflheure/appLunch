@@ -36,6 +36,8 @@ class Coordinator: ObservableObject {
                 case .success(let user):
                     UserDefaults.standard.set(user.uid, forKey: "userUID")
 
+                    self.user = user
+
                     if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
                         self.firebaseService.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
                     }

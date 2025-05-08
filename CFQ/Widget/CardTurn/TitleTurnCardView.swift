@@ -1,18 +1,6 @@
 import SwiftUI
 
 struct TitleTurnCardPreviewView: View {
-
-    // TODO: Change with user
-    var userProfileImage: UIImage = .profile
-
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
     
     @ObservedObject var viewModel: TurnCardViewModel
 
@@ -25,9 +13,10 @@ struct TitleTurnCardPreviewView: View {
                 .textCase(.uppercase)
 
             HStack {
-                Image(uiImage: userProfileImage)
+                CachedAsyncImageView(urlString: viewModel.adminUser.profilePictureUrl, designType: .scaledToFill_Circle)
+                    .frame(width: 50, height: 50)
 
-                Text(user.pseudo)
+                Text(viewModel.adminUser.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
 
@@ -38,7 +27,9 @@ struct TitleTurnCardPreviewView: View {
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {})
+                ButtonParticipate(action: {
+                    
+                })
             }
 
             PreviewProfile(pictures: [], previewProfileType: .userComming)
@@ -48,18 +39,6 @@ struct TitleTurnCardPreviewView: View {
 }
 
 struct TitleTurnCardDetailView: View {
-
-    // TODO: Change with user
-    var userProfileImage: UIImage = .profile
-
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
 
     @FocusState private var isFocused: Bool
     @ObservedObject var viewModel: TurnCardViewModel
@@ -77,9 +56,10 @@ struct TitleTurnCardDetailView: View {
             .padding(.bottom, 16)
 
             HStack {
-                Image(uiImage: userProfileImage)
+                CachedAsyncImageView(urlString: viewModel.adminUser.profilePictureUrl, designType: .scaledToFill_Circle)
+                    .frame(width: 50, height: 50)
 
-                Text(user.pseudo)
+                Text(viewModel.adminUser.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
 

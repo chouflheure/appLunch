@@ -7,7 +7,7 @@ struct CirclePictureStatusUserProfile: View {
 
     var body: some View {
         ZStack {
-            CachedAsyncImageView(urlString: viewModel.user.profilePictureUrl)
+            CachedAsyncImageView(urlString: viewModel.user.profilePictureUrl, designType: .scaledToFill_Circle)
         }
     }
 }
@@ -19,7 +19,7 @@ struct CirclePictureStatus: View {
 
     var body: some View {
         ZStack {
-            CachedAsyncImageView(urlString: userPreview.profilePictureUrl)
+            CachedAsyncImageView(urlString: userPreview.profilePictureUrl, designType: .scaledToFill_Circle)
         }.onTapGesture {
             Logger.log("click on picture", level: .action)
             onClick()

@@ -3,23 +3,43 @@ import Foundation
 import Combine
 import SwiftUI
 
+class Adresse {
+    var placeTitle = String()
+    var placeAdresse = String()
+    var placeLatitude = Double()
+    var placeLongitude = Double()
+    
+    init(placeTitle: String = "", placeAdresse: String = "", placeLatitude: Double = 0, placeLongitude: Double = 0) {
+        self.placeTitle = placeTitle
+        self.placeAdresse = placeAdresse
+        self.placeLatitude = placeLatitude
+        self.placeLatitude = placeLongitude
+    }
+}
+
 class TurnCardViewModel: ObservableObject {
 
     @Published var titleEvent = String()
     @Published var dateEvent: Date?
     @Published var moods = Set<MoodType>()
-    @Published var adresse = String()
     @Published var starthours: Date?
-    @Published var imageSelected: Image?
+    @Published var imageSelected: UIImage?
+    @Published var description = String()
+    @Published var invited = [String]()
+    @Published var messagerieUUID = String()
+    @Published var adminUID = String()
+    @Published var adresse = Adresse()
+
     @Published var showDetailTurnCard: Bool = false
     @Published var isPhotoPickerPresented: Bool = false
-    @Published var description = String()
 
     var turn: Turn
+    var adminUser: User
     var firebaseService = FirebaseService()
     
     var disableButtonSend: Bool {
-        return turn.titleEvent.isEmpty || turn.date == nil || moods.isEmpty || starthours == nil || imageSelected == nil || turn.description.isEmpty
+        return false
+        // return turn.titleEvent.isEmpty || turn.date == nil || moods.isEmpty || starthours == nil || imageSelected == nil || turn.description.isEmpty
     }
 
     var textFormattedLongFormat: String {
@@ -39,12 +59,34 @@ class TurnCardViewModel: ObservableObject {
         return ""
     }
     
-    init(turn: Turn) {
+    private func verificationIdentificationUserUID(coordinator: Coordinator) {
+        if let adminUser = coordinator.user {
+            self.adminUser = adminUser
+        } else {
+            coordinator.showTurnCardView = false
+        }
+    }
+    
+    init(turn: Turn, coordinator: Coordinator) {
+        
         self.turn = turn
+        self.adminUser = coordinator.user ?? User(uid: "")
+        
+        verificationIdentificationUserUID(coordinator: coordinator)
+        
         titleEvent = turn.titleEvent
         dateEvent = turn.date
-        adresse = turn.placeTitle
         description = turn.description
+        turn.mood.forEach { moods.insert(MoodType.convertIntToMoodType(MoodType(rawValue: $0)?.rawValue ?? 0)) }
+        starthours = nil
+        imageSelected = UIImage(resource: .background2)
+        invited = turn.invited
+        adresse.placeAdresse = turn.placeAdresse
+        adresse.placeLatitude = turn.placeLatitude
+        adresse.placeLongitude = turn.placeLongitude
+        adresse.placeTitle = turn.placeTitle
+
+        
     }
     
     func textFormattedShortFormat() -> (jour: String, mois: String) {
@@ -78,19 +120,43 @@ extension TurnCardViewModel {
 
         // TODO => Remove brouillon
 
+        uploadImageToDataBase()
+    }
+    
+    private func uploadImageToDataBase() {
+        guard let imageSelected = imageSelected else { return }
+        firebaseService.uploadImage(picture: imageSelected, uidUser: "") { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let urlString):
+                    self.uploadTurnOnDataBase(urlString: urlString)
+
+                case .failure(let error):
+                    Logger.log(error.localizedDescription, level: .error)
+                }
+            }
+        }
+    }
+    
+    private func uploadTurnOnDataBase(urlString: String) {
         print("@@@ here push")
         let uid = UUID()
+        let messagerieUIID = UUID()
+
+        var moodsInt: [Int] = []
+        moods.forEach { moodsInt.append($0.convertMoodTypeToInt()) }
+        
         let turn = Turn(
             uid: uid.description,
             titleEvent: titleEvent,
             date: dateEvent ?? Date(),
-            pictureURLString: "", // push Image on Data base
-            admin: "", // userID
+            pictureURLString: urlString,
+            admin: adminUser.uid,
             description: description,
             invited: [""],
             participants:  [""],
-            mood: [0],
-            messagerieUUID: "",
+            mood: moodsInt,
+            messagerieUUID: messagerieUIID.description,
             placeTitle: "",
             placeAdresse: "",
             placeLatitude: 1.1,
