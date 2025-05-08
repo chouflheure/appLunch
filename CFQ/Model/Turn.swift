@@ -1,7 +1,7 @@
 
 import Foundation
 
-class Turn: Codable, Hashable {
+class Turn: Codable, Hashable, Identifiable {
     var uid: String
     var titleEvent: String
     var date: Date?

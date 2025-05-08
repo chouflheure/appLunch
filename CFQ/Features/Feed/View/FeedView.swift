@@ -4,7 +4,7 @@ import SwiftUI
 struct FeedView: View {
     @ObservedObject var coordinator: Coordinator
     @EnvironmentObject var user: User
-    var viewModel = FeedViewModel()
+    @StateObject var viewModel = FeedViewModel()
 
     var body: some View {
         VStack {
@@ -65,13 +65,37 @@ struct FeedView: View {
                     }
                 }
                 
-                Divider()
-                    .background(.white)
+                ZStack {
+                    Divider()
+                        .background(.white)
+                    
+                    HStack {
+                        Text("CFQ")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(.white)
+                            .background(.black)
+                            .padding(.leading, 20)
+
+                        Spacer()
+                    }
+                }
                 
                 CFQCollectionView(coordinator: coordinator)
                 
-                Divider()
-                    .background(.white)
+                ZStack {
+                    Divider()
+                        .background(.white)
+                    
+                    HStack {
+                        Text("TURN")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(.white)
+                            .background(.black)
+                            .padding(.leading, 20)
+
+                        Spacer()
+                    }
+                }
 
                 LazyVStack(spacing: 20) {
                     ForEach(viewModel.turns, id: \.self) { turn in
