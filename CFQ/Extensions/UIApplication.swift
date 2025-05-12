@@ -2,7 +2,7 @@
 import SwiftUI
 
 extension UIApplication {
-    func endEditing(_ force: Bool) {
-        windows.first?.rootViewController?.view.endEditing(force)
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

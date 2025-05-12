@@ -90,10 +90,11 @@ struct NameSignUpScreen: View {
                 ).padding(.horizontal, 20)
             }
         }
-        .onTapGesture {
-            UIApplication.shared.endEditing(true)
-        }
         .fullBackground(imageName: "backgroundNeon")
+        .ignoresSafeArea(.keyboard)
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
     }
 }
 

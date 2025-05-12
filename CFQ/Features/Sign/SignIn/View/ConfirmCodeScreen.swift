@@ -120,10 +120,12 @@ struct ConfirmCodeScreen: View {
             isLoadingSendButton = false
         }
         .toastView(toast: $toast)
-        .onTapGesture {
-            UIApplication.shared.endEditing(true)
-        }
         .fullBackground(imageName: "backgroundNeon")
+        .ignoresSafeArea(.keyboard)
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
+        .scrollDismissesKeyboard(.interactively)
     }
 }
 

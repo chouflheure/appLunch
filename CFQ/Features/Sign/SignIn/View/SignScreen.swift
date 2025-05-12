@@ -75,6 +75,7 @@ struct SignScreen: View {
             }
         }
         .padding(.horizontal, 16)
+        .ignoresSafeArea(.keyboard)
         .fullScreenCover(isPresented: $viewModel.isConfirmScreenActive) {
             ConfirmCodeScreen(
                 viewModel: viewModel,
@@ -97,12 +98,14 @@ struct SignScreen: View {
         }
         .fullBackground(imageName: "backgroundNeon")
         .toastView(toast: $toast)
+        .ignoresSafeArea(.keyboard)
+        .scrollDismissesKeyboard(.immediately)
         .onChange(of: viewModel.isConfirmScreenActive || viewModel.isSignFinish)
         {
             isLoadingSendButton = $0
         }
         .onTapGesture {
-            UIApplication.shared.endEditing(true)
+            UIApplication.shared.endEditing()
         }
     }
 }

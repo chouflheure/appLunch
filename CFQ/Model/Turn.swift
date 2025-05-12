@@ -75,7 +75,7 @@ class Turn: Codable, Hashable, Identifiable {
         return "@@@ ---------TURN--------- "
         + "\nuid : \(uid)"
         + "\n titleEvent : \(titleEvent)"
-        + "\n date : \(date)"
+        + "\n date : \(String(describing: date))"
         + "\n pictureUrlString : \(pictureURLString)"
         + "\n admin : \(admin)"
         + "\n description : \(description)"

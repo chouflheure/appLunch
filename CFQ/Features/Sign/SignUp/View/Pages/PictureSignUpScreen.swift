@@ -83,7 +83,10 @@ struct PictureSignUpScreen: View {
             }
         }
         .fullBackground(imageName: "backgroundNeon")
-
+        .ignoresSafeArea(.keyboard)
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
     }
 
     @State private var isPhotoPickerPresented = false

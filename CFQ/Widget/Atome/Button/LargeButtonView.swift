@@ -32,7 +32,7 @@ struct LargeButtonView: View{
         })
         .disabled(isDisabled)
         .onTapGesture {
-            UIApplication.shared.endEditing(true)
+            UIApplication.shared.endEditing()
         }
     }
 }
