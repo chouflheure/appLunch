@@ -17,12 +17,22 @@ struct HeaderCardNotEditableView: View {
                     CachedAsyncImageView(urlString: turn.pictureURLString, designType: .scaledToFill_Clipped)
                 }
                 
-                DateLabel(
-                    dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).jour,
-                    monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).mois
-                )
-                .padding(.top, 20)
-                .padding(.leading, 16)
+                HStack(alignment: .center) {
+                    DateLabel(
+                        dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).jour,
+                        monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).mois
+                    )//.padding(.top, 20)
+                    
+                    Spacer()
+           
+                    Text("Turn")
+                        .tokenFont(.Title_Gigalypse_24)
+                        .bold()
+                        .textCase(.uppercase)
+                        .font(.system(size: 30))
+                    
+                }
+                .padding(.horizontal, 16)
             }
             .frame(height: 100)
             .contentShape(Rectangle())

@@ -7,7 +7,6 @@ class FeedViewModel: ObservableObject {
     @Published var turns: [Turn] = []
         
     init() {
-        print("@@@ init")
         startListeningToTeams()
     }
 
@@ -16,14 +15,51 @@ class FeedViewModel: ObservableObject {
             from: .turns,
             with: turnsID,
             listenerKeyPrefix: ListenerType.team_group_listener.rawValue
-        ){ [weak self] (result: Result<[Turn], Error>) in
-                switch result {
-                case .success(let turns):
-                    self?.turns = turns
-                case .failure(let error):
-                    print("@@@ here")
-                    Logger.log(error.localizedDescription, level: .error)
+        ) { [weak self] (result: Result<[Turn], Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let fetchedTurns):
+                // Stockez les turns récupérés
+                DispatchQueue.main.async {
+                    self.turns = fetchedTurns
+                    
+                    // Pour chaque turn, récupérez l'admin
+                    for (index, turn) in fetchedTurns.enumerated() {
+                        self.fetchAdminForTurn(at: index, adminID: turn.admin)
+                    }
                 }
+            case .failure(let error):
+                Logger.log(error.localizedDescription, level: .error)
             }
+        }
+    }
+
+    func fetchAdminForTurn(at index: Int, adminID: String) {
+        firebaseService.getDataByID(from: .users, with: adminID) { [weak self] (result: Result<UserContact, Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let adminContact):
+                // Assurez-vous que l'index est toujours valide
+                guard index < self.turns.count else { return }
+                
+                // Important: Sur le thread principal pour les UI updates
+                DispatchQueue.main.async {
+                    // Créez une copie du tableau entier pour déclencher le changement observable
+                    var updatedTurns = self.turns
+                    updatedTurns[index].adminContact = adminContact
+                    
+                    // Remplacez tout le tableau pour que SwiftUI détecte le changement
+                    self.turns = updatedTurns
+                    
+                    print("@@@ Admin récupéré pour le turn \(index)")
+                    print("@@@ turn.adminContact = \(adminContact.pseudo)")
+                }
+                
+            case .failure(let error):
+                Logger.log(error.localizedDescription, level: .error)
+            }
+        }
     }
 }

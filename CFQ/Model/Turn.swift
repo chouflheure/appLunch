@@ -16,6 +16,7 @@ class Turn: Codable, Hashable, Identifiable {
     var placeAdresse: String
     var placeLatitude: Double
     var placeLongitude: Double
+    var adminContact: UserContact?
 
     init(uid: String, titleEvent: String, date: Date?, pictureURLString: String, admin: String, description: String, invited: [String], participants: [String], mood: [Int], messagerieUUID: String, placeTitle: String, placeAdresse: String, placeLatitude: Double, placeLongitude: Double) {
         self.uid = uid

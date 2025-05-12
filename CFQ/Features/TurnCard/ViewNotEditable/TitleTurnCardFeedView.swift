@@ -7,19 +7,12 @@ struct TitleTurnCardFeedView: View {
 
     init(turn: Turn) {
         self.turn = turn
+        print("@@@ &&& turn = \(turn.adminContact?.pseudo)")
     }
     
     // TODO: Change with user
     var userProfileImage: UIImage = .profile
 
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -30,9 +23,10 @@ struct TitleTurnCardFeedView: View {
                 .textCase(.uppercase)
 
             HStack {
-                Image(uiImage: userProfileImage)
+                CachedAsyncImageView(urlString: turn.adminContact?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
+                    .frame(width: 40, height: 40)
 
-                Text(turn.admin)
+                Text(turn.adminContact?.pseudo ?? "")
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
 
