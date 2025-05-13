@@ -4,7 +4,6 @@ import SwiftUI
 struct HeaderBackLeftScreen: View {
     var onClickBack: (() -> Void)
     var titleScreen: String
-    // var onClickDots: (() -> Void)?
     var thirdElement: AnyView?
     var isShowDivider: Bool?
 

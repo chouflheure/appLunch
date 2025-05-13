@@ -291,6 +291,10 @@ struct ConversationOptionView: View {
                     .padding(.horizontal, 12)
                 }
             }
+            .ignoresSafeArea(.keyboard)
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+            }
         }
     }
 }

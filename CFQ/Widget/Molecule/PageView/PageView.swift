@@ -29,6 +29,7 @@ struct PageView: View {
             }
             .padding(.top, 20)
 
+            /*
             // PageView avec TabView
             TabView(selection: $selectedIndex) {
                 CollectionViewParticipant(viewModel: TurnCardViewModel())
@@ -41,6 +42,7 @@ struct PageView: View {
                     .tag(3)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Mode Page sans dots
+             */
         }
     }
 }

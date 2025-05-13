@@ -21,7 +21,7 @@ class Coordinator: ObservableObject {
     @Published var dataApp = DataApp()
     @Published var teamDetail: TeamGlobal?
     @Published var turnSelected: Turn?
-
+    
     @Published var userCFQ: [CFQ] = []
     @Published var userFriends: [UserContact] = []
     @Published var profileOtherUser: User = User()
@@ -35,6 +35,8 @@ class Coordinator: ObservableObject {
                 switch result {
                 case .success(let user):
                     UserDefaults.standard.set(user.uid, forKey: "userUID")
+
+                    self.user = user
 
                     if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
                         self.firebaseService.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)

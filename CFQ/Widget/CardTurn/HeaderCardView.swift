@@ -3,7 +3,7 @@ import SwiftUI
 
 struct HeaderCardViewDetail: View {
     @ObservedObject var viewModel: TurnCardViewModel
-    @State private var selectedImage: Image?
+    @State private var selectedImage: UIImage?
     @State private var avatarPhotoItem: PhotosPickerItem?
 
     var body: some View {
@@ -11,7 +11,7 @@ struct HeaderCardViewDetail: View {
             ZStack {
                 ZStack(alignment: .bottom) {
                     if let selectedImage = viewModel.imageSelected {
-                        selectedImage
+                        Image(uiImage: selectedImage)
                             .resizable()
                             .scaledToFill()
                             .contentShape(Rectangle())
@@ -45,6 +45,9 @@ struct HeaderCardViewDetail: View {
                             .foregroundColor(.white)
                             .frame(width: 30, height: 30)
                             .rotationEffect(Angle(degrees: -90))
+                            .background(.gray)
+                            .padding(.all, 5)
+                            .clipShape(Circle())
                     }
                     .frame(width: 50, height: 50)
                 }
@@ -60,7 +63,7 @@ struct HeaderCardViewDetail: View {
                     type: Data.self),
                    let uiImage = UIImage(data: data)
                 {
-                    viewModel.imageSelected = Image(uiImage: uiImage)
+                    viewModel.imageSelected = uiImage
                 }
             }
         }
@@ -74,7 +77,7 @@ struct HeaderCardPreviewView: View {
         VStack {
             ZStack {
                 if let selectedImage = viewModel.imageSelected {
-                    selectedImage
+                    Image(uiImage: selectedImage)
                         .resizable()
                         .scaledToFill()
                         .frame(height: 100)
@@ -105,6 +108,6 @@ struct HeaderCardPreviewView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        HeaderCardViewDetail(viewModel: TurnCardViewModel())
+        // HeaderCardViewDetail(viewModel: TurnCardViewModel())
     }
 }

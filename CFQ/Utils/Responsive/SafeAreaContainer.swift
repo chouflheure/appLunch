@@ -20,6 +20,11 @@ struct SafeAreaContainer<Content: View>: View {
                 }
             }
             .ignoresSafeArea()
+            // .ignoresSafeArea(.keyboard)
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+            }
+            .scrollDismissesKeyboard(.interactively)
         }
     }
 }

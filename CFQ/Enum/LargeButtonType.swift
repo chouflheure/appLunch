@@ -19,7 +19,7 @@ enum LargeButtonType {
         case .signBack:
             return LargeButtonData(
                 background: .clear,
-                foregroundColor: .purple,
+                foregroundColor: .purpleLight,
                 hasStoke: false
             )
         case .teamCreate:

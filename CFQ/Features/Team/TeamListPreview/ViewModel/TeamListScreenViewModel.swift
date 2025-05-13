@@ -15,7 +15,7 @@ class TeamListScreenViewModel: ObservableObject {
             admins: [UserContact()]
         )
     ]
-
+/*
     var user = User(
         uid: "1234567890",
         name: "John",
@@ -25,8 +25,11 @@ class TeamListScreenViewModel: ObservableObject {
         friends: ["EMZGTTeqJ1dv9SX0YaNOExaLjjw1", "77MKZdb3FJX8EFvlRGotntxk6oi1", "ziOs7jn3d5hZ0tgkTQdCNGQqlB33"],
         teams: ["1"]
     )
-
-    init() {
+*/
+    var user: User
+    
+    init(coordinator: Coordinator) {
+        self.user = coordinator.user ?? User(uid: "")
         startListeningToTeams()
     }
 

@@ -41,7 +41,7 @@ struct CollectionViewExample_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            CollectionViewMoods(viewModel: TurnCardViewModel())
+            // CollectionViewMoods(viewModel: TurnCardViewModel())
         }
     }
 }

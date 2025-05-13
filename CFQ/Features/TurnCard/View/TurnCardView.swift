@@ -2,30 +2,44 @@
 import SwiftUI
 
 struct TurnCardView: View {
-    
-    @Binding var isShow: Bool
-    @StateObject var viewModel = TurnCardViewModel()
+    @ObservedObject var coordinator: Coordinator
+    @StateObject var viewModel: TurnCardViewModel
 
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+
+        let turn = coordinator.turnSelected ?? Turn(
+                uid: "",
+                titleEvent: "",
+                date: nil,
+                pictureURLString: "",
+                admin: "",
+                description: "",
+                invited: [""],
+                participants: [""],
+                mood: [],
+                messagerieUUID: "",
+                placeTitle: "",
+                placeAdresse: "",
+                placeLatitude: 0,
+                placeLongitude: 0
+            )
+
+        _viewModel = StateObject(wrappedValue: TurnCardViewModel(turn: turn, coordinator: coordinator))
+    }
     
     var body: some View {
-        DraggableViewLeft(isPresented: $isShow) {
+        DraggableViewLeft(isPresented: $coordinator.showTurnCardView) {
             SafeAreaContainer {
                 VStack {
                     HeaderBackLeftScreen(
                         onClickBack: {
                             withAnimation {
-                                isShow = false
+                                coordinator.showTurnCardView = false
+                                coordinator.turnSelected = nil
                             }
                         },
-                        titleScreen: StringsToken.Turn.titleTurn,
+                        titleScreen: StringsToken.Turn.titleTurnPreview,
                         thirdElement: AnyView(Button(action: {
                             viewModel.showDetailTurnCard = true
                         }) {
@@ -130,7 +144,7 @@ struct TurnCardView: View {
 }
 
 #Preview {
-    TurnCardView(isShow: .constant(true))
+    // TurnCardView(isShow: .constant(true))
 }
 
 

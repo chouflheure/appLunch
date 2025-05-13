@@ -4,6 +4,11 @@ import SwiftUI
 struct FeedView: View {
     @ObservedObject var coordinator: Coordinator
     @EnvironmentObject var user: User
+    @StateObject var viewModel = FeedViewModel()
+
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+    }
 
     var body: some View {
         VStack {
@@ -37,41 +42,70 @@ struct FeedView: View {
                         coordinator.showMessageScreen = true
                     }
                 })
-                
             }.padding(.horizontal, 12)
 
-            VStack(alignment: .leading) {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        SwitchStatusUserProfile(
-                            viewModel: SwitchStatusUserProfileViewModel(user: user)
-                        )
-                        ForEach(coordinator.userFriends, id: \.self) { friend in
-                            CirclePictureStatusAndPseudo(
-                                userPreview: friend,
-                                onClick: {
-                                    withAnimation {
-                                        coordinator.showProfileFriend = true
-                                    }
-                                }
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            SwitchStatusUserProfile(
+                                viewModel: SwitchStatusUserProfileViewModel(user: user)
                             )
-                            .frame(width: 60, height: 60)
-                            .padding(.leading, 17)
+                            ForEach(coordinator.userFriends, id: \.self) { friend in
+                                CirclePictureStatusAndPseudo(
+                                    userPreview: friend,
+                                    onClick: {
+                                        withAnimation {
+                                            coordinator.showProfileFriend = true
+                                        }
+                                    }
+                                )
+                                .frame(width: 60, height: 60)
+                                .padding(.leading, 17)
+                            }
+                            .frame(height: 100)
                         }
-                        .frame(height: 100)
+                    }
+                }
+                
+                ZStack {
+                    Divider()
+                        .background(.white)
+                    
+                    HStack {
+                        Text("CFQ")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(.gray)
+                            .background(.black)
+                            .padding(.leading, 20)
+
+                        Spacer()
+                    }
+                }
+                
+                CFQCollectionView(coordinator: coordinator)
+                
+                ZStack {
+                    Divider()
+                        .background(.white)
+                    
+                    HStack {
+                        Text("TURN")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(.gray)
+                            .background(.black)
+                            .padding(.leading, 20)
+
+                        Spacer()
+                    }
+                }
+
+                LazyVStack(spacing: 20) {
+                    ForEach(viewModel.turns, id: \.id) { turn in
+                        TurnCardFeedView(turn: turn)
                     }
                 }
             }
-            
-            Divider()
-                .background(.white)
-            
-            CFQCollectionView(coordinator: coordinator)
-
-            Divider()
-                .background(.white)
-            
-            Spacer()
         }
     }
 }

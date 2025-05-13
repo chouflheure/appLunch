@@ -1,35 +1,22 @@
 import SwiftUI
 
-// PreviewView
-
 struct TitleTurnCardPreviewView: View {
-
-    // TODO: Change with user
-    var userProfileImage: UIImage = .profile
-
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
-
+    
     @ObservedObject var viewModel: TurnCardViewModel
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(viewModel.titleEvent.isEmpty ? "Titre du TURN" : viewModel.titleEvent)
+            Text(viewModel.turn.titleEvent.isEmpty ? "Titre du TURN" : viewModel.turn.titleEvent)
                 .tokenFont(.Title_Inter_semibold_24)
                 .padding(.bottom, 16)
                 .bold()
                 .textCase(.uppercase)
 
             HStack {
-                Image(uiImage: userProfileImage)
+                CachedAsyncImageView(urlString: viewModel.adminUser.profilePictureUrl, designType: .scaledToFill_Circle)
+                    .frame(width: 50, height: 50)
 
-                Text(user.pseudo)
+                Text(viewModel.adminUser.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
 
@@ -40,7 +27,9 @@ struct TitleTurnCardPreviewView: View {
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {})
+                ButtonParticipate(action: {
+                    
+                })
             }
 
             PreviewProfile(pictures: [], previewProfileType: .userComming)
@@ -51,18 +40,6 @@ struct TitleTurnCardPreviewView: View {
 
 struct TitleTurnCardDetailView: View {
 
-    // TODO: Change with user
-    var userProfileImage: UIImage = .profile
-
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
-
     @FocusState private var isFocused: Bool
     @ObservedObject var viewModel: TurnCardViewModel
 
@@ -70,7 +47,7 @@ struct TitleTurnCardDetailView: View {
         VStack(alignment: .leading) {
 
             CustomTextField(
-                text: $viewModel.titleEvent,
+                text: $viewModel.turn.titleEvent,
                 keyBoardType: .default,
                 placeHolder: StringsToken.TurnCardInformation.PlaceholderTitle,
                 textFieldType: .turn
@@ -79,9 +56,10 @@ struct TitleTurnCardDetailView: View {
             .padding(.bottom, 16)
 
             HStack {
-                Image(uiImage: userProfileImage)
+                CachedAsyncImageView(urlString: viewModel.adminUser.profilePictureUrl, designType: .scaledToFill_Circle)
+                    .frame(width: 50, height: 50)
 
-                Text(user.pseudo)
+                Text(viewModel.adminUser.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
 

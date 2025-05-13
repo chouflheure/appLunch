@@ -11,7 +11,6 @@ struct PreviewMessagerieScreenView: View {
             SafeAreaContainer {
                 ZStack {
                     VStack(spacing: 0) {
-
                         HeaderBackLeftScreen(
                             onClickBack: {
                                 withAnimation {
@@ -20,7 +19,6 @@ struct PreviewMessagerieScreenView: View {
                             },
                             titleScreen: StringsToken.Messaging.titleScreen
                         )
-
                         ScrollView(.vertical, showsIndicators: false) {
                             Spacer()
                                 .frame(height: 12)
@@ -50,6 +48,10 @@ struct PreviewMessagerieScreenView: View {
 
                     }
                 }
+            }
+            .ignoresSafeArea(.keyboard)
+            .onTapGesture {
+                UIApplication.shared.endEditing()
             }
         }
         

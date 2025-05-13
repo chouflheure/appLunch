@@ -56,7 +56,7 @@ struct CollectionViewHours_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            CollectionViewHours(viewModel: TurnCardViewModel())
+            // CollectionViewHours(viewModel: TurnCardViewModel())
         }
     }
 }

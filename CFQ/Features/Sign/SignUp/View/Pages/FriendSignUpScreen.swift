@@ -129,6 +129,10 @@ struct FriendSignUpScreen: View {
                 }
             }
             .fullBackground(imageName: "backgroundNeon")
+            .ignoresSafeArea(.keyboard)
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+            }
     }
 
     func startAnimationTimer(totalFrames: Int) {

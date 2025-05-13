@@ -5,11 +5,10 @@ struct CFQFormView: View {
 
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: CFQFormViewModel
-    @EnvironmentObject var user: User
-    
-    init(coordinator: Coordinator, user: User) {
+
+    init(coordinator: Coordinator) {
         self.coordinator = coordinator
-        self._viewModel = StateObject(wrappedValue: CFQFormViewModel(coordinator: coordinator, user: user))
+        self._viewModel = StateObject(wrappedValue: CFQFormViewModel(coordinator: coordinator))
     }
     
     var body: some View {
@@ -29,7 +28,7 @@ struct CFQFormView: View {
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
                                 HStack(alignment: .center, spacing: 12) {
-                                    CachedAsyncImageView(urlString: user.profilePictureUrl)
+                                    CachedAsyncImageView(urlString: coordinator.user?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
                                         .frame(width: 50, height: 50)
                                         .cornerRadius(100)
                                     
@@ -89,7 +88,7 @@ struct CFQFormView: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CFQFormView(coordinator: Coordinator(), user: User())
+        CFQFormView(coordinator: Coordinator())
     }.ignoresSafeArea()
 }
 

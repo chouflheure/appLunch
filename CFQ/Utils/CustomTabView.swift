@@ -96,16 +96,10 @@ struct CustomTabView: View {
     @State private var selectedEvent: MapLocationEventData? = nil
     @State private var isShowPopUp: Bool = true
 
-    // @EnvironmentObject var user: User
+    @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici"
-    )
+
     @State var text = ""
     var body: some View {
         GeometryReader { geometry in
@@ -207,7 +201,6 @@ struct CustomTabView: View {
                     }
                     .padding(.top, 15)// geometry.safeAreaInsets.top) // Respecte la safe area en haut
                     .padding(.bottom, geometry.safeAreaInsets.bottom)
-                    // .edgesIgnoringSafeArea(coordinator.selectedTab == 1 ? .all : .bottom)
                     .edgesIgnoringSafeArea(.bottom)
                     .fullScreenCover(isPresented: $coordinator.showMapFullScreen) {
                         TestMap(selectedEvent: $selectedEvent, coordinator: coordinator)
@@ -244,7 +237,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showTurnCardView {
-                        TurnCardView(isShow: $coordinator.showTurnCardView)
+                        TurnCardView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
@@ -259,11 +252,8 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showCFQForm {
-                        CFQFormView(
-                            coordinator: coordinator,
-                            user: user
-                        )
-                        .transition(.move(edge: .trailing))
+                        CFQFormView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showMessageScreen {

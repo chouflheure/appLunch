@@ -67,8 +67,14 @@ private struct CachedAsyncImage<Content>: View where Content: View {
     }
 }
 
+internal enum PictureCacheDesignType {
+    case scaledToFill_Circle
+    case scaledToFill_Clipped
+}
+
 struct CachedAsyncImageView: View {
     let urlString: String
+    let designType: PictureCacheDesignType
     let animation = LottieView(animation: .named(StringsToken.Animation.loaderPicture))
 
     var body: some View {
@@ -80,10 +86,20 @@ struct CachedAsyncImageView: View {
                     .looping()
 
             case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(Circle())
+                switch designType {
+                    case .scaledToFill_Circle:
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .clipShape(Circle())
+                                        
+                    case .scaledToFill_Clipped:
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 100)
+                            .clipped()
+                }
 
             case .failure(_):
                 animation

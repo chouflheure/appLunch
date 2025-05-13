@@ -97,12 +97,13 @@ struct SignScreen: View {
         }
         .fullBackground(imageName: "backgroundNeon")
         .toastView(toast: $toast)
-        .onChange(of: viewModel.isConfirmScreenActive || viewModel.isSignFinish)
-        {
+        .ignoresSafeArea(.keyboard)
+        .scrollDismissesKeyboard(.immediately)
+        .onChange(of: viewModel.isConfirmScreenActive || viewModel.isSignFinish) {
             isLoadingSendButton = $0
         }
         .onTapGesture {
-            UIApplication.shared.endEditing(true)
+            UIApplication.shared.endEditing()
         }
     }
 }
