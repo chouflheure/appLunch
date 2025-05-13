@@ -3,18 +3,17 @@ import Lottie
 import SwiftUI
 
 struct ConfirmCodeScreen: View {
+    
     @State private var otpCode = ""
     @State private var hasAlreadyAccount = true
     @State private var toast: Toast? = nil
+    @State private var isLoadingSendButton = false
 
     @ObservedObject var viewModel: SignInViewModel
+    @Environment(\.dismiss) var dismiss
 
     var verificationID: String
     var mobileNumber: String
-    @State private var isLoadingSendButton = false
-
-    @Environment(\.dismiss) var dismiss
-
    
     var body: some View {
         VStack {
@@ -132,16 +131,4 @@ struct ConfirmCodeScreen: View {
 #Preview {
     ConfirmCodeScreen(
         viewModel: SignInViewModel(), verificationID: "", mobileNumber: "")
-}
-
-extension View {
-    public func fullBackground(imageName: String) -> some View {
-        return background(
-            Image(imageName)
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
-                .padding(.bottom, -100)
-        )
-    }
 }

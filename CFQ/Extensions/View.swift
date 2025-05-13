@@ -23,3 +23,16 @@ public extension View {
       self.modifier(ToastModifier(toast: toast))
     }
 }
+
+// Background 
+public extension View {
+     func fullBackground(imageName: String) -> some View {
+        return background(
+            Image(imageName)
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+                .padding(.bottom, -100)
+        )
+    }
+}
