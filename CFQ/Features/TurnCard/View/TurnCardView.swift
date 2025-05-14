@@ -8,21 +8,20 @@ struct TurnCardView: View {
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
 
-        let turn = coordinator.turnSelected ?? Turn(
+        let turn = coordinator.turnSelectedPreview ?? TurnPreview(
                 uid: "",
                 titleEvent: "",
                 date: nil,
-                pictureURLString: "",
                 admin: "",
                 description: "",
                 invited: [""],
-                participants: [""],
                 mood: [],
                 messagerieUUID: "",
                 placeTitle: "",
                 placeAdresse: "",
                 placeLatitude: 0,
-                placeLongitude: 0
+                placeLongitude: 0,
+                imageEvent: nil
             )
 
         _viewModel = StateObject(wrappedValue: TurnCardViewModel(turn: turn, coordinator: coordinator))
@@ -90,12 +89,15 @@ struct TurnCardView: View {
                     HStack(spacing: 30) {
                         Button(action: {}, label: {
                             HStack {
-                                Image(.iconTrash)
+                                Image(.iconSave)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
                                     .foregroundColor(.white)
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
-                                    .font(.system(size: 10, weight: .bold))
-                                Text("Supprimer")
+
+                                Text("Enregistrer")
                                     .foregroundColor(.white)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)

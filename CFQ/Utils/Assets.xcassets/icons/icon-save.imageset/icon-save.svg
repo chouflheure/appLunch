@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 100 125"
+   id="svg2"
+   sodipodi:docname="noun-save-858111.svg"
+   inkscape:export-filename="icon-save"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="2.9125048"
+     inkscape:cx="21.974213"
+     inkscape:cy="86.008443"
+     inkscape:window-width="1728"
+     inkscape:window-height="1080"
+     inkscape:window-x="0"
+     inkscape:window-y="37"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     transform="translate(0,-940.36218)"
+     id="g1">
+    <path
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6;marker:none;enable-background:accumulate"
+       d="m 17,10 c -3.826109,0 -7,3.17389 -7,7 v 66 c 0,3.8261 3.173891,7 7,7 h 66 c 3.826109,0 7,-3.1739 7,-7 V 29 a 3.0002998,3.0002998 0 0 0 -0.875,-2.125 l -16,-16 A 3.0002998,3.0002998 0 0 0 71,10 Z m 0,6 h 8 v 25 a 3.0002995,3.0002995 0 0 0 3,3 h 40 a 3.0002995,3.0002995 0 0 0 3,-3 V 17.25 l 13,13 V 83 c 0,0.6059 -0.394111,1 -1,1 H 17 c -0.605889,0 -1,-0.3941 -1,-1 V 17 c 0,-0.60589 0.394111,-1 1,-1 z m 14,0 H 65 V 38 H 31 Z m 19,35 c -7.144168,0 -13,5.8558 -13,13 0,7.1441 5.855832,13 13,13 7.144168,0 13,-5.8559 13,-13 0,-7.1442 -5.855832,-13 -13,-13 z m 0,6 c 3.901527,0 7,3.0985 7,7 0,3.9015 -3.098473,7 -7,7 -3.901527,0 -7,-3.0985 -7,-7 0,-3.9015 3.098473,-7 7,-7 z"
+       transform="translate(0,952.36218)"
+       id="path1" />
+  </g>
+</svg>

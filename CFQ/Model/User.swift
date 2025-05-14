@@ -165,6 +165,6 @@ class User: ObservableObject, Encodable, Decodable {
     }
     // TODO: - For debug
     var printObject: String {
-          return "uid : \(uid) | name : \(name) | firstName : \(firstName) | pseudo : \(pseudo) | profilePictureUrl : \(profilePictureUrl) | location : \(location)"
-       }
+        return "@@@ uid : \(uid) | name : \(name) | firstName : \(firstName) | pseudo : \(pseudo) | profilePictureUrl : \(profilePictureUrl) | location : \(location)"
+    }
 }

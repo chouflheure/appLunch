@@ -7,7 +7,7 @@ struct TitleTurnCardFeedView: View {
 
     init(turn: Turn) {
         self.turn = turn
-        print("@@@ &&& turn = \(turn.adminContact?.pseudo)")
+        
     }
     
     // TODO: Change with user

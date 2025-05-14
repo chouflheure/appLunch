@@ -14,8 +14,9 @@ struct HeaderCardViewDetail: View {
                         Image(uiImage: selectedImage)
                             .resizable()
                             .scaledToFill()
-                            .contentShape(Rectangle())
                             .frame(height: 200)
+                            .frame(width: UIScreen.main.bounds.width)
+                            .contentShape(Rectangle())
                             .clipped()
                     } else {
                         Image(systemName: "photo")
@@ -43,11 +44,16 @@ struct HeaderCardViewDetail: View {
                         Image(.iconArrow)
                             .resizable()
                             .foregroundColor(.white)
-                            .frame(width: 30, height: 30)
+                            .scaledToFit()
+                            .frame(height: 30)
                             .rotationEffect(Angle(degrees: -90))
-                            .background(.gray)
                             .padding(.all, 5)
+                            .background(.black)
                             .clipShape(Circle())
+                            .overlay() {
+                                Circle()
+                                    .stroke(.white, style: StrokeStyle(lineWidth: 2))
+                            }
                     }
                     .frame(width: 50, height: 50)
                 }
@@ -83,15 +89,15 @@ struct HeaderCardPreviewView: View {
                         .frame(height: 100)
                         .clipped()
                 }
-                
+
                 HStack(alignment: .center) {
                     DateLabel(
                         dayEventString: viewModel.textFormattedShortFormat().jour.isEmpty ? "XX" : viewModel.textFormattedShortFormat().jour,
                         monthEventString: viewModel.textFormattedShortFormat().mois.isEmpty ? "XX" : viewModel.textFormattedShortFormat().mois
                     ).padding(.top, 20)
-                    
+
                     Spacer()
-           
+
                     Text("Turn")
                         .tokenFont(.Title_Gigalypse_24)
                         .bold()

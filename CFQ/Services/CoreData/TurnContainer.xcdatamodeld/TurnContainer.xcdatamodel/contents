@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24D70" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="TurnData" representedClassName=".TurnData" syncable="YES" codeGenerationType="class">
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="dateEvent" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descriptionEvent" optional="YES" attributeType="String"/>
+        <attribute name="imageEvent" optional="YES" attributeType="Binary"/>
         <attribute name="invited" optional="YES" attributeType="Transformable"/>
         <attribute name="mood" optional="YES" attributeType="Transformable"/>
         <attribute name="placeAdresse" optional="YES" attributeType="String"/>

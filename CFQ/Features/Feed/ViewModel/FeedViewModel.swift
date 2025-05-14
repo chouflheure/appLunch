@@ -6,6 +6,8 @@ class FeedViewModel: ObservableObject {
     var turnsID = ["FP5UQvLXVpuSt8N0b9ML", "9BB80E71-84B3-4503-90E8-470836A22FB7", "DC77FECA-B535-4CBF-81F7-C9D09FA32049", "F2D2CE38-0C1E-44E7-ABFA-FF9C588676CB"]
     @Published var turns: [Turn] = []
         
+    // TODO: - Mettre turnsID en set car si deux fois le même ca bug
+
     init() {
         startListeningToTeams()
     }

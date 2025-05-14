@@ -202,8 +202,6 @@ struct CFQApp: App {
 
     var body: some Scene {
         WindowGroup {
-            // TurnCoreDataView()
-            // CoreDataTest()
             ContentView()
                 .preferredColorScheme(.dark)
 

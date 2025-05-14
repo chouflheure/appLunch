@@ -148,7 +148,8 @@ struct CustomTabView: View {
                                 TeamView(coordinator: coordinator)
                                 // Screen()
                             } else {
-                                ProfileView(coordinator: coordinator)
+                                // ProfileView(coordinator: coordinator)
+                                TurnCoreDataView()
                             }
                         }
                         .frame(maxHeight: .infinity)
