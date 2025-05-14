@@ -101,7 +101,7 @@ struct FeedView: View {
                 }
 
                 LazyVStack(spacing: 20) {
-                    ForEach(viewModel.turns, id: \.id) { turn in
+                    ForEach(viewModel.turns, id: \.self) { turn in
                         TurnCardFeedView(turn: turn)
                     }
                 }

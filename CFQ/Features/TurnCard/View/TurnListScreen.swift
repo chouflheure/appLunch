@@ -16,7 +16,8 @@ class HeaderPreviewCardTurn {
 struct TurnListScreen: View {
     
     @ObservedObject var coordinator: Coordinator
-    
+    @StateObject var vm = TurnCoreDataViewModel()
+
     var arrayTurn = [
         Turn(uid: "1", titleEvent: "TESSSST", date: nil, pictureURLString: "", admin: "", description: "On va se faire une super soirée et se mettre une grosse ciasse uiiiiiii", invited: [""], participants: [""], mood: [0,1,2,3], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 1.1, placeLongitude: 1.2),
         Turn(uid: "2", titleEvent: "Tomorolland", date: nil, pictureURLString: "", admin: "", description: "", invited: [""], participants: [""], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 1.1, placeLongitude: 1.2),
@@ -59,17 +60,26 @@ struct TurnListScreen: View {
                     }.padding(.bottom, 30)
 
                     VStack(alignment: .leading) {
-                        Text("Brouillons " + "(\(arrayTurn.count))")
+                        Text("Brouillons " + "(\(vm.savedTurns.count))")
                             .tokenFont(.Body_Inter_Medium_12)
 
+                        ForEach(vm.savedTurns) { turn in
+                            CellPreviewCardTurn(turn: Turn(uid: turn.id.debugDescription, titleEvent: turn.titleEvent ?? "", date: nil, pictureURLString: "", admin: "", description: turn.descriptionEvent ?? "", invited: [""], participants: [""], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0), coordinator: coordinator)
+                                .padding(.bottom, 15)
+                        }
+                        /*
                         ForEach(arrayTurn, id: \.self) { turn in
                             CellPreviewCardTurn(turn: turn, coordinator: coordinator)
                                 .padding(.bottom, 15)
                         }
+                         */
                     }
                     .padding(.leading, 16)
                 }
             }
+        }
+        .onAppear {
+            vm.fecthTurn()
         }
     }
 }
