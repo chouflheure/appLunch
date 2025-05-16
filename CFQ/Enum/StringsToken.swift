@@ -102,6 +102,7 @@ enum StringsToken {
     enum Turn {
         static let titleTurn = "TURN"
         static let titleTurnPreview = "TURN Preview"
+        static let placeholderDescriptionEvent = "Décris l’event, raconte pas ta vie"
     }
     
     enum SearchBar {

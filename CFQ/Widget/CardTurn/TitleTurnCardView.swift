@@ -31,8 +31,9 @@ struct TitleTurnCardPreviewView: View {
                     
                 })
             }
-
-            PreviewProfile(pictures: [], previewProfileType: .userComming)
+            
+            Text("0 Personne y va pour l'instant")
+                .tokenFont(.Body_Inter_Medium_14)
                 .padding(.vertical, 8)
         }
     }

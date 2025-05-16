@@ -93,7 +93,13 @@ struct FeedView: View {
 
                 LazyVStack(spacing: 20) {
                     ForEach(viewModel.turns, id: \.uid) { turn in
-                       TurnCardFeedView(turn: turn)
+                        TurnCardFeedView(turn: turn) {
+                            coordinator.turnSelected = turn
+                            withAnimation {
+                                coordinator.showTurnFeedDetail = true
+                            }
+                        }
+                        
                     }
                 }.padding(.top, 24)
             }

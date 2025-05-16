@@ -17,7 +17,8 @@ class Coordinator: ObservableObject {
     @Published var showMessageScreen = false
     @Published var showTeamDetailEdit = false
     @Published var showMapFullScreen = false
-
+    @Published var showTurnFeedDetail = false
+    
     @Published var dataApp = DataApp()
     @Published var teamDetail: TeamGlobal?
     @Published var turnSelected: Turn?

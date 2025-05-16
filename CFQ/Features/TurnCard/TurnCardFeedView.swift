@@ -3,9 +3,11 @@ import SwiftUI
 
 struct TurnCardFeedView: View {
     var turn: Turn
+    var onClickTurn: () -> Void
 
-    init(turn: Turn) {
+    init(turn: Turn, onclickTurn: @escaping () -> Void) {
         self.turn = turn
+        self.onClickTurn = onclickTurn
     }
     
     var body: some View {
@@ -46,7 +48,7 @@ struct TurnCardFeedView: View {
         }
 
         .onTapGesture {
-            print("@@@ tap card")
+            onClickTurn()
         }
             /*
         .fullScreenCover(isPresented: $viewModel.showDetailTurnCard) {

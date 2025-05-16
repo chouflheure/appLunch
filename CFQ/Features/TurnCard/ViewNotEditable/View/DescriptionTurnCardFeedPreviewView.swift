@@ -8,10 +8,9 @@ struct DescriptionTurnCardFeedPreviewView: View {
     init(turn: Turn) {
         self.turn = turn
     }
-    
-    @State private var expanded = false
+
     @State private var truncated = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
 
@@ -47,47 +46,7 @@ struct DescriptionTurnCardFeedPreviewView: View {
     }
 }
 
-struct ExpandableTextView: View {
-    let text: String
-    @State private var expanded = false
-    @State private var truncated = false
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-
-            TruncatedTextWithColor(
-                fullText: text,
-                truncated: $truncated
-            )
-            .foregroundColor(.white)
-            // .tokenFont(.Body_Inter_Medium_14)
-            .padding(.bottom, 20)
-            .padding(.top, 10)
-            .background(
-                Text(text)
-                    .tokenFont(.Body_Inter_Medium_14)
-                    .lineLimit(nil)
-                    .background(
-                        GeometryReader { fullSize in
-                            Color.clear.onAppear {
-                                let fullHeight = fullSize.size.height
-                                let threeLineHeight =
-                                    UIFont.preferredFont(forTextStyle: .body)
-                                    .lineHeight * 3
-                                if fullHeight > threeLineHeight {
-                                    truncated = true
-                                }
-                            }
-                        }
-                    )
-                    .hidden()
-            )
-
-        }
-    }
-}
-
-// Structure pour le texte tronqué avec couleur
+// Structure pour le texte tronqué
 struct TruncatedTextWithColor: View {
     let fullText: String
     let lineLimit: Int = 3
@@ -108,13 +67,13 @@ struct TruncatedTextWithColor: View {
     private var attributedTruncatedText: AttributedString {
         let approximateCharsPerLine = 45
         let approximateTextLength = approximateCharsPerLine * lineLimit
-        
+
         // Vérifier d'abord les sauts de ligne explicites
         let lines = fullText.components(separatedBy: "\n")
-        
+
         // Calculer le texte tronqué
         let visibleText: String
-        
+
         if lines.count > lineLimit {
             // S'il y a plus de sauts de ligne que la limite
             let truncatedLines = Array(lines.prefix(lineLimit))
@@ -129,24 +88,14 @@ struct TruncatedTextWithColor: View {
             // Le texte est suffisamment court
             visibleText = fullText + " "
         }
-        
-        // Créer l'AttributedString
+
         var attributedString = AttributedString(visibleText)
-        
-        // Ajouter le "Voir plus" avec sa couleur
+
         var seeMoreString = AttributedString("Voir plus")
         seeMoreString.foregroundColor = .gray
-        
+
         attributedString.append(seeMoreString)
-        
+
         return attributedString
     }
-}
-
-#Preview {
-    VStack {
-        DescriptionTurnCardFeedPreviewView(turn: Turn(uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "Charles Calvignac on test la taille du text pour voir si ca rentre correctement ? Tant que le text ne dépasse pas 3 lignes on ne voit  pour voir si ca rentre correctement  ", invited: [""], participants: [""], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0))
-    }
-    .background(.black)
-    .padding(.horizontal, 12)
 }

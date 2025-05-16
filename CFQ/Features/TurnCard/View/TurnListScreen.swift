@@ -62,7 +62,7 @@ struct TurnListScreen: View {
                                     uid: element.id.debugDescription,
                                     titleEvent: element.titleEvent ?? "",
                                     date: element.dateEvent,
-                                    admin: "",
+                                    admin: coordinator.user?.uid ?? "",
                                     description: element.descriptionEvent ?? "",
                                     invited: [""],
                                     mood: [],

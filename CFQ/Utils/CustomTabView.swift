@@ -246,6 +246,11 @@ struct CustomTabView: View {
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showTurnFeedDetail {
+                        TurnCardDetailsFeedView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+
                     if coordinator.showNotificationScreen {
                         NotificationScreenView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))

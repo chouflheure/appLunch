@@ -31,13 +31,6 @@ struct DescriptionTurnCardDetailView: View {
             }
              
         }
-        /*
-            Text("Diner entre girls <3 Ramenez juste à boire! Diner entre girls <3 Ramenez juste à boire! Diner entre girls <3 Ramenez juste à boire! Ramenez juste à boire")
-                .tokenFont(.Body_Inter_Medium_16)
-                .padding(.bottom, 20)
-                .padding(.top, 15)
-             */
-
     }
 }
 
@@ -47,8 +40,8 @@ struct DescriptionTurnCardPreviewView: View {
     var body: some View {
 
         HStack {
-            Text(viewModel.description)
-                .tokenFont(.Body_Inter_Medium_14)
+            Text(viewModel.description.isEmpty ? StringsToken.Turn.placeholderDescriptionEvent : viewModel.description)
+                .tokenFont(viewModel.description.isEmpty ? .Placeholder_Title_Gigalypse_24 : .Title_Gigalypse_24)
                 .padding(.bottom, 20)
                 .padding(.top, 10)
                 .lineLimit(3)
