@@ -17,7 +17,6 @@ struct TeamFormView: View {
                         Button(action: {
                             withAnimation {
                                 coordinator.showCreateTeam = false
-                                // showDetail = false
                             }
                         }) {
                             Image(.iconArrow)

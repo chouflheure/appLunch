@@ -166,8 +166,8 @@ struct TeamDetailView: View {
             )
             .presentationDragIndicator(.visible)
             .presentationDetents([.height(120)])
-                
         }
+        .padding(.vertical, 30)
     }
 
     private func dataTeam() -> String {

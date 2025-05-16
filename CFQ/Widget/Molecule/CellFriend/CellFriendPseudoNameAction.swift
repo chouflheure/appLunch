@@ -7,27 +7,24 @@ struct CellFriendPseudoNameAction: View {
         case add
     }
     
-    var pseudo: String
-    var name: String
-    var firstName: String
+    var user: UserContact
     var coordinator: Coordinator
-    var isSelected: Bool = false
     var type: CellFriendPseudoNameActionType
     var isActionabled: (() -> Void)
     
     var body: some View {
         HStack(spacing: 0) {
             HStack {
-                CirclePicture(urlStringImage: "")
+                CirclePicture(urlStringImage: user.profilePictureUrl)
                     .frame(width: 48, height: 48)
                 VStack(alignment: .leading) {
-                    Text(pseudo)
+                    Text(user.pseudo)
                         .foregroundColor(.white)
                         .lineLimit(1)
                     HStack {
-                        Text(name)
+                        Text(user.name)
                             .tokenFont(.Body_Inter_Regular_12)
-                        Text((firstName.first?.uppercased() ?? "") + ".")
+                        Text((user.firstName.first?.uppercased() ?? "") + ".")
                             .tokenFont(.Body_Inter_Regular_12)
                     }
                 }.padding(.leading, 8)
@@ -36,6 +33,13 @@ struct CellFriendPseudoNameAction: View {
             }
             .onTapGesture {
                 withAnimation {
+                    coordinator.profileUserSelected = User(
+                        uid: user.uid,
+                        name: user.name,
+                        firstName: user.firstName,
+                        pseudo: user.pseudo,
+                        profilePictureUrl: user.profilePictureUrl
+                    )
                     coordinator.showProfileFriend = true
                 }
             }
@@ -61,18 +65,4 @@ struct CellFriendPseudoNameAction: View {
             )
         }
     }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        CellFriendPseudoNameAction(
-            pseudo: "Charlouu",
-            name: "Charles",
-            firstName: "Calvignac",
-            coordinator: .init(),
-            type: .remove,
-            isActionabled: {}
-        )
-    }.ignoresSafeArea()
 }

@@ -29,10 +29,23 @@ struct HeaderCardViewDetail: View {
                 }
 
                 HStack(alignment: .center) {
-                    DateLabel(
-                        dayEventString: viewModel.textFormattedShortFormat().jour.isEmpty ? "XX" : viewModel.textFormattedShortFormat().jour,
-                        monthEventString: viewModel.textFormattedShortFormat().mois.isEmpty ? "XX" : viewModel.textFormattedShortFormat().mois
-                    ).padding(.top, 20)
+                    if viewModel.textFormattedShortFormat().jour.isEmpty || viewModel.textFormattedShortFormat().mois.isEmpty {
+                        VStack {
+                            Image(.iconDate)
+                                .resizable()
+                                .foregroundColor(.white)
+                                .frame(width: 25, height: 25)
+                        }
+                        .frame(width: 50, height: 55)
+                        .background(.black.opacity(0.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .padding(.top, 20)
+                    } else {
+                        DateLabel(
+                            dayEventString: viewModel.textFormattedShortFormat().jour.isEmpty ? "XX" : viewModel.textFormattedShortFormat().jour,
+                            monthEventString: viewModel.textFormattedShortFormat().mois.isEmpty ? "XX" : viewModel.textFormattedShortFormat().mois
+                        ).padding(.top, 20)
+                    }
                     
                     Spacer()
                     
@@ -81,21 +94,33 @@ struct HeaderCardPreviewView: View {
 
     var body: some View {
         VStack {
-            ZStack {
+            ZStack(alignment: .top) {
                 if let selectedImage = viewModel.imageSelected {
                     Image(uiImage: selectedImage)
                         .resizable()
                         .scaledToFill()
-                        .frame(height: 100)
+                        .frame(height: 150)
                         .clipped()
                 }
 
                 HStack(alignment: .center) {
-                    DateLabel(
-                        dayEventString: viewModel.textFormattedShortFormat().jour.isEmpty ? "XX" : viewModel.textFormattedShortFormat().jour,
-                        monthEventString: viewModel.textFormattedShortFormat().mois.isEmpty ? "XX" : viewModel.textFormattedShortFormat().mois
-                    ).padding(.top, 20)
-
+                    if viewModel.textFormattedShortFormat().jour.isEmpty || viewModel.textFormattedShortFormat().mois.isEmpty {
+                        VStack {
+                            Image(.iconDate)
+                                .resizable()
+                                .foregroundColor(.white)
+                                .frame(width: 25, height: 25)
+                        }
+                        .frame(width: 50, height: 55)
+                        .background(.black.opacity(0.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .padding(.top, 20)
+                    } else {
+                        DateLabel(
+                            dayEventString: viewModel.textFormattedShortFormat().jour.isEmpty ? "XX" : viewModel.textFormattedShortFormat().jour,
+                            monthEventString: viewModel.textFormattedShortFormat().mois.isEmpty ? "XX" : viewModel.textFormattedShortFormat().mois
+                        ).padding(.top, 20)
+                    }
                     Spacer()
 
                     Text("Turn")
@@ -107,7 +132,10 @@ struct HeaderCardPreviewView: View {
                 }
                 .padding(.horizontal, 16)
             }
+            .frame(height: 150)
+            .contentShape(Rectangle())
         }
+        .frame(maxWidth: .infinity)
     }
 }
 

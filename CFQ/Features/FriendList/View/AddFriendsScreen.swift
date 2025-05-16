@@ -2,17 +2,18 @@
 import SwiftUI
 
 struct AddFriendsScreen: View {
-    @Binding var isPresented: Bool
+    
     @StateObject var viewModel = AddFriendsViewModel()
+    @ObservedObject var coordinator: Coordinator
 
     var body: some View {
-        DraggableViewRight(isPresented: $isPresented) {
+        DraggableViewRight(isPresented: $coordinator.showFriendListScreen) {
             SafeAreaContainer {
                 VStack {
                     HeaderBackRightScreen(
                         onClickBack: {
                             withAnimation {
-                                isPresented = false
+                                coordinator.showFriendListScreen = false
                             }
                         },
                         titleScreen: "AJoute tes amis"
@@ -42,9 +43,7 @@ struct AddFriendsScreen: View {
                                 VStack(alignment: .leading) {
                                     ForEach(Array(viewModel.friendsList), id: \.self) { user in
                                         CellFriendPseudoNameAction(
-                                            pseudo: user.pseudo,
-                                            name: user.name,
-                                            firstName: user.firstName,
+                                            user: user,
                                             coordinator: Coordinator(),
                                             type: .add,
                                             isActionabled: {
@@ -67,6 +66,6 @@ struct AddFriendsScreen: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        AddFriendsScreen(isPresented: .constant(true))
+        AddFriendsScreen(coordinator: Coordinator())
     }
 }

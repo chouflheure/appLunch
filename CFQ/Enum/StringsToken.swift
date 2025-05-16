@@ -7,8 +7,6 @@ enum StringsToken {
         static let Inscritpion = "Inscription"
         static let ConnectYou = "Connecte-toi"
         static let InscritpionYou = "Inscription-toi"
-        static let NoAccount = "Pas encore de compte ?"
-        static let AlreadyAccount = "T’as déjà un compte ?"
         static let PlaceholderPhoneNumber = "06 ..."
         static let GuestMode = "Mode invité"
 

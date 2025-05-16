@@ -14,9 +14,6 @@ struct GradientCardView: View {
                 endPoint: .topTrailing
             )
         }
-        .frame(height: 500)
-        .cornerRadius(20)
-        .padding(.horizontal, 12)
     }
 }
 

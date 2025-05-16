@@ -7,7 +7,7 @@ struct TitleTurnCardPreviewView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(viewModel.turn.titleEvent.isEmpty ? "Titre du TURN" : viewModel.turn.titleEvent)
-                .tokenFont(.Title_Inter_semibold_24)
+                .tokenFont(.Title_Gigalypse_24)
                 .padding(.bottom, 16)
                 .bold()
                 .textCase(.uppercase)

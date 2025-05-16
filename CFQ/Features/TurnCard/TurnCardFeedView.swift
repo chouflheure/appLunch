@@ -17,11 +17,12 @@ struct TurnCardFeedView: View {
                     // Header ( Date / Picture / TURN )
                     HeaderCardNotEditableView(turn: turn)
                         .padding(.bottom, 15)
-                        .frame(height: 100)
+                        .frame(height: 150)
                     
                     // Title ( Title / Guest )
                     TitleTurnCardFeedView(turn: turn)
                         .padding(.horizontal, 16)
+                        .padding(.top, 20)
                     
                     // Informations ( Mood / Date / Loc )
                     MainInformationsPreviewFeedView(turn: turn)
@@ -33,11 +34,14 @@ struct TurnCardFeedView: View {
                     
                     Spacer()
                 }
-                .cornerRadius(20)
-                .frame(height: 500)
-                .padding(.horizontal, 12)
-                
             }
+            .overlay {
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.gray, lineWidth: 0.2)
+            }
+            .frame(height: 550)
+            .cornerRadius(20)
+            .padding(.horizontal, 12)
             .zIndex(1)
         }
 

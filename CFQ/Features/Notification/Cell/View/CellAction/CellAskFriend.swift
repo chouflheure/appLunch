@@ -73,7 +73,7 @@ struct CellAskFriend: View {
         .frame(height: 70)
         .background(.gray.opacity(0.4))
         .fullScreenCover(isPresented: $isShowProfile){
-            FriendProfileView(show: $isShowProfile)
+            // FriendProfileView(show: $isShowProfile)
         }
     }
 }

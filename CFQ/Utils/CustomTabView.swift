@@ -102,10 +102,11 @@ struct CustomTabView: View {
 
     @State var text = ""
     var body: some View {
-        GeometryReader { geometry in
+        // GeometryReader { geometry in
+        SafeAreaContainer {
             ZStack {
-                NeonBackgroundImage()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
+                // NeonBackgroundImage()
+                    // .frame(width: geometry.size.width, height: geometry.size.height)
 
                 if !hasAlreadyOnboarded {
                     OnboardingView()
@@ -116,25 +117,30 @@ struct CustomTabView: View {
                 }
 
                 else {
-                    VStack {
+                    VStack(spacing: 0) {
                         Group {
                             if coordinator.selectedTab == 0 {
+
                                 FeedView(coordinator: coordinator)
+                                
                                 // CellMessageView()
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
                                 // TestTextEditor(text: $text)
                                 
-                                // ContentViewExpandableTextEditor(text: $text)
-                                
+                                /*
                                 TestMap(
                                     selectedEvent: $selectedEvent,
                                     coordinator: coordinator
                                 )
                                 .offset(y: -30)
                                 .padding(.bottom, -30)
-                                 
+                                 */
+                                Text("Map")
+                                    .tokenFont(.Title_Gigalypse_24)
+                                
+
                             } else if coordinator.selectedTab == 2 {
                                 TurnListScreen(coordinator: coordinator)
                                 /*
@@ -150,6 +156,7 @@ struct CustomTabView: View {
                             } else {
                                 // ProfileView(coordinator: coordinator)
                                 TurnCoreDataView()
+                                
                             }
                         }
                         .frame(maxHeight: .infinity)
@@ -200,9 +207,6 @@ struct CustomTabView: View {
                         .padding(.vertical)
                         .background(.black)
                     }
-                    .padding(.top, 15)// geometry.safeAreaInsets.top) // Respecte la safe area en haut
-                    .padding(.bottom, geometry.safeAreaInsets.bottom)
-                    .edgesIgnoringSafeArea(.bottom)
                     .fullScreenCover(isPresented: $coordinator.showMapFullScreen) {
                         TestMap(selectedEvent: $selectedEvent, coordinator: coordinator)
                     }
@@ -223,7 +227,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showProfileFriend {
-                        FriendProfileView(show: $coordinator.showProfileFriend)
+                        FriendProfileView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
@@ -248,7 +252,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showFriendListScreen {
-                        AddFriendsScreen(isPresented: $coordinator.showFriendListScreen)
+                        AddFriendsScreen(coordinator: coordinator)
                             .transition(.move(edge: .leading))
                     }
                     
@@ -263,7 +267,7 @@ struct CustomTabView: View {
                     }
                 }
             )
-            .frame(width: geometry.size.width, height: geometry.size.height)
+            // .frame(width: geometry.size.width, height: geometry.size.height)
             .animation(.easeInOut, value: coordinator.showCreateTeam)
         }
     }

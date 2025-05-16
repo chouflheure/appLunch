@@ -11,8 +11,8 @@ struct FeedView: View {
     }
 
     var body: some View {
-        VStack {
-            HStack {
+        VStack(spacing: 0) {
+            HStack(spacing: 14) {
                 Button(action: {
                     withAnimation {
                         coordinator.showFriendListScreen = true
@@ -42,7 +42,9 @@ struct FeedView: View {
                         coordinator.showMessageScreen = true
                     }
                 })
-            }.padding(.horizontal, 12)
+            }
+            .padding(.bottom, 10)
+            .padding(.horizontal, 20)
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading) {
@@ -51,60 +53,49 @@ struct FeedView: View {
                             SwitchStatusUserProfile(
                                 viewModel: SwitchStatusUserProfileViewModel(user: user)
                             )
+                            .padding(.bottom, 8)
+                            .padding(.leading, 16)
+
                             ForEach(coordinator.userFriends, id: \.self) { friend in
                                 CirclePictureStatusAndPseudo(
                                     userPreview: friend,
                                     onClick: {
                                         withAnimation {
+                                            coordinator.profileUserSelected = User(
+                                                uid: friend.uid,
+                                                name: friend.name,
+                                                firstName: friend.firstName,
+                                                pseudo: friend.pseudo,
+                                                profilePictureUrl: friend.profilePictureUrl,
+                                                isActive: friend.isActive
+                                            )
+                                            
                                             coordinator.showProfileFriend = true
                                         }
                                     }
                                 )
-                                .frame(width: 60, height: 60)
                                 .padding(.leading, 17)
                             }
-                            .frame(height: 100)
+                            .padding(.top, 15)
+                            .frame(height: 120)
                         }
                     }
                 }
                 
-                ZStack {
-                    Divider()
-                        .background(.white)
-                    
-                    HStack {
-                        Text("CFQ")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.gray)
-                            .background(.black)
-                            .padding(.leading, 20)
-
-                        Spacer()
-                    }
-                }
+                Divider()
+                    .background(.white)
                 
                 CFQCollectionView(coordinator: coordinator)
+                    .padding(.vertical, 5)
                 
-                ZStack {
-                    Divider()
-                        .background(.white)
-                    
-                    HStack {
-                        Text("TURN")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.gray)
-                            .background(.black)
-                            .padding(.leading, 20)
-
-                        Spacer()
-                    }
-                }
+                Divider()
+                    .background(.white)
 
                 LazyVStack(spacing: 20) {
                     ForEach(viewModel.turns, id: \.uid) { turn in
                        TurnCardFeedView(turn: turn)
                     }
-                }
+                }.padding(.top, 24)
             }
         }.onAppear {
             // TestRef()
@@ -285,7 +276,6 @@ struct NotificationButtonIcon: View {
                 Image(icon)
                     .frame(width: 24, height: 24)
                     .foregroundColor(.white)
-                    .padding(.horizontal, 16)
                 
                 if numberNotificationUnRead > 0 {
                     Circle()

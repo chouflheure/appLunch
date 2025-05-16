@@ -3,7 +3,6 @@ import CoreData
 import SwiftUI
 
 class TurnCoreDataViewModel: ObservableObject {
-    private let nameCoreDataDB = "TurnContainer"
     private let container: NSPersistentContainer
 
     
@@ -48,22 +47,24 @@ class TurnCoreDataViewModel: ObservableObject {
         if let imageData = turn.imageEvent?.pngData()  {
             image = imageData
         }
-            newTurn.titleEvent = turn.titleEvent
-            newTurn.descriptionEvent = turn.description
-            newTurn.dateEvent = turn.date
-            newTurn.imageEvent = image
-            // newTurn.invited = turn.invited
-            // newTurn.mood = turn.mood
-            // newTurn.placeTitle = turn.placeTitle
+
+        newTurn.titleEvent = turn.titleEvent
+        newTurn.descriptionEvent = turn.description
+        newTurn.dateEvent = turn.date
+        newTurn.imageEvent = image
+        // newTurn.invited = turn.invited
+        // newTurn.mood = turn.mood
+        // newTurn.placeTitle = turn.placeTitle
             
-            newTurn.placeLongitude = turn.placeLongitude
-            newTurn.placeLatitude = turn.placeLatitude
-            newTurn.placeAdresse = turn.placeAdresse
-            do {
-                try context.save()
-            } catch {
-                print("Failed to save context: \(error)")
-            }
+        newTurn.placeLongitude = turn.placeLongitude
+        newTurn.placeLatitude = turn.placeLatitude
+        newTurn.placeAdresse = turn.placeAdresse
+
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save context: \(error)")
+        }
     }
     
     func saveData() {
@@ -96,25 +97,27 @@ struct TurnCoreDataView: View {
     @StateObject var vm = TurnCoreDataViewModel()
     
     var body: some View {
-        Text("Hello, World!")
-        Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title2", date: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background2)) }, label: {
-            Text("click")
-        })
-        
-        Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title3", date: Date(), admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: nil)) }, label: {
-            Text("click")
-        })
-        
-        Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title4", date: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background3)) }, label: {
-            Text("click")
-        })
-        
-        Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title5", date: Date(), admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .header)) }, label: {
-            Text("click")
-        })
-        
-        Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title6", date: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background2)) }, label: {
-            Text("click")
-        })
+        VStack {
+            Text("Hello, World!")
+            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title2", date: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background2)) }, label: {
+                Text("click")
+            })
+            
+            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title3", date: Date(), admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: nil)) }, label: {
+                Text("click")
+            })
+            
+            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title4", date: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background3)) }, label: {
+                Text("click")
+            })
+            
+            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title5", date: Date(), admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .header)) }, label: {
+                Text("click")
+            })
+            
+            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title6", date: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background2)) }, label: {
+                Text("click")
+            })
+        }.fullBackground(imageName: "backgroundNeon")
     }
 }

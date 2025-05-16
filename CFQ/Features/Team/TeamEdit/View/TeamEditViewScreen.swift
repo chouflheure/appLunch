@@ -114,8 +114,7 @@ struct TeamEditViewScreen: View {
                             .overlay(.whitePrimary)
 
                         Button(action: {
-                            viewModel.showFriendsList = true
-                            // coordinator.userFriends = viewModel.listFriendsOnTeamAndToAdd()
+                            // viewModel.showFriendsList = true
                         }) {
                             Text("Ajouter des amis")
                                 .tokenFont(.Body_Inter_Medium_16)
@@ -167,8 +166,8 @@ struct TeamEditViewScreen: View {
                             action: {
                                 withAnimation {
                                     coordinator.showTeamDetailEdit = false
-                                    viewModel.pushEditTeamToFirebase(uuidTeam: coordinator.teamDetail?.uid ?? "")
                                 }
+                                viewModel.pushEditTeamToFirebase(uuidTeam: coordinator.teamDetail?.uid ?? "")
                             },
                             label: {
                                 HStack {
@@ -201,8 +200,7 @@ struct TeamEditViewScreen: View {
                 allFriends: $viewModel.allFriends
             )
         }
-        .padding(.top, 30)
-        .padding(.bottom, 30)
+        .padding(.vertical, 30)
     }
 
     private func showPhotoPicker() {

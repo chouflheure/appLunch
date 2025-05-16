@@ -6,7 +6,6 @@ import FirebaseMessaging
 import UserNotifications
 import Firebase
 
-//@main
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
     
     private var firebaseService: FirebaseService?
@@ -202,6 +201,7 @@ struct CFQApp: App {
 
     var body: some Scene {
         WindowGroup {
+            // ContentViewTestElement()
             ContentView()
                 .preferredColorScheme(.dark)
 

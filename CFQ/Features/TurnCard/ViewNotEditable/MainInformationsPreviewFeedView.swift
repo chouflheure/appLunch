@@ -30,7 +30,7 @@ struct MainInformationsPreviewFeedView: View {
 
                     Image(.iconDate)
                         .resizable()
-                        .frame(width: 20, height: 16)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(.white)
                         .padding(.leading, 12)
                     
@@ -41,12 +41,14 @@ struct MainInformationsPreviewFeedView: View {
                         .foregroundColor(.white)
 
                     Text(formattedDateAndTime.textFormattedHours(hours: turn.date))
-                        .tokenFont(.Body_Inter_Medium_16)
+                        .tokenFont(.Placeholder_Inter_Regular_16)
                 }
 
                 HStack(alignment: .top) {
                     
-                    Image(systemName: "mappin")
+                    Image(.iconLocation)
+                        .resizable()
+                        .frame(width: 20, height: 20)
                         .foregroundColor(.white)
                     
                     Text("Lieu")
@@ -56,6 +58,7 @@ struct MainInformationsPreviewFeedView: View {
                         .foregroundColor(.white)
                     
                     Text("92240 Malakoff ")
+                        .tokenFont(.Placeholder_Inter_Regular_16)
                         .foregroundColor(.white)
                 }
                 .padding(.horizontal, 12)

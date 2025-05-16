@@ -3,7 +3,6 @@ import Foundation
 class CFQFormViewModel: ObservableObject {
 
     @Published var researchText = String()
-    // @Published var isEnableButton: Bool = false
     @Published var friendsList = Set<UserContact>()
     @Published var friendsAddToCFQ = Set<UserContact>()
     
@@ -21,7 +20,7 @@ class CFQFormViewModel: ObservableObject {
     }
     
     var filteredNames: Set<UserContact> {
-        let searchWords = researchText.lowercased().split(separator: " ")
+        let searchWords = researchText.split(separator: " ").map { $0.lowercased() }
         return allFriends.filter { name in
             searchWords.allSatisfy { word in
                 name.name.lowercased().hasPrefix(word)

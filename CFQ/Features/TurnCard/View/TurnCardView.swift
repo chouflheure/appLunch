@@ -60,11 +60,12 @@ struct TurnCardView: View {
                             // Header ( Date / Picture / TURN )
                             HeaderCardPreviewView(viewModel: viewModel)
                                 .padding(.bottom, 15)
-                                .frame(height: 100)
+                                .frame(height: 150)
                             
                             // Title ( Title / Guest )
                             TitleTurnCardPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
+                                .padding(.top, 20)
                             
                             // Informations ( Mood / Date / Loc )
                             MainInformationsPreviewView(viewModel: viewModel)
@@ -76,18 +77,19 @@ struct TurnCardView: View {
                             
                             Spacer()
                         }
-                        .cornerRadius(20)
-                        .frame(height: 500)
-                        .padding(.horizontal, 12)
-                        
                     }
+                    .cornerRadius(20)
+                    .padding(.horizontal, 12)
+                    .frame(height: 550)
                     .padding(.bottom, 30)
                     .zIndex(1)
                     
                     Spacer()
 
                     HStack(spacing: 30) {
-                        Button(action: {}, label: {
+                        Button(action: {
+                            //TurnCoreDataViewModel().addTurn(turn: TurnPreview(uid: "", titleEvent: "Modifier", date: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: viewModel.imageSelected))
+                        }, label: {
                             HStack {
                                 Image(.iconSave)
                                     .resizable()

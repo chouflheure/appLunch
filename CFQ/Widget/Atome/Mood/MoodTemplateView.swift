@@ -9,11 +9,11 @@ struct MoodTemplateView: View {
         HStack {
             Image(uiImage: icon)
                 .resizable()
-                .frame(width: 25, height: 25)
+                .frame(width: 20, height: 20)
                 .foregroundColor(.gray)
             Text(title)
                 .foregroundColor(.gray)
-                .font(.system(size: 20))
+                .tokenFont(.Body_Inter_Medium_16)
         }
     }
 }

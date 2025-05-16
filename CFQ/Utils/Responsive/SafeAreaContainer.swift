@@ -9,22 +9,16 @@ struct SafeAreaContainer<Content: View>: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                NeonBackgroundImage()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                VStack {
-                    content
-                        .padding(.top, geometry.safeAreaInsets.top)
-                        .padding(.bottom, geometry.safeAreaInsets.bottom)
-                }
+        ZStack() {
+            NeonBackgroundImage()
+                    
+            VStack(spacing: 0) {
+                content
             }
-            .ignoresSafeArea()
-            // .ignoresSafeArea(.keyboard)
-            .onTapGesture {
-                UIApplication.shared.endEditing()
-            }
-            .scrollDismissesKeyboard(.interactively)
         }
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
+        .scrollDismissesKeyboard(.interactively)
     }
 }

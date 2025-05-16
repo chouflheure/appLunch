@@ -2,7 +2,6 @@
 import SwiftUI
 
 struct MainInformationsPreviewView: View {
-    @State private var showMoods = false
     @ObservedObject var viewModel: TurnCardViewModel
 
     var body: some View {
@@ -25,8 +24,8 @@ struct MainInformationsPreviewView: View {
 
                     Image(.iconDate)
                         .resizable()
-                        .frame(width: 20, height: 16)
-                        .foregroundColor(.white)
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(viewModel.textFormattedLongFormat.isEmpty ? .gray : .white)
                         .padding(.leading, 12)
                     
                     Text(viewModel.textFormattedLongFormat.isEmpty ? "Date" : viewModel.textFormattedLongFormat)
@@ -36,19 +35,21 @@ struct MainInformationsPreviewView: View {
                         .foregroundColor(.white)
 
                     Text(viewModel.textFormattedHours.isEmpty ? "Heure de début" : viewModel.textFormattedHours)
-                        .tokenFont(viewModel.textFormattedHours.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+                        .tokenFont(.Placeholder_Inter_Regular_16)
                 }
 
                 HStack(alignment: .top) {
                     
-                    Image(systemName: "mappin")
+                    Image(.iconLocation)
+                        .resizable()
+                        .frame(width: 20, height: 20)
                         .foregroundColor(.white)
                     
                     Text("Lieu")
                         .foregroundColor(.white)
                         
                     Text("|")
-                        .foregroundColor(.white)
+                        .tokenFont(.Placeholder_Inter_Regular_16)
                     
                     Text("92240 Malakoff ")
                         .foregroundColor(.white)

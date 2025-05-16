@@ -10,20 +10,19 @@ struct DateLabel: View {
         VStack {
             Text(dayEventString)
                 .foregroundColor(.white)
-                .font(.system(size: 25))
+                .tokenFont(.Title_Inter_semibold_24)
                 .padding(.top, 10)
 
             Text(monthEventString)
                 .foregroundColor(.white)
+                .tokenFont(.Label_Inter_Semibold_14)
                 .textCase(.uppercase)
-                .font(.system(size: 20))
                 .tint(.white)
                 .padding(.bottom, 10)
-                .frame(width: 90)
-
+                .frame(width: 60)
         }
-        .background(.black).opacity(0.8)
-        .cornerRadius(10)
+        .background(.black.opacity(0.5))
+        .cornerRadius(5)
     }
 }
 

@@ -38,6 +38,7 @@ struct TurnListScreen: View {
                         Button(
                             action: {
                                 withAnimation {
+                                    coordinator.turnSelectedPreview = nil
                                     coordinator.showTurnCardView = true
                                 }
                             },
@@ -51,8 +52,9 @@ struct TurnListScreen: View {
                     }.padding(.bottom, 30)
 
                     VStack(alignment: .leading) {
-                        Text("Brouillons " + "(\(vm.savedTurns.count))")
-                            .tokenFont(.Body_Inter_Medium_12)
+                        Text("Brouillon\(vm.savedTurns.count > 1 ? "s" : "") " + "(\(vm.savedTurns.count))")
+                            .tokenFont(.Body_Inter_Medium_14)
+                            .padding(.bottom, 20)
 
                         ForEach(Array(vm.savedTurns.enumerated()), id: \.element.id) { index, element in
                             CellPreviewCardTurn(
@@ -63,7 +65,7 @@ struct TurnListScreen: View {
                                     admin: "",
                                     description: element.descriptionEvent ?? "",
                                     invited: [""],
-                                    mood: [0],
+                                    mood: [],
                                     messagerieUUID: "",
                                     placeTitle: "",
                                     placeAdresse: "",
@@ -170,10 +172,12 @@ struct CellPreviewCardTurn: View {
                                     .strokeBorder(Color.white, lineWidth: 1)
                             }
                     }
-                    .padding(.trailing, 5)
-                    .offset(y: -30)
+                    .padding(.trailing, 0)
+                    .offset(x: 5, y: -30)
+                    .frame(width: 40, height: 40)
                 }
             }
+            .zIndex(2)
             .frame(height: 60)
 
             ZStack {
@@ -186,51 +190,28 @@ struct CellPreviewCardTurn: View {
                 if let image = turn.imageEvent {
                     Image(uiImage: image)
                         .resizable()
+                        .scaledToFill()
+                        .frame(width: UIScreen.main.bounds.width - 32, height: 150)
+                        .clipped()
                         .clipShape(
                             CustomRoundedCorners(
                                 radius: 30,
                                 corners: [.bottomLeft, .bottomRight])
                         )
-                        .frame(
-                            width: UIScreen.main.bounds.width - 32, height: 150)
+                        .frame(height: 150)
+                       
                 }
-
-                Button(action: {
-                    withAnimation {
-                        coordinator.showTurnCardView = true
-                        coordinator.turnSelectedPreview = turn
-                    }
-                }) {
-                    Text("Modifier")
-                        .tokenFont(.Body_Inter_Regular_16)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 30)
-                        .padding(.vertical, 10)
-                        .background(.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(lineWidth: 1)
-                                .foregroundColor(.white)
-                        }
+            }
+            .onTapGesture {
+                coordinator.turnSelectedPreview = turn
+                withAnimation {
+                    coordinator.showTurnCardView = true
                 }
             }
         }
         .frame(width: UIScreen.main.bounds.width - 32)
     }
 }
-/*
-#Preview {
-    CellPreviewCardTurn(
-        turn: Turn(
-            uid: "", titleEvent: "turn.titleEvent", date: Date(),
-            pictureURLString: "", admin: "",
-            description: "turn.descriptionEvent", invited: [""],
-            participants: [""], mood: [0], messagerieUUID: "", placeTitle: "",
-            placeAdresse: "", placeLatitude: 0, placeLongitude: 0),
-        coordinator: Coordinator())
-
-}*/
 
 struct CustomRoundedCorners: Shape {
     var radius: CGFloat = 25.0

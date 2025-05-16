@@ -23,7 +23,7 @@ struct CFQFormView: View {
                         },
                         titleScreen: "CFQ ?"
                     )
-                    
+
                     VStack {
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {

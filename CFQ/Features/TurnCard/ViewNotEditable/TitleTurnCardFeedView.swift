@@ -17,7 +17,7 @@ struct TitleTurnCardFeedView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(turn.titleEvent)
-                .tokenFont(.Title_Inter_semibold_24)
+                .tokenFont(.Title_Gigalypse_24)
                 .padding(.bottom, 16)
                 .bold()
                 .textCase(.uppercase)
@@ -37,7 +37,9 @@ struct TitleTurnCardFeedView: View {
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {})
+                ButtonParticipate(action: {
+                    
+                })
             }
 
             PreviewProfile(pictures: [], previewProfileType: .userComming)
