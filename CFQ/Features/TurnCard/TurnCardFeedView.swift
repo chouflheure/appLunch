@@ -2,12 +2,12 @@
 import SwiftUI
 
 struct TurnCardFeedView: View {
-    var turn: Turn
-    var onClickTurn: () -> Void
+    @ObservedObject var turn: Turn
+    @ObservedObject var coordinator: Coordinator
 
-    init(turn: Turn, onclickTurn: @escaping () -> Void) {
+    init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
-        self.onClickTurn = onclickTurn
+        self.coordinator = coordinator
     }
     
     var body: some View {
@@ -22,10 +22,10 @@ struct TurnCardFeedView: View {
                         .frame(height: 150)
                     
                     // Title ( Title / Guest )
-                    TitleTurnCardFeedView(turn: turn)
+                    TitleTurnCardFeedView(turn: turn, coordinator: coordinator)
                         .padding(.horizontal, 16)
                         .padding(.top, 20)
-                    
+
                     // Informations ( Mood / Date / Loc )
                     MainInformationsPreviewFeedView(turn: turn)
                         .padding(.horizontal, 16)
@@ -46,14 +46,11 @@ struct TurnCardFeedView: View {
             .padding(.horizontal, 12)
             .zIndex(1)
         }
-
         .onTapGesture {
-            onClickTurn()
+            coordinator.turnSelected = turn
+            withAnimation {
+                coordinator.showTurnFeedDetail = true
+            }
         }
-            /*
-        .fullScreenCover(isPresented: $viewModel.showDetailTurnCard) {
-            TurnCardDetailsView(viewModel: viewModel)
-        }
-             */
     }
 }

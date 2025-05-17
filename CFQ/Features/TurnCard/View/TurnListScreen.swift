@@ -85,6 +85,12 @@ struct TurnListScreen: View {
                 }
             }
         }
+        
+        .onChange(of: coordinator.showTurnCardView) { _ in
+            if !coordinator.showTurnCardView {
+                vm.fecthTurn()
+            }
+        }
         .onAppear {
             vm.fecthTurn()
         }

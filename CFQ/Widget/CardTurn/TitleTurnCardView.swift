@@ -27,9 +27,7 @@ struct TitleTurnCardPreviewView: View {
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {
-                    
-                })
+                ButtonParticipate(action: {}, selectedOption: .constant(.yes))
             }
             
             Text("0 Personne y va pour l'instant")
@@ -46,7 +44,10 @@ struct TitleTurnCardDetailView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-
+            TextField("", text: $viewModel.titleEvent)
+                .focused($isFocused)
+                .padding(.bottom, 16)
+            /*
             CustomTextField(
                 text: $viewModel.turn.titleEvent,
                 keyBoardType: .default,
@@ -55,7 +56,7 @@ struct TitleTurnCardDetailView: View {
             )
             .focused($isFocused)
             .padding(.bottom, 16)
-
+*/
             HStack {
                 CachedAsyncImageView(urlString: viewModel.adminUser.profilePictureUrl, designType: .scaledToFill_Circle)
                     .frame(width: 50, height: 50)
@@ -72,7 +73,8 @@ struct TitleTurnCardDetailView: View {
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {})
+                ButtonParticipate(action: {}, selectedOption: .constant(.yes))
+
             }
 
             Button(action: {}) {

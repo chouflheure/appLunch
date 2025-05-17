@@ -55,18 +55,12 @@ struct HeaderCardViewDetail: View {
                         }
                     }) {
                         Image(.iconArrow)
-                            .resizable()
-                            .foregroundColor(.white)
-                            .scaledToFit()
-                            .frame(height: 30)
                             .rotationEffect(Angle(degrees: -90))
+                            .foregroundColor(.white)
+                            .frame(width: 24, height: 24)
                             .padding(.all, 5)
-                            .background(.black)
+                            .background(.gray)
                             .clipShape(Circle())
-                            .overlay() {
-                                Circle()
-                                    .stroke(.white, style: StrokeStyle(lineWidth: 2))
-                            }
                     }
                     .frame(width: 50, height: 50)
                 }

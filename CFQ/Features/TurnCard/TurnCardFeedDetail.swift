@@ -2,7 +2,6 @@
 import SwiftUI
 
 struct TurnCardDetailsFeedView: View {
-//     @StateObject var viewModel: TurnCardViewModel
     @ObservedObject var coordinator: Coordinator
 
     var body: some View {
@@ -23,9 +22,12 @@ struct TurnCardDetailsFeedView: View {
                             .frame(height: 200)
 
                         // Title ( Title / Guest )
-                        TitleTurnCardDetailFeedView(turn: checkTurnSelectedNotNull())
-                            .padding(.horizontal, 16)
-                            .zIndex(2)
+                        TitleTurnCardDetailFeedView(
+                            turn: checkTurnSelectedNotNull(),
+                            coordinator: coordinator
+                        )
+                        .padding(.horizontal, 16)
+                        .zIndex(2)
                         
                         // Informations ( Mood / Date / Loc )
                         MainInformationsDetailFeedView(turn: checkTurnSelectedNotNull())
@@ -43,7 +45,7 @@ struct TurnCardDetailsFeedView: View {
             .ignoresSafeArea()
         }
     }
-    
+
     private func checkTurnSelectedNotNull() -> Turn {
         guard let turn = coordinator.turnSelected else {
             coordinator.showTurnFeedDetail = false
@@ -71,7 +73,7 @@ struct HeaderCardViewFeedDetailView: View {
         VStack {
             ZStack {
                 ZStack(alignment: .top) {
-                    CachedAsyncImageView(urlString: turn.pictureURLString, designType: .fullScreenImageTurn)
+                    CachedAsyncImageView(urlString: turn.pictureURLString, designType: .fullScreenImageTurnDetail)
                     
                     HStack(alignment: .center) {
                         Button(action: {
@@ -80,7 +82,9 @@ struct HeaderCardViewFeedDetailView: View {
                             Image(.iconArrow)
                                 .foregroundColor(.white)
                                 .frame(width: 24, height: 24)
-                                .padding(.leading, 16)
+                                .padding(.all, 5)
+                                .background(.gray)
+                                .clipShape(Circle())
                         })
 
                         Spacer()
@@ -90,7 +94,7 @@ struct HeaderCardViewFeedDetailView: View {
                             monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).mois
                         )
                     }
-                    .padding(.top, 50)
+                    .padding(.top, 100)
                     .padding(.horizontal, 16)
                 }
             }
@@ -102,15 +106,23 @@ struct HeaderCardViewFeedDetailView: View {
 struct TitleTurnCardDetailFeedView: View {
 
     var turn: Turn
+    @ObservedObject var coordinator: Coordinator
+    @State var status: TypeParticipateButton = .none
 
-    init(turn: Turn) {
+    init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
+        self.coordinator = coordinator
     }
 
     var body: some View {
         VStack(alignment: .leading) {
             Text(turn.titleEvent)
                 .tokenFont(.Title_Gigalypse_24)
+                .background {
+                    Color.gray.opacity(0.6)
+                        .blur(radius: 10)
+                        .padding(-5) // Pour que le flou dépasse un peu du texte
+                }
                 .padding(.bottom, 16)
 
             HStack {
@@ -122,20 +134,31 @@ struct TitleTurnCardDetailFeedView: View {
                     .lineLimit(1)
 
                 Spacer()
-                    .onTapGesture {}
 
                 Button(action: {}) {
                     Image(systemName: "message")
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {})
+                ButtonParticipate(
+                    action: {
+                        withAnimation {
+                            coordinator.showSheetParticipateAnswers = coordinator.turnSelected?.adminContact?.uid != coordinator.user?.uid
+                        }
+                    },
+                    selectedOption: (coordinator.turnSelected?.adminContact?.uid == coordinator.user?.uid) ? .constant(.yes) : $status
+                )
             }
-
             // TODO: - Add participants
             PreviewProfile(pictures: [], previewProfileType: .userComming)
                 .padding(.vertical, 8)
         }
+        .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
+            AllOptionsAnswerParticpateButton(participateButtonSelected: $status)
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(250)])
+        }
+         
     }
 }
 
@@ -154,6 +177,7 @@ struct MainInformationsDetailFeedView: View {
                 HStack {
                     ForEach(Array(turn.mood), id: \.self) { mood in
                         Mood().data(for: MoodType.convertIntToMoodType(MoodType(rawValue: mood)?.rawValue ?? 0))
+                            .padding(.trailing, 10)
                     }
                 }
             }
@@ -216,7 +240,7 @@ struct DescriptionTurnCardDetailFeedView: View {
     var body: some View {
         HStack {
             Text(turn.description)
-                .tokenFont(.Body_Inter_Medium_14)
+                .tokenFont(.Body_Inter_Regular_14)
                 .padding(.bottom, 20)
                 .padding(.top, 10)
                 .multilineTextAlignment(.leading)

@@ -71,6 +71,7 @@ internal enum PictureCacheDesignType {
     case scaledToFill_Circle
     case scaledToFill_Clipped
     case fullScreenImageTurn
+    case fullScreenImageTurnDetail
 }
 
 struct CachedAsyncImageView: View {
@@ -108,6 +109,15 @@ struct CachedAsyncImageView: View {
                         .resizable()
                         .scaledToFill()
                         .frame(height: 200)
+                        .frame(width: UIScreen.main.bounds.width)
+                        .contentShape(Rectangle())
+                        .clipped()
+                    
+                case .fullScreenImageTurnDetail:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 300)
                         .frame(width: UIScreen.main.bounds.width)
                         .contentShape(Rectangle())
                         .clipped()

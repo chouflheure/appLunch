@@ -49,14 +49,11 @@ class FeedViewModel: ObservableObject {
                 // Important: Sur le thread principal pour les UI updates
                 DispatchQueue.main.async {
                     // Créez une copie du tableau entier pour déclencher le changement observable
-                    var updatedTurns = self.turns
+                    let updatedTurns = self.turns
                     updatedTurns[index].adminContact = adminContact
                     
                     // Remplacez tout le tableau pour que SwiftUI détecte le changement
                     self.turns = updatedTurns
-                    
-                    print("@@@ Admin récupéré pour le turn \(index)")
-                    print("@@@ turn.adminContact = \(adminContact.pseudo)")
                 }
                 
             case .failure(let error):

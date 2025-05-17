@@ -5,7 +5,6 @@ import SwiftUI
 class TurnCoreDataViewModel: ObservableObject {
     private let container: NSPersistentContainer
 
-    
     @Published var savedTurns: [TurnData] = []
 
     init() {

@@ -1,9 +1,8 @@
-//
 
 import SwiftUI
 
 struct DescriptionTurnCardFeedPreviewView: View {
-    var turn: Turn
+    @ObservedObject var turn: Turn
 
     init(turn: Turn) {
         self.turn = turn
@@ -12,6 +11,17 @@ struct DescriptionTurnCardFeedPreviewView: View {
     @State private var truncated = false
 
     var body: some View {
+        
+        HStack {
+            Text(turn.description)
+                .tokenFont(.Body_Inter_Regular_14)
+                .padding(.bottom, 20)
+                .padding(.top, 10)
+                .lineLimit(3)
+                .multilineTextAlignment(.leading)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        /*
         VStack(alignment: .leading, spacing: 0) {
 
             TruncatedTextWithColor(
@@ -43,6 +53,7 @@ struct DescriptionTurnCardFeedPreviewView: View {
 
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+         */
     }
 }
 

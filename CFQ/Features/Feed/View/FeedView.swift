@@ -93,13 +93,7 @@ struct FeedView: View {
 
                 LazyVStack(spacing: 20) {
                     ForEach(viewModel.turns, id: \.uid) { turn in
-                        TurnCardFeedView(turn: turn) {
-                            coordinator.turnSelected = turn
-                            withAnimation {
-                                coordinator.showTurnFeedDetail = true
-                            }
-                        }
-                        
+                        TurnCardFeedView(turn: turn, coordinator: coordinator)
                     }
                 }.padding(.top, 24)
             }
@@ -132,6 +126,7 @@ class TestObjet: Encodable, Decodable {
         try container.encode(referenceUser, forKey: .referenceUser)
     }
 }
+
 import FirebaseFirestore
 class TestRef {
     let firebaseService = FirebaseService()

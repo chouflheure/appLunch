@@ -3,9 +3,11 @@ import SwiftUI
 
 struct TurnCardView: View {
     @ObservedObject var coordinator: Coordinator
+    @StateObject var coreDataViewModel = TurnCoreDataViewModel()
+
     @StateObject var viewModel: TurnCardViewModel
 
-    init(coordinator: Coordinator) {
+    init(coordinator: Coordinator, coreDataViewModel: TurnCoreDataViewModel) {
         self.coordinator = coordinator
 
         let turn = coordinator.turnSelectedPreview ?? TurnPreview(
@@ -88,6 +90,23 @@ struct TurnCardView: View {
 
                     HStack(spacing: 30) {
                         Button(action: {
+                            coreDataViewModel.addTurn(
+                                turn: TurnPreview(
+                                    uid: UUID().description,
+                                    titleEvent: viewModel.titleEvent,
+                                    date: viewModel.dateEvent,
+                                    admin: coordinator.user?.uid ?? "",
+                                    description: viewModel.description,
+                                    invited: [],
+                                    mood: [],
+                                    messagerieUUID: "",
+                                    placeTitle: "",
+                                    placeAdresse: "",
+                                    placeLatitude: 0,
+                                    placeLongitude: 0,
+                                    imageEvent: viewModel.imageSelected
+                                )
+                            )
                             //TurnCoreDataViewModel().addTurn(turn: TurnPreview(uid: "", titleEvent: "Modifier", date: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: viewModel.imageSelected))
                         }, label: {
                             HStack {
@@ -100,10 +119,9 @@ struct TurnCardView: View {
                                     .padding(.vertical, 10)
 
                                 Text("Enregistrer")
-                                    .foregroundColor(.white)
+                                    .tokenFont(.Body_Inter_Medium_14)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
-                                    .font(.system(size: 15, weight: .bold))
                             }
                         })
                         .frame(width: 150)

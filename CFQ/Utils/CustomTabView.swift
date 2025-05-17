@@ -154,8 +154,8 @@ struct CustomTabView: View {
                                 TeamView(coordinator: coordinator)
                                 // Screen()
                             } else {
-                                // ProfileView(coordinator: coordinator)
-                                TurnCoreDataView()
+                                ProfileView(coordinator: coordinator)
+                                // TurnCoreDataView()
                                 
                             }
                         }
@@ -207,6 +207,13 @@ struct CustomTabView: View {
                         .padding(.vertical)
                         .background(.black)
                     }
+                    /*
+                    .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
+                        AllOptionsAnswerParticpateButton(participateButtonSelected: .constant(.maybe))
+                            .presentationDragIndicator(.visible)
+                            .presentationDetents([.height(350)])
+                    }
+                     */
                     .fullScreenCover(isPresented: $coordinator.showMapFullScreen) {
                         TestMap(selectedEvent: $selectedEvent, coordinator: coordinator)
                     }
@@ -242,7 +249,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showTurnCardView {
-                        TurnCardView(coordinator: coordinator)
+                        TurnCardView(coordinator: coordinator, coreDataViewModel: TurnCoreDataViewModel())
                             .transition(.move(edge: .trailing))
                     }
                     

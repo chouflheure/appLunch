@@ -3,7 +3,7 @@ import SwiftUI
 
 struct HeaderCardNotEditableView: View {
     
-    var turn: Turn
+    @ObservedObject var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
 
     init(turn: Turn) {

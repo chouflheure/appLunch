@@ -3,7 +3,7 @@ import SwiftUI
 
 struct MainInformationsPreviewFeedView: View {
     
-    var turn: Turn
+    @ObservedObject var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
 
     init(turn: Turn) {
@@ -19,12 +19,12 @@ struct MainInformationsPreviewFeedView: View {
                         } else {
                             ForEach(Array(turn.mood), id: \.self) { moodIndex in
                                 Mood().data(for: MoodType(rawValue: moodIndex) ?? .other)
+                                    .padding(.leading, 12)
                                     
                             }
                         }
                     }
                 }
-                .padding(.horizontal, 12)
                 
                 HStack {
 
