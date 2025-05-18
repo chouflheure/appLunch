@@ -60,16 +60,15 @@ struct FeedView: View {
                                 CirclePictureStatusAndPseudo(
                                     userPreview: friend,
                                     onClick: {
+                                        coordinator.profileUserSelected = User(
+                                            uid: friend.uid,
+                                            name: friend.name,
+                                            firstName: friend.firstName,
+                                            pseudo: friend.pseudo,
+                                            profilePictureUrl: friend.profilePictureUrl,
+                                            isActive: friend.isActive
+                                        )
                                         withAnimation {
-                                            coordinator.profileUserSelected = User(
-                                                uid: friend.uid,
-                                                name: friend.name,
-                                                firstName: friend.firstName,
-                                                pseudo: friend.pseudo,
-                                                profilePictureUrl: friend.profilePictureUrl,
-                                                isActive: friend.isActive
-                                            )
-                                            
                                             coordinator.showProfileFriend = true
                                         }
                                     }
@@ -97,7 +96,9 @@ struct FeedView: View {
                     }
                 }.padding(.top, 24)
             }
-        }.onAppear {
+        }
+        .padding(.top, 15)
+        .onAppear {
             // TestRef()
         }
     }

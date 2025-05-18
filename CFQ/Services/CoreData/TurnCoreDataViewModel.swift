@@ -13,10 +13,9 @@ class TurnCoreDataViewModel: ObservableObject {
             if let error = error {
                 print("@@@ error to load CoreData \(error)")
             } else {
-                print("@@@ success to load CoreData")
+                self.fecthTurn()
             }
         }
-        fecthTurn()
     }
     
     func fecthTurn() {

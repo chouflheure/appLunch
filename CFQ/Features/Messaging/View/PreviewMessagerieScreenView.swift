@@ -9,44 +9,42 @@ struct PreviewMessagerieScreenView: View {
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showMessageScreen) {
             SafeAreaContainer {
-                ZStack {
-                    VStack(spacing: 0) {
-                        HeaderBackLeftScreen(
-                            onClickBack: {
-                                withAnimation {
-                                    coordinator.showMessageScreen = false
-                                }
-                            },
-                            titleScreen: StringsToken.Messaging.titleScreen
-                        )
-                        ScrollView(.vertical, showsIndicators: false) {
-                            Spacer()
-                                .frame(height: 12)
-                            VStack(alignment: .leading) {
-                                SearchBarView(
-                                    text: $viewModel.researchText,
-                                    placeholder: StringsToken.SearchBar
-                                        .placeholderConversation,
-                                    onRemoveText: {
-                                        viewModel.removeText()
-                                    },
-                                    onTapResearch: {
-                                        viewModel.researche()
-                                    }
-                                ).padding(.top, 16)
-
-                                ForEach(viewModel.messageList, id: \.self) {
-                                    data in
-                                    CellMessagingView(data: data) { _ in
-                                        withAnimation {
-                                            showDetail = true
-                                        }
-                                    }.padding(.top, 16)
-                                }.padding(.horizontal, 16)
+                VStack(spacing: 0) {
+                    HeaderBackLeftScreen(
+                        onClickBack: {
+                            withAnimation {
+                                coordinator.showMessageScreen = false
                             }
-                        }
+                        },
+                        titleScreen: StringsToken.Messaging.titleScreen
+                    )
+                    ScrollView(.vertical, showsIndicators: false) {
+                        Spacer()
+                            .frame(height: 12)
+                        VStack(alignment: .leading) {
+                            SearchBarView(
+                                text: $viewModel.researchText,
+                                placeholder: StringsToken.SearchBar
+                                    .placeholderConversation,
+                                onRemoveText: {
+                                    viewModel.removeText()
+                                },
+                                onTapResearch: {
+                                    viewModel.researche()
+                                }
+                            ).padding(.top, 16)
 
+                            ForEach(viewModel.messageList, id: \.self) {
+                                data in
+                                CellMessagingView(data: data) { _ in
+                                    withAnimation {
+                                        showDetail = true
+                                    }
+                                }.padding(.top, 16)
+                            }.padding(.horizontal, 16)
+                        }
                     }
+
                 }
             }
             .ignoresSafeArea(.keyboard)
@@ -54,18 +52,18 @@ struct PreviewMessagerieScreenView: View {
                 UIApplication.shared.endEditing()
             }
         }
-        
+
         if showDetail {
             destinationView()
                 .transition(.move(edge: .trailing))
                 .zIndex(1)
         }
     }
-        
+
     @ViewBuilder
-        func destinationView() -> some View {
-            MessagerieScreenView(isPresented: $showDetail)
-        }
+    func destinationView() -> some View {
+        MessagerieScreenView(isPresented: $showDetail)
+    }
 }
 
 #Preview {

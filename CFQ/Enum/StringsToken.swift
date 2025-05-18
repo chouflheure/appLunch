@@ -61,6 +61,7 @@ enum StringsToken {
         static let headerABug = "Un bug, une remarque"
         static let headerNotifications = "Notifications"
         static let noteTheApp = "Note l'app"
+        static let archives = "Archives"
     }
     
     enum ButtonTitle {

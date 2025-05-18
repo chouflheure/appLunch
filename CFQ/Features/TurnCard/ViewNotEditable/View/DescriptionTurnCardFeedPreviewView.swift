@@ -15,7 +15,7 @@ struct DescriptionTurnCardFeedPreviewView: View {
         HStack {
             Text(turn.description)
                 .tokenFont(.Body_Inter_Regular_14)
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
                 .padding(.top, 10)
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)

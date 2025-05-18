@@ -68,6 +68,7 @@ struct CFQFormView: View {
                                 AddFriendsAndListView(
                                     arrayPicture: $viewModel.friendsAddToCFQ,
                                     arrayFriends: $viewModel.friendsList,
+                                    coordinator: coordinator,
                                     onRemove: { userRemoved in
                                         viewModel.removeFriendsFromList(user: userRemoved)
                                     },

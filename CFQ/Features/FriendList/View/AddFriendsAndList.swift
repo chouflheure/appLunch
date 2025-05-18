@@ -3,6 +3,8 @@ import SwiftUI
 struct AddFriendsAndListView: View {
     @Binding var arrayPicture: Set<UserContact>
     @Binding var arrayFriends: Set<UserContact>
+    @ObservedObject var coordinator: Coordinator
+
     var onRemove: ((UserContact) -> Void)
     var onAdd: ((UserContact) -> Void)
     
@@ -23,6 +25,19 @@ struct AddFriendsAndListView: View {
                                 CellFriendCanRemove(userPreview: user) {
                                     onRemove(user)
                                 }
+                                .onTapGesture {
+                                    coordinator.profileUserSelected = User(
+                                        uid: user.uid,
+                                        name: user.name,
+                                        firstName: user.firstName,
+                                        pseudo: user.pseudo,
+                                        profilePictureUrl: user.profilePictureUrl,
+                                        isActive: user.isActive
+                                    )
+                                    withAnimation {
+                                        coordinator.showProfileFriend = true
+                                    }
+                                }
                             }.frame(height: 100)
                         }
                     }
@@ -40,6 +55,20 @@ struct AddFriendsAndListView: View {
                                 onAdd(user)
                             }
                             .padding(.top, 15)
+                            .onTapGesture {
+                                print("@@@ tap cell")
+                                coordinator.profileUserSelected = User(
+                                    uid: user.uid,
+                                    name: user.name,
+                                    firstName: user.firstName,
+                                    pseudo: user.pseudo,
+                                    profilePictureUrl: user.profilePictureUrl,
+                                    isActive: user.isActive
+                                )
+                                withAnimation {
+                                    coordinator.showProfileFriend = true
+                                }
+                            }
                         }
                     }
                 }

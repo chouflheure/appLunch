@@ -233,11 +233,6 @@ struct CustomTabView: View {
                         .transition(.move(edge: .trailing))
                     }
                     
-                    if coordinator.showProfileFriend {
-                        FriendProfileView(coordinator: coordinator)
-                            .transition(.move(edge: .trailing))
-                    }
-                    
                     if coordinator.showTeamDetail {
                         TeamDetailView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
@@ -277,10 +272,15 @@ struct CustomTabView: View {
                         PreviewMessagerieScreenView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
+                    
+                    if coordinator.showProfileFriend {
+                        FriendProfileView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
                 }
             )
             // .frame(width: geometry.size.width, height: geometry.size.height)
-            .animation(.easeInOut, value: coordinator.showCreateTeam)
+            .animation(.easeInOut, value: coordinator.showProfileFriend)
         }
     }
 }

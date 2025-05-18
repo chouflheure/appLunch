@@ -133,6 +133,8 @@ struct SettingsView: View {
                 OnboardingPreviewSettingsView(showDetail: $showDetail)
             case .bugReport:
                 IssueReportView(showDetail: $showDetail)
+            case .archive:
+                NotificationsListView(showDetail: $showDetail)
             case .notifications:
                 NotificationsListView(showDetail: $showDetail)
             case .logout:
