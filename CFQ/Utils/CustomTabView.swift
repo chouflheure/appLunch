@@ -157,6 +157,7 @@ struct CustomTabView: View {
                                 ProfileView(coordinator: coordinator)
                                 // TurnCoreDataView()
                                 
+                                
                             }
                         }
                         .frame(maxHeight: .infinity)

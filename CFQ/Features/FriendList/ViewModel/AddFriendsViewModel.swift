@@ -45,6 +45,7 @@ class AddFriendsViewModel: ObservableObject {
             )
         ]
     )
+
     @Published var friendsList = Set<UserContact>(
         [
             UserContact(

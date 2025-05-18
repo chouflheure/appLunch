@@ -98,6 +98,7 @@ enum StringsToken {
     
     enum Team {
         static let teamTitle = "MES TEAMs"
+        static let newTeam = "NOUVELLE TEAM"
     }
     
     enum Turn {

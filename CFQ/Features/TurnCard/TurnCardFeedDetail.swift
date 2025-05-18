@@ -175,16 +175,15 @@ struct MainInformationsDetailFeedView: View {
         VStack(alignment: .leading, spacing: 20) {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(Array(turn.mood), id: \.self) { mood in
-                        Mood().data(for: MoodType.convertIntToMoodType(MoodType(rawValue: mood)?.rawValue ?? 0))
-                            .padding(.trailing, 10)
+                    ForEach(Array(turn.mood), id: \.self) { moodIndex in
+                        Mood().data(for: MoodType.convertIntToMoodType(MoodType(rawValue: moodIndex)?.rawValue ?? 0))
+                            .padding(.leading, 12)
+                            .padding(.trailing, moodIndex == Array(turn.mood).last ? 12 : 0)
                     }
                 }
             }
-            .padding(.horizontal, 12)
             
             HStack {
-
                 Image(.iconDate)
                     .resizable()
                     .frame(width: 20, height: 20)

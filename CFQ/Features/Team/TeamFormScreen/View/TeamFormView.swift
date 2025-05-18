@@ -2,7 +2,7 @@ import PhotosUI
 import SwiftUI
 
 struct TeamFormView: View {
-    // @Binding var showDetail: Bool
+
     @ObservedObject var coordinator: Coordinator
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
@@ -13,35 +13,21 @@ struct TeamFormView: View {
         DraggableViewLeft(isPresented: $coordinator.showCreateTeam) {
             SafeAreaContainer {
                 VStack {
-                    HStack {
-                        Button(action: {
+                    HeaderBackLeftScreen(
+                        onClickBack: {
                             withAnimation {
                                 coordinator.showCreateTeam = false
                             }
-                        }) {
-                            Image(.iconArrow)
-                                .foregroundStyle(.white)
-                                .frame(width: 24, height: 24)
-                        }
-
-                        Spacer()
-
-                        Text("NOUVELLE TEAM")
-                            .tokenFont(.Title_Gigalypse_24)
-
-                        Spacer()
-
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 25)
-                    .zIndex(100)
+                        },
+                        titleScreen: StringsToken.Team.newTeam
+                    )
 
                     ZStack(alignment: .bottom) {
                         if let selectedImage = viewModel.imageProfile {
                             selectedImage
                                 .resizable()
                                 .scaledToFill()
-                                .frame(height: 100)
+                                .frame(width: 100, height: 100)
                                 .clipShape(Circle())
                         } else {
                             ZStack {
@@ -56,8 +42,9 @@ struct TeamFormView: View {
                         }
                     }
                     .padding(.vertical, 32)
+                    .contentShape(Circle())
                     .onTapGesture {
-                        showPhotoPicker()
+                        isPhotoPickerPresented = true
                     }
                     .photosPicker(
                         isPresented: $isPhotoPickerPresented,
@@ -76,10 +63,39 @@ struct TeamFormView: View {
                     CustomTextField(
                         text: $viewModel.nameTeam,
                         keyBoardType: .default,
-                        placeHolder: "test",
+                        placeHolder: "Nom de ta team",
                         textFieldType: .sign
                     )
                     .padding(.horizontal, 16)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        VStack {
+                            HStack {
+                                ForEach(Array(viewModel.friendsAdd), id: \.self)
+                                { user in
+                                    CellFriendCanRemove(userPreview: user) {
+                                        viewModel.removeFriendsFromList(
+                                            user: user)
+                                    }
+                                    .onTapGesture {
+                                        coordinator.profileUserSelected = User(
+                                            uid: user.uid,
+                                            name: user.name,
+                                            firstName: user.firstName,
+                                            pseudo: user.pseudo,
+                                            profilePictureUrl: user
+                                                .profilePictureUrl,
+                                            isActive: user.isActive
+                                        )
+                                        withAnimation {
+                                            coordinator.showProfileFriend = true
+                                        }
+                                    }
+                                }.frame(height: 100)
+                            }
+                        }
+                    }
+                    .padding(.top, 15)
 
                     Button(action: {
                         viewModel.showFriendsList = true
@@ -88,23 +104,9 @@ struct TeamFormView: View {
                             .tokenFont(.Body_Inter_Medium_16)
                     }
                     .padding()
-                    .overlay() {
+                    .overlay {
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(.white, lineWidth: 1)
-                    }
-                    .padding(.top, 15)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        VStack {
-                            HStack {
-                                ForEach(Array(viewModel.friendsAdd), id: \.self) { user in
-                                /*    CellPictureCanRemove(name: user.name) {
-                                        viewModel.removeFriendsFromList(user: user)
-                                    }
-                                 */
-                                }.frame(height: 100)
-                            }
-                        }
                     }
                     .padding(.top, 15)
 
@@ -116,22 +118,22 @@ struct TeamFormView: View {
                         },
                         title: "Créer la team",
                         largeButtonType: .teamCreate,
-                        isDisabled: viewModel.friendsAdd.isEmpty ||
-                            viewModel.nameTeam.isEmpty ||
-                            viewModel.imageProfile == nil
+                        isDisabled: viewModel.friendsAdd.isEmpty
+                            || viewModel.nameTeam.isEmpty
+                            || viewModel.imageProfile == nil
                     )
                     .padding(.horizontal, 16)
-                    
+
                 }
             }
-            /*
             .fullScreenCover(isPresented: $viewModel.showFriendsList) {
                 ListFriendToAdd(
                     isPresented: $viewModel.showFriendsList,
-                    coordinator: coordinator
+                    coordinator: coordinator,
+                    friendsOnTeam: $viewModel.friendsAdd,
+                    allFriends: $viewModel.friendsList
                 )
             }
-             */
             .padding(.top, 30)
             .padding(.bottom, 30)
         }
@@ -152,26 +154,27 @@ class ListFriendToAddViewModel: ObservableObject {
     @Binding var allFriends: Set<UserContact>
     private var allFriendstemps = Set<UserContact>()
 
-    init(coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>, allFriends: Binding<Set<UserContact>>) {
+    init(
+        coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>,
+        allFriends: Binding<Set<UserContact>>
+    ) {
         self.coordinator = coordinator
         self._friendsOnTeam = friendsOnTeam
         self._allFriends = allFriends
-        sortListFriendOnTeam()
+        // sortListFriendOnTeam()
         allFriendstemps = friendsOnTeam.wrappedValue
     }
-    
+
     func sortListFriendOnTeam() {
         /*
         if let friendsOnTeamFromCoordinator = coordinator.teamDetail?.friends {
             friendsOnTeam = Set(friendsOnTeamFromCoordinator)
         }
-         
+
          */
         // friendsOnTeam = friends
         allFriends = allFriends.filter { !friendsOnTeam.contains($0) }
     }
-    
-    
 
     var filteredNames: Set<UserContact> {
         let searchWords = researchText.lowercased().split(separator: " ")
@@ -182,7 +185,6 @@ class ListFriendToAddViewModel: ObservableObject {
         }
     }
 
-    
     func removeFriendsFromList(user: UserContact) {
         friendsOnTeam.remove(user)
         allFriends.insert(user)
@@ -212,12 +214,18 @@ struct ListFriendToAdd: View {
     @Binding var friendsOnTeam: Set<UserContact>
     @Binding var allFriends: Set<UserContact>
 
-    // @Binding var allfriends: Set<UserContact>
-
-    init(isPresented: Binding<Bool>, coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>, allFriends: Binding<Set<UserContact>>) {
+    init(
+        isPresented: Binding<Bool>,
+        coordinator: Coordinator,
+        friendsOnTeam: Binding<Set<UserContact>>,
+        allFriends: Binding<Set<UserContact>>
+    ) {
         self._isPresented = isPresented
         self.coordinator = coordinator
-        self._viewModel = StateObject(wrappedValue: ListFriendToAddViewModel(coordinator: coordinator, friendsOnTeam: friendsOnTeam, allFriends: allFriends))
+        self._viewModel = StateObject(
+            wrappedValue: ListFriendToAddViewModel(
+                coordinator: coordinator, friendsOnTeam: friendsOnTeam,
+                allFriends: allFriends))
         self._friendsOnTeam = friendsOnTeam
         self._allFriends = allFriends
     }
@@ -236,7 +244,7 @@ struct ListFriendToAdd: View {
                             viewModel.researche()
                         }
                     )
-                    
+
                     Button(action: {
                         isPresented = false
                     }) {
@@ -250,27 +258,18 @@ struct ListFriendToAdd: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 50)
                 .zIndex(100)
-/*
+
                 AddFriendsAndListView(
-                    arrayPicture: $friendsOnTeam,
-                    arrayFriends: $viewModel.userFriends,
+                    arrayPicture: viewModel.$friendsOnTeam,
+                    arrayFriends: viewModel.$allFriends,
+                    coordinator: coordinator,
                     onRemove: { userRemoved in
-                        viewModel.removeFriendsFromList(user: userRemoved)
-                    },
+                        viewModel.removeFriendsFromList(user: userRemoved) },
                     onAdd: { userAdd in
-                        viewModel.addFriendsToList(user: userAdd)
-                    }
+                        viewModel.addFriendsToList(user: userAdd) }
                 )
- */
                 .padding(.top, 30)
             }
         }
     }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        // TeamFormView(showDetail: .constant(true))
-    }.ignoresSafeArea()
 }

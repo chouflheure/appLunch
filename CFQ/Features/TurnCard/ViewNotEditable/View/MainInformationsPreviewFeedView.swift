@@ -20,7 +20,7 @@ struct MainInformationsPreviewFeedView: View {
                             ForEach(Array(turn.mood), id: \.self) { moodIndex in
                                 Mood().data(for: MoodType(rawValue: moodIndex) ?? .other)
                                     .padding(.leading, 12)
-                                    
+                                    .padding(.trailing, moodIndex == Array(turn.mood).last ? 12 : 0)
                             }
                         }
                     }

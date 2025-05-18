@@ -41,7 +41,7 @@ struct DescriptionTurnCardPreviewView: View {
 
         HStack {
             Text(viewModel.description.isEmpty ? StringsToken.Turn.placeholderDescriptionEvent : viewModel.description)
-                .tokenFont(viewModel.description.isEmpty ? .Placeholder_Inter_Gigalypse_14 : .Body_Inter_Regular_14)
+                .tokenFont(viewModel.description.isEmpty ? .Placeholder_Gigalypse_14 : .Body_Inter_Regular_14)
                 .padding(.bottom, 20)
                 .padding(.top, 10)
                 .lineLimit(3)
