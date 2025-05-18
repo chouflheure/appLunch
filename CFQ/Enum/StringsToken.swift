@@ -7,8 +7,6 @@ enum StringsToken {
         static let Inscritpion = "Inscription"
         static let ConnectYou = "Connecte-toi"
         static let InscritpionYou = "Inscription-toi"
-        static let NoAccount = "Pas encore de compte ?"
-        static let AlreadyAccount = "T’as déjà un compte ?"
         static let PlaceholderPhoneNumber = "06 ..."
         static let GuestMode = "Mode invité"
 
@@ -63,6 +61,7 @@ enum StringsToken {
         static let headerABug = "Un bug, une remarque"
         static let headerNotifications = "Notifications"
         static let noteTheApp = "Note l'app"
+        static let archives = "Archives"
     }
     
     enum ButtonTitle {
@@ -104,6 +103,7 @@ enum StringsToken {
     enum Turn {
         static let titleTurn = "TURN"
         static let titleTurnPreview = "TURN Preview"
+        static let placeholderDescriptionEvent = "Décris l’event, raconte pas ta vie"
     }
     
     enum SearchBar {

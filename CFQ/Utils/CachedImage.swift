@@ -1,5 +1,5 @@
-import SwiftUI
 import Lottie
+import SwiftUI
 
 private class ImageCache {
     static private var cache: [URL: Image] = [:]
@@ -70,15 +70,19 @@ private struct CachedAsyncImage<Content>: View where Content: View {
 internal enum PictureCacheDesignType {
     case scaledToFill_Circle
     case scaledToFill_Clipped
+    case fullScreenImageTurn
+    case fullScreenImageTurnDetail
 }
 
 struct CachedAsyncImageView: View {
     let urlString: String
     let designType: PictureCacheDesignType
-    let animation = LottieView(animation: .named(StringsToken.Animation.loaderPicture))
+    let animation = LottieView(
+        animation: .named(StringsToken.Animation.loaderPicture))
 
     var body: some View {
-        CachedAsyncImage(url: URL(string: urlString) ?? URL(string: "")) { phase in
+        CachedAsyncImage(url: URL(string: urlString) ?? URL(string: "")) {
+            phase in
             switch phase {
             case .empty:
                 animation
@@ -87,18 +91,36 @@ struct CachedAsyncImageView: View {
 
             case .success(let image):
                 switch designType {
-                    case .scaledToFill_Circle:
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .clipShape(Circle())
-                                        
-                    case .scaledToFill_Clipped:
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 100)
-                            .clipped()
+                case .scaledToFill_Circle:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+
+                case .scaledToFill_Clipped:
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 150)
+                        .clipped()
+
+                case .fullScreenImageTurn:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 200)
+                        .frame(width: UIScreen.main.bounds.width)
+                        .contentShape(Rectangle())
+                        .clipped()
+                    
+                case .fullScreenImageTurnDetail:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 300)
+                        .frame(width: UIScreen.main.bounds.width)
+                        .contentShape(Rectangle())
+                        .clipped()
                 }
 
             case .failure(_):

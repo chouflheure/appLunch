@@ -3,26 +3,27 @@ import SwiftUI
 
 struct TurnCardView: View {
     @ObservedObject var coordinator: Coordinator
+    @StateObject var coreDataViewModel = TurnCoreDataViewModel()
+
     @StateObject var viewModel: TurnCardViewModel
 
-    init(coordinator: Coordinator) {
+    init(coordinator: Coordinator, coreDataViewModel: TurnCoreDataViewModel) {
         self.coordinator = coordinator
 
-        let turn = coordinator.turnSelected ?? Turn(
+        let turn = coordinator.turnSelectedPreview ?? TurnPreview(
                 uid: "",
                 titleEvent: "",
                 date: nil,
-                pictureURLString: "",
                 admin: "",
                 description: "",
                 invited: [""],
-                participants: [""],
                 mood: [],
                 messagerieUUID: "",
                 placeTitle: "",
                 placeAdresse: "",
                 placeLatitude: 0,
-                placeLongitude: 0
+                placeLongitude: 0,
+                imageEvent: nil
             )
 
         _viewModel = StateObject(wrappedValue: TurnCardViewModel(turn: turn, coordinator: coordinator))
@@ -61,11 +62,12 @@ struct TurnCardView: View {
                             // Header ( Date / Picture / TURN )
                             HeaderCardPreviewView(viewModel: viewModel)
                                 .padding(.bottom, 15)
-                                .frame(height: 100)
+                                .frame(height: 150)
                             
                             // Title ( Title / Guest )
                             TitleTurnCardPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
+                                .padding(.top, 20)
                             
                             // Informations ( Mood / Date / Loc )
                             MainInformationsPreviewView(viewModel: viewModel)
@@ -77,29 +79,49 @@ struct TurnCardView: View {
                             
                             Spacer()
                         }
-                        .cornerRadius(20)
-                        .frame(height: 500)
-                        .padding(.horizontal, 12)
-                        
                     }
+                    .cornerRadius(20)
+                    .padding(.horizontal, 12)
+                    .frame(height: 550)
                     .padding(.bottom, 30)
                     .zIndex(1)
                     
                     Spacer()
 
                     HStack(spacing: 30) {
-                        Button(action: {}, label: {
+                        Button(action: {
+                            coreDataViewModel.addTurn(
+                                turn: TurnPreview(
+                                    uid: UUID().description,
+                                    titleEvent: viewModel.titleEvent,
+                                    date: viewModel.dateEvent,
+                                    admin: coordinator.user?.uid ?? "",
+                                    description: viewModel.description,
+                                    invited: [],
+                                    mood: [],
+                                    messagerieUUID: "",
+                                    placeTitle: "",
+                                    placeAdresse: "",
+                                    placeLatitude: 0,
+                                    placeLongitude: 0,
+                                    imageEvent: viewModel.imageSelected
+                                )
+                            )
+                            //TurnCoreDataViewModel().addTurn(turn: TurnPreview(uid: "", titleEvent: "Modifier", date: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: viewModel.imageSelected))
+                        }, label: {
                             HStack {
-                                Image(.iconTrash)
+                                Image(.iconSave)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
                                     .foregroundColor(.white)
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
-                                    .font(.system(size: 10, weight: .bold))
-                                Text("Supprimer")
-                                    .foregroundColor(.white)
+
+                                Text("Enregistrer")
+                                    .tokenFont(.Body_Inter_Medium_14)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
-                                    .font(.system(size: 15, weight: .bold))
                             }
                         })
                         .frame(width: 150)

@@ -11,7 +11,7 @@ struct CirclePictureStatusAndPseudo: View {
                 userPreview: userPreview,
                 onClick: { onClick() }
             )
-            .frame(width: 48, height: 48)
+            .frame(width: 72, height: 72)
             .padding(.bottom, 4)
             Text(userPreview.pseudo)
                 .tokenFont(.Body_Inter_Medium_14)

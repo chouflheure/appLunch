@@ -3,7 +3,7 @@ import SwiftUI
 
 struct HeaderCardNotEditableView: View {
     
-    var turn: Turn
+    @ObservedObject var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
 
     init(turn: Turn) {
@@ -12,7 +12,7 @@ struct HeaderCardNotEditableView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack(alignment: .leading) {
+            ZStack(alignment: .top) {
                 GeometryReader { geometry in
                     CachedAsyncImageView(urlString: turn.pictureURLString, designType: .scaledToFill_Clipped)
                 }
@@ -21,7 +21,7 @@ struct HeaderCardNotEditableView: View {
                     DateLabel(
                         dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).jour,
                         monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).mois
-                    )//.padding(.top, 20)
+                    )
                     
                     Spacer()
            
@@ -29,12 +29,12 @@ struct HeaderCardNotEditableView: View {
                         .tokenFont(.Title_Gigalypse_24)
                         .bold()
                         .textCase(.uppercase)
-                        .font(.system(size: 30))
                     
                 }
+                .padding(.top, 20)
                 .padding(.horizontal, 16)
             }
-            .frame(height: 100)
+            .frame(height: 150)
             .contentShape(Rectangle())
         }
         .frame(maxWidth: .infinity)

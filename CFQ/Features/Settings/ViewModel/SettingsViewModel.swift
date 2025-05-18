@@ -36,6 +36,12 @@ class SettingsViewModel {
         ),
 
         ScreenSettingsData(
+            icon: .iconArchive,
+            label: StringsToken.Settings.archives,
+            screen: .archive
+        ),
+        
+        ScreenSettingsData(
             icon: .iconNotifs,
             label: StringsToken.Settings.notifications,
             screen: .notifications

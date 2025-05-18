@@ -17,14 +17,17 @@ class Coordinator: ObservableObject {
     @Published var showMessageScreen = false
     @Published var showTeamDetailEdit = false
     @Published var showMapFullScreen = false
-
+    @Published var showTurnFeedDetail = false
+    @Published var showSheetParticipateAnswers = false
+    
     @Published var dataApp = DataApp()
     @Published var teamDetail: TeamGlobal?
     @Published var turnSelected: Turn?
+    @Published var turnSelectedPreview: TurnPreview?
     
     @Published var userCFQ: [CFQ] = []
     @Published var userFriends: [UserContact] = []
-    @Published var profileOtherUser: User = User()
+    @Published var profileUserSelected: User = User()
 
     private var auth = Auth.auth()
     private var firebaseService = FirebaseService()

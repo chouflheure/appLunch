@@ -26,3 +26,5 @@ struct CellFriendCanRemove: View {
         }.background(.clear)
     }
 }
+
+

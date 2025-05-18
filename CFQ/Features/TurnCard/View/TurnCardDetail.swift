@@ -39,7 +39,8 @@ struct TurnCardDetailsView: View {
         
     }
 }
-
+/*
 #Preview {
     TurnCardDetailsView(viewModel: TurnCardViewModel(turn: Turn(uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "", invited: [""], participants: [""], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 1, placeLongitude: 1), coordinator: Coordinator()))
 }
+*/

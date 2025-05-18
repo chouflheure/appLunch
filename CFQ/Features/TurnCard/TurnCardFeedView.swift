@@ -2,10 +2,12 @@
 import SwiftUI
 
 struct TurnCardFeedView: View {
-    var turn: Turn
+    @ObservedObject var turn: Turn
+    @ObservedObject var coordinator: Coordinator
 
-    init(turn: Turn) {
+    init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
+        self.coordinator = coordinator
     }
     
     var body: some View {
@@ -17,12 +19,13 @@ struct TurnCardFeedView: View {
                     // Header ( Date / Picture / TURN )
                     HeaderCardNotEditableView(turn: turn)
                         .padding(.bottom, 15)
-                        .frame(height: 100)
+                        .frame(height: 150)
                     
                     // Title ( Title / Guest )
-                    TitleTurnCardFeedView(turn: turn)
+                    TitleTurnCardFeedView(turn: turn, coordinator: coordinator)
                         .padding(.horizontal, 16)
-                    
+                        .padding(.top, 20)
+
                     // Informations ( Mood / Date / Loc )
                     MainInformationsPreviewFeedView(turn: turn)
                         .padding(.horizontal, 16)
@@ -33,21 +36,21 @@ struct TurnCardFeedView: View {
                     
                     Spacer()
                 }
-                .cornerRadius(20)
-                .frame(height: 500)
-                .padding(.horizontal, 12)
-                
             }
+            .overlay {
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.gray, lineWidth: 0.2)
+            }
+            .frame(height: 550)
+            .cornerRadius(20)
+            .padding(.horizontal, 12)
             .zIndex(1)
         }
-
         .onTapGesture {
-            print("@@@ tap card")
+            coordinator.turnSelected = turn
+            withAnimation {
+                coordinator.showTurnFeedDetail = true
+            }
         }
-            /*
-        .fullScreenCover(isPresented: $viewModel.showDetailTurnCard) {
-            TurnCardDetailsView(viewModel: viewModel)
-        }
-             */
     }
 }

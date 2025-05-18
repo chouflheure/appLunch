@@ -40,9 +40,7 @@ struct FriendListScreen: View {
                                 
                                 ForEach(Array(viewModel.friendsList), id: \.self) { user in
                                     CellFriendPseudoNameAction(
-                                        pseudo: user.pseudo,
-                                        name: user.name,
-                                        firstName: user.firstName,
+                                        user: user,
                                         coordinator: coordinator,
                                         type: .remove,
                                         isActionabled: {}

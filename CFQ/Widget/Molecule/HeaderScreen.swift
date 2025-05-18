@@ -49,6 +49,7 @@ struct HeaderBackRightScreen: View {
     var onClickBack: (() -> Void)
     var titleScreen: String
     var onClickDots: (() -> Void)?
+    var isShowDivider: Bool?
 
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
@@ -76,8 +77,12 @@ struct HeaderBackRightScreen: View {
             )
         }
         .padding(.horizontal, 12)
-        .padding(.top, 12)
+        .padding(.vertical, 12)
         .background(.clear)
+        
+        Divider()
+            .background(.white)
+            .opacity(isShowDivider ?? true ? 1 : 0)
     }
 }
 

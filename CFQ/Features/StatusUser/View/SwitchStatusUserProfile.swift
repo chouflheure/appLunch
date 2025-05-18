@@ -7,7 +7,7 @@ struct SwitchStatusUserProfile: View {
     var body: some View {
         ZStack{
             CirclePictureStatusUserProfile(viewModel: viewModel)
-                .frame(width: 70, height: 70)
+                .frame(width: 72, height: 72)
             CustomToggleStatus(viewModel: viewModel)
                 .offset(y: 40)
         }

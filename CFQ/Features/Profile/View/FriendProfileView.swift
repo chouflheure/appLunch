@@ -1,18 +1,8 @@
 import SwiftUI
 
 struct FriendProfileView: View {
-    @Binding var show: Bool
 
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici",
-        friends: ["77MKZdb3FJX8EFvlRGotntxk6oi1"],
-        isPrivateAccount: false
-    )
+    @EnvironmentObject var user: User
 
     var profileFriend = User(
         uid: "77MKZdb3FJX8EFvlRGotntxk6oi1",
@@ -25,16 +15,17 @@ struct FriendProfileView: View {
     )
 
     @StateObject var viewModel = FriendProfileViewModel()
+    @StateObject var coordinator: Coordinator
 
     var body: some View {
-        DraggableViewLeft(isPresented: $show) {
+        DraggableViewLeft(isPresented: $coordinator.showProfileFriend ) {
             SafeAreaContainer {
                 VStack {
                     HStack(alignment: .center) {
                         Button(
                             action: {
                                 withAnimation {
-                                    show = false
+                                    coordinator.showProfileFriend  = false
                                 }
                             },
                             label: {
@@ -55,18 +46,28 @@ struct FriendProfileView: View {
                     }
                     .padding(.trailing, 12)
                     .padding(.bottom, 32)
-                    
+
                     HStack {
-                        /*
-                        CirclePictureStatus(isActive: true, onClick: {})
-                            .frame(width: 70, height: 70)
-                            .padding(.trailing, 12)
-                        */
+                        CirclePictureStatus(
+                            userPreview: UserContact(
+                                uid: coordinator.profileUserSelected.uid,
+                                name: coordinator.profileUserSelected.name,
+                                firstName: coordinator.profileUserSelected.firstName,
+                                pseudo: coordinator.profileUserSelected.pseudo,
+                                profilePictureUrl: coordinator.profileUserSelected.profilePictureUrl,
+                                isActive: coordinator.profileUserSelected.isActive
+                            ),
+                            onClick: {}
+                        )
+                        .frame(width: 70, height: 70)
+                        .padding(.trailing, 12)
+
+                        
                         VStack(alignment: .leading, spacing: 12) {
                             PreviewPseudoName(
-                                name: profileFriend.name,
-                                firstName: profileFriend.firstName,
-                                pseudo: profileFriend.pseudo
+                                name: coordinator.profileUserSelected.name,
+                                firstName: coordinator.profileUserSelected.firstName,
+                                pseudo: coordinator.profileUserSelected.pseudo
                             )
                             
                             HStack(alignment: .center) {
@@ -74,7 +75,7 @@ struct FriendProfileView: View {
                                     .resizable()
                                     .frame(width: 16, height: 16)
                                     .foregroundColor(.white)
-                                Text("\(profileFriend.location)")
+                                Text("\(coordinator.profileUserSelected.location)")
                                     .tokenFont(.Body_Inter_Medium_16)
                             }
                         }
@@ -104,14 +105,18 @@ struct FriendProfileView: View {
                                     }
                                 })
                             .onAppear() {
-                                viewModel.statusFriendButton(user: user, friend: profileFriend)
+                                // viewModel.statusFriendButton(user: user, friend: profileFriend)
+
+                                // TODO: - call to have full user
+                                viewModel.statusFriendButton(user: user, friend: coordinator.profileUserSelected)
                             }
                         }
                     }
                     .padding(.bottom, 16)
                     
                     if viewModel.isRequestedToBeFriendByTheUser {
-                        AnswerFriendToTheProfile(viewModel: viewModel, profileFriend: profileFriend)
+                        // AnswerFriendToTheProfile(viewModel: viewModel, profileFriend: profileFriend)
+                        AnswerFriendToTheProfile(viewModel: viewModel, profileFriend: coordinator.profileUserSelected)
                     }
 
                     HStack {
@@ -400,6 +405,6 @@ struct PageViewEventFriends: View {
 
 struct FriendProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        FriendProfileView(show: .constant(false))
+        FriendProfileView(coordinator: Coordinator())
     }
 }

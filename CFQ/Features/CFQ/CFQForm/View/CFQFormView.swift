@@ -23,7 +23,7 @@ struct CFQFormView: View {
                         },
                         titleScreen: "CFQ ?"
                     )
-                    
+
                     VStack {
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
@@ -68,6 +68,7 @@ struct CFQFormView: View {
                                 AddFriendsAndListView(
                                     arrayPicture: $viewModel.friendsAddToCFQ,
                                     arrayFriends: $viewModel.friendsList,
+                                    coordinator: coordinator,
                                     onRemove: { userRemoved in
                                         viewModel.removeFriendsFromList(user: userRemoved)
                                     },

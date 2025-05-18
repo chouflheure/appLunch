@@ -11,18 +11,22 @@ struct CustomPlusButtonTabBar: View {
                     endPoint: .bottomTrailing
                 ))
                 .blur(radius: 1, opaque: true)
-                .cornerRadius(10)
-                .frame(width: 55, height: 55)
+                .cornerRadius(5)
+                .frame(width: 40, height: 40)
 
             Rectangle()
                 .foregroundColor(.black)
-                .cornerRadius(10)
-                .frame(width: 50, height: 50)
-                .shadow(radius: 30)
+                .cornerRadius(5)
+                .frame(width: 35, height: 35)
+                .shadow(radius: 5)
 
             Image(systemName: "plus")
-                .font(.system(size: 30, weight: .bold))
+                .font(.system(size: 25, weight: .medium))
                 .foregroundColor(.white)
         }
     }
+}
+
+#Preview {
+    CustomPlusButtonTabBar()
 }

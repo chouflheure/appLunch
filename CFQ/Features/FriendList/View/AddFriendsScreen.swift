@@ -1,35 +1,31 @@
-
 import SwiftUI
 
 struct AddFriendsScreen: View {
-    @Binding var isPresented: Bool
+
     @StateObject var viewModel = AddFriendsViewModel()
+    @ObservedObject var coordinator: Coordinator
 
     var body: some View {
-        DraggableViewRight(isPresented: $isPresented) {
+        DraggableViewRight(isPresented: $coordinator.showFriendListScreen) {
             SafeAreaContainer {
-                VStack {
+                VStack(spacing: 0) {
                     HeaderBackRightScreen(
                         onClickBack: {
                             withAnimation {
-                                isPresented = false
+                                coordinator.showFriendListScreen = false
                             }
                         },
-                        titleScreen: "AJoute tes amis"
+                        titleScreen: "AJoute tes amis",
+                        isShowDivider: true
                     )
 
-                    Divider()
-                        .frame(height: 0.5)
-                        .background(.white)
-                        .padding(.bottom, 15)
-
-                    
-                    VStack {
+                    VStack(spacing: 0) {
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
                                 SearchBarView(
                                     text: $viewModel.researchText,
-                                    placeholder: StringsToken.SearchBar.placeholderFriend,
+                                    placeholder: StringsToken.SearchBar
+                                        .placeholderFriend,
                                     onRemoveText: {
                                         viewModel.removeText()
                                     },
@@ -37,19 +33,17 @@ struct AddFriendsScreen: View {
                                         viewModel.researche()
                                     }
                                 )
-                                .padding(.top, 10)
-                                
+                                .padding(.top, 20)
+
                                 VStack(alignment: .leading) {
-                                    ForEach(Array(viewModel.friendsList), id: \.self) { user in
+                                    ForEach(
+                                        Array(viewModel.friendsList), id: \.self
+                                    ) { user in
                                         CellFriendPseudoNameAction(
-                                            pseudo: user.pseudo,
-                                            name: user.name,
-                                            firstName: user.firstName,
+                                            user: user,
                                             coordinator: Coordinator(),
                                             type: .add,
-                                            isActionabled: {
-                                                viewModel.addFriendsToList(user: user)
-                                            }
+                                            isActionabled: { viewModel.addFriendsToList(user: user) }
                                         )
                                         .padding(.top, 15)
                                     }
@@ -67,6 +61,6 @@ struct AddFriendsScreen: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        AddFriendsScreen(isPresented: .constant(true))
+        AddFriendsScreen(coordinator: Coordinator())
     }
 }

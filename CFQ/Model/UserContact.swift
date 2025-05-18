@@ -6,20 +6,22 @@ class UserContact: Codable, Hashable {
     var firstName: String
     var pseudo: String
     var profilePictureUrl: String
-    var isActive: Bool?
+    var isActive: Bool
 
     init(
         uid: String = "",
         name: String = "",
         firstName: String = "",
         pseudo: String = "",
-        profilePictureUrl: String = ""
+        profilePictureUrl: String = "",
+        isActive: Bool = false
     ) {
         self.uid = uid
         self.name = name
         self.firstName = firstName
         self.pseudo = pseudo
         self.profilePictureUrl = profilePictureUrl
+        self.isActive = isActive
     }
 
     // Conformité à Equatable
@@ -28,7 +30,8 @@ class UserContact: Codable, Hashable {
                lhs.name == rhs.name &&
                lhs.firstName == rhs.firstName &&
                lhs.pseudo == rhs.pseudo &&
-               lhs.profilePictureUrl == rhs.profilePictureUrl
+               lhs.profilePictureUrl == rhs.profilePictureUrl &&
+               lhs.isActive == rhs.isActive
     }
 
     // Conformité à Hashable
@@ -38,6 +41,7 @@ class UserContact: Codable, Hashable {
         hasher.combine(firstName)
         hasher.combine(pseudo)
         hasher.combine(profilePictureUrl)
+        hasher.combine(isActive)
     }
     
     func userContactDefault() -> [UserContact] {
@@ -47,7 +51,8 @@ class UserContact: Codable, Hashable {
                 name: "",
                 firstName: "",
                 pseudo: "",
-                profilePictureUrl: ""
+                profilePictureUrl: "",
+                isActive: false
             )
         ]
     }

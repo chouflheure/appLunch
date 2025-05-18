@@ -33,7 +33,7 @@ class TurnCardViewModel: ObservableObject {
     @Published var showDetailTurnCard: Bool = false
     @Published var isPhotoPickerPresented: Bool = false
 
-    var turn: Turn
+    var turn: TurnPreview
     var adminUser: User
     var firebaseService = FirebaseService()
     
@@ -67,7 +67,7 @@ class TurnCardViewModel: ObservableObject {
         }
     }
     
-    init(turn: Turn, coordinator: Coordinator) {
+    init(turn: TurnPreview, coordinator: Coordinator) {
         
         self.turn = turn
         self.adminUser = coordinator.user ?? User(uid: "")
@@ -77,16 +77,14 @@ class TurnCardViewModel: ObservableObject {
         titleEvent = turn.titleEvent
         dateEvent = turn.date
         description = turn.description
-        turn.mood.forEach { moods.insert(MoodType.convertIntToMoodType(MoodType(rawValue: $0)?.rawValue ?? 0)) }
+        // turn.mood.forEach { moods.insert(MoodType.convertIntToMoodType(MoodType(rawValue: $0)?.rawValue ?? 0)) }
         starthours = nil
-        imageSelected = UIImage(resource: .background2)
+        imageSelected = turn.imageEvent
         invited = turn.invited
         adresse.placeAdresse = turn.placeAdresse
         adresse.placeLatitude = turn.placeLatitude
         adresse.placeLongitude = turn.placeLongitude
         adresse.placeTitle = turn.placeTitle
-
-        
     }
     
     func textFormattedShortFormat() -> (jour: String, mois: String) {

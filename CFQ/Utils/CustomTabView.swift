@@ -102,10 +102,11 @@ struct CustomTabView: View {
 
     @State var text = ""
     var body: some View {
-        GeometryReader { geometry in
+        // GeometryReader { geometry in
+        SafeAreaContainer {
             ZStack {
-                NeonBackgroundImage()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
+                // NeonBackgroundImage()
+                    // .frame(width: geometry.size.width, height: geometry.size.height)
 
                 if !hasAlreadyOnboarded {
                     OnboardingView()
@@ -116,25 +117,30 @@ struct CustomTabView: View {
                 }
 
                 else {
-                    VStack {
+                    VStack(spacing: 0) {
                         Group {
                             if coordinator.selectedTab == 0 {
+
                                 FeedView(coordinator: coordinator)
+                                
                                 // CellMessageView()
                                 // P158_SubscriptionView()
                             } else if coordinator.selectedTab == 1 {
                                 //FriendListScreen()
                                 // TestTextEditor(text: $text)
                                 
-                                // ContentViewExpandableTextEditor(text: $text)
-                                
+                                /*
                                 TestMap(
                                     selectedEvent: $selectedEvent,
                                     coordinator: coordinator
                                 )
                                 .offset(y: -30)
                                 .padding(.bottom, -30)
-                                 
+                                 */
+                                Text("Map")
+                                    .tokenFont(.Title_Gigalypse_24)
+                                
+
                             } else if coordinator.selectedTab == 2 {
                                 TurnListScreen(coordinator: coordinator)
                                 /*
@@ -149,6 +155,8 @@ struct CustomTabView: View {
                                 // Screen()
                             } else {
                                 ProfileView(coordinator: coordinator)
+                                // TurnCoreDataView()
+                                
                             }
                         }
                         .frame(maxHeight: .infinity)
@@ -199,9 +207,13 @@ struct CustomTabView: View {
                         .padding(.vertical)
                         .background(.black)
                     }
-                    .padding(.top, 15)// geometry.safeAreaInsets.top) // Respecte la safe area en haut
-                    .padding(.bottom, geometry.safeAreaInsets.bottom)
-                    .edgesIgnoringSafeArea(.bottom)
+                    /*
+                    .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
+                        AllOptionsAnswerParticpateButton(participateButtonSelected: .constant(.maybe))
+                            .presentationDragIndicator(.visible)
+                            .presentationDetents([.height(350)])
+                    }
+                     */
                     .fullScreenCover(isPresented: $coordinator.showMapFullScreen) {
                         TestMap(selectedEvent: $selectedEvent, coordinator: coordinator)
                     }
@@ -221,11 +233,6 @@ struct CustomTabView: View {
                         .transition(.move(edge: .trailing))
                     }
                     
-                    if coordinator.showProfileFriend {
-                        FriendProfileView(show: $coordinator.showProfileFriend)
-                            .transition(.move(edge: .trailing))
-                    }
-                    
                     if coordinator.showTeamDetail {
                         TeamDetailView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
@@ -237,17 +244,22 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showTurnCardView {
-                        TurnCardView(coordinator: coordinator)
+                        TurnCardView(coordinator: coordinator, coreDataViewModel: TurnCoreDataViewModel())
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showTurnFeedDetail {
+                        TurnCardDetailsFeedView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+
                     if coordinator.showNotificationScreen {
                         NotificationScreenView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showFriendListScreen {
-                        AddFriendsScreen(isPresented: $coordinator.showFriendListScreen)
+                        AddFriendsScreen(coordinator: coordinator)
                             .transition(.move(edge: .leading))
                     }
                     
@@ -260,10 +272,15 @@ struct CustomTabView: View {
                         PreviewMessagerieScreenView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
+                    
+                    if coordinator.showProfileFriend {
+                        FriendProfileView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
                 }
             )
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .animation(.easeInOut, value: coordinator.showCreateTeam)
+            // .frame(width: geometry.size.width, height: geometry.size.height)
+            .animation(.easeInOut, value: coordinator.showProfileFriend)
         }
     }
 }

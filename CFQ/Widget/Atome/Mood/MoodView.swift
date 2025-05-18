@@ -8,11 +8,11 @@ struct MoodView: View {
         HStack {
             Image(uiImage: moodData.icon)
                 .resizable()
-                .frame(width: 25, height: 25)
+                .frame(width: 20, height: 20)
                 .foregroundColor(.white)
             Text(moodData.title)
                 .foregroundColor(.white)
-                .font(.system(size: 20))
+                .tokenFont(.Body_Inter_Medium_16)
         }
     }
 }

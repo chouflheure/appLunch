@@ -8,4 +8,5 @@ enum CollectionFirebaseType: String {
     case conversations = "conversations"
     case usersPreviews = "usersPreviews"
     case dataApp = "dataApp"
+    case testRef = "testRef"
 }
