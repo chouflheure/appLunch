@@ -97,14 +97,14 @@ struct ConfirmCodeScreen: View {
                                         style: .success,
                                         message: "Le code a été renvoyé"
                                     )
-                                    viewModel.startTimer10s()
+                                    viewModel.startTimerLock(delay: 10)
                                 } else {
                                     toast = Toast(
                                         style: .error, message: message)
                                 }
                             }
                         },
-                        title: StringsToken.Sign.DontReceiveCode,
+                        title: StringsToken.Sign.DontReceiveCode + " " + viewModel.timerString,
                         largeButtonType: .signBack,
                         isDisabled: !viewModel.isEnabledResendCode
                     )
@@ -115,12 +115,11 @@ struct ConfirmCodeScreen: View {
         }
         .padding(.horizontal, 16)
         .onAppear {
-            viewModel.startTimer10s()
+            viewModel.startTimerLock(delay: 10)
             isLoadingSendButton = false
         }
         .toastView(toast: $toast)
         .fullBackground(imageName: "backgroundNeon")
-        .ignoresSafeArea(.keyboard)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }

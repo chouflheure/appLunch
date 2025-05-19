@@ -243,7 +243,7 @@ struct CustomTabView: View {
                         TeamEditViewScreen(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
-                    
+
                     if coordinator.showTurnCardView {
                         TurnCardView(coordinator: coordinator, coreDataViewModel: TurnCoreDataViewModel())
                             .transition(.move(edge: .trailing))
@@ -277,6 +277,7 @@ struct CustomTabView: View {
                     if coordinator.showProfileFriend {
                         FriendProfileView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
+                            .zIndex(100)
                     }
                 }
             )

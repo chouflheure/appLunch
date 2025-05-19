@@ -1,6 +1,7 @@
 import SwiftUI
 
 enum TextFieldType {
+    case signUp
     case sign
     case turn
     case cfq
@@ -9,7 +10,17 @@ enum TextFieldType {
     
     var data: TextFieldData {
         switch self {
-        case .sign, .cfq, .editProfile:
+        case .sign:
+            return TextFieldData(
+                background: .clear,
+                foregroundColor: .white,
+                hasStoke: false,
+                titleCase: .lowercase,
+                titleCaseFunc: { $0.lowercased() },
+                cornerRadius: 0,
+                leadingPadding: 5
+            )
+        case .signUp, .cfq, .editProfile:
             return TextFieldData(
                 background: .black,
                 foregroundColor: .white,
@@ -104,11 +115,13 @@ struct CustomTextField: View {
             }
 
             TextField("", text: $text)
-                .placeholder(when: text.isEmpty) {
+                .multilineTextAlignment(textFieldType == .sign ? .center : .leading)
+                .placeholder(when: text.isEmpty, alignment: textFieldType == .sign ? .center : .leading) {
                     HStack {
                         Text(placeHolder)
                             .foregroundColor(.gray)
                             .textCase(textFieldType.data.titleCase)
+                            .multilineTextAlignment(textFieldType == .sign ? .center : .leading)
                     }
             }.onChange(of: text) { newValue in
                 text = textFieldType.data.titleCaseFunc(newValue)
@@ -158,8 +171,14 @@ private struct ParentView: View {
                 CustomTextField(
                     text: $currentIndex,
                     keyBoardType: .default,
-                    placeHolder: "test",
+                    placeHolder: "• • • • • • • • • ",
                     textFieldType: .sign
+                )
+                CustomTextField(
+                    text: $currentIndex,
+                    keyBoardType: .default,
+                    placeHolder: "test",
+                    textFieldType: .signUp
                 )
                 
                 CustomTextField(

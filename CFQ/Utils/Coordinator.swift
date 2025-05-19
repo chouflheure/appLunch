@@ -148,6 +148,9 @@ class Coordinator: ObservableObject {
                 case .success(let cfq):
                     DispatchQueue.main.async {
                         self.userCFQ = cfq
+                        cfq.forEach { (item) in
+                            print("@@@ cfq = \(item.uid)")
+                        }
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")

@@ -2,8 +2,8 @@
 import SwiftUI
 
 struct FeedView: View {
-    @ObservedObject var coordinator: Coordinator
     @EnvironmentObject var user: User
+    @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel = FeedViewModel()
 
     init(coordinator: Coordinator) {

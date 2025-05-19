@@ -27,7 +27,7 @@ struct NameSignUpScreen: View {
                     text: $viewModel.user.firstName,
                     keyBoardType: .default,
                     placeHolder: "Prenom",
-                    textFieldType: .sign
+                    textFieldType: .signUp
                 )
                 .focused($focusedField, equals: .name)
                 .submitLabel(.next)
@@ -38,7 +38,7 @@ struct NameSignUpScreen: View {
                     text: $viewModel.user.name,
                     keyBoardType: .default,
                     placeHolder: "Nom",
-                    textFieldType: .sign
+                    textFieldType: .signUp
                 )
                 .focused($focusedField, equals: .firstName)
                 .submitLabel(.next)
@@ -49,7 +49,7 @@ struct NameSignUpScreen: View {
                     text: $viewModel.user.pseudo,
                     keyBoardType: .default,
                     placeHolder: "Pseudo",
-                    textFieldType: .sign
+                    textFieldType: .signUp
                 )
                 .focused($focusedField, equals: .pseudo)
                 .submitLabel(.return)
@@ -91,7 +91,6 @@ struct NameSignUpScreen: View {
             }
         }
         .fullBackground(imageName: "backgroundNeon")
-        .ignoresSafeArea(.keyboard)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }

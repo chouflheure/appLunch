@@ -42,16 +42,7 @@ class TeamEditViewModel: ObservableObject {
     )
 
     var firebaseService = FirebaseService()
-    
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1",
-        name: "Charles",
-        firstName: "Charles",
-        pseudo: "Charles",
-        profilePictureUrl: "",
-        friends: ["EMZGTTeqJ1dv9SX0YaNOExaLjjw1", "77MKZdb3FJX8EFvlRGotntxk6oi1", "ziOs7jn3d5hZ0tgkTQdCNGQqlB33"]
-    )
+    @EnvironmentObject var user: User
 
 }
 

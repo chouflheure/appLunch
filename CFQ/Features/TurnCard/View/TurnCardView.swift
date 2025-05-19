@@ -160,7 +160,7 @@ struct TurnCardView: View {
             }
         }
         .fullScreenCover(isPresented: $viewModel.showDetailTurnCard) {
-            TurnCardDetailsView(viewModel: viewModel)
+            TurnCardDetailsView(viewModel: viewModel, coordinator: coordinator)
         }
     }
 }

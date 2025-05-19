@@ -20,7 +20,9 @@ struct TeamView: View {
 
             ScrollView(.vertical, showsIndicators: false) {
                 Button(action: {
-                    coordinator.showCreateTeam = true
+                    withAnimation {
+                        coordinator.showCreateTeam = true
+                    }
                 }) {
                     Image(.iconPlus)
                         .resizable()

@@ -37,7 +37,6 @@ struct LocalisationSignUpScreen: View {
                 }
             }
             .fullBackground(imageName: "backgroundNeon")
-            .ignoresSafeArea(.keyboard)
             .onTapGesture {
                 UIApplication.shared.endEditing()
             }

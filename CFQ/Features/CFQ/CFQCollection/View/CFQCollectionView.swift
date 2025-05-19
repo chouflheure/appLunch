@@ -25,8 +25,14 @@ struct CFQCollectionView: View {
                         }
                     ).padding(.leading, 20)
                     ForEach(coordinator.userCFQ, id: \.self) { cfq in
-                        if let pseudoUser = coordinator.userFriends.first(where: { $0.uid == cfq.admin })?.pseudo {
-                            CFQMolecule(name: pseudoUser, title: cfq.title)
+                        // ?? 
+                        if let userAdmin = coordinator.userFriends.first(where: { $0.uid == cfq.admin }) {
+                            CFQMolecule(
+                                name: userAdmin.pseudo,
+                                title: cfq.title,
+                                image: userAdmin.profilePictureUrl
+                            )
+                            .padding(.trailing, 12)
                         }
                     }
                 }

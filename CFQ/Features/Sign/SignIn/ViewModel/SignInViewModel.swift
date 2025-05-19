@@ -1,7 +1,8 @@
 import Firebase
 import FirebaseAuth
 import Foundation
-import SwiftUI
+// import SwiftUI
+import Combine
 
 class SignInViewModel: ObservableObject {
     @Published var uidUser = String()
@@ -15,8 +16,13 @@ class SignInViewModel: ObservableObject {
     @Published var isEnabledResendCode: Bool = false
     @Published var numberTapResendCode: Int = 0
 
-    @State private var timer: Timer? = nil
-
+    var timer: Timer? = nil
+    var timerContString: Timer? = nil
+    private var timerCancellable: AnyCancellable?
+    @Published var timerString: String = "10"
+    private var secondsElapsed = 10
+    
+    private var cancellables = Set<AnyCancellable>()
     private let firebaseService = FirebaseService()
 
     func signInGuestMode() {
@@ -110,11 +116,36 @@ class SignInViewModel: ObservableObject {
         }
     }
 
+    func startTimerString(delay: Double) {
+        secondsElapsed = Int(delay)
+        timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.secondsElapsed -= 1
+                self.updateTimerString(delay: delay)
+                if self.secondsElapsed <= 0 {
+                    self.stopTimerString()
+                }
+            }
+        }
+
+    private func updateTimerString(delay: Double) {
+        let minutes = secondsElapsed / 60
+        let seconds = secondsElapsed % 60
+        timerString  = delay == 600 ? String(format: "%02d:%02d", minutes, seconds) : String(format: "%02d", seconds)
+    }
+
+    private func stopTimerString() {
+        timerCancellable?.cancel()
+        timerString = ""
+    }
+    
     func dontReciveVerificationCode(
         completion: @escaping (Bool, String) -> Void
     ) {
         if numberTapResendCode >= 3 {
-            startTimerLock10m()
+            startTimerLock(delay: 600)
             completion(false, "Vous avez tenté de réenvoyer le code 3 fois. Veuillez patienter 10 minutes avant de réessayer.")
             return
         } else {
@@ -127,20 +158,14 @@ class SignInViewModel: ObservableObject {
         }
     }
 
-    func startTimerLock10m() {
+    func startTimerLock(delay: Double) {
+        startTimerString(delay: delay)
         isEnabledResendCode = false
-        let delay = 600.0
         timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
             self.isEnabledResendCode = true
-            self.numberTapResendCode = 0
-        }
-    }
-
-    func startTimer10s() {
-        isEnabledResendCode = false
-        let delay = 10.0
-        timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
-            self.isEnabledResendCode = true
+            if delay == 600 {
+                self.numberTapResendCode = 0
+            }
         }
     }
 

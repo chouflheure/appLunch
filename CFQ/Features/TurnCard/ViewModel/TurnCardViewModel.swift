@@ -29,17 +29,49 @@ class TurnCardViewModel: ObservableObject {
     @Published var messagerieUUID = String()
     @Published var adminUID = String()
     @Published var adresse = Adresse()
-
+    @Published var setFriendsOnTurn = Set<UserContact>()
+    // @Published var allFriends = Set<UserContact>()
+    
+    @Published var showFriendsList: Bool = false
     @Published var showDetailTurnCard: Bool = false
     @Published var isPhotoPickerPresented: Bool = false
+
+    @ObservedObject var coordinator: Coordinator
 
     var turn: TurnPreview
     var adminUser: User
     var firebaseService = FirebaseService()
+    var allFriends: Set<UserContact> = []
+    
+    @Published var friendListToAdd = Set<UserContact>(
+        [
+            UserContact(
+                uid: "77MKZdb3FJX8EFvlRGotntxk6oi1",
+                name: "name1",
+                firstName: "firstName1",
+                pseudo: "pseudo1",
+                profilePictureUrl: ""
+            ),
+            UserContact(
+                uid: "EMZGTTeqJ1dv9SX0YaNOExaLjjw1",
+                name: "name2",
+                firstName: "firstName2",
+                pseudo: "pseudo2",
+                profilePictureUrl: ""
+            ),
+            UserContact(
+                uid: "ziOs7jn3d5hZ0tgkTQdCNGQqlB33",
+                name: "name3",
+                firstName: "firstName3",
+                pseudo: "pseudo3",
+                profilePictureUrl: ""
+            ),
+        ]
+    )
+    
     
     var disableButtonSend: Bool {
-        return false
-        // return turn.titleEvent.isEmpty || turn.date == nil || moods.isEmpty || starthours == nil || imageSelected == nil || turn.description.isEmpty
+        return turn.titleEvent.isEmpty || turn.date == nil || moods.isEmpty || starthours == nil || imageSelected == nil || turn.description.isEmpty
     }
 
     var textFormattedLongFormat: String {
@@ -68,12 +100,14 @@ class TurnCardViewModel: ObservableObject {
     }
     
     init(turn: TurnPreview, coordinator: Coordinator) {
-        
+
         self.turn = turn
         self.adminUser = coordinator.user ?? User(uid: "")
-        
+        self.coordinator = coordinator
+        self.allFriends = friendListToAdd
+
         verificationIdentificationUserUID(coordinator: coordinator)
-        
+
         titleEvent = turn.titleEvent
         dateEvent = turn.date
         description = turn.description
@@ -85,6 +119,7 @@ class TurnCardViewModel: ObservableObject {
         adresse.placeLatitude = turn.placeLatitude
         adresse.placeLongitude = turn.placeLongitude
         adresse.placeTitle = turn.placeTitle
+        
     }
     
     func textFormattedShortFormat() -> (jour: String, mois: String) {
@@ -108,6 +143,12 @@ class TurnCardViewModel: ObservableObject {
     func showPhotoPicker() {
         Logger.log("Click on photo picker", level: .action)
             isPhotoPickerPresented = true
+    }
+    
+    func removeFriendsFromList(user: UserContact) {
+        setFriendsOnTurn.remove(user)
+        friendListToAdd.insert(user)
+        allFriends.insert(user)
     }
     
 }
