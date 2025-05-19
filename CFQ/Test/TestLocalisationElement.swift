@@ -53,10 +53,45 @@ struct ContentView8: View {
             })
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding()
+            .padding(.top, 20)
             .onChange(of: searchText) { newValue in
                 searchCompleter.updateQueryFragment(newValue)
             }
 
+            ScrollView(showsIndicators: false) {
+                ForEach(searchCompleter.results, id: \.self) { result in
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(result.title)
+                            Spacer()
+                        }
+
+                        HStack {
+                            Text(result.subtitle)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.leading)
+                            Spacer()
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .onTapGesture {
+                        viewModel.placeTitle = result.title
+                        viewModel.placeAdresse = result.subtitle
+                        searchForLocation(completion: result)
+                        print("@@@ viewModel.adresse.placeTitle \(viewModel.placeTitle)")
+                        print("@@@ viewModel.adresse.placeAdresse \(viewModel.placeAdresse)")
+                    }
+                    
+                    Divider()
+                        .background(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        
+                }
+            }
+
+/*
             List(searchCompleter.results, id: \.self) { result in
                 VStack(alignment: .leading) {
                     Text(result.title)
@@ -72,17 +107,28 @@ struct ContentView8: View {
                     print("@@@ viewModel.adresse.placeAdresse \(viewModel.placeAdresse)")
                 }
             }
-
+*/
             if let selectedLocation = selectedLocation {
-                Map(coordinateRegion: $mapRegion, annotationItems: [selectedLocation]) { location in
-                    MapMarker(coordinate: location.mapItem.placemark.coordinate, tint: .red)
+                ZStack {
+                    Map(coordinateRegion: $mapRegion, annotationItems: [selectedLocation]) { location in
+                        MapMarker(coordinate: location.mapItem.placemark.coordinate, tint: .red)
+                    }
+                    .frame(height: 300)
                 }
-                .frame(height: 300)
-
                 Button(action: {
                     isPresented = false
-                }) {
+                }, label: {
                     Text("Done")
+                        .foregroundColor(.white)
+                        .padding(.vertical, 10)
+                        .font(.system(size: 15, weight: .bold))
+                        .multilineTextAlignment(.center)
+                })
+                .frame(width: 150)
+                .background(Color(hex: "B098E6").opacity(viewModel.disableButtonSend ? 0.5 : 1))
+                .cornerRadius(10)
+                
+                
                     /*
                     let latitude = selectedLocation.mapItem.placemark.coordinate.latitude
                     let longitude = selectedLocation.mapItem.placemark.coordinate.longitude
@@ -94,8 +140,8 @@ struct ContentView8: View {
                         showingSafariView = true
                     }
                      */
-                }
-                .padding()
+                    
+               
             }
         }
         /*
