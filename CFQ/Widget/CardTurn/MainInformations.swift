@@ -68,6 +68,7 @@ struct MainInformationsPreviewView: View {
 struct MainInformationsDetailView: View {
     @State private var showMoods = false
     @ObservedObject var viewModel: TurnCardViewModel
+    @State var isPresentedLocalisation = false
 
     var body: some View {
             VStack(alignment: .leading, spacing: 20) {
@@ -86,48 +87,29 @@ struct MainInformationsDetailView: View {
                     showMoods.toggle()
                 }
                 .padding(.horizontal, 12)
-                .sheet(isPresented: $showMoods) {
-                    ZStack {
-                        NeonBackgroundImage()
-                        VStack {
-                            CollectionViewMoods(viewModel: viewModel)
-                            Button(
-                                action: {showMoods = false},
-                                label: {
-                                Text("Done")
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 30)
-                                    .padding(.vertical, 10)
-                                    .background(.black)
-                                    .cornerRadius(8)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .stroke(Color.white, lineWidth: 0.5)
-                                    )
-                                    
-                            })
-                        }
-                    }
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.height(500)])
-                }
 
                 DatePickerMainInformations(viewModel: viewModel)
                     .padding(.horizontal, 12)
 
                 HStack(alignment: .top) {
 
-                    Image(systemName: "mappin")
-                        .foregroundColor(.white)
+                    Button(action: {
+                        isPresentedLocalisation = true
+                    }) {
+                        Image(.iconLocation)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
 
-                    Text("Chez moi")
-                        .foregroundColor(.white)
+                        Text(viewModel.placeTitle.isEmpty ? "Lieu" : viewModel.placeTitle)
+                            .tokenFont(viewModel.placeTitle.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
 
-                    Text("|")
-                        .foregroundColor(.white)
+                        Text("|")
+                            .foregroundColor(.white)
 
-                    Text("92240 Malakoff ")
-                        .foregroundColor(.white)
+                        Text(viewModel.placeAdresse.isEmpty ? "Adress" : viewModel.placeAdresse)
+                            .tokenFont(.Placeholder_Inter_Regular_14)
+                    }
                 }
                 .padding(.horizontal, 12)
             }
@@ -137,6 +119,35 @@ struct MainInformationsDetailView: View {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(.white, lineWidth: 0.8)
             )
+            .sheet(isPresented: $isPresentedLocalisation) {
+                ContentView8(viewModel: viewModel, isPresented: $isPresentedLocalisation)
+                    .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showMoods) {
+                ZStack {
+                    NeonBackgroundImage()
+                    VStack {
+                        CollectionViewMoods(viewModel: viewModel)
+                        Button(
+                            action: {showMoods = false},
+                            label: {
+                            Text("Done")
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 30)
+                                .padding(.vertical, 10)
+                                .background(.black)
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 0.5)
+                                )
+                                
+                        })
+                    }
+                }
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(500)])
+            }
         }
 }
 
