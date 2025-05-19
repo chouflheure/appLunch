@@ -3,7 +3,8 @@ import SwiftUI
 
 struct TurnCardDetailsView: View {
     @StateObject var viewModel: TurnCardViewModel
-    
+    @ObservedObject var coordinator: Coordinator
+
     var body: some View {
         ZStack {
             GradientCardDetailView()
@@ -13,8 +14,9 @@ struct TurnCardDetailsView: View {
                     HeaderCardViewDetail(viewModel: viewModel)
                         .padding(.bottom, 15)
                         .frame(height: 200)
+
                     // Title ( Title / Guest )
-                    TitleTurnCardDetailView(viewModel: viewModel)
+                    TitleTurnCardDetailView(viewModel: viewModel, coordinator: coordinator)
                         .padding(.horizontal, 16)
                         .zIndex(2)
                     

@@ -25,7 +25,7 @@ struct SignScreen: View {
                 CustomTextField(
                     text: $viewModel.phoneNumber,
                     keyBoardType: .phonePad,
-                    placeHolder: StringsToken.Sign.PlaceholderPhoneNumber,
+                    placeHolder: "• • • • • • • • • • •",
                     textFieldType: .sign
                 )
             }
@@ -97,8 +97,6 @@ struct SignScreen: View {
         }
         .fullBackground(imageName: "backgroundNeon")
         .toastView(toast: $toast)
-        .ignoresSafeArea(.keyboard)
-        .scrollDismissesKeyboard(.immediately)
         .onChange(of: viewModel.isConfirmScreenActive || viewModel.isSignFinish) {
             isLoadingSendButton = $0
         }

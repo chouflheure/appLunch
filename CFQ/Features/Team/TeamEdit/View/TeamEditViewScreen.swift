@@ -114,7 +114,7 @@ struct TeamEditViewScreen: View {
                             .overlay(.whitePrimary)
 
                         Button(action: {
-                            // viewModel.showFriendsList = true
+                            viewModel.showFriendsList = true
                         }) {
                             Text("Ajouter des amis")
                                 .tokenFont(.Body_Inter_Medium_16)
@@ -206,11 +206,4 @@ struct TeamEditViewScreen: View {
     private func showPhotoPicker() {
         isPhotoPickerPresented = true
     }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        // TeamEditViewScreen(coordinator: Coordinator())
-    }.ignoresSafeArea()
 }

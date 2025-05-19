@@ -98,12 +98,16 @@ enum StringsToken {
     
     enum Team {
         static let teamTitle = "MES TEAMs"
+        static let newTeam = "NOUVELLE TEAM"
     }
     
     enum Turn {
         static let titleTurn = "TURN"
         static let titleTurnPreview = "TURN Preview"
         static let placeholderDescriptionEvent = "Décris l’event, raconte pas ta vie"
+        static let noParticipantsYet = "0 Personne y va pour l'instant"
+        static let placeholderTitleEvent = "Titre du TURN"
+        static let addYourFriendToTheEvent = "Ajoute tes amis à l'évent"
     }
     
     enum SearchBar {

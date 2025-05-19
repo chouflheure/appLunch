@@ -4,6 +4,7 @@ import SwiftUI
 struct CFQMolecule: View {
     @State var name: String
     @State var title: String
+    @State var image: String
     
     let gradientBackground = LinearGradient(
         gradient: Gradient(
@@ -35,18 +36,10 @@ struct CFQMolecule: View {
             }
             .padding(.leading, 10)
 
-            Image(.header)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 60, height: 60)
-                .clipShape(Circle())
+            CachedAsyncImageView(
+                urlString: image,
+                designType: .scaledToFill_Circle_CFQ
+            ).frame(width: 60, height: 60)
         }
     }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        CFQMolecule(name: "Charles", title: "CFQ CE SOIR ?")
-    }.ignoresSafeArea()
 }

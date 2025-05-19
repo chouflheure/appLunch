@@ -77,6 +77,7 @@ class SignUpPageViewModel: ObservableObject {
 
     func fetchContacts() {
         isFetchingContacts = true
+        print("@@ isFetchingContacts = \(isFetchingContacts)")
         DispatchQueue.global(qos: .userInitiated).async {
             let store = CNContactStore()
             var phoneNumberIds: [String] = []
@@ -96,12 +97,14 @@ class SignUpPageViewModel: ObservableObject {
                         try store.enumerateContacts(with: fetchRequest) {
                             (contact, stop) in
                             if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
+                                print("@@ phoneNumber = \(phoneNumber)")
                                 let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
                                 phoneNumberIds.append(formattedPhoneNumber)
                             }
                         }
 
                         self?.fetchDataContactUser { users in
+                            print("@@ users = \(users)")
                             var arrayUsersContact: [UserContact] = []
                             DispatchQueue.main.async {
                                 for user in users {
@@ -110,6 +113,7 @@ class SignUpPageViewModel: ObservableObject {
                                     }
                                 }
                                 self?.contacts = Array(Set(arrayUsersContact))
+                                self?.contacts.forEach { print("@@@ Contact: \($0.pseudo)") }
                             }
                         }
                     } catch {

@@ -45,10 +45,8 @@ private struct CachedAsyncImage<Content>: View where Content: View {
 
     public var body: some View {
         if let url, let cached = ImageCache[url] {
-            let _ = print("cached")
             content(.success(cached))
         } else {
-            let _ = print("fetched")
             AsyncImage(
                 url: url,
                 scale: scale,
@@ -72,25 +70,58 @@ internal enum PictureCacheDesignType {
     case scaledToFill_Clipped
     case fullScreenImageTurn
     case fullScreenImageTurnDetail
+    case scaledToFill_Circle_CFQ
 }
 
 struct CachedAsyncImageView: View {
     let urlString: String
     let designType: PictureCacheDesignType
-    let animation = LottieView(
-        animation: .named(StringsToken.Animation.loaderPicture))
+    let animation = LottieView(animation: .named(StringsToken.Animation.loaderPicture))
 
     var body: some View {
         CachedAsyncImage(url: URL(string: urlString) ?? URL(string: "")) {
             phase in
             switch phase {
             case .empty:
-                animation
-                    .playing()
-                    .looping()
+                switch designType {
+                    
+                case .scaledToFill_Circle_CFQ:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 60, height: 60)
+                    }
+
+                case .scaledToFill_Circle:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                    }
+
+                case .fullScreenImageTurn, .fullScreenImageTurnDetail, .scaledToFill_Clipped:
+                    animation
+                        .playing()
+                        .looping()
+                }
 
             case .success(let image):
                 switch designType {
+                    
+                case .scaledToFill_Circle_CFQ:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+                        .frame(width: 60, height: 60)
+
                 case .scaledToFill_Circle:
                     image
                         .resizable()
@@ -124,14 +155,64 @@ struct CachedAsyncImageView: View {
                 }
 
             case .failure(_):
-                animation
-                    .playing()
-                    .looping()
+                switch designType {
+                    
+                case .scaledToFill_Circle_CFQ:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 60, height: 60)
+                    }
+
+                case .scaledToFill_Circle:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                    }
+
+                case .fullScreenImageTurn, .fullScreenImageTurnDetail, .scaledToFill_Clipped:
+                    animation
+                        .playing()
+                        .looping()
+                }
 
             @unknown default:
-                animation
-                    .playing()
-                    .looping()
+                switch designType {
+                    
+                case .scaledToFill_Circle_CFQ:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 60, height: 60)
+                    }
+
+                case .scaledToFill_Circle:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                    }
+
+                case .fullScreenImageTurn, .fullScreenImageTurnDetail, .scaledToFill_Clipped:
+                    animation
+                        .playing()
+                        .looping()
+                }
             }
         }
     }

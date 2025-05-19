@@ -57,7 +57,7 @@ struct MessagerieScreenView: View, KeyboardReadable {
 
                             Spacer()
 
-                            CFQMolecule(name: "Charles", title: "CFQ Demain")
+                            CFQMolecule(name: "Charles", title: "CFQ Demain ?", image: "")
                                 .onTapGesture {
                                     withAnimation {
                                         viewModel.showConversationOptionView = true

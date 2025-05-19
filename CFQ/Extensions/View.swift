@@ -31,6 +31,7 @@ public extension View {
             Image(imageName)
                 .resizable()
                 .scaledToFill()
+                .ignoresSafeArea(.keyboard)
                 .edgesIgnoringSafeArea(.all)
                 .padding(.bottom, -100)
         )

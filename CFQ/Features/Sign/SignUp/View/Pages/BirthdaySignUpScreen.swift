@@ -20,7 +20,7 @@ struct BirthdaySignUpScreen: View {
                         text: $viewModel.name,
                         keyBoardType: .default,
                         placeHolder: "01/01/2000",
-                        textFieldType: .sign
+                        textFieldType: .signUp
                     )
                     .padding(.bottom, 20)
                     .padding(.horizontal, 20)
