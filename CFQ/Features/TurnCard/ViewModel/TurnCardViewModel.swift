@@ -3,7 +3,7 @@ import Foundation
 import Combine
 import SwiftUI
 
-class Adresse {
+class Adresse: ObservableObject {
     var placeTitle = String()
     var placeAdresse = String()
     var placeLatitude = Double()
@@ -28,8 +28,12 @@ class TurnCardViewModel: ObservableObject {
     @Published var invited = [String]()
     @Published var messagerieUUID = String()
     @Published var adminUID = String()
-    @Published var adresse = Adresse()
+    @Published var placeTitle = String()
+    @Published var placeAdresse = String()
+    @Published var placeLatitude = Double()
+    @Published var placeLongitude = Double()
     @Published var setFriendsOnTurn = Set<UserContact>()
+    
     // @Published var allFriends = Set<UserContact>()
     
     @Published var showFriendsList: Bool = false
@@ -115,10 +119,10 @@ class TurnCardViewModel: ObservableObject {
         starthours = nil
         imageSelected = turn.imageEvent
         invited = turn.invited
-        adresse.placeAdresse = turn.placeAdresse
-        adresse.placeLatitude = turn.placeLatitude
-        adresse.placeLongitude = turn.placeLongitude
-        adresse.placeTitle = turn.placeTitle
+        placeAdresse = turn.placeAdresse
+        placeLatitude = turn.placeLatitude
+        placeLongitude = turn.placeLongitude
+        placeTitle = turn.placeTitle
         
     }
     

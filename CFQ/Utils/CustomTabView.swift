@@ -137,6 +137,7 @@ struct CustomTabView: View {
                                 .offset(y: -30)
                                 .padding(.bottom, -30)
                                  */
+                                // ContentView8()
                                 Text("Map")
                                     .tokenFont(.Title_Gigalypse_24)
                                 
