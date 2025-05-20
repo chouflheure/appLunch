@@ -8,25 +8,26 @@ enum MessagerieHeaderType {
     case event
 }
 
-/// Publisher to read keyboard changes.
 protocol KeyboardReadable {
-    var keyboardPublisher: AnyPublisher<Bool, Never> { get }
+    var keyboardPublisher: AnyPublisher<CGFloat, Never> { get }
 }
 
 extension KeyboardReadable {
-    var keyboardPublisher: AnyPublisher<Bool, Never> {
+    var keyboardPublisher: AnyPublisher<CGFloat, Never> {
         Publishers.Merge(
             NotificationCenter.default
                 .publisher(for: UIResponder.keyboardWillShowNotification)
-                .map { _ in true },
-
+                .compactMap { notification in
+                    (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height
+                },
             NotificationCenter.default
                 .publisher(for: UIResponder.keyboardWillHideNotification)
-                .map { _ in false }
+                .map { _ in CGFloat(0) }
         )
         .eraseToAnyPublisher()
     }
 }
+
 
 struct MessagerieScreenView: View, KeyboardReadable {
     @Binding var isPresented: Bool
@@ -37,180 +38,193 @@ struct MessagerieScreenView: View, KeyboardReadable {
     @State private var showReaction: Bool = false
     @State private var isKeyboardVisible = false
     @State private var textViewHeight: CGFloat = 20
+    @State private var keyboardHeight: CGFloat = 0
 
     var body: some View {
         DraggableViewLeft(isPresented: $isPresented) {
             SafeAreaContainer {
-            ZStack {
-                VStack {
-                    HStack {
-                        Button(action: {
-                            withAnimation {
-                                isPresented = false
+                ZStack {
+                    VStack {
+                        HStack {
+                            Button(action: {
+                                withAnimation {
+                                    isPresented = false
+                                }
+                            }) {
+                                Image(.iconArrow)
+                                    .foregroundStyle(.white)
+                                    .frame(width: 24, height: 24)
                             }
-                        }) {
-                            Image(.iconArrow)
-                                .foregroundStyle(.white)
-                                .frame(width: 24, height: 24)
-                        }
 
-                        Spacer()
+                            Spacer()
 
-                        CFQMolecule(
-                            name: "Charles", title: "CFQ Demain ?", image: ""
-                        )
-                        .onTapGesture {
-                            withAnimation {
-                                viewModel.showConversationOptionView = true
+                            CFQMolecule(
+                                name: "Charles", title: "CFQ Demain ?",
+                                image: ""
+                            )
+                            .onTapGesture {
+                                withAnimation {
+                                    viewModel.showConversationOptionView = true
+                                }
+                            }
+
+                            Spacer()
+
+                            Button(action: {
+                                // viewModel.showDetailGuest = true
+                            }) {
+                                Image(.iconGuests)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 24)
+                            }.padding(.trailing, 16)
+
+                            Button(action: {
+                                viewModel.showSettingMessagerie = true
+                            }) {
+                                Image(.iconDots)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 24)
                             }
                         }
+                        .padding(.horizontal, 12)
 
-                        Spacer()
+                        Divider()
+                            .background(.white)
 
-                        Button(action: {
-                            // viewModel.showDetailGuest = true
-                        }) {
-                            Image(.iconGuests)
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(.white)
-                                .frame(width: 24)
-                        }.padding(.trailing, 16)
+                        ZStack {
 
-                        Button(action: {
-                            viewModel.showSettingMessagerie = true
-                        }) {
-                            Image(.iconDots)
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(.white)
-                                .frame(width: 24)
-                        }
-                    }
-                    .padding(.horizontal, 12)
-
-                    Divider()
-                        .background(.white)
-
-                    ZStack {
-
-                        /*
+                            /*
                             Image(.background3)
                                 .resizable()
                                 .opacity(0.8)
                                 .ignoresSafeArea()
                             */
 
-                        VStack {
-                            ScrollViewReader { proxy in
-                                ScrollView(.vertical, showsIndicators: false) {
-                                    LazyVStack(spacing: 10) {
-                                        CellMessageView()
-                                            .rotationEffect(.degrees(180))
-                                        CellMessageView()
-                                            .rotationEffect(.degrees(180))
-                                        CellMessageView()
-                                            .rotationEffect(.degrees(180))
-                                        CellMessageView()
-                                            .rotationEffect(.degrees(180))
-                                        CellMessageSendByTheUserView(
-                                            textMessage: .constant(
-                                                "Test de message qui vient de l'user"
-                                            ),
-                                            onDoubleTap: {
-                                                withAnimation {
-                                                    print("@@@ 2 tap ")
-                                                    self.showReaction = true
+                            VStack(spacing: 0) {
+                                ScrollViewReader { proxy in
+                                    ScrollView(
+                                        .vertical, showsIndicators: false
+                                    ) {
+                                        LazyVStack(spacing: 10) {
+                                            CellMessageView()
+                                                .rotationEffect(.degrees(180))
+                                            CellMessageView()
+                                                .rotationEffect(.degrees(180))
+                                            CellMessageView()
+                                                .rotationEffect(.degrees(180))
+                                            CellMessageView()
+                                                .rotationEffect(.degrees(180))
+                                            CellMessageSendByTheUserView(
+                                                textMessage: .constant(
+                                                    "Test de message qui vient de l'user"
+                                                ),
+                                                onDoubleTap: {
+                                                    withAnimation {
+                                                        print("@@@ 2 tap ")
+                                                        self.showReaction = true
+                                                    }
                                                 }
-                                            }
-                                        )
-                                        .rotationEffect(.degrees(180))
-                                        .padding(.horizontal, 12)
-
-                                        ForEach(
-                                            (0..<viewModel.messages.count)
-                                                .reversed(), id: \.self
-                                        ) { index in
-                                            CellMessageView2(
-                                                textMessage:
-                                                    $viewModel.messages[index]
                                             )
-                                            .padding(.horizontal, 12)
                                             .rotationEffect(.degrees(180))
+                                            .padding(.horizontal, 12)
+
+                                            ForEach(
+                                                (0..<viewModel.messages.count)
+                                                    .reversed(), id: \.self
+                                            ) { index in
+                                                CellMessageView2(
+                                                    textMessage:
+                                                        $viewModel.messages[
+                                                            index]
+                                                )
+                                                .padding(.horizontal, 12)
+                                                .rotationEffect(.degrees(180))
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                    }
+                                    .rotationEffect(.degrees(180))
+
+                                    .onChange(of: viewModel.messages.count) {
+                                        _ in
+                                        withAnimation(.easeOut(duration: 0.3)) {
+                                            proxy.scrollTo(
+                                                viewModel.messages.count - 1,
+                                                anchor: .top)
                                         }
                                     }
-                                    .frame(maxWidth: .infinity)
                                 }
-                                .rotationEffect(.degrees(180))
-
-                                .onChange(of: viewModel.messages.count) { _ in
-                                    withAnimation(.easeOut(duration: 0.3)) {
-                                        proxy.scrollTo(
-                                            viewModel.messages.count - 1,
-                                            anchor: .top)
-                                    }
-                                }
+                                Spacer()
+                                    .frame(height: textViewHeight + 30)
                             }
-                            Spacer()
-                                .frame(height: textViewHeight)
-                        }
-                        
-                        // TestEditTextfieldSize2()
-                        
-                        VStack {
-                            Spacer()
-                            GeometryReader { geometry in
-                                HStack(alignment: .bottom) {
-                                    GrowingTextView(
-                                        text: $viewModel.textMessage,
-                                        dynamicHeight: $textViewHeight,
-                                        availableWidth: geometry.size.width - 80 // Ajuste selon ton layout
-                                    )
-                                    .frame(height: textViewHeight)
-                                    .padding(8)
-                                    .background(.red)
-                                    .cornerRadius(8)
-                                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
 
-                                    if !viewModel.textMessage.isEmpty {
-                                        Button(action: {
-                                            viewModel.messages.append(viewModel.textMessage)
-                                            viewModel.textMessage = ""
-                                        }) {
-                                            Image(.iconSend)
-                                                .foregroundColor(.white)
-                                                .padding(5)
-                                                .background(.purpleDark)
-                                                .clipShape(Circle())
+                            VStack {
+                                Spacer()
+                                GeometryReader { geometry in
+                                    HStack(alignment: .bottom) {
+                                        GrowingTextView(
+                                            text: $viewModel.textMessage,
+                                            dynamicHeight: $textViewHeight,
+                                            availableWidth: geometry.size.width - 80
+                                        )
+                                        .frame(height: textViewHeight)
+                                        .padding(8)
+                                        .background(.red)
+                                        .cornerRadius(8)
+                                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
+
+                                        if !viewModel.textMessage.isEmpty {
+                                            Button(action: {
+                                                viewModel.messages.append(viewModel.textMessage)
+                                                viewModel.textMessage = ""
+                                            }) {
+                                                Image(.iconSend)
+                                                    .foregroundColor(.white)
+                                                    .padding(5)
+                                                    .background(.purpleDark)
+                                                    .clipShape(Circle())
+                                            }
+                                            .frame(width: 15, height: 15)
+                                            .padding(.horizontal, 10)
+                                            .padding(.bottom, 10)
                                         }
-                                        .frame(width: 15, height: 15)
-                                        .padding(.horizontal, 10)
-                                        .padding(.bottom, 10)
                                     }
-                                }
-                                .padding(.horizontal, 12)
-                                .padding(.bottom, 30)
-                            }
-                            .frame(height: textViewHeight + 30) // pour que GeometryReader ne prenne pas toute la hauteur
-                        }
+                                    .padding(.horizontal, 12)
+                                    .padding(.bottom, keyboardHeight == 0 ? 30 : keyboardHeight)
 
-                        
+//                                     .padding(.bottom, keyboardHeight + 10) // ✅ dynamique
+                                }
+                                .frame(height: textViewHeight + 30)
+                            }
+
+
+                        }
+                        .blur(radius: showReaction ? 10 : 0)
+                        .allowsHitTesting(!showReaction)
+                        // .ignoresSafeArea()
                     }
-                    .blur(radius: showReaction ? 10 : 0)
-                    .allowsHitTesting(!showReaction)
-                    // .ignoresSafeArea()
+                    if showReaction {
+                        destinationView()
+                            // .transition(.move(edge: .trailing))
+                            .zIndex(2)
+                        // ReactionPreviewView(showReaction: $showReaction)
+                    }
                 }
-                if showReaction {
-                    destinationView()
-                        // .transition(.move(edge: .trailing))
-                        .zIndex(2)
-                    // ReactionPreviewView(showReaction: $showReaction)
-                }
-            }
-            .fullBackground(imageName: "backgroundNeon")
-            .scrollDismissesKeyboard(.immediately)
+
+                .scrollDismissesKeyboard(.interactively)
             }
         }
+        .onReceive(keyboardPublisher) { height in
+            withAnimation(.easeOut(duration: 0.25)) {
+                self.keyboardHeight = height
+            }
+        }
+        .animation(.easeOut(duration: 0.25), value: keyboardHeight)
+
 
         if viewModel.showConversationOptionView {
             destinationView()
