@@ -42,6 +42,7 @@ struct PreviewMessagerieScreenView: View {
                             ForEach(viewModel.messageList, id: \.uid) {
                                 data in
                                 CellMessagingView(data: data) { _ in
+                                    coordinator.selectedConversation = data
                                     withAnimation {
                                         showDetail = true
                                     }
@@ -67,7 +68,7 @@ struct PreviewMessagerieScreenView: View {
 
     @ViewBuilder
     func destinationView() -> some View {
-        MessagerieScreenView(isPresented: $showDetail)
+        MessagerieScreenView(isPresented: $showDetail, coordinator: coordinator)
     }
 }
 

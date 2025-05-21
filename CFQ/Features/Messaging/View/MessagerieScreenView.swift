@@ -10,14 +10,21 @@ enum MessagerieHeaderType {
 
 struct MessagerieScreenView: View {
     @Binding var isPresented: Bool
-    @ObservedObject var viewModel = MessagerieScreenViewModel()
-    @State private var text: String = ""
+    @ObservedObject var viewModel: MessagerieScreenViewModel
+    @ObservedObject var coordinator: Coordinator
 
+    @State private var text: String = ""
     @State private var lastText: String = ""
     @State private var showReaction: Bool = false
     @State private var isKeyboardVisible = false
     @State private var textViewHeight: CGFloat = 20
     @State private var keyboardHeight: CGFloat = 0
+
+    init(isPresented: Binding<Bool>, coordinator: Coordinator) {
+        _isPresented = isPresented
+        self.coordinator = coordinator
+        _viewModel = ObservedObject(wrappedValue: MessagerieScreenViewModel(coordinator: coordinator))
+    }
 
     var body: some View {
         DraggableViewLeft(isPresented: $isPresented) {
@@ -38,7 +45,8 @@ struct MessagerieScreenView: View {
                             Spacer()
 
                             CFQMolecule(
-                                name: "Charles", title: "CFQ Demain ?",
+                                name: "Charles",
+                                title: "CFQ Demain ?",
                                 image: ""
                             )
                             .onTapGesture {
@@ -88,40 +96,15 @@ struct MessagerieScreenView: View {
                                     ScrollView(
                                         .vertical, showsIndicators: false
                                     ) {
-                                        LazyVStack(spacing: 10) {
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageSendByTheUserView(
-                                                textMessage: .constant(
-                                                    "Test de message qui vient de l'user"
-                                                ),
-                                                onDoubleTap: {
-                                                    withAnimation {
-                                                        print("@@@ 2 tap ")
-                                                        self.showReaction = true
-                                                    }
+                                        VStack {
+                                            ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
+                                                LazyVStack(spacing: 10) {
+                                                    CellMessageView3(
+                                                        data: $viewModel.messages[index]
+                                                    )
+                                                    .padding(.horizontal, 12)
+                                                    .rotationEffect(.degrees(180))
                                                 }
-                                            )
-                                            .rotationEffect(.degrees(180))
-                                            .padding(.horizontal, 12)
-
-                                            ForEach(
-                                                (0..<viewModel.messages.count)
-                                                    .reversed(), id: \.self
-                                            ) { index in
-                                                CellMessageView2(
-                                                    textMessage:
-                                                        $viewModel.messages[
-                                                            index]
-                                                )
-                                                .padding(.horizontal, 12)
-                                                .rotationEffect(.degrees(180))
                                             }
                                         }
                                         .frame(maxWidth: .infinity)
@@ -148,17 +131,18 @@ struct MessagerieScreenView: View {
                                         GrowingTextView(
                                             text: $viewModel.textMessage,
                                             dynamicHeight: $textViewHeight,
-                                            availableWidth: geometry.size.width - 80
+                                            availableWidth: geometry.size.width - 80,
+                                            placeholder: "Ecris ici..."
                                         )
                                         .frame(height: textViewHeight)
                                         .padding(8)
-                                        .background(.red)
-                                        .cornerRadius(8)
+                                        .background(.black)
+                                        .cornerRadius(24)
                                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
 
                                         if !viewModel.textMessage.isEmpty {
                                             Button(action: {
-                                                viewModel.messages.append(viewModel.textMessage)
+                                                viewModel.messages.append(Message(uid: "", message: viewModel.textMessage, senderUID: "", userContact: nil))
                                                 viewModel.textMessage = ""
                                             }) {
                                                 Image(.iconSend)
@@ -214,12 +198,7 @@ struct MessagerieScreenView: View {
     }
 }
 
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        MessagerieScreenView(isPresented: .constant(true))
-    }
-}
+
 
 struct ConversationOptionView: View {
     @Binding var isPresented: Bool

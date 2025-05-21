@@ -140,6 +140,57 @@ class FirebaseService: FirebaseServiceProtocol {
             }
         }
     }
+
+    func getMessagesByIds<T: Codable>(
+        conversationID: String,
+        with ids: [String],
+        listenerKeyPrefix: String? = nil,
+        onUpdate: @escaping (Result<[T], Error>) -> Void
+    ) {
+        let db = Firestore.firestore()
+        var currentData: [String: T] = [:]
+        var firstLoadCompleted = Set<String>()
+
+        for id in ids {
+            let messageRef = db.collection("conversations").document(conversationID).collection("messages").document(id)
+
+            let registration = messageRef.addSnapshotListener { documentSnapshot, error in
+                if let error = error {
+                    onUpdate(.failure(error))
+                    return
+                }
+
+                guard let document = documentSnapshot, document.exists else {
+                    onUpdate(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Message \(id) non trouvé."])))
+                    return
+                }
+
+                do {
+                    let data = try document.data(as: T.self)
+                    currentData[id] = data
+                    firstLoadCompleted.insert(id)
+
+                    // Si tous les documents ont été chargés au moins une fois, on peut émettre le tableau
+                    if firstLoadCompleted.count == ids.count {
+                        let orderedResults = ids.compactMap { currentData[$0] }
+                        onUpdate(.success(orderedResults))
+                    }
+                } catch {
+                    onUpdate(.failure(error))
+                }
+            }
+
+            // Stocke le listener si un préfixe est fourni
+            if let keyPrefix = listenerKeyPrefix {
+                let key = "\(keyPrefix)_\(id)"
+                listeners[key] = registration
+                print("@@@ listenerKeyPrefix")
+            } else {
+                print("@@@ NOP")
+            }
+        }
+    }
+
     
 /*
     func getDataByIDs<T: Codable>(from collection: CollectionFirebaseType, with ids: [String], completion: @escaping (Result<[T], Error>) -> Void) {

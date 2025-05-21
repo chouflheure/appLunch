@@ -4,6 +4,7 @@ struct GrowingTextView: UIViewRepresentable {
     @Binding var text: String
     @Binding var dynamicHeight: CGFloat
     var availableWidth: CGFloat
+    var placeholder: String
 
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
@@ -17,6 +18,19 @@ struct GrowingTextView: UIViewRepresentable {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.widthAnchor.constraint(equalToConstant: availableWidth).isActive = true
 
+        // Ajouter le placeholder
+        let placeholderLabel = UILabel()
+        placeholderLabel.text = placeholder
+        placeholderLabel.font = UIFont.systemFont(ofSize: 16)
+        placeholderLabel.sizeToFit()
+        placeholderLabel.textColor = .lightGray
+        textView.addSubview(placeholderLabel)
+
+        placeholderLabel.frame.origin = CGPoint(x: 5, y: 0)
+        placeholderLabel.isHidden = !text.isEmpty
+
+        context.coordinator.placeholderLabel = placeholderLabel
+
         return textView
     }
 
@@ -25,6 +39,9 @@ struct GrowingTextView: UIViewRepresentable {
             uiView.text = self.text
         }
         Self.recalculateHeight(view: uiView, result: $dynamicHeight)
+
+        // Mettre à jour la visibilité du placeholder
+        context.coordinator.placeholderLabel?.isHidden = !text.isEmpty
     }
 
     func makeCoordinator() -> Coordinator {
@@ -46,6 +63,7 @@ struct GrowingTextView: UIViewRepresentable {
     class Coordinator: NSObject, UITextViewDelegate {
         var text: Binding<String>
         var height: Binding<CGFloat>
+        weak var placeholderLabel: UILabel?
 
         init(text: Binding<String>, height: Binding<CGFloat>) {
             self.text = text
@@ -55,6 +73,9 @@ struct GrowingTextView: UIViewRepresentable {
         func textViewDidChange(_ textView: UITextView) {
             self.text.wrappedValue = textView.text
             GrowingTextView.recalculateHeight(view: textView, result: height)
+
+            // Mettre à jour la visibilité du placeholder
+            placeholderLabel?.isHidden = !textView.text.isEmpty
         }
     }
 }
@@ -83,7 +104,7 @@ struct TestEditTextfieldSize2: View {
                             Image(systemName: "face.smiling")
                         }
                         
-                        GrowingTextView(text: $text, dynamicHeight: $height, availableWidth: UIScreen.main.bounds.width)
+                        GrowingTextView(text: $text, dynamicHeight: $height, availableWidth: UIScreen.main.bounds.width, placeholder: "test")
                             .frame(height: height)
                             .padding(8)
                             .background(Color.gray.opacity(0.2))

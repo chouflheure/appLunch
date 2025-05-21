@@ -77,71 +77,13 @@ class Conversation: ObservableObject, Encodable, Decodable {
         return "@@@ ---------Conv---------- "
         + "\nuid : \(uid)"
         + "\n titleEvent : \(titleConv)"
-        + "\n pictureEventURL : \(pictureEventURL)"
+        + "\n messagesArrayUID : \(messagesArrayUID)"
+        + "\n eventUID : \(eventUID)"
         + "\n typeEvent : \(typeEvent)"
         + "\n eventUID : \(eventUID)"
         + "\n lastMessageSender : \(lastMessageSender)"
         + "\n lastMessageDate : \(String(describing: lastMessageDate))"
         + "\n lastMessage : \(lastMessage)"
-        + "\n ------------------"
-    }
-}
-
-
-class ConversationTurn: ObservableObject, Encodable, Decodable {
-    @Published var uid: String
-    @Published var titleConv: String
-    @Published var dateLastMessage: Date?
-    @Published var pictureURLString: String
-    @Published var turn: Turn
-    
-    enum CodingKeys: String, CodingKey {
-        case uid
-        case titleConv
-        case dateLastMessage
-        case pictureURLString
-        case turn
-    }
-
-    init(
-        uid: String,
-        titleConv: String,
-        dateLastMessage: Date?,
-        pictureURLString: String,
-        turn: Turn
-    ) {
-        self.uid = uid
-        self.titleConv = titleConv
-        self.dateLastMessage = dateLastMessage
-        self.pictureURLString = pictureURLString
-        self.turn = turn
-    }
-
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        uid = try values.decode(String.self, forKey: .uid)
-        titleConv = try values.decode(String.self, forKey: .titleConv)
-        dateLastMessage = try values.decodeIfPresent(Date.self, forKey: .dateLastMessage)
-        pictureURLString = try values.decode(String.self, forKey: .pictureURLString)
-        turn = try values.decode(Turn.self, forKey: .turn)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(uid, forKey: .uid)
-        try container.encode(titleConv, forKey: .titleConv)
-        try container.encodeIfPresent(dateLastMessage, forKey: .dateLastMessage)
-        try container.encode(pictureURLString, forKey: .pictureURLString)
-        try container.encode(turn, forKey: .turn)
-    }
-    
-    var printObject: String {
-        return "@@@ ---------Conv TURN--------- "
-        + "\nuid : \(uid)"
-        + "\n titleEvent : \(titleConv)"
-        + "\n date : \(String(describing: dateLastMessage))"
-        + "\n pictureUrlString : \(pictureURLString)"
-        + "\n admin : \(turn)"
         + "\n ------------------"
     }
 }

@@ -310,6 +310,104 @@ struct CellMessageSendByTheUserView: View {
     }
 }
 
+
+#Preview {
+    ZStack {
+        NeonBackgroundImage()
+        CellMessageView3(data: .constant(Message(uid: "", message: "test", senderUID: "", userContact: UserContact())))
+    }
+}
+
+struct CellMessageView3: View {
+    @State private var dragOffset: CGFloat = 0
+    @State private var showReaction: Bool = false
+    @State private var isShowPopover = false
+    
+    @Binding var data: Message
+
+    var body: some View {
+        VStack(alignment: .leading) {
+
+            ReponseMessage {
+
+                Text(data.userContact?.pseudo ?? "User")
+                    .tokenFont(.Placeholder_Inter_Regular_14)
+                    .padding(.leading, 50)
+
+                HStack(alignment: .top) {
+                    CachedAsyncImageView(
+                        urlString: data.userContact?.profilePictureUrl ?? "",
+                        designType: .scaleImageMessageProfile
+                    )
+
+                    Text(data.message)
+                        .tokenFont(.Body_Inter_Medium_12)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .background(.blackLight)
+                        .cornerRadius(20)
+                        .simultaneousGesture(
+                            LongPressGesture()
+                                .onEnded { _ in
+                                    print("@@@ long Tap")
+                                    showReaction = true
+                                }
+                        )
+                        .simultaneousGesture(
+                            TapGesture(count: 2)
+                                .onEnded {
+                                    print("@@@ double Tap")
+                                    showReaction = true
+                                }
+                        )
+                    Spacer()
+                }
+                .padding(.trailing, 30)
+
+                HStack {
+                    Button(action: {
+                        isShowPopover = true
+                    }) {
+                        Text("❤️ 😘 2")
+                            .foregroundColor(.white)
+                            .font(.system(size: 10))
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .background(.blackLight)
+                            .cornerRadius(20)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(lineWidth: 0.3)
+                                    .foregroundColor(.black)
+                            }
+                            .popover(
+                                isPresented: $isShowPopover,
+                                arrowEdge: .bottom,
+                                content: {
+                                    Text("Hello, World!")
+                                        .padding()
+                                        .presentationCompactAdaptation(
+                                            .none)
+                                }
+                            )
+                            .zIndex(999)
+                    }
+                    Spacer()
+                }
+                .padding(.leading, 40)
+                .offset(y: -12)
+
+            }
+
+        }
+    }
+}
+
+
+
+
+
+
 struct CellMessageView2: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false

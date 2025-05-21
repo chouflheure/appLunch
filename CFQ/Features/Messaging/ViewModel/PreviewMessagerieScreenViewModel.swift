@@ -30,6 +30,7 @@ extension PreviewMessagerieScreenViewModel {
             switch result {
             case .success(let fetchedConv):
                 DispatchQueue.main.async {
+                    fetchedConv.forEach { print($0.printObject) }
                     self?.messageList = fetchedConv
                 }
             case .failure(let error):

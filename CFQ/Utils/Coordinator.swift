@@ -28,6 +28,7 @@ class Coordinator: ObservableObject {
     @Published var userCFQ: [CFQ] = []
     @Published var userFriends: [UserContact] = []
     @Published var profileUserSelected: User = User()
+    @Published var selectedConversation: Conversation?
 
     private var auth = Auth.auth()
     private var firebaseService = FirebaseService()
