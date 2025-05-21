@@ -2,10 +2,15 @@ import SwiftUI
 
 struct PreviewMessagerieScreenView: View {
     @ObservedObject var coordinator: Coordinator
-    @ObservedObject var viewModel = PreviewMessagerieScreenViewModel()
+    @StateObject var viewModel: PreviewMessagerieScreenViewModel
     @State private var showDetail = false
     @State private var showDetailPopUp = false
 
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: PreviewMessagerieScreenViewModel(coordinator: coordinator))
+    }
+    
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showMessageScreen) {
             SafeAreaContainer {
@@ -27,14 +32,14 @@ struct PreviewMessagerieScreenView: View {
                                 placeholder: StringsToken.SearchBar
                                     .placeholderConversation,
                                 onRemoveText: {
-                                    viewModel.removeText()
+                                    // viewModel.removeText()
                                 },
                                 onTapResearch: {
-                                    viewModel.researche()
+                                    // viewModel.researche()
                                 }
                             ).padding(.top, 16)
 
-                            ForEach(viewModel.messageList, id: \.self) {
+                            ForEach(viewModel.messageList, id: \.uid) {
                                 data in
                                 CellMessagingView(data: data) { _ in
                                     withAnimation {

@@ -8,28 +8,7 @@ enum MessagerieHeaderType {
     case event
 }
 
-protocol KeyboardReadable {
-    var keyboardPublisher: AnyPublisher<CGFloat, Never> { get }
-}
-
-extension KeyboardReadable {
-    var keyboardPublisher: AnyPublisher<CGFloat, Never> {
-        Publishers.Merge(
-            NotificationCenter.default
-                .publisher(for: UIResponder.keyboardWillShowNotification)
-                .compactMap { notification in
-                    (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height
-                },
-            NotificationCenter.default
-                .publisher(for: UIResponder.keyboardWillHideNotification)
-                .map { _ in CGFloat(0) }
-        )
-        .eraseToAnyPublisher()
-    }
-}
-
-
-struct MessagerieScreenView: View, KeyboardReadable {
+struct MessagerieScreenView: View {
     @Binding var isPresented: Bool
     @ObservedObject var viewModel = MessagerieScreenViewModel()
     @State private var text: String = ""
@@ -148,7 +127,7 @@ struct MessagerieScreenView: View, KeyboardReadable {
                                         .frame(maxWidth: .infinity)
                                     }
                                     .rotationEffect(.degrees(180))
-
+                                    
                                     .onChange(of: viewModel.messages.count) {
                                         _ in
                                         withAnimation(.easeOut(duration: 0.3)) {
@@ -195,8 +174,6 @@ struct MessagerieScreenView: View, KeyboardReadable {
                                     }
                                     .padding(.horizontal, 12)
                                     .padding(.bottom, keyboardHeight == 0 ? 30 : keyboardHeight)
-
-//                                     .padding(.bottom, keyboardHeight + 10) // ✅ dynamique
                                 }
                                 .frame(height: textViewHeight + 30)
                             }
@@ -215,15 +192,10 @@ struct MessagerieScreenView: View, KeyboardReadable {
                     }
                 }
 
-                .scrollDismissesKeyboard(.interactively)
+                .scrollDismissesKeyboard(.immediately)
             }
         }
-        .onReceive(keyboardPublisher) { height in
-            withAnimation(.easeOut(duration: 0.25)) {
-                self.keyboardHeight = height
-            }
-        }
-        .animation(.easeOut(duration: 0.25), value: keyboardHeight)
+        
 
 
         if viewModel.showConversationOptionView {

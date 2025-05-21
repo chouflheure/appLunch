@@ -41,4 +41,14 @@ class CFQ: Codable, Hashable {
             users: ["MockUser"]
         )
     }
+    
+    var printObject: String {
+        return "@@@ ---------CFQ---------- "
+        + "\nuid : \(uid)"
+        + "\n title : \(title)"
+        + "\n admin : \(admin)"
+        + "\n messagerieUUID : \(messagerieUUID)"
+        + "\n users : \(users)"
+        + "\n ------------------"
+    }
 }

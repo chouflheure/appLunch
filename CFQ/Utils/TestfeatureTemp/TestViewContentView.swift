@@ -1,50 +1,5 @@
 import SwiftUI
 
-struct TestViewContentView: View {
-    let viewModel = SignUpPageViewModel(uidUser: "")
-    func pictureAdd() {
-        viewModel.picture = UIImage(resource: .crown)
-    }
-
-    var body: some View {
-        FriendSignUpScreen(
-            viewModel: viewModel,
-            coordinator: Coordinator(),
-            onDismiss: {}
-        ).onAppear {
-            pictureAdd()
-        }
-    }
-}
-
-struct TestEditTextfieldSize: View {
-    @State private var text: String = ""
-    @State private var textViewHeight: CGFloat = 20
-
-    var body: some View {
-        
-        VStack {
-            // ScrollView {
-            Spacer()
-            VStack {
-                GrowingTextView(text: $text, dynamicHeight: $textViewHeight, availableWidth: UIScreen.main.bounds.width)
-                    .frame(height: textViewHeight)
-                    .padding(8)
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8).stroke(Color.gray)
-                    )
-            }
-            // }
-            // .frame(height: 120)
-
-            
-        }
-        .padding()
-    }
-}
-
 struct GrowingTextView: UIViewRepresentable {
     @Binding var text: String
     @Binding var dynamicHeight: CGFloat
@@ -112,38 +67,43 @@ struct TestEditTextfieldSize2: View {
     @ObservedObject private var keyboard = KeyboardResponder()
 
     var body: some View {
-        VStack {
-            Spacer()
-
-            // Barre "personnalisée" collée au bas, monte avec clavier
-            VStack {
-                HStack {
-                    Button(action: {
-                        print("Emoji tap")
-                    }) {
-                        Image(systemName: "face.smiling")
-                    }
-
-                    GrowingTextView(text: $text, dynamicHeight: $height, availableWidth: UIScreen.main.bounds.width)
-                        .frame(height: height)
-                        .padding(8)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(8)
-
-                    Button("Envoyer") {
-                        print("Envoyer : \(text)")
-                        text = ""
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.top, 6)
-                .padding(.bottom, 6)
-                .background(Color.white.shadow(radius: 2))
+        ZStack {
+            ScrollView {
+                
             }
-            .padding(.bottom, keyboard.currentHeight)
-            .animation(.easeOut(duration: 0.25), value: keyboard.currentHeight)
+            VStack {
+                Spacer()
+                
+                // Barre "personnalisée" collée au bas, monte avec clavier
+                VStack {
+                    HStack {
+                        Button(action: {
+                            print("Emoji tap")
+                        }) {
+                            Image(systemName: "face.smiling")
+                        }
+                        
+                        GrowingTextView(text: $text, dynamicHeight: $height, availableWidth: UIScreen.main.bounds.width)
+                            .frame(height: height)
+                            .padding(8)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                        
+                        Button("Envoyer") {
+                            print("Envoyer : \(text)")
+                            text = ""
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 6)
+                    .padding(.bottom, 6)
+                    .background(Color.white.shadow(radius: 2))
+                }
+                .padding(.bottom, keyboard.currentHeight)
+                .animation(.easeOut(duration: 0.25), value: keyboard.currentHeight)
+            }
+            // .edgesIgnoringSafeArea(.bottom)
         }
-        .edgesIgnoringSafeArea(.bottom)
     }
 }
 

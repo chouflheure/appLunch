@@ -22,6 +22,7 @@ class User: ObservableObject, Encodable, Decodable {
     @Published var unreadNotificationsCount: Int
     @Published var isPrivateAccount: Bool
     @Published var requestsFriends: Set<String>
+    @Published var messagesChannelId: [String]
     // conversations
 
     init(
@@ -44,7 +45,8 @@ class User: ObservableObject, Encodable, Decodable {
         tokenFCM: String = "",
         unreadNotificationsCount: Int = 0,
         isPrivateAccount: Bool = true,
-        requestsFriends: Set<String> = [""]
+        requestsFriends: Set<String> = [""],
+        messagesChannelId: [String] = []
     ) {
         self.uid = uid
         self.name = name
@@ -66,6 +68,7 @@ class User: ObservableObject, Encodable, Decodable {
         self.unreadNotificationsCount = unreadNotificationsCount
         self.isPrivateAccount = isPrivateAccount
         self.requestsFriends = requestsFriends
+        self.messagesChannelId = messagesChannelId
     }
 
     enum CodingKeys: String, CodingKey {
@@ -89,6 +92,7 @@ class User: ObservableObject, Encodable, Decodable {
         case unreadNotificationsCount
         case isPrivateAccount
         case requestsFriends
+        case messagesChannelId
     }
     
     required init(from decoder:Decoder) throws {
@@ -113,6 +117,7 @@ class User: ObservableObject, Encodable, Decodable {
         unreadNotificationsCount = try values.decode(Int.self, forKey: .unreadNotificationsCount)
         isPrivateAccount = try values.decode(Bool.self, forKey: .isPrivateAccount)
         requestsFriends = try values.decode(Set<String>.self, forKey: .requestsFriends)
+        messagesChannelId = try values.decode([String].self, forKey: .messagesChannelId)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -137,6 +142,7 @@ class User: ObservableObject, Encodable, Decodable {
         try container.encode(unreadNotificationsCount, forKey: .unreadNotificationsCount)
         try container.encode(isPrivateAccount, forKey: .isPrivateAccount)
         try container.encode(requestsFriends, forKey: .requestsFriends)
+        try container.encode(messagesChannelId, forKey: .messagesChannelId)
     }
 
     var guestMode: User {
@@ -160,7 +166,8 @@ class User: ObservableObject, Encodable, Decodable {
         tokenFCM: "",
         unreadNotificationsCount: 0,
         isPrivateAccount: true,
-        requestsFriends: [""]
+        requestsFriends: [""],
+        messagesChannelId: []
        )
     }
     // TODO: - For debug

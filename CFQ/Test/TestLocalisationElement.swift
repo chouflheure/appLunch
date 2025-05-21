@@ -4,6 +4,14 @@ import MapKit
 import SafariServices
 import Combine
 
+
+struct TestCatchConv: View {
+    let vm = MessagerieScreenViewModel()//coordinator: Coordinator())
+    var body: some View {
+        Text("Hello world")
+    }
+}
+
 struct IdentifiableMapItem: Identifiable {
     let id = UUID()
     var mapItem: MKMapItem
