@@ -5,6 +5,7 @@ import Lottie
 
 struct CFQCollectionView: View {
     @ObservedObject var coordinator: Coordinator
+    @State var showDetail: Bool = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -32,13 +33,17 @@ struct CFQCollectionView: View {
                                 title: cfq.title,
                                 image: userAdmin.profilePictureUrl
                             )
+                            .onTapGesture {
+                                withAnimation {
+                                    coordinator.showMessagerieScreen = true
+                                }
+                            }
                             .padding(.trailing, 12)
                         }
                     }
                 }
             }
         }
-        .onAppear {}
     }
 }
 

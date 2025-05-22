@@ -3,93 +3,6 @@ import SwiftUI
 import MapKit
 import FirebaseFirestore
 
-
-struct TestTextEditor: View {
-    @Binding var text: String
-    @FocusState private var isFocused : Bool
-    
-    var body: some View {
-        Spacer()
-        
-        TextEditor(text: $text)
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Button(action: {
-                        isFocused = false
-                    }, label: {
-                        Image(systemName: "keyboard.chevron.compact.down.fill")
-                    })
-                    
-                    Spacer()
-                    
-                    Button(action: {}, label: {
-                        Image(systemName: "photo.badge.plus")
-                    })
-                    
-                    Button(action: {}, label: {
-                        Image(systemName: "folder.badge.plus")
-                    })
-                }
-            }
-            .tint(.purple)
-            .focused($isFocused)
-    }
-}
-
-import SwiftUI
-
-struct ContentViewTestKeyBoard: View {
-    @State private var text: String = ""
-    @FocusState private var isFocused: Bool
-    @State private var keyboardHeight: CGFloat = 0
-
-    var body: some View {
-        VStack {
-            Spacer()
-            
-            TextEditor(text: $text)
-                .padding(.bottom, keyboardHeight)
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Button(action: {
-                            isFocused = false
-                        }, label: {
-                            Image(systemName: "keyboard.chevron.compact.down.fill")
-                        })
-                        
-                        Spacer()
-                        
-                        Button(action: {}, label: {
-                            Image(systemName: "photo.badge.plus")
-                        })
-                        
-                        Button(action: {}, label: {
-                            Image(systemName: "folder.badge.plus")
-                        })
-                    }
-                }
-                .tint(.purple)
-                .focused($isFocused)
-        }
-        .onAppear {
-            // Ajouter les observers pour le clavier
-            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
-                if let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-                    keyboardHeight = frame.height
-                }
-            }
-
-            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-                keyboardHeight = 0
-            }
-        }
-        .onDisappear {
-            // Nettoyer les observers
-            NotificationCenter.default.removeObserver(self)
-        }
-    }
-}
-
 struct CustomTabView: View {
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 
@@ -102,11 +15,8 @@ struct CustomTabView: View {
 
     @State var text = ""
     var body: some View {
-        // GeometryReader { geometry in
         SafeAreaContainer {
             ZStack {
-                // NeonBackgroundImage()
-                    // .frame(width: geometry.size.width, height: geometry.size.height)
 
                 if !hasAlreadyOnboarded {
                     OnboardingView()
@@ -275,6 +185,11 @@ struct CustomTabView: View {
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showMessagerieScreen {
+                        MessagerieScreenView(isPresented: $coordinator.showMessagerieScreen, coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+                    
                     if coordinator.showProfileFriend {
                         FriendProfileView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
@@ -282,7 +197,6 @@ struct CustomTabView: View {
                     }
                 }
             )
-            // .frame(width: geometry.size.width, height: geometry.size.height)
             .animation(.easeInOut, value: coordinator.showProfileFriend)
         }
     }
