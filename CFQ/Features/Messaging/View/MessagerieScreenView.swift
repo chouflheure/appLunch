@@ -99,11 +99,18 @@ struct MessagerieScreenView: View {
                                         VStack {
                                             ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
                                                 LazyVStack(spacing: 10) {
-                                                    CellMessageView3(
-                                                        data: viewModel.messages[index]
-                                                    )
-                                                    .padding(.horizontal, 12)
-                                                    .rotationEffect(.degrees(180))
+                                                    if viewModel.messages[index].senderUID == coordinator.user?.uid {
+                                                        CellMessageSendByTheUserView(data: viewModel.messages[index]) {
+                                                        }
+                                                        .padding(.horizontal, 12)
+                                                        .rotationEffect(.degrees(180))
+                                                    } else {
+                                                        CellMessageView3(
+                                                            data: viewModel.messages[index]
+                                                        )
+                                                        .padding(.horizontal, 12)
+                                                        .rotationEffect(.degrees(180))
+                                                    }
                                                 }
                                             }
                                         }

@@ -237,7 +237,7 @@ struct CellMessageSendByTheUserView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false
     @State private var isShowPopover = false
-    @Binding var textMessage: String
+    var data: Message
     var onDoubleTap: () -> Void
 
     var body: some View {
@@ -246,7 +246,7 @@ struct CellMessageSendByTheUserView: View {
 
                 ReponseMessage {
 
-                    Text(textMessage)
+                    Text(data.message)
                         .tokenFont(.Body_Inter_Medium_12)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
@@ -306,6 +306,7 @@ struct CellMessageSendByTheUserView: View {
 
             }
             .padding(.trailing, 15)
+            .padding(.leading, 30)
         }
     }
 }
@@ -388,9 +389,8 @@ struct CellMessageView3: View {
                 }
                 .padding(.leading, 40)
                 .offset(y: -12)
-
             }
-
+            .padding(.trailing, 30)
         }
     }
 }
@@ -512,56 +512,3 @@ struct ReactionMessageView {
         // CellMessageView()
     }
 }
-
-class P158_SubscriptionView {
-
-    init() {}
-    @State private var count1: Double = 0
-    @State private var count2: Double = 0
-
-    @State private var angle1 = Angle(degrees: 0)
-    @State private var angle2 = Angle(degrees: 0)
-
-    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
-
-    public var body: some View {
-        ZStack {
-            SubscriptionView(
-                content:
-                    StrokeCapsuleView(color: Color.purple)
-                    .frame(width: 260, height: 100)
-                    .rotationEffect(angle1), publisher: timer
-            ) { t in
-                self.count1 += 1
-                self.angle1 = Angle(degrees: self.count1 * 45)
-            }
-            StrokeCapsuleView(color: Color.orange)
-                .frame(width: 100, height: 260)
-                .rotationEffect(angle2)
-                .onReceive(timer) { t in
-                    self.count2 += 1
-                    self.angle2 = Angle(degrees: self.count1 * -45)
-                }
-        }
-        .animation(.easeOut, value: count1)
-        .animation(.easeOut, value: count2)
-    }
-}
-
-extension P158_SubscriptionView {
-    fileprivate struct StrokeCapsuleView: View {
-        let color: Color
-        var body: some View {
-            Capsule()
-                .stroke(lineWidth: 1)
-                .foregroundColor(color)
-        }
-    }
-}
-/*
-struct P158_SubscriptionView_Previews: PreviewProvider {
-    static var previews: some View {
-        P158_SubscriptionView()
-    }
-}
-*/

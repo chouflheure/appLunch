@@ -33,7 +33,7 @@ class Conversation: ObservableObject, Encodable, Decodable {
         typeEvent: String,
         eventUID: String,
         lastMessageSender: String,
-        lastMessageDate: Date?,
+        lastMessageDate: Date,
         lastMessage: String
     ) {
         self.uid = uid
@@ -82,7 +82,7 @@ class Conversation: ObservableObject, Encodable, Decodable {
         + "@@@ \n typeEvent : \(typeEvent)"
         + "@@@ \n eventUID : \(eventUID)"
         + "@@@ \n lastMessageSender : \(lastMessageSender)"
-        + "@@@ \n lastMessageDate : \(String(describing: lastMessageDate))"
+        + "@@@ \n lastMessageDate : \(lastMessageDate)"
         + "@@@ \n lastMessage : \(lastMessage)"
         + "@@@ \n ------------------"
     }
