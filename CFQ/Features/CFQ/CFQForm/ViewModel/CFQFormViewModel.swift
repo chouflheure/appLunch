@@ -69,7 +69,7 @@ extension CFQFormViewModel {
         firebaseService.addData(
             data: CFQ(
                 uid: uuid.description,
-                title: titleCFQ,
+                title: "CFQ " + titleCFQ + " ?",
                 admin: user.uid,
                 messagerieUUID: messagerieUUID.description,
                 users: adminUUIDs

@@ -10,7 +10,7 @@ enum MessagerieHeaderType {
 
 struct MessagerieScreenView: View {
     @Binding var isPresented: Bool
-    @ObservedObject var viewModel: MessagerieScreenViewModel
+    @StateObject var viewModel: MessagerieScreenViewModel
     @ObservedObject var coordinator: Coordinator
 
     @State private var text: String = ""
@@ -23,7 +23,7 @@ struct MessagerieScreenView: View {
     init(isPresented: Binding<Bool>, coordinator: Coordinator) {
         _isPresented = isPresented
         self.coordinator = coordinator
-        _viewModel = ObservedObject(wrappedValue: MessagerieScreenViewModel(coordinator: coordinator))
+        _viewModel = StateObject(wrappedValue: MessagerieScreenViewModel(coordinator: coordinator))
     }
 
     var body: some View {
@@ -100,7 +100,7 @@ struct MessagerieScreenView: View {
                                             ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
                                                 LazyVStack(spacing: 10) {
                                                     CellMessageView3(
-                                                        data: $viewModel.messages[index]
+                                                        data: viewModel.messages[index]
                                                     )
                                                     .padding(.horizontal, 12)
                                                     .rotationEffect(.degrees(180))
@@ -110,7 +110,6 @@ struct MessagerieScreenView: View {
                                         .frame(maxWidth: .infinity)
                                     }
                                     .rotationEffect(.degrees(180))
-                                    
                                     .onChange(of: viewModel.messages.count) {
                                         _ in
                                         withAnimation(.easeOut(duration: 0.3)) {
@@ -119,6 +118,7 @@ struct MessagerieScreenView: View {
                                                 anchor: .top)
                                         }
                                     }
+                                    
                                 }
                                 Spacer()
                                     .frame(height: textViewHeight + 30)
@@ -142,8 +142,8 @@ struct MessagerieScreenView: View {
 
                                         if !viewModel.textMessage.isEmpty {
                                             Button(action: {
-                                                viewModel.messages.append(Message(uid: "", message: viewModel.textMessage, senderUID: "", userContact: nil))
-                                                viewModel.textMessage = ""
+                                                viewModel.pushMessage()
+//                                                viewModel.textMessage = ""
                                             }) {
                                                 Image(.iconSend)
                                                     .foregroundColor(.white)
@@ -161,8 +161,6 @@ struct MessagerieScreenView: View {
                                 }
                                 .frame(height: textViewHeight + 30)
                             }
-
-
                         }
                         .blur(radius: showReaction ? 10 : 0)
                         .allowsHitTesting(!showReaction)
@@ -175,12 +173,9 @@ struct MessagerieScreenView: View {
                         // ReactionPreviewView(showReaction: $showReaction)
                     }
                 }
-
                 .scrollDismissesKeyboard(.immediately)
             }
         }
-        
-
 
         if viewModel.showConversationOptionView {
             destinationView()

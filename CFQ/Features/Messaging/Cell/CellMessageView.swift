@@ -310,20 +310,12 @@ struct CellMessageSendByTheUserView: View {
     }
 }
 
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        CellMessageView3(data: .constant(Message(uid: "", message: "test", senderUID: "", userContact: UserContact())))
-    }
-}
-
 struct CellMessageView3: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false
     @State private var isShowPopover = false
     
-    @Binding var data: Message
+    var data: Message
 
     var body: some View {
         VStack(alignment: .leading) {

@@ -7,55 +7,57 @@ class MessagerieScreenViewModel: ObservableObject {
     @Published var showDetailGuest: Bool = false
     @Published var showConversationOptionView: Bool = false
     @Published var messages: [Message] = []
+    @Published var textMessage: String = ""
 
     private let firebaseService = FirebaseService()
     @ObservedObject var coordinator: Coordinator
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
-        fectchMessages()
+        fetchMessages2()
         
     }
-
-    @Published var textMessage: String = ""
- 
-    /*
-     Text("Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 Chaud d’un verre dans le 18 😂 Chaud d’un verre dans le ")
-     */
+    
+    deinit {
+        firebaseService.removeListener(for: ListenerType.team_group_listener.rawValue)
+    }
 }
 
 extension MessagerieScreenViewModel {
     
-    func fectchMessages() {
+    func fetchMessages2() {
+        print("@@@ fetchMessages")
+        
+        guard let conversationID = coordinator.selectedConversation?.uid else {
+            print("@@@ guard ")
+            return
+        }
+        
         firebaseService.getMessagesByIds(
-            conversationID: coordinator.selectedConversation?.uid ?? "",
-            with: coordinator.selectedConversation?.messagesArrayUID ?? [],
+            conversationID: conversationID,
+            limit: 15,
             listenerKeyPrefix: ListenerType.team_group_listener.rawValue
         ) { [weak self] (result: Result<[Message], Error>) in
-            guard self != nil else { return }
+            guard let self = self else { return }
             
             switch result {
             case .success(let messages):
-                
                 DispatchQueue.main.async {
-                    messages.forEach({
-                        print("@@@ \(String(describing: $0.printObject))")
-                    })
-                    
-                    self?.messages = messages
-                    
-                    for (index, messages) in messages.enumerated() {
-                        self?.fetchUserContactMessages(at: index, adminID: messages.senderUID)
+                    self.messages = messages
+
+                    // Fetch user contact pour chaque message
+                    for (index, message) in messages.enumerated() {
+                        self.fetchUserContactMessages(at: index, adminID: message.senderUID)
                     }
-                    
                 }
+                
             case .failure(let error):
                 Logger.log(error.localizedDescription, level: .error)
                 print("@@@ error = \(error)")
             }
         }
     }
-    
+
     func fetchUserContactMessages(at index: Int, adminID: String) {
         firebaseService.getDataByID(from: .users, with: adminID) { [weak self] (result: Result<UserContact, Error>) in
             guard let self = self else { return }
@@ -70,7 +72,7 @@ extension MessagerieScreenViewModel {
                     // Créez une copie du tableau entier pour déclencher le changement observable
                     let updatedMessageUser = self.messages
                     updatedMessageUser[index].userContact = userMessage
-                    print("@@@ userMessage = \(userMessage)")
+                    // print("@@@ userMessage = \(userMessage)")
                     // Remplacez tout le tableau pour que SwiftUI détecte le changement
                     self.messages = updatedMessageUser
                 }
@@ -80,4 +82,54 @@ extension MessagerieScreenViewModel {
             }
         }
     }
+    
+    func pushMessage() {
+    
+        let message = Message (
+            uid: UUID().description,
+            message: textMessage,
+            senderUID: coordinator.user?.uid ?? "",
+            timestamp: Date(),
+            userContact: UserContact(
+                uid: coordinator.user?.uid ?? "",
+                name: coordinator.user?.name ?? "",
+                firstName: coordinator.user?.firstName ?? "",
+                pseudo: coordinator.user?.pseudo ?? "",
+                profilePictureUrl: coordinator.user?.profilePictureUrl ?? ""
+            )
+        )
+        
+        messages.append(message)
+        
+        print("@@@ &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        messages.forEach { print($0.printObject) }
+        print("@@@ &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        
+        firebaseService.addMessage(
+            data: message,
+            at: coordinator.selectedConversation?.uid ?? "",
+            completion: { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    print("@@@ result yes")
+                case .failure(let error):
+                    print("@@@ error = \(error)")
+                }
+            }
+        )
+
+        firebaseService.updateDataByID(
+            data: [
+                "lastMessageSender": message.userContact?.pseudo ?? "",
+                "lastMessageDate": Date(),
+                "lastMessage": message.message,
+                "messagesArrayUID": messages.map { $0.uid }
+            ],
+            to: .conversations,
+            at: coordinator.selectedConversation?.uid ?? ""
+        )
+        
+        textMessage = ""
+    }
 }
+

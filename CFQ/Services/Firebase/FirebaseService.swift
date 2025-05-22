@@ -141,56 +141,80 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
 
-    func getMessagesByIds<T: Codable>(
+    func getMessagesByIds(
         conversationID: String,
-        with ids: [String],
-        listenerKeyPrefix: String? = nil,
-        onUpdate: @escaping (Result<[T], Error>) -> Void
+        limit: Int = 15,
+        listenerKeyPrefix: String,
+        completion: @escaping (Result<[Message], Error>) -> Void
     ) {
+        print("@@@ here ")
         let db = Firestore.firestore()
-        var currentData: [String: T] = [:]
-        var firstLoadCompleted = Set<String>()
-
-        for id in ids {
-            let messageRef = db.collection("conversations").document(conversationID).collection("messages").document(id)
-
-            let registration = messageRef.addSnapshotListener { documentSnapshot, error in
-                if let error = error {
-                    onUpdate(.failure(error))
-                    return
-                }
-
-                guard let document = documentSnapshot, document.exists else {
-                    onUpdate(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Message \(id) non trouvé."])))
-                    return
-                }
-
+        let messagesRef = db.collection("conversations")
+                            .document(conversationID)
+                            .collection("messages")
+        
+        // Query pour récupérer les 15 derniers messages triés par timestamp
+        let query = messagesRef
+            .order(by: "timestamp", descending: true) // Les plus récents d'abord
+            .limit(to: limit)
+        
+        // Ajouter le listener
+        let listener = query.addSnapshotListener { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                print("@@@ failure ")
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(.success([]))
+                print("@@@ success ")
+                return
+            }
+            
+            var messages: [Message] = []
+            for document in documents {
                 do {
-                    let data = try document.data(as: T.self)
-                    currentData[id] = data
-                    firstLoadCompleted.insert(id)
-
-                    // Si tous les documents ont été chargés au moins une fois, on peut émettre le tableau
-                    if firstLoadCompleted.count == ids.count {
-                        let orderedResults = ids.compactMap { currentData[$0] }
-                        onUpdate(.success(orderedResults))
-                    }
+                    let message = try document.data(as: Message.self)
+                    messages.append(message)
                 } catch {
-                    onUpdate(.failure(error))
+                    print("Erreur de décodage du message: \(error)")
                 }
             }
+            
+            // Inverser l'ordre pour avoir les plus anciens en premier (pour l'affichage)
+            let sortedMessages = messages.reversed()
+            completion(.success(Array(sortedMessages)))
+        }
+        
+        // Stocker le listener pour pouvoir le supprimer plus tard
+        activeListeners[listenerKeyPrefix] = listener
+    }
+    
+    private var activeListeners: [String: ListenerRegistration] = [:]
 
-            // Stocke le listener si un préfixe est fourni
-            if let keyPrefix = listenerKeyPrefix {
-                let key = "\(keyPrefix)_\(id)"
-                listeners[key] = registration
-                print("@@@ listenerKeyPrefix")
-            } else {
-                print("@@@ NOP")
+    
+    func addMessage(
+        data: Message,
+        at conversationID: String,
+        completion: @escaping (Result<Void, Error>) -> (Void)
+    ) {
+        do {
+            try db.collection("conversations").document(conversationID).collection("messages").document(data.uid).setData(from: data) { error in
+                if let error = error {
+                    completion(.failure(error))
+                    Logger.log(" Erreur lors de l'ajout du message : \(error.localizedDescription)", level: .error)
+                } else {
+                    completion(.success(Void()))
+                    Logger.log("le message a été ajouté avec success", level: .success)
+                }
             }
+            
+        } catch {
+            completion(.failure(error))
+            Logger.log("Erreur de conversion des données : \(error.localizedDescription)", level: .error)
         }
     }
-
     
 /*
     func getDataByIDs<T: Codable>(from collection: CollectionFirebaseType, with ids: [String], completion: @escaping (Result<[T], Error>) -> Void) {
@@ -263,7 +287,7 @@ class FirebaseService: FirebaseServiceProtocol {
             completion(.success(dataArray))
         }
     }
-
+    
     /// Pour arrêter un listener
     func removeListener(for key: String) {
         listeners[key]?.remove()

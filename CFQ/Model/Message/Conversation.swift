@@ -75,15 +75,15 @@ class Conversation: ObservableObject, Encodable, Decodable {
     
     var printObject: String {
         return "@@@ ---------Conv---------- "
-        + "\nuid : \(uid)"
-        + "\n titleEvent : \(titleConv)"
-        + "\n messagesArrayUID : \(messagesArrayUID)"
-        + "\n eventUID : \(eventUID)"
-        + "\n typeEvent : \(typeEvent)"
-        + "\n eventUID : \(eventUID)"
-        + "\n lastMessageSender : \(lastMessageSender)"
-        + "\n lastMessageDate : \(String(describing: lastMessageDate))"
-        + "\n lastMessage : \(lastMessage)"
-        + "\n ------------------"
+        + "@@@ \nuid : \(uid)"
+        + "@@@ \n titleEvent : \(titleConv)"
+        + "@@@ \n messagesArrayUID : \(messagesArrayUID)"
+        + "@@@ \n eventUID : \(eventUID)"
+        + "@@@ \n typeEvent : \(typeEvent)"
+        + "@@@ \n eventUID : \(eventUID)"
+        + "@@@ \n lastMessageSender : \(lastMessageSender)"
+        + "@@@ \n lastMessageDate : \(String(describing: lastMessageDate))"
+        + "@@@ \n lastMessage : \(lastMessage)"
+        + "@@@ \n ------------------"
     }
 }
