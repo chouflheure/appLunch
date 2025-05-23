@@ -41,7 +41,7 @@ enum NotificationType: CaseIterable {
     var topic: String {
         switch self {
         case .message:
-            return "message"
+            return "new_message"
         case .invitTurn:
             return "invitTurn"
         case .invitCFQ:

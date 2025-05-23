@@ -251,9 +251,185 @@ struct CFQApp: App {
 
     var body: some Scene {
         WindowGroup {
-            // TestCatchConv()
             ContentView()
                 .preferredColorScheme(.dark)
         }
     }
 }
+
+
+
+
+// TEST A FAIRE :
+
+/*
+ import UserNotifications
+ import FirebaseMessaging
+
+ // MARK: - AppDelegate ou SceneDelegate
+ extension AppDelegate: UNUserNotificationCenterDelegate {
+     
+     // Cette méthode est appelée quand l'app reçoit une notification en arrière-plan
+     func userNotificationCenter(_ center: UNUserNotificationCenter,
+                               willPresent notification: UNNotification,
+                               withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+         
+         let userInfo = notification.request.content.userInfo
+         
+         // Récupérer l'ID de l'expéditeur depuis les données de la notification
+         if let senderUID = userInfo["senderUID"] as? String {
+             
+             // Récupérer l'UID de l'utilisateur actuel
+             let currentUserUID = Auth.auth().currentUser?.uid ?? ""
+             
+             // Si l'expéditeur est l'utilisateur actuel, ne pas afficher la notification
+             if senderUID == currentUserUID {
+                 print("🚫 Notification ignorée - envoyée par l'utilisateur actuel")
+                 completionHandler([]) // Pas d'affichage
+                 return
+             }
+         }
+         
+         // Afficher la notification normalement
+         print("✅ Notification affichée")
+         completionHandler([.banner, .sound, .badge])
+     }
+     
+     // Cette méthode est appelée quand l'utilisateur tape sur la notification
+     func userNotificationCenter(_ center: UNUserNotificationCenter,
+                               didReceive response: UNNotificationResponse,
+                               withCompletionHandler completionHandler: @escaping () -> Void) {
+         
+         let userInfo = response.notification.request.content.userInfo
+         
+         // Gérer la navigation vers la conversation
+         if let conversationId = userInfo["conversationId"] as? String {
+             // Naviguer vers la conversation
+             navigateToConversation(conversationId: conversationId)
+         }
+         
+         completionHandler()
+     }
+ }
+
+ // MARK: - Messaging Delegate
+ extension AppDelegate: MessagingDelegate {
+     
+     // Cette méthode est appelée quand l'app reçoit un message de données
+     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+         print("📱 Message de données reçu:", remoteMessage.appData)
+         
+         // Récupérer les données
+         let messageData = remoteMessage.appData
+         
+         // Vérifier si c'est l'utilisateur actuel qui a envoyé le message
+         if let senderUID = messageData["senderUID"] as? String {
+             let currentUserUID = Auth.auth().currentUser?.uid ?? ""
+             
+             if senderUID == currentUserUID {
+                 print("🚫 Message ignoré - envoyé par l'utilisateur actuel")
+                 return
+             }
+         }
+         
+         // Traiter le message normalement
+         handleIncomingMessage(messageData)
+     }
+ }
+
+ // MARK: - Fonctions utilitaires
+ extension AppDelegate {
+     
+     private func navigateToConversation(conversationId: String) {
+         // Implémenter la navigation vers la conversation
+         print("🔄 Navigation vers la conversation: \(conversationId)")
+         
+         // Exemple avec un coordinator pattern
+         DispatchQueue.main.async {
+             // Votre logique de navigation
+             NotificationCenter.default.post(
+                 name: NSNotification.Name("NavigateToConversation"),
+                 object: nil,
+                 userInfo: ["conversationId": conversationId]
+             )
+         }
+     }
+     
+     private func handleIncomingMessage(_ messageData: [AnyHashable: Any]) {
+         // Traiter les messages de données (mise à jour UI, etc.)
+         if let conversationId = messageData["conversationId"] as? String,
+            let type = messageData["type"] as? String {
+             
+             switch type {
+             case "new_message":
+                 // Mettre à jour l'UI des messages
+                 updateMessagesUI(for: conversationId)
+             default:
+                 break
+             }
+         }
+     }
+     
+     private func updateMessagesUI(for conversationId: String) {
+         DispatchQueue.main.async {
+             // Notifier les vues concernées
+             NotificationCenter.default.post(
+                 name: NSNotification.Name("NewMessageReceived"),
+                 object: nil,
+                 userInfo: ["conversationId": conversationId]
+             )
+         }
+     }
+ }
+
+ // MARK: - Configuration dans AppDelegate
+ func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+     
+     // Configuration Firebase
+     FirebaseApp.configure()
+     
+     // Configuration des notifications
+     UNUserNotificationCenter.current().delegate = self
+     Messaging.messaging().delegate = self
+     
+     // Demander l'autorisation pour les notifications
+     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+         if granted {
+             print("✅ Autorisation notifications accordée")
+             DispatchQueue.main.async {
+                 application.registerForRemoteNotifications()
+             }
+         } else {
+             print("❌ Autorisation notifications refusée")
+         }
+     }
+     
+     return true
+ }
+
+ // MARK: - Gestion des topics
+ class NotificationManager {
+     
+     static let shared = NotificationManager()
+     
+     func subscribeToNewMessages() {
+         Messaging.messaging().subscribe(toTopic: "new_message") { error in
+             if let error = error {
+                 print("❌ Erreur abonnement topic: \(error)")
+             } else {
+                 print("✅ Abonné au topic 'new_message'")
+             }
+         }
+     }
+     
+     func unsubscribeFromNewMessages() {
+         Messaging.messaging().unsubscribe(fromTopic: "new_message") { error in
+             if let error = error {
+                 print("❌ Erreur désabonnement topic: \(error)")
+             } else {
+                 print("✅ Désabonné du topic 'new_message'")
+             }
+         }
+     }
+ }
+ */

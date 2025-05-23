@@ -122,8 +122,7 @@ extension MessagerieScreenViewModel {
             data: [
                 "lastMessageSender": message.userContact?.pseudo ?? "",
                 "lastMessageDate": Date(),
-                "lastMessage": message.message,
-                "messagesArrayUID": messages.map { $0.uid }
+                "lastMessage": message.message
             ],
             to: .conversations,
             at: coordinator.selectedConversation?.uid ?? ""

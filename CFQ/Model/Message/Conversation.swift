@@ -6,7 +6,6 @@ class Conversation: ObservableObject, Encodable, Decodable {
     @Published var uid: String
     @Published var titleConv: String
     @Published var pictureEventURL: String
-    @Published var messagesArrayUID: [String] = []
     @Published var typeEvent: String
     @Published var eventUID: String
     @Published var lastMessageSender: String
@@ -17,7 +16,6 @@ class Conversation: ObservableObject, Encodable, Decodable {
         case uid
         case titleConv
         case pictureEventURL
-        case messagesArrayUID
         case typeEvent
         case eventUID
         case lastMessageSender
@@ -29,7 +27,6 @@ class Conversation: ObservableObject, Encodable, Decodable {
         uid: String,
         titleConv: String,
         pictureEventURL: String,
-        messagesArrayUID: [String],
         typeEvent: String,
         eventUID: String,
         lastMessageSender: String,
@@ -39,7 +36,6 @@ class Conversation: ObservableObject, Encodable, Decodable {
         self.uid = uid
         self.titleConv = titleConv
         self.pictureEventURL = pictureEventURL
-        self.messagesArrayUID = messagesArrayUID
         self.typeEvent = typeEvent
         self.eventUID = eventUID
         self.lastMessageSender = lastMessageSender
@@ -52,7 +48,6 @@ class Conversation: ObservableObject, Encodable, Decodable {
         uid = try values.decode(String.self, forKey: .uid)
         titleConv = try values.decode(String.self, forKey: .titleConv)
         pictureEventURL = try values.decode(String.self, forKey: .pictureEventURL)
-        messagesArrayUID = try values.decode([String].self, forKey: .messagesArrayUID)
         typeEvent = try values.decode(String.self, forKey: .typeEvent)
         eventUID = try values.decode(String.self, forKey: .eventUID)
         lastMessageSender = try values.decode(String.self, forKey: .lastMessageSender)
@@ -65,7 +60,6 @@ class Conversation: ObservableObject, Encodable, Decodable {
         try container.encode(uid, forKey: .uid)
         try container.encode(titleConv, forKey: .titleConv)
         try container.encode(pictureEventURL, forKey: .pictureEventURL)
-        try container.encode(messagesArrayUID, forKey: .messagesArrayUID)
         try container.encode(typeEvent, forKey: .typeEvent)
         try container.encode(eventUID, forKey: .eventUID)
         try container.encode(lastMessageSender, forKey: .lastMessageSender)
@@ -77,7 +71,6 @@ class Conversation: ObservableObject, Encodable, Decodable {
         return "@@@ ---------Conv---------- "
         + "@@@ \nuid : \(uid)"
         + "@@@ \n titleEvent : \(titleConv)"
-        + "@@@ \n messagesArrayUID : \(messagesArrayUID)"
         + "@@@ \n eventUID : \(eventUID)"
         + "@@@ \n typeEvent : \(typeEvent)"
         + "@@@ \n eventUID : \(eventUID)"
