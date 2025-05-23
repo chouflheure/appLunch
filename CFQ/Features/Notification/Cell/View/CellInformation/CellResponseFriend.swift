@@ -15,15 +15,16 @@ struct CellResponseFriend: View {
                     .padding(.trailing, 5)
                 
                 HStack {
-                    (Text("Demande d'ami de ")
+                    (Text("Demande d'ami de")
                         .tokenFont(.Body_Inter_Medium_14)
-                     + Text(" ")
-                     + Text("Mathilde ")
+                     + Text(" Mathilde ")
                         .tokenFont(.Body_Inter_Medium_14)
                         .bold()
-                     + Text(" ")
-                     + Text(isAcceptedFriend ? "a été acceptée. " : "a été refusée. ")
+                     + Text("a été ")
                         .tokenFont(.Body_Inter_Medium_14)
+                     + Text(isAcceptedFriend ? "acceptée. " : "refusée. ")
+                        .tokenFont(.Body_Inter_Medium_14)
+                        .bold()
                     )
                     .multilineTextAlignment(.leading)
                 }

@@ -21,10 +21,10 @@ struct NotificationScreenView: View {
                                     .frame(width: 24, height: 24)
                             })
                         Spacer()
-                        
+
                         Text("NOTIFICATIONS")
                             .tokenFont(.Title_Gigalypse_24)
-                        
+
                         Spacer()
                     }
                     .padding(.horizontal, 12)
@@ -40,20 +40,55 @@ struct NotificationScreenView: View {
                             Text("Aujourd'hui")
                                 .tokenFont(.Body_Inter_Medium_16)
                                 .padding(.horizontal, 12)
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl: "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                isActive: false
+                                ),
+                                onClick: {}
+                            )
+
                             Text("Hier")
                                 .tokenFont(.Body_Inter_Medium_16)
                                 .padding(.horizontal, 12)
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
+                            CellInformationMultiPerson()
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl: "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                isActive: false
+                                ),
+                                onClick: {}
+                            )
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl: "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                isActive: false
+                                ),
+                                onClick: {}
+                            )
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl: "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                isActive: false
+                                ),
+                                onClick: {}
+                            )
                         }
                     }
                 }

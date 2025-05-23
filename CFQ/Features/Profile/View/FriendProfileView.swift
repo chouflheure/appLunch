@@ -15,7 +15,7 @@ struct FriendProfileView: View {
     )
 
     @StateObject var viewModel = FriendProfileViewModel()
-    @StateObject var coordinator: Coordinator
+    @ObservedObject var coordinator: Coordinator
 
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showProfileFriend ) {
