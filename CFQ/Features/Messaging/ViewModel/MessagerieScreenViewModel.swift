@@ -55,8 +55,11 @@ extension MessagerieScreenViewModel {
                 print("@@@ error = \(error)")
             }
         }
+        
+        firebaseService.markMessageAsRead(conversationId: conversationID, userId: coordinator.user?.uid ?? "")
     }
 
+    
     private func fetchUserContactMessages(at index: Int, adminID: String) {
         firebaseService.getDataByID(from: .users, with: adminID) { [weak self] (result: Result<UserContact, Error>) in
             guard let self = self else { return }
@@ -119,7 +122,8 @@ extension MessagerieScreenViewModel {
             data: [
                 "lastMessageSender": message.userContact?.pseudo ?? "",
                 "lastMessageDate": Date(),
-                "lastMessage": message.message
+                "lastMessage": message.message,
+                "messageReader": [coordinator.user?.uid ?? ""]
             ],
             to: .conversations,
             at: coordinator.selectedConversation?.uid ?? ""

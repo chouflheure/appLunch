@@ -1,4 +1,3 @@
-
 import Firebase
 import FirebaseStorage
 import Network
@@ -14,49 +13,68 @@ class FirebaseService: FirebaseServiceProtocol {
     private var listeners: [String: ListenerRegistration] = [:]
     let db = Firestore.firestore()
 
-    func addData<T: Codable>(data: T, to collection: CollectionFirebaseType, completion: @escaping (Result<Void, Error>) -> (Void)) {
+    func addData<T: Codable>(
+        data: T, to collection: CollectionFirebaseType,
+        completion: @escaping (Result<Void, Error>) -> (Void)
+    ) {
         do {
             let collectionName = collection.rawValue
 
-            if let uid = (data as? User)?.uid ??
-                (data as? Turn)?.uid ??
-                (data as? Conversation)?.uid ??
-                (data as? Notification)?.uid ??
-                (data as? Team)?.uid ??
-                (data as? CFQ)?.uid
+            if let uid = (data as? User)?.uid ?? (data as? Turn)?.uid
+                ?? (data as? Conversation)?.uid ?? (data as? Notification)?.uid
+                ?? (data as? Team)?.uid ?? (data as? CFQ)?.uid
             {
-                try db.collection(collectionName).document(uid).setData(from: data) { error in
+                try db.collection(collectionName).document(uid).setData(
+                    from: data
+                ) { error in
                     if let error = error {
                         completion(.failure(error))
-                        Logger.log(" Erreur lors de l'ajout de \(collection.rawValue) : \(error.localizedDescription)", level: .error)
+                        Logger.log(
+                            " Erreur lors de l'ajout de \(collection.rawValue) : \(error.localizedDescription)",
+                            level: .error)
                     } else {
                         completion(.success(Void()))
-                        Logger.log("\(collection.rawValue) a été ajouté avec success", level: .success)
+                        Logger.log(
+                            "\(collection.rawValue) a été ajouté avec success",
+                            level: .success)
                     }
                 }
             } else {
-                Logger.log("Erreur : Impossible de récupérer l'identifiant de l'objet", level: .error)
+                Logger.log(
+                    "Erreur : Impossible de récupérer l'identifiant de l'objet",
+                    level: .error)
             }
         } catch {
             completion(.failure(error))
-            Logger.log("Erreur de conversion des données : \(error.localizedDescription)", level: .error)
+            Logger.log(
+                "Erreur de conversion des données : \(error.localizedDescription)",
+                level: .error)
         }
     }
 
-    func updateDataByID(data: [String: Any], to collection: CollectionFirebaseType, at id: String) {
+    func updateDataByID(
+        data: [String: Any], to collection: CollectionFirebaseType,
+        at id: String
+    ) {
         let collectionName = collection.rawValue
 
         db.collection(collectionName).document(id).updateData(data) { error in
             if let error = error {
-                Logger.log("Erreur lors de la modification de \(collection.rawValue) : \(error.localizedDescription)", level: .error)
+                Logger.log(
+                    "Erreur lors de la modification de \(collection.rawValue) : \(error.localizedDescription)",
+                    level: .error)
             } else {
-                Logger.log("\(collection.rawValue) a été modifié avec succès", level: .success)
+                Logger.log(
+                    "\(collection.rawValue) a été modifié avec succès",
+                    level: .success)
             }
         }
     }
 
-    
-    func deleteDataByID(from collection: CollectionFirebaseType, at id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func deleteDataByID(
+        from collection: CollectionFirebaseType, at id: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
         let collectionName = collection.rawValue
 
         db.collection(collectionName).document(id).delete { error in
@@ -67,21 +85,32 @@ class FirebaseService: FirebaseServiceProtocol {
             completion(.success(()))
         }
     }
-    
-    func getDataByID<T: Codable>(from collection: CollectionFirebaseType, with id: String, completion: @escaping (Result<T, Error>) -> Void) {
+
+    func getDataByID<T: Codable>(
+        from collection: CollectionFirebaseType, with id: String,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) {
         let collectionName = collection.rawValue
 
-        db.collection(collectionName).document(id).getDocument { document, error in
+        db.collection(collectionName).document(id).getDocument {
+            document, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            
+
             guard let document = document, document.exists else {
-                completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Document non trouvé."])))
+                completion(
+                    .failure(
+                        NSError(
+                            domain: "", code: 0,
+                            userInfo: [
+                                NSLocalizedDescriptionKey:
+                                    "Document non trouvé."
+                            ])))
                 return
             }
-            
+
             do {
                 let data = try document.data(as: T.self)
                 completion(.success(data))
@@ -99,19 +128,27 @@ class FirebaseService: FirebaseServiceProtocol {
     ) {
         let collectionName = collection.rawValue
         var currentData: [String: T] = [:]
-        var firstLoadCompleted = Set<String>() // Pour ne notifier que quand tous les premiers loads sont faits
+        var firstLoadCompleted = Set<String>()  // Pour ne notifier que quand tous les premiers loads sont faits
 
         for id in ids {
             let documentRef = db.collection(collectionName).document(id)
 
-            let registration = documentRef.addSnapshotListener { documentSnapshot, error in
+            let registration = documentRef.addSnapshotListener {
+                documentSnapshot, error in
                 if let error = error {
                     onUpdate(.failure(error))
                     return
                 }
 
                 guard let document = documentSnapshot, document.exists else {
-                    onUpdate(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Document \(id) non trouvé."])))
+                    onUpdate(
+                        .failure(
+                            NSError(
+                                domain: "", code: 0,
+                                userInfo: [
+                                    NSLocalizedDescriptionKey:
+                                        "Document \(id) non trouvé."
+                                ])))
                     return
                 }
 
@@ -149,14 +186,15 @@ class FirebaseService: FirebaseServiceProtocol {
     ) {
         let db = Firestore.firestore()
         let messagesRef = db.collection("conversations")
-                            .document(conversationID)
-                            .collection("messages")
-        
+            .document(conversationID)
+            .collection("messages")
+
         // Query pour récupérer les 15 derniers messages triés par timestamp
-        let query = messagesRef
-            .order(by: "timestamp", descending: true) // Les plus récents d'abord
+        let query =
+            messagesRef
+            .order(by: "timestamp", descending: true)  // Les plus récents d'abord
             .limit(to: limit)
-        
+
         // Ajouter le listener
         let listener = query.addSnapshotListener { snapshot, error in
             if let error = error {
@@ -164,13 +202,13 @@ class FirebaseService: FirebaseServiceProtocol {
                 print("@@@ failure ")
                 return
             }
-            
+
             guard let documents = snapshot?.documents else {
                 completion(.success([]))
                 print("@@@ success ")
                 return
             }
-            
+
             var messages: [Message] = []
             for document in documents {
                 do {
@@ -180,42 +218,64 @@ class FirebaseService: FirebaseServiceProtocol {
                     print("Erreur de décodage du message: \(error)")
                 }
             }
-            
+
             // Inverser l'ordre pour avoir les plus anciens en premier (pour l'affichage)
             let sortedMessages = messages.reversed()
             completion(.success(Array(sortedMessages)))
         }
-        
+
         // Stocker le listener pour pouvoir le supprimer plus tard
         activeListeners[listenerKeyPrefix] = listener
     }
-    
+
+    func markMessageAsRead(conversationId: String, userId: String) {
+        let conversationRef = db.collection("conversations").document(conversationId)
+
+        // Utiliser arrayUnion pour ajouter l'userId s'il n'existe pas déjà
+        conversationRef.updateData([
+            "messageReader": FieldValue.arrayUnion([userId])
+        ]) { error in
+            if let error = error {
+                print("Erreur lors de la mise à jour: \(error)")
+            } else {
+                print("Utilisateur ajouté aux lecteurs")
+            }
+        }
+    }
+
     private var activeListeners: [String: ListenerRegistration] = [:]
 
-    
     func addMessage(
         data: Message,
         at conversationID: String,
         completion: @escaping (Result<Void, Error>) -> (Void)
     ) {
         do {
-            try db.collection("conversations").document(conversationID).collection("messages").document(data.uid).setData(from: data) { error in
-                if let error = error {
-                    completion(.failure(error))
-                    Logger.log(" Erreur lors de l'ajout du message : \(error.localizedDescription)", level: .error)
-                } else {
-                    completion(.success(Void()))
-                    Logger.log("le message a été ajouté avec success", level: .success)
+            try db.collection("conversations").document(conversationID)
+                .collection("messages").document(data.uid).setData(from: data) {
+                    error in
+                    if let error = error {
+                        completion(.failure(error))
+                        Logger.log(
+                            " Erreur lors de l'ajout du message : \(error.localizedDescription)",
+                            level: .error)
+                    } else {
+                        completion(.success(Void()))
+                        Logger.log(
+                            "le message a été ajouté avec success",
+                            level: .success)
+                    }
                 }
-            }
-            
+
         } catch {
             completion(.failure(error))
-            Logger.log("Erreur de conversion des données : \(error.localizedDescription)", level: .error)
+            Logger.log(
+                "Erreur de conversion des données : \(error.localizedDescription)",
+                level: .error)
         }
     }
-    
-/*
+
+    /*
     func getDataByIDs<T: Codable>(from collection: CollectionFirebaseType, with ids: [String], completion: @escaping (Result<[T], Error>) -> Void) {
         let collectionName = collection.rawValue
             let dispatchGroup = DispatchGroup()
@@ -257,8 +317,11 @@ class FirebaseService: FirebaseServiceProtocol {
             }
     }
 */
-    
-    func getAllData<T: Codable>(from collection: CollectionFirebaseType, completion: @escaping (Result<[T], Error>) -> Void) {
+
+    func getAllData<T: Codable>(
+        from collection: CollectionFirebaseType,
+        completion: @escaping (Result<[T], Error>) -> Void
+    ) {
         let collectionName = collection.rawValue
         var dataArray: [T] = []
 
@@ -269,10 +332,17 @@ class FirebaseService: FirebaseServiceProtocol {
             }
 
             guard let snapshot = snapshot else {
-                completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Snapshot non disponible."])))
+                completion(
+                    .failure(
+                        NSError(
+                            domain: "", code: 0,
+                            userInfo: [
+                                NSLocalizedDescriptionKey:
+                                    "Snapshot non disponible."
+                            ])))
                 return
             }
-            
+
             for document in snapshot.documents {
                 do {
                     let data = try document.data(as: T.self)
@@ -286,7 +356,7 @@ class FirebaseService: FirebaseServiceProtocol {
             completion(.success(dataArray))
         }
     }
-    
+
     /// Pour arrêter un listener
     func removeListener(for key: String) {
         listeners[key]?.remove()
@@ -300,17 +370,15 @@ class FirebaseService: FirebaseServiceProtocol {
     }
 }
 
-
 enum ImageUploadError: Error {
     case imageConversionFailed
     case uploadFailed(Error)
     // Ajoutez d'autres cas d'erreur si nécessaire
 }
 
-
 // Firebase Storage
 extension FirebaseService {
-    
+
     /*
     func uploadImage(picture: UIImage, uidUser: String, completion: @escaping (Result<String, Error>) -> Void ) {
         print("@@@ uploadImage in ")
@@ -324,7 +392,7 @@ extension FirebaseService {
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         print("@@@ here 1")
-        
+
         storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
             print("@@@ here 2")
             if let error = error {
@@ -372,10 +440,11 @@ extension FirebaseService {
         print("@@@ uploadImage out ")
     }
      */
-    
-    
 
-    func uploadImage(picture: UIImage, uidUser: String, completion: @escaping (Result<String, Error>) -> Void ) {
+    func uploadImage(
+        picture: UIImage, uidUser: String,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
         print("@@@ uploadImage in ")
 
         guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
@@ -394,7 +463,14 @@ extension FirebaseService {
             } else {
                 hasConnection = false
                 print("@@@ No internet connection")
-                completion(.failure(NSError(domain: "NoInternet", code: -1, userInfo: [NSLocalizedDescriptionKey: "No internet connection"])))
+                completion(
+                    .failure(
+                        NSError(
+                            domain: "NoInternet", code: -1,
+                            userInfo: [
+                                NSLocalizedDescriptionKey:
+                                    "No internet connection"
+                            ])))
             }
             monitor.cancel()
         }
@@ -406,12 +482,14 @@ extension FirebaseService {
                 return
             }
 
-            let storageRef = Storage.storage().reference().child("images/\(uidUser).jpg")
+            let storageRef = Storage.storage().reference().child(
+                "images/\(uidUser).jpg")
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
             print("@@@ here 1")
 
-            storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+            storageRef.putData(imageData, metadata: metadata) {
+                (metadata, error) in
                 print("@@@ here 2")
                 if let error = error {
                     print("@@@ error 2")
@@ -420,18 +498,24 @@ extension FirebaseService {
                     if let errCode = (error as NSError?)?.code {
                         switch errCode {
                         case -1009:
-                            userFriendlyErrorMessage = "No internet connection. Please check your network settings."
+                            userFriendlyErrorMessage =
+                                "No internet connection. Please check your network settings."
                         case -1001:
-                            userFriendlyErrorMessage = "The request timed out. Please try again later."
+                            userFriendlyErrorMessage =
+                                "The request timed out. Please try again later."
                         case -1004:
-                            userFriendlyErrorMessage = "Cannot connect to the server. Please try again later."
+                            userFriendlyErrorMessage =
+                                "Cannot connect to the server. Please try again later."
                         default:
-                            userFriendlyErrorMessage = "An error occurred: \(error.localizedDescription)"
+                            userFriendlyErrorMessage =
+                                "An error occurred: \(error.localizedDescription)"
                         }
                         print("@@@ error = \(errCode)")
                     }
 
-                    print("@@@ Error uploading image: \(userFriendlyErrorMessage)")
+                    print(
+                        "@@@ Error uploading image: \(userFriendlyErrorMessage)"
+                    )
                     completion(.failure(error))
                     return
                 }
@@ -442,7 +526,9 @@ extension FirebaseService {
                     print("@@@ here 4")
                     if let error = error {
                         print("@@@ error 3")
-                        print("@@@ Error getting download URL: \(error.localizedDescription)")
+                        print(
+                            "@@@ Error getting download URL: \(error.localizedDescription)"
+                        )
                         completion(.failure(error))
                         return
                     }
@@ -460,9 +546,8 @@ extension FirebaseService {
 
 }
 
-
 extension FirebaseService {
-/*
+    /*
     // Modifiez la fonction getDataByIDs pour inclure un callback supplémentaire
     func getDataByIDs<T: Codable>(
         from collection: CollectionFirebaseType,

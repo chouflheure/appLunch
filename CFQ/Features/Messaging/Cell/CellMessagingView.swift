@@ -3,12 +3,12 @@ import SwiftUI
 
 struct CellMessagingView: View {
     var data: Conversation
+    var hasUnReadMessage: Bool
     var onTap: ((String) -> Void)
 
     var body: some View {
         VStack(alignment: .leading) {
-            //HStack(spacing: data.hasUnReadMessage ? 0 : 20) {
-            HStack(spacing: 12) {
+            HStack(spacing: hasUnReadMessage ? 0 : 12) {
                 Image(.header)
                     .resizable()
                     .scaledToFill()
@@ -16,8 +16,7 @@ struct CellMessagingView: View {
                     .frame(width: 45, height: 45)
                     .padding(.trailing, 0)
                 
-                // if data.hasUnReadMessage {
-                if false {
+                if hasUnReadMessage {
                     Circle()
                         .fill(.purpleLight)
                         .frame(width: 15, height: 15)
@@ -39,16 +38,7 @@ struct CellMessagingView: View {
                             .tokenFont(.Body_Inter_Medium_14)
                             .lineLimit(1)
                     }
-                    /*
-                    Text(data.hasUnReadMessage ? StringsToken.Messaging.newMessagePreview : data.lastMessage)
-                        .tokenFont(
-                            data.hasUnReadMessage ?
-                                .Body_Inter_Medium_14 :
-                                .Placeholder_Inter_Regular_14
-                        )
-                        .lineLimit(1)
-                     */
-                }// .bold(data.hasUnReadMessage)
+                }.bold(hasUnReadMessage)
 
                 Spacer()
 

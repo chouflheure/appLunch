@@ -41,7 +41,7 @@ struct PreviewMessagerieScreenView: View {
 
                             ForEach(viewModel.messageList.sorted { $0.lastMessageDate ?? Date() > $1.lastMessageDate ?? Date() }, id: \.uid) {
                                 data in
-                                CellMessagingView(data: data) { _ in
+                                CellMessagingView(data: data, hasUnReadMessage: !data.messageReader.contains(coordinator.user?.uid ?? "")) { _ in
                                     coordinator.selectedConversation = data
                                     withAnimation {
                                         showDetail = true
