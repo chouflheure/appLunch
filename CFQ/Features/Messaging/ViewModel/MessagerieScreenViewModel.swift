@@ -14,7 +14,7 @@ class MessagerieScreenViewModel: ObservableObject {
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
-        fetchMessages2()
+        fetchMessages()
         
     }
     
@@ -25,11 +25,10 @@ class MessagerieScreenViewModel: ObservableObject {
 
 extension MessagerieScreenViewModel {
     
-    func fetchMessages2() {
+    func fetchMessages() {
         print("@@@ fetchMessages")
         
         guard let conversationID = coordinator.selectedConversation?.uid else {
-            print("@@@ guard ")
             return
         }
         
@@ -58,7 +57,7 @@ extension MessagerieScreenViewModel {
         }
     }
 
-    func fetchUserContactMessages(at index: Int, adminID: String) {
+    private func fetchUserContactMessages(at index: Int, adminID: String) {
         firebaseService.getDataByID(from: .users, with: adminID) { [weak self] (result: Result<UserContact, Error>) in
             guard let self = self else { return }
             
@@ -81,6 +80,8 @@ extension MessagerieScreenViewModel {
                 Logger.log(error.localizedDescription, level: .error)
             }
         }
+        
+        
     }
     
     func pushMessage() {
@@ -100,10 +101,6 @@ extension MessagerieScreenViewModel {
         )
         
         messages.append(message)
-        
-        print("@@@ &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-        messages.forEach { print($0.printObject) }
-        print("@@@ &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         
         firebaseService.addMessage(
             data: message,

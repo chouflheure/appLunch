@@ -11,7 +11,8 @@ class Conversation: ObservableObject, Encodable, Decodable {
     @Published var lastMessageSender: String
     @Published var lastMessageDate: Date?
     @Published var lastMessage: String
-    
+    @Published var messageReader: [String]
+
     enum CodingKeys: String, CodingKey {
         case uid
         case titleConv
@@ -21,6 +22,7 @@ class Conversation: ObservableObject, Encodable, Decodable {
         case lastMessageSender
         case lastMessageDate
         case lastMessage
+        case messageReader
     }
 
     init(
@@ -31,7 +33,8 @@ class Conversation: ObservableObject, Encodable, Decodable {
         eventUID: String,
         lastMessageSender: String,
         lastMessageDate: Date,
-        lastMessage: String
+        lastMessage: String,
+        messageReader: [String]
     ) {
         self.uid = uid
         self.titleConv = titleConv
@@ -41,6 +44,7 @@ class Conversation: ObservableObject, Encodable, Decodable {
         self.lastMessageSender = lastMessageSender
         self.lastMessageDate = lastMessageDate
         self.lastMessage = lastMessage
+        self.messageReader = messageReader
     }
 
     required init(from decoder: Decoder) throws {
@@ -53,6 +57,7 @@ class Conversation: ObservableObject, Encodable, Decodable {
         lastMessageSender = try values.decode(String.self, forKey: .lastMessageSender)
         lastMessageDate = try values.decodeIfPresent(Date.self, forKey: .lastMessageDate)
         lastMessage = try values.decode(String.self, forKey: .lastMessage)
+        messageReader = try values.decode([String].self, forKey: .messageReader)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -65,6 +70,7 @@ class Conversation: ObservableObject, Encodable, Decodable {
         try container.encode(lastMessageSender, forKey: .lastMessageSender)
         try container.encodeIfPresent(lastMessageDate, forKey: .lastMessageDate)
         try container.encode(lastMessage, forKey: .lastMessage)
+        try container.encode(messageReader, forKey: .messageReader)
     }
     
     var printObject: String {
@@ -77,6 +83,7 @@ class Conversation: ObservableObject, Encodable, Decodable {
         + "@@@ \n lastMessageSender : \(lastMessageSender)"
         + "@@@ \n lastMessageDate : \(lastMessageDate)"
         + "@@@ \n lastMessage : \(lastMessage)"
+        + "@@@ \n messageReader : \(messageReader)"
         + "@@@ \n ------------------"
     }
 }

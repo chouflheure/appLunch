@@ -8,7 +8,7 @@ class PreviewMessagerieScreenViewModel: ObservableObject {
     @Published var researchText = String()
     @Published var messageList = [Conversation]()
     @ObservedObject var coordinator: Coordinator
-
+ 
     private var firebaseService = FirebaseService()
     
     init(coordinator: Coordinator) {
