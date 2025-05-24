@@ -8,6 +8,7 @@ enum MessagerieHeaderType {
     case event
 }
 
+// Garder le paramètre isPresented pour pouvoir y accéder depuis différent endroit
 struct MessagerieScreenView: View {
     @Binding var isPresented: Bool
     @StateObject var viewModel: MessagerieScreenViewModel
@@ -150,7 +151,6 @@ struct MessagerieScreenView: View {
                                         if !viewModel.textMessage.isEmpty {
                                             Button(action: {
                                                 viewModel.pushMessage()
-//                                                viewModel.textMessage = ""
                                             }) {
                                                 Image(.iconSend)
                                                     .foregroundColor(.white)

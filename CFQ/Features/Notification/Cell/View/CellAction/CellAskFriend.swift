@@ -12,7 +12,7 @@ struct CellAskFriend: View {
         VStack(alignment: .leading) {
             HStack {
                 Button(action: {
-                    isShowProfile = true
+                    onClick()
                 }) {
                     CachedAsyncImageView(
                         urlString: userContact.profilePictureUrl,
@@ -83,9 +83,7 @@ struct CellAskFriend: View {
         .frame(height: 70)
         .background(.gray.opacity(0.4))
         .onTapGesture {
-            withAnimation {
-                //onClick()
-            }
+            onClick()
         }
     }
 }

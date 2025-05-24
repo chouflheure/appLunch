@@ -75,7 +75,7 @@ struct FriendProfileView: View {
                                     .resizable()
                                     .frame(width: 16, height: 16)
                                     .foregroundColor(.white)
-                                Text("\(coordinator.profileUserSelected.location)")
+                                Text(coordinator.profileUserSelected.location)
                                     .tokenFont(.Body_Inter_Medium_16)
                             }
                         }
@@ -115,7 +115,6 @@ struct FriendProfileView: View {
                     .padding(.bottom, 16)
                     
                     if viewModel.isRequestedToBeFriendByTheUser {
-                        // AnswerFriendToTheProfile(viewModel: viewModel, profileFriend: profileFriend)
                         AnswerFriendToTheProfile(viewModel: viewModel, profileFriend: coordinator.profileUserSelected)
                     }
 
@@ -141,7 +140,12 @@ struct FriendProfileView: View {
             .blur(radius: viewModel.isShowRemoveFriends ? 10 : 0)
             .allowsHitTesting(!viewModel.isShowRemoveFriends)
         }
-        
+
+        /*
+        .onAppear() {
+            viewModel.statusFriendButton(user: user, friend: coordinator.profileUserSelected)
+        }
+         */
         if viewModel.isShowRemoveFriends {
             PopUpRemoveFriendAlert(viewModel: viewModel)
         }
@@ -220,7 +224,6 @@ private struct SignalAndBlockUserSheet: View {
 
 private struct PrivateEventShow: View {
     var body: some View {
-        Spacer()
         VStack() {
             Image(.iconLock)
                 .resizable()
@@ -231,7 +234,8 @@ private struct PrivateEventShow: View {
             Text("COMPTE PRIVÉ")
                 .tokenFont(.Body_Inter_Medium_16)
         }
-        Spacer()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.top, 40) // Ajuster selon vos besoins pour le centrage vertical
     }
 }
 

@@ -261,7 +261,7 @@ struct CFQApp: App {
 
 
 // TEST A FAIRE :
-
+// https://claude.ai/chat/34109bc7-8c8f-432c-89df-a73be3a7f4ff
 /*
  import UserNotifications
  import FirebaseMessaging
