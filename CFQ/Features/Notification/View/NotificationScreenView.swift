@@ -2,7 +2,8 @@ import SwiftUI
 
 struct NotificationScreenView: View {
     @ObservedObject var coordinator: Coordinator
-
+    @StateObject var vm = NotificationViewModel()
+    
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showNotificationScreen) {
             SafeAreaContainer {

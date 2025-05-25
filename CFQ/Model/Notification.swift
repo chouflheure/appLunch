@@ -6,12 +6,14 @@ class Notification: ObservableObject, Encodable, Decodable {
     @Published var uid: String
     @Published var typeNotif: String
     @Published var timestamp: Date
-    @Published var userContact: UserContact
+    @Published var uidUserNotif: String
+    @Published var userContact: UserContact?
 
     enum CodingKeys: String, CodingKey {
         case uid
         case typeNotif
         case timestamp
+        case uidUserNotif
         case userContact
     }
 
@@ -19,11 +21,13 @@ class Notification: ObservableObject, Encodable, Decodable {
         uid: String,
         typeNotif: String,
         timestamp: Date,
-        userContact: UserContact
+        uidUserNotif: String,
+        userContact: UserContact?
     ) {
         self.uid = uid
         self.typeNotif = typeNotif
         self.timestamp = timestamp
+        self.uidUserNotif = uidUserNotif
         self.userContact = userContact
     }
 
@@ -32,7 +36,8 @@ class Notification: ObservableObject, Encodable, Decodable {
         uid = try values.decode(String.self, forKey: .uid)
         typeNotif = try values.decode(String.self, forKey: .typeNotif)
         timestamp = try values.decode(Date.self, forKey: .timestamp)
-        userContact = try values.decode(UserContact.self, forKey: .userContact)
+        uidUserNotif = try values.decode(String.self, forKey: .uidUserNotif)
+        userContact = try values.decodeIfPresent(UserContact.self, forKey: .userContact)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -40,7 +45,8 @@ class Notification: ObservableObject, Encodable, Decodable {
         try container.encode(uid, forKey: .uid)
         try container.encode(typeNotif, forKey: .typeNotif)
         try container.encode(timestamp, forKey: .timestamp)
-        try container.encode(userContact, forKey: .userContact)
+        try container.encode(uidUserNotif, forKey: .uidUserNotif)
+        try container.encodeIfPresent(userContact, forKey: .userContact)
     }
     
     var printObject: String {

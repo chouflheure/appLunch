@@ -26,8 +26,7 @@ class MessagerieScreenViewModel: ObservableObject {
 extension MessagerieScreenViewModel {
     
     func fetchMessages() {
-        print("@@@ fetchMessages")
-        
+
         guard let conversationID = coordinator.selectedConversation?.uid else {
             return
         }
