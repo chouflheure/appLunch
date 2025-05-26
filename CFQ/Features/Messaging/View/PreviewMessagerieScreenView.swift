@@ -2,10 +2,15 @@ import SwiftUI
 
 struct PreviewMessagerieScreenView: View {
     @ObservedObject var coordinator: Coordinator
-    @ObservedObject var viewModel = PreviewMessagerieScreenViewModel()
+    @StateObject var viewModel: PreviewMessagerieScreenViewModel
     @State private var showDetail = false
     @State private var showDetailPopUp = false
 
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: PreviewMessagerieScreenViewModel(coordinator: coordinator))
+    }
+    
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showMessageScreen) {
             SafeAreaContainer {
@@ -27,16 +32,17 @@ struct PreviewMessagerieScreenView: View {
                                 placeholder: StringsToken.SearchBar
                                     .placeholderConversation,
                                 onRemoveText: {
-                                    viewModel.removeText()
+                                    // viewModel.removeText()
                                 },
                                 onTapResearch: {
-                                    viewModel.researche()
+                                    // viewModel.researche()
                                 }
                             ).padding(.top, 16)
 
-                            ForEach(viewModel.messageList, id: \.self) {
+                            ForEach(viewModel.messageList.sorted { $0.lastMessageDate ?? Date() > $1.lastMessageDate ?? Date() }, id: \.uid) {
                                 data in
-                                CellMessagingView(data: data) { _ in
+                                CellMessagingView(data: data, hasUnReadMessage: !data.messageReader.contains(coordinator.user?.uid ?? "")) { _ in
+                                    coordinator.selectedConversation = data
                                     withAnimation {
                                         showDetail = true
                                     }
@@ -62,7 +68,7 @@ struct PreviewMessagerieScreenView: View {
 
     @ViewBuilder
     func destinationView() -> some View {
-        MessagerieScreenView(isPresented: $showDetail)
+        MessagerieScreenView(isPresented: $showDetail, coordinator: coordinator)
     }
 }
 

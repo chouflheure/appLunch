@@ -53,10 +53,3 @@ struct TeamView: View {
         }
     }
 }
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-
-    }.ignoresSafeArea()
-}

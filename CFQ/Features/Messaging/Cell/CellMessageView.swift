@@ -237,7 +237,7 @@ struct CellMessageSendByTheUserView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false
     @State private var isShowPopover = false
-    @Binding var textMessage: String
+    var data: Message
     var onDoubleTap: () -> Void
 
     var body: some View {
@@ -246,7 +246,7 @@ struct CellMessageSendByTheUserView: View {
 
                 ReponseMessage {
 
-                    Text(textMessage)
+                    Text(data.message)
                         .tokenFont(.Body_Inter_Medium_12)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
@@ -268,8 +268,98 @@ struct CellMessageSendByTheUserView: View {
                                 }
                         )
 
+                    if data.reactions?.count ?? 0 > 0 {
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                isShowPopover = true
+                            }) {
+                                Text("❤️ 😘 2")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 10))
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .background(.blackLight)
+                                    .cornerRadius(20)
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(lineWidth: 0.3)
+                                            .foregroundColor(.black)
+                                    }
+                                    .popover(
+                                        isPresented: $isShowPopover,
+                                        arrowEdge: .bottom,
+                                        content: {
+                                            Text("Hello, World!")
+                                                .padding()
+                                                .presentationCompactAdaptation(
+                                                    .none)
+                                        }
+                                    )
+                                    .zIndex(999)
+                            }
+                            
+                        }
+                        .padding(.trailing, 20)
+                        .offset(y: -12)
+                    }
+                }
+
+            }
+            .padding(.trailing, 15)
+            .padding(.leading, 30)
+        }
+    }
+}
+
+struct CellMessageView3: View {
+    @State private var dragOffset: CGFloat = 0
+    @State private var showReaction: Bool = false
+    @State private var isShowPopover = false
+    
+    var data: Message
+
+    var body: some View {
+        VStack(alignment: .leading) {
+
+            ReponseMessage {
+
+                Text(data.userContact?.pseudo ?? "User")
+                    .tokenFont(.Placeholder_Inter_Regular_14)
+                    .padding(.leading, 50)
+
+                HStack(alignment: .top) {
+                    CachedAsyncImageView(
+                        urlString: data.userContact?.profilePictureUrl ?? "",
+                        designType: .scaleImageMessageProfile
+                    )
+
+                    Text(data.message)
+                        .tokenFont(.Body_Inter_Medium_12)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .background(.blackLight)
+                        .cornerRadius(20)
+                        .simultaneousGesture(
+                            LongPressGesture()
+                                .onEnded { _ in
+                                    print("@@@ long Tap")
+                                    showReaction = true
+                                }
+                        )
+                        .simultaneousGesture(
+                            TapGesture(count: 2)
+                                .onEnded {
+                                    print("@@@ double Tap")
+                                    showReaction = true
+                                }
+                        )
+                    Spacer()
+                }
+                .padding(.trailing, 30)
+
+                if data.reactions?.count ?? 0 > 0 {
                     HStack {
-                        Spacer()
                         Button(action: {
                             isShowPopover = true
                         }) {
@@ -297,18 +387,22 @@ struct CellMessageSendByTheUserView: View {
                                 )
                                 .zIndex(999)
                         }
-                        
+                        Spacer()
                     }
-                    .padding(.trailing, 20)
+                    .padding(.leading, 40)
                     .offset(y: -12)
-
                 }
-
+                
             }
-            .padding(.trailing, 15)
+            .padding(.trailing, 30)
         }
     }
 }
+
+
+
+
+
 
 struct CellMessageView2: View {
     @State private var dragOffset: CGFloat = 0
@@ -422,56 +516,3 @@ struct ReactionMessageView {
         // CellMessageView()
     }
 }
-
-class P158_SubscriptionView {
-
-    init() {}
-    @State private var count1: Double = 0
-    @State private var count2: Double = 0
-
-    @State private var angle1 = Angle(degrees: 0)
-    @State private var angle2 = Angle(degrees: 0)
-
-    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
-
-    public var body: some View {
-        ZStack {
-            SubscriptionView(
-                content:
-                    StrokeCapsuleView(color: Color.purple)
-                    .frame(width: 260, height: 100)
-                    .rotationEffect(angle1), publisher: timer
-            ) { t in
-                self.count1 += 1
-                self.angle1 = Angle(degrees: self.count1 * 45)
-            }
-            StrokeCapsuleView(color: Color.orange)
-                .frame(width: 100, height: 260)
-                .rotationEffect(angle2)
-                .onReceive(timer) { t in
-                    self.count2 += 1
-                    self.angle2 = Angle(degrees: self.count1 * -45)
-                }
-        }
-        .animation(.easeOut, value: count1)
-        .animation(.easeOut, value: count2)
-    }
-}
-
-extension P158_SubscriptionView {
-    fileprivate struct StrokeCapsuleView: View {
-        let color: Color
-        var body: some View {
-            Capsule()
-                .stroke(lineWidth: 1)
-                .foregroundColor(color)
-        }
-    }
-}
-/*
-struct P158_SubscriptionView_Previews: PreviewProvider {
-    static var previews: some View {
-        P158_SubscriptionView()
-    }
-}
-*/

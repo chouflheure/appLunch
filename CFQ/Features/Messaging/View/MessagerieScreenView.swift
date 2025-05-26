@@ -1,4 +1,6 @@
+import Combine
 import SwiftUI
+import UIKit
 
 enum MessagerieHeaderType {
     case cfq
@@ -6,38 +8,24 @@ enum MessagerieHeaderType {
     case event
 }
 
-import Combine
-import UIKit
-
-
-/// Publisher to read keyboard changes.
-protocol KeyboardReadable {
-    var keyboardPublisher: AnyPublisher<Bool, Never> { get }
-}
-
-extension KeyboardReadable {
-    var keyboardPublisher: AnyPublisher<Bool, Never> {
-        Publishers.Merge(
-            NotificationCenter.default
-                .publisher(for: UIResponder.keyboardWillShowNotification)
-                .map { _ in true },
-            
-            NotificationCenter.default
-                .publisher(for: UIResponder.keyboardWillHideNotification)
-                .map { _ in false }
-        )
-        .eraseToAnyPublisher()
-    }
-}
-
-struct MessagerieScreenView: View, KeyboardReadable {
+// Garder le paramètre isPresented pour pouvoir y accéder depuis différent endroit
+struct MessagerieScreenView: View {
     @Binding var isPresented: Bool
-    @ObservedObject var viewModel = MessagerieScreenViewModel()
+    @StateObject var viewModel: MessagerieScreenViewModel
+    @ObservedObject var coordinator: Coordinator
+
     @State private var text: String = ""
-    @State private var textViewHeight: CGFloat = 15
     @State private var lastText: String = ""
     @State private var showReaction: Bool = false
     @State private var isKeyboardVisible = false
+    @State private var textViewHeight: CGFloat = 20
+    @State private var keyboardHeight: CGFloat = 0
+
+    init(isPresented: Binding<Bool>, coordinator: Coordinator) {
+        _isPresented = isPresented
+        self.coordinator = coordinator
+        _viewModel = StateObject(wrappedValue: MessagerieScreenViewModel(coordinator: coordinator))
+    }
 
     var body: some View {
         DraggableViewLeft(isPresented: $isPresented) {
@@ -57,12 +45,16 @@ struct MessagerieScreenView: View, KeyboardReadable {
 
                             Spacer()
 
-                            CFQMolecule(name: "Charles", title: "CFQ Demain ?", image: "")
-                                .onTapGesture {
-                                    withAnimation {
-                                        viewModel.showConversationOptionView = true
-                                    }
+                            CFQMolecule(
+                                name: "Charles",
+                                title: "CFQ Demain ?",
+                                image: ""
+                            )
+                            .onTapGesture {
+                                withAnimation {
+                                    viewModel.showConversationOptionView = true
                                 }
+                            }
 
                             Spacer()
 
@@ -100,130 +92,95 @@ struct MessagerieScreenView: View, KeyboardReadable {
                                 .ignoresSafeArea()
                             */
 
-                            VStack {
+                            VStack(spacing: 0) {
                                 ScrollViewReader { proxy in
-                                    ScrollView(.vertical, showsIndicators: false) {
-                                        LazyVStack(spacing: 10) {
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageView()
-                                                .rotationEffect(.degrees(180))
-                                            CellMessageSendByTheUserView(
-                                                textMessage: .constant(
-                                                    "Test de message qui vient de l'user"
-                                                ),
-                                                onDoubleTap: {
-                                                    withAnimation {
-                                                        print("@@@ 2 tap ")
-                                                        self.showReaction = true
+                                    ScrollView(
+                                        .vertical, showsIndicators: false
+                                    ) {
+                                        VStack {
+                                            ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
+                                                LazyVStack(spacing: 10) {
+                                                    if viewModel.messages[index].senderUID == coordinator.user?.uid {
+                                                        CellMessageSendByTheUserView(data: viewModel.messages[index]) {
+                                                        }
+                                                        .padding(.horizontal, 12)
+                                                        .rotationEffect(.degrees(180))
+                                                    } else {
+                                                        CellMessageView3(
+                                                            data: viewModel.messages[index]
+                                                        )
+                                                        .padding(.horizontal, 12)
+                                                        .rotationEffect(.degrees(180))
                                                     }
                                                 }
-                                            )
-                                            .rotationEffect(.degrees(180))
-                                            .padding(.horizontal, 12)
-                                            
-                                            ForEach(
-                                                (0..<viewModel.messages.count)
-                                                    .reversed(), id: \.self
-                                            ) { index in
-                                                CellMessageView2(
-                                                    textMessage:
-                                                        $viewModel.messages[index]
-                                                )
-                                                .padding(.horizontal, 12)
-                                                .rotationEffect(.degrees(180))
                                             }
                                         }
                                         .frame(maxWidth: .infinity)
                                     }
                                     .rotationEffect(.degrees(180))
-                                    
-                                    .onChange(of: viewModel.messages.count) { _ in
+                                    .onChange(of: viewModel.messages.count) {
+                                        _ in
                                         withAnimation(.easeOut(duration: 0.3)) {
                                             proxy.scrollTo(
                                                 viewModel.messages.count - 1,
                                                 anchor: .top)
                                         }
                                     }
+                                    
                                 }
                                 Spacer()
-                                    .frame(height: 80)
+                                    .frame(height: textViewHeight + 30)
                             }
+
                             VStack {
                                 Spacer()
-                                
-                                HStack(alignment: .bottom) {
-                                    AutoGrowingTextView2(
-                                        text: $viewModel.textMessage,
-                                        minHeight: 15,
-                                        calculatedHeight: $textViewHeight
-                                    )
-                                    .padding(.horizontal, 5)
-                                    .foregroundColor(.white)
-                                    .frame(height: textViewHeight)
-                                    .background(.black)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    .onReceive(keyboardPublisher) { newIsKeyboardVisible in
-                                        print("@@@ Is keyboard visible? ", newIsKeyboardVisible)
-                                        isKeyboardVisible = newIsKeyboardVisible
-                                    }
-                                    .onChange(of: viewModel.textMessage) { newValue in
-                                        if newValue.count > viewModel.textMessage.count {
-                                            let diff = newValue.suffix( newValue.count - viewModel.textMessage.count )
-                                            if diff.contains("\n") {
-                                                print("⏎ Retour à la ligne détecté !")
-                                            }
-                                        }
-                                        
-                                        lastText = newValue
-                                        viewModel.textMessage = newValue
-                                    }
-                                    .overlay {
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color.white, lineWidth: 1)
-                                    }
-                                    
-                                    if !viewModel.textMessage.isEmpty {
-                                        Button(action: {
-                                            viewModel.messages.append(
-                                                viewModel.textMessage)
-                                            viewModel.textMessage = ""
-                                        }) {
-                                            Image(.iconSend)
-                                                .foregroundColor(.white)
-                                                .padding(.all, 5)
-                                                .padding(.trailing, 2)
-                                                .background(.purpleDark)
-                                                .clipShape(
-                                                    Circle()
-                                                )
-                                            
-                                        }
-                                        .frame(width: 15, height: 15)
-                                        .padding(.horizontal, 10)
-                                        .padding(.bottom, 10)
-                                    }
-                                }
-                                .padding(.horizontal, 12)
-                                .padding(.bottom, 30)
+                                GeometryReader { geometry in
+                                    HStack(alignment: .bottom) {
+                                        GrowingTextView(
+                                            text: $viewModel.textMessage,
+                                            dynamicHeight: $textViewHeight,
+                                            availableWidth: geometry.size.width - 80,
+                                            placeholder: "Ecris ici..."
+                                        )
+                                        .frame(height: textViewHeight)
+                                        .padding(8)
+                                        .background(.black)
+                                        .cornerRadius(24)
+                                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
 
+                                        if !viewModel.textMessage.isEmpty {
+                                            Button(action: {
+                                                viewModel.pushMessage()
+                                            }) {
+                                                Image(.iconSend)
+                                                    .foregroundColor(.white)
+                                                    .padding(5)
+                                                    .background(.purpleDark)
+                                                    .clipShape(Circle())
+                                            }
+                                            .frame(width: 15, height: 15)
+                                            .padding(.horizontal, 10)
+                                            .padding(.bottom, 10)
+                                        }
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.bottom, keyboardHeight == 0 ? 30 : keyboardHeight)
+                                }
+                                .frame(height: textViewHeight + 30)
                             }
                         }
                         .blur(radius: showReaction ? 10 : 0)
                         .allowsHitTesting(!showReaction)
-                        .ignoresSafeArea()
+                        // .ignoresSafeArea()
                     }
                     if showReaction {
                         destinationView()
-                        // .transition(.move(edge: .trailing))
+                            // .transition(.move(edge: .trailing))
                             .zIndex(2)
                         // ReactionPreviewView(showReaction: $showReaction)
                     }
                 }
+                .scrollDismissesKeyboard(.immediately)
             }
         }
 
@@ -238,16 +195,11 @@ struct MessagerieScreenView: View, KeyboardReadable {
     func destinationView() -> some View {
         // ReactionPreviewView(showReaction: $showReaction)
         // MessagerieScreenView(isPresented: $viewModel.showDetailGuest)
-        ConversationOptionView(isPresented: $viewModel.showConversationOptionView)
+        ConversationOptionView(
+            isPresented: $viewModel.showConversationOptionView)
     }
 }
 
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        MessagerieScreenView(isPresented: .constant(true))
-    }
-}
 
 
 struct ConversationOptionView: View {
@@ -268,22 +220,26 @@ struct ConversationOptionView: View {
                                 .scaledToFill()
                                 .frame(width: 50, height: 50)
                                 .clipShape(Circle())
-                            
+
                             Text("Titre du groupe")
                                 .tokenFont(.Title_Inter_semibold_24)
-                            
+
                             // MEDIA PART
-                            ConversationOptionPart(icon: .iconAdduser, title: "Ajouter quelqu'un", onTap: {})
-                            ConversationOptionPart(icon: .iconSearch, title: "Rechercher dans la conv", onTap: {})
-                            ConversationOptionPart(icon: .icon, title: "Medias", nbElement: 8, onTap: {})
-                            
+                            ConversationOptionPart(
+                                icon: .iconAdduser, title: "Ajouter quelqu'un",
+                                onTap: {})
+                            ConversationOptionPart(
+                                icon: .iconSearch,
+                                title: "Rechercher dans la conv", onTap: {})
+                            ConversationOptionPart(
+                                icon: .icon, title: "Medias", nbElement: 8,
+                                onTap: {})
 
                             PageView(pageViewType: .invited)
                                 .frame(height: 300)
-                            
-                            
+
                             Spacer()
-                            
+
                             Button("coucou", action: {})
                         }
                     }
@@ -304,7 +260,7 @@ private struct ConversationOptionPart: View {
     var title: String
     var nbElement: Int?
     var onTap: () -> Void
-    
+
     var body: some View {
         HStack {
             Image(icon)
@@ -323,7 +279,7 @@ private struct ConversationOptionPart: View {
                 .frame(width: 20, height: 20)
                 .foregroundColor(.gray)
                 .rotationEffect(.init(degrees: 180))
-            
+
         }
         .padding()
         .background(.black)

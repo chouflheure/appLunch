@@ -1,0 +1,864 @@
+[debug] [2025-05-22T14:17:34.322Z] ----------------------------------------------------------------------
+[debug] [2025-05-22T14:17:34.326Z] Command:       /opt/homebrew/Cellar/node/23.7.0/bin/node /opt/homebrew/bin/firebase deploy
+[debug] [2025-05-22T14:17:34.326Z] CLI Version:   14.4.0
+[debug] [2025-05-22T14:17:34.326Z] Platform:      darwin
+[debug] [2025-05-22T14:17:34.326Z] Node Version:  v23.7.0
+[debug] [2025-05-22T14:17:34.327Z] Time:          Thu May 22 2025 16:17:34 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2025-05-22T14:17:34.327Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-22T14:17:34.407Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-22T14:17:34.407Z] > authorizing via signed-in user (calvignaccharles@gmail.com)
+[debug] [2025-05-22T14:17:34.407Z] [iam] checking project cfq-dev-7c39a for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-05-22T14:17:34.408Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:34.408Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:34.408Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions [none]
+[debug] [2025-05-22T14:17:34.408Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:34.408Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-05-22T14:17:35.085Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions 200
+[debug] [2025-05-22T14:17:35.086Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-05-22T14:17:35.086Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:35.086Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:35.086Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-05-22T14:17:35.086Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-05-22T14:17:36.023Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-05-22T14:17:36.023Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'cfq-dev-7c39a'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-05-22T14:17:36.649Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:36.649Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:36.649Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-05-22T14:17:36.649Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:37.565Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-05-22T14:17:37.565Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-05-22T14:17:37.566Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.566Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.566Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a [none]
+[debug] [2025-05-22T14:17:37.738Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a 200
+[debug] [2025-05-22T14:17:37.739Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a {"projectNumber":"502812345014","projectId":"cfq-dev-7c39a","lifecycleState":"ACTIVE","name":"CFQ-DEV","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-01-28T14:11:03.250616Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-05-22T14:17:37.741Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.741Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.741Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.741Z] Checked if tokens are valid: true, expires at: 1747926912801
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-05-22T14:17:37.742Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.742Z] Checked if tokens are valid: true, expires at: 1747926912801
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-05-22T14:17:37.742Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.742Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:37.743Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-05-22T14:17:37.744Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:37.745Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-05-22T14:17:37.745Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:37.747Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com [none]
+[debug] [2025-05-22T14:17:37.747Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:37.748Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com [none]
+[debug] [2025-05-22T14:17:37.748Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:38.508Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com 200
+[debug] [2025-05-22T14:17:38.508Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-05-22T14:17:38.538Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com 200
+[debug] [2025-05-22T14:17:38.539Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-05-22T14:17:38.543Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com 200
+[debug] [2025-05-22T14:17:38.543Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-05-22T14:17:38.545Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com 200
+[debug] [2025-05-22T14:17:38.545Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-05-22T14:17:38.546Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:38.546Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:38.546Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig [none]
+[debug] [2025-05-22T14:17:39.377Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig 200
+[debug] [2025-05-22T14:17:39.377Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig {"projectId":"cfq-dev-7c39a","storageBucket":"cfq-dev-7c39a.firebasestorage.app"}
+[debug] [2025-05-22T14:17:39.379Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:39.379Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:39.379Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs [none]
+[debug] [2025-05-22T14:17:39.798Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs 200
+[debug] [2025-05-22T14:17:39.798Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs {}
+[debug] [2025-05-22T14:17:39.801Z] Validating nodejs source
+[debug] [2025-05-22T14:17:40.259Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-05-22T14:17:40.259Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-05-22T14:17:40.260Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-05-22T14:17:40.266Z] Found firebase-functions binary at '/Users/calvignaccharles/Documents/Projets/appLunch/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8543
+
+[debug] [2025-05-22T14:17:40.638Z] Got response from /__/functions.yaml {"endpoints":{"sendScheduledDataMessageIsTurnTonight6PM":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west3"],"scheduleTrigger":{"schedule":"30 18 * * *","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":"Europe/Paris"},"labels":{},"entryPoint":"sendScheduledDataMessageIsTurnTonight6PM"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-05-22T14:17:44.660Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:44.660Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:44.661Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com [none]
+[debug] [2025-05-22T14:17:44.661Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:45.732Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com 200
+[debug] [2025-05-22T14:17:45.733Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com [omitted]
+[info] ✔  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2025-05-22T14:17:45.733Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-22T14:17:45.734Z] > authorizing via signed-in user (calvignaccharles@gmail.com)
+[debug] [2025-05-22T14:17:45.734Z] [iam] checking project cfq-dev-7c39a for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2025-05-22T14:17:45.734Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:45.734Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:45.734Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions [none]
+[debug] [2025-05-22T14:17:45.734Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:45.734Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-22T14:17:46.444Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions 200
+[debug] [2025-05-22T14:17:46.444Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-22T14:17:46.445Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:46.445Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:46.446Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances pageSize=100&pageToken=
+[debug] [2025-05-22T14:17:47.263Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances 200
+[debug] [2025-05-22T14:17:47.263Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged /Users/calvignaccharles/Documents/Projets/appLunch/functions (74.19 KB) for uploading 
+[debug] [2025-05-22T14:17:47.296Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:47.296Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:47.296Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions [none]
+[debug] [2025-05-22T14:17:47.876Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions 200
+[debug] [2025-05-22T14:17:47.876Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions {}
+[debug] [2025-05-22T14:17:47.877Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:47.877Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:47.877Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-05-22T14:17:48.829Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions 200
+[debug] [2025-05-22T14:17:48.830Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions {}
+[info] i  functions: ensuring required API cloudscheduler.googleapis.com is enabled... 
+[debug] [2025-05-22T14:17:48.833Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:48.833Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:48.833Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com [none]
+[debug] [2025-05-22T14:17:48.833Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com x-goog-quota-user=projects/502812345014
+[debug] [2025-05-22T14:17:49.578Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com 200
+[debug] [2025-05-22T14:17:49.578Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com [omitted]
+[info] ✔  functions: required API cloudscheduler.googleapis.com is enabled 
+[debug] [2025-05-22T14:17:49.591Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:49.592Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:49.592Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-05-22T14:17:49.592Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:17:50.320Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-05-22T14:17:50.321Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-05-22T14:17:50.321Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:50.321Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:50.322Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a [none]
+[debug] [2025-05-22T14:17:50.490Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a 200
+[debug] [2025-05-22T14:17:50.490Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a {"projectNumber":"502812345014","projectId":"cfq-dev-7c39a","lifecycleState":"ACTIVE","name":"CFQ-DEV","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-01-28T14:11:03.250616Z"}
+[debug] [2025-05-22T14:17:50.492Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:50.492Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:50.492Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo [none]
+[debug] [2025-05-22T14:17:51.306Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo 200
+[debug] [2025-05-22T14:17:51.307Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo {"name":"projects/cfq-dev-7c39a/billingInfo","projectId":"cfq-dev-7c39a","billingAccountName":"billingAccounts/01A22D-21934A-5B9F69","billingEnabled":true}
+[debug] [2025-05-22T14:17:51.308Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:51.308Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:51.308Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl [none]
+[debug] [2025-05-22T14:17:51.308Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl {}
+[debug] [2025-05-22T14:17:52.480Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl 200
+[debug] [2025-05-22T14:17:52.480Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/fbbcb290-dc23-45b4-bd3a-2a84324dd7ae.zip?GoogleAccessId=service-502812345014@gcf-admin-robot.iam.gserviceaccount.com&Expires=1747925272&Signature=G1hBevocSyclEp88j5TIpExZc2AbZtUdyrVQ8aTFlAa11GHPxqitT0pb4nFtMRYp28kz7wPu%2BVnfCCEHxXEv0mNy%2BQ74hPpblJGZRJmQt1n1RwkOBlN5UdIy5jkJPtiBR70DsbZ6f3jHlNw2fhHpYajZqEQ1hCNWwtdx8OPytP%2FuBwBW9YuceFnRP3XJA8fLp5xwwoKW0nelBjMmIgtGxgsUt4Y0O77Tw89B1IZLVNS%2B%2FPZEKf8D0TUvjcPJi8o0KWZWhtzDaMU7B4qepiQFozo%2BXWWdRVr1Q4p%2FtOcU%2BkJTfhBEX6MIuFcLfWIIBesiKEdZCFKKGV6bM3jyney8Ew%3D%3D"}
+[debug] [2025-05-22T14:17:52.483Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/fbbcb290-dc23-45b4-bd3a-2a84324dd7ae.zip GoogleAccessId=service-502812345014%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1747925272&Signature=G1hBevocSyclEp88j5TIpExZc2AbZtUdyrVQ8aTFlAa11GHPxqitT0pb4nFtMRYp28kz7wPu%2BVnfCCEHxXEv0mNy%2BQ74hPpblJGZRJmQt1n1RwkOBlN5UdIy5jkJPtiBR70DsbZ6f3jHlNw2fhHpYajZqEQ1hCNWwtdx8OPytP%2FuBwBW9YuceFnRP3XJA8fLp5xwwoKW0nelBjMmIgtGxgsUt4Y0O77Tw89B1IZLVNS%2B%2FPZEKf8D0TUvjcPJi8o0KWZWhtzDaMU7B4qepiQFozo%2BXWWdRVr1Q4p%2FtOcU%2BkJTfhBEX6MIuFcLfWIIBesiKEdZCFKKGV6bM3jyney8Ew%3D%3D
+[debug] [2025-05-22T14:17:52.483Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/fbbcb290-dc23-45b4-bd3a-2a84324dd7ae.zip [stream]
+[debug] [2025-05-22T14:17:52.793Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/fbbcb290-dc23-45b4-bd3a-2a84324dd7ae.zip 200
+[debug] [2025-05-22T14:17:52.793Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/fbbcb290-dc23-45b4-bd3a-2a84324dd7ae.zip [omitted]
+[info] ✔  functions: functions folder uploaded successfully 
+[info] i  functions: creating Node.js 22 (1st Gen) function sendScheduledDataMessageIsTurnTonight6PM(europe-west3)... 
+[debug] [2025-05-22T14:17:52.798Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:52.798Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:52.798Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions [none]
+[debug] [2025-05-22T14:17:52.798Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions {"name":"projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM","sourceUploadUrl":"https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/fbbcb290-dc23-45b4-bd3a-2a84324dd7ae.zip?GoogleAccessId=service-502812345014@gcf-admin-robot.iam.gserviceaccount.com&Expires=1747925272&Signature=G1hBevocSyclEp88j5TIpExZc2AbZtUdyrVQ8aTFlAa11GHPxqitT0pb4nFtMRYp28kz7wPu%2BVnfCCEHxXEv0mNy%2BQ74hPpblJGZRJmQt1n1RwkOBlN5UdIy5jkJPtiBR70DsbZ6f3jHlNw2fhHpYajZqEQ1hCNWwtdx8OPytP%2FuBwBW9YuceFnRP3XJA8fLp5xwwoKW0nelBjMmIgtGxgsUt4Y0O77Tw89B1IZLVNS%2B%2FPZEKf8D0TUvjcPJi8o0KWZWhtzDaMU7B4qepiQFozo%2BXWWdRVr1Q4p%2FtOcU%2BkJTfhBEX6MIuFcLfWIIBesiKEdZCFKKGV6bM3jyney8Ew%3D%3D","entryPoint":"sendScheduledDataMessageIsTurnTonight6PM","runtime":"nodejs22","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","deployment-scheduled":"true","firebase-functions-hash":"1fdea6f6f805a873c9c9406ee61e9acfea1635fd"},"eventTrigger":{"eventType":"google.pubsub.topic.publish","resource":"projects/cfq-dev-7c39a/topics/firebase-schedule-sendScheduledDataMessageIsTurnTonight6PM-europe-west3"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"cfq-dev-7c39a\",\"storageBucket\":\"cfq-dev-7c39a.firebasestorage.app\"}","GCLOUD_PROJECT":"cfq-dev-7c39a","EVENTARC_CLOUD_EVENT_SOURCE":"projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2025-05-22T14:17:52.998Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions 400
+[debug] [2025-05-22T14:17:52.998Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions {"error":{"code":400,"message":"Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]","status":"INVALID_ARGUMENT"}}
+[warn] ⚠  functions: failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM 
+[error] Failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM
+[debug] [2025-05-22T14:17:53.000Z] Total Function Deployment time: 203
+[debug] [2025-05-22T14:17:53.000Z] 1 Functions Deployed
+[debug] [2025-05-22T14:17:53.000Z] 1 Functions Errored
+[debug] [2025-05-22T14:17:53.001Z] 0 Function Deployments Aborted
+[debug] [2025-05-22T14:17:53.001Z] Average Function Deployment time: 202
+[info] 
+[info] Functions deploy had errors with the following functions:
+	sendScheduledDataMessageIsTurnTonight6PM(europe-west3)
+[debug] [2025-05-22T14:17:53.002Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:53.002Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:17:53.002Z] >>> [apiv2][query] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts [none]
+[debug] [2025-05-22T14:17:53.225Z] <<< [apiv2][status] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts 404
+[debug] [2025-05-22T14:17:53.225Z] <<< [apiv2][body] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[debug] [2025-05-22T14:17:53.225Z] Failed to check artifact cleanup policy for region europe-west3: Request to https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found. {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found.","status":404}
+[debug] [2025-05-22T14:17:53.226Z] Functions deploy failed.
+[debug] [2025-05-22T14:17:53.226Z] {
+  "endpoint": {
+    "id": "sendScheduledDataMessageIsTurnTonight6PM",
+    "project": "cfq-dev-7c39a",
+    "region": "europe-west3",
+    "entryPoint": "sendScheduledDataMessageIsTurnTonight6PM",
+    "platform": "gcfv1",
+    "runtime": "nodejs22",
+    "scheduleTrigger": {
+      "schedule": "30 18 * * *",
+      "timeZone": "Europe/Paris",
+      "retryConfig": {
+        "maxBackoffSeconds": null,
+        "minBackoffSeconds": null,
+        "maxRetrySeconds": null,
+        "retryCount": null,
+        "maxDoublings": null
+      }
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "serviceAccount": null,
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"cfq-dev-7c39a\",\"storageBucket\":\"cfq-dev-7c39a.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "cfq-dev-7c39a",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"
+    },
+    "codebase": "default",
+    "targetedByOnly": false,
+    "hash": "1fdea6f6f805a873c9c9406ee61e9acfea1635fd"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "context": {
+      "function": "projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"
+    },
+    "exit": 1,
+    "message": "Failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM",
+    "original": {
+      "name": "FirebaseError",
+      "children": [],
+      "context": {
+        "body": {
+          "error": {
+            "code": 400,
+            "message": "Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]",
+            "status": "INVALID_ARGUMENT"
+          }
+        },
+        "response": {
+          "statusCode": 400
+        }
+      },
+      "exit": 1,
+      "message": "Request to https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions had HTTP Error: 400, Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]",
+      "status": 400
+    },
+    "status": 400,
+    "code": 400
+  }
+}
+[debug] [2025-05-22T14:17:53.227Z] Error: Failed to create function sendScheduledDataMessageIsTurnTonight6PM in region europe-west3
+    at /opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:52:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Fabricator.createV1Function (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:182:32)
+    at async Fabricator.createEndpoint (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:134:13)
+    at async handle (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:89:17)
+[error] 
+[error] Error: There was an error deploying functions
+[debug] [2025-05-22T14:19:29.578Z] ----------------------------------------------------------------------
+[debug] [2025-05-22T14:19:29.579Z] Command:       /opt/homebrew/Cellar/node/23.7.0/bin/node /opt/homebrew/bin/firebase deploy
+[debug] [2025-05-22T14:19:29.579Z] CLI Version:   14.4.0
+[debug] [2025-05-22T14:19:29.579Z] Platform:      darwin
+[debug] [2025-05-22T14:19:29.579Z] Node Version:  v23.7.0
+[debug] [2025-05-22T14:19:29.580Z] Time:          Thu May 22 2025 16:19:29 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2025-05-22T14:19:29.580Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-22T14:19:29.658Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-22T14:19:29.658Z] > authorizing via signed-in user (calvignaccharles@gmail.com)
+[debug] [2025-05-22T14:19:29.658Z] [iam] checking project cfq-dev-7c39a for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-05-22T14:19:29.659Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:29.659Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:29.659Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions [none]
+[debug] [2025-05-22T14:19:29.659Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:29.659Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-05-22T14:19:30.290Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions 200
+[debug] [2025-05-22T14:19:30.290Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-05-22T14:19:30.290Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:30.291Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:30.291Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-05-22T14:19:30.291Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-05-22T14:19:31.393Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-05-22T14:19:31.394Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'cfq-dev-7c39a'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-05-22T14:19:31.853Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:31.853Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:31.853Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-05-22T14:19:31.853Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:32.624Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-05-22T14:19:32.624Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-05-22T14:19:32.625Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.625Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.625Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a [none]
+[debug] [2025-05-22T14:19:32.804Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a 200
+[debug] [2025-05-22T14:19:32.804Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a {"projectNumber":"502812345014","projectId":"cfq-dev-7c39a","lifecycleState":"ACTIVE","name":"CFQ-DEV","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-01-28T14:11:03.250616Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-05-22T14:19:32.806Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.806Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.806Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.806Z] Checked if tokens are valid: true, expires at: 1747926912801
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-05-22T14:19:32.807Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.807Z] Checked if tokens are valid: true, expires at: 1747926912801
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-05-22T14:19:32.807Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.807Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:32.808Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-05-22T14:19:32.808Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:32.809Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-05-22T14:19:32.809Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:32.811Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com [none]
+[debug] [2025-05-22T14:19:32.811Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:32.812Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com [none]
+[debug] [2025-05-22T14:19:32.812Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:33.557Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com 200
+[debug] [2025-05-22T14:19:33.557Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-05-22T14:19:33.582Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com 200
+[debug] [2025-05-22T14:19:33.585Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-05-22T14:19:33.596Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com 200
+[debug] [2025-05-22T14:19:33.596Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-05-22T14:19:33.606Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com 200
+[debug] [2025-05-22T14:19:33.607Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-05-22T14:19:33.608Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:33.608Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:33.608Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig [none]
+[debug] [2025-05-22T14:19:34.274Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig 200
+[debug] [2025-05-22T14:19:34.275Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig {"projectId":"cfq-dev-7c39a","storageBucket":"cfq-dev-7c39a.firebasestorage.app"}
+[debug] [2025-05-22T14:19:34.276Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:34.276Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:34.276Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs [none]
+[debug] [2025-05-22T14:19:34.487Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs 200
+[debug] [2025-05-22T14:19:34.487Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs {}
+[debug] [2025-05-22T14:19:34.490Z] Validating nodejs source
+[debug] [2025-05-22T14:19:34.890Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-05-22T14:19:34.890Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-05-22T14:19:34.891Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-05-22T14:19:34.895Z] Found firebase-functions binary at '/Users/calvignaccharles/Documents/Projets/appLunch/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8873
+
+[debug] [2025-05-22T14:19:35.134Z] Got response from /__/functions.yaml {"endpoints":{"sendScheduledDataMessageIsTurnTonight6PM":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west3"],"scheduleTrigger":{"schedule":"30 18 * * *","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":"Europe/Paris"},"labels":{},"entryPoint":"sendScheduledDataMessageIsTurnTonight6PM"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-05-22T14:19:39.155Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:39.155Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:39.155Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com [none]
+[debug] [2025-05-22T14:19:39.155Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:40.519Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com 200
+[debug] [2025-05-22T14:19:40.519Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com [omitted]
+[info] ✔  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2025-05-22T14:19:40.520Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-22T14:19:40.520Z] > authorizing via signed-in user (calvignaccharles@gmail.com)
+[debug] [2025-05-22T14:19:40.520Z] [iam] checking project cfq-dev-7c39a for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2025-05-22T14:19:40.520Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:40.520Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:40.521Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions [none]
+[debug] [2025-05-22T14:19:40.521Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:40.521Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-22T14:19:41.184Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions 200
+[debug] [2025-05-22T14:19:41.185Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-22T14:19:41.186Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:41.186Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:41.187Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances pageSize=100&pageToken=
+[debug] [2025-05-22T14:19:42.135Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances 200
+[debug] [2025-05-22T14:19:42.136Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged /Users/calvignaccharles/Documents/Projets/appLunch/functions (74.19 KB) for uploading 
+[debug] [2025-05-22T14:19:42.171Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:42.171Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:42.171Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions [none]
+[debug] [2025-05-22T14:19:42.768Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions 200
+[debug] [2025-05-22T14:19:42.769Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions {}
+[debug] [2025-05-22T14:19:42.769Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:42.769Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:42.769Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-05-22T14:19:43.794Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions 200
+[debug] [2025-05-22T14:19:43.794Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions {}
+[info] i  functions: ensuring required API cloudscheduler.googleapis.com is enabled... 
+[debug] [2025-05-22T14:19:43.796Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:43.796Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:43.797Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com [none]
+[debug] [2025-05-22T14:19:43.797Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com x-goog-quota-user=projects/502812345014
+[debug] [2025-05-22T14:19:44.112Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com 200
+[debug] [2025-05-22T14:19:44.113Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com [omitted]
+[info] ✔  functions: required API cloudscheduler.googleapis.com is enabled 
+[debug] [2025-05-22T14:19:44.116Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:44.117Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:44.117Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-05-22T14:19:44.117Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:19:45.210Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-05-22T14:19:45.211Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-05-22T14:19:45.211Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:45.211Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:45.211Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a [none]
+[debug] [2025-05-22T14:19:45.389Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a 200
+[debug] [2025-05-22T14:19:45.389Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a {"projectNumber":"502812345014","projectId":"cfq-dev-7c39a","lifecycleState":"ACTIVE","name":"CFQ-DEV","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-01-28T14:11:03.250616Z"}
+[debug] [2025-05-22T14:19:45.391Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:45.391Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:45.391Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo [none]
+[debug] [2025-05-22T14:19:45.616Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo 200
+[debug] [2025-05-22T14:19:45.616Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo {"name":"projects/cfq-dev-7c39a/billingInfo","projectId":"cfq-dev-7c39a","billingAccountName":"billingAccounts/01A22D-21934A-5B9F69","billingEnabled":true}
+[debug] [2025-05-22T14:19:45.619Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:45.619Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:45.619Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl [none]
+[debug] [2025-05-22T14:19:45.619Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl {}
+[debug] [2025-05-22T14:19:46.281Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl 200
+[debug] [2025-05-22T14:19:46.282Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/df84daad-9d37-47af-9872-b31fae734d6c.zip?GoogleAccessId=service-502812345014@gcf-admin-robot.iam.gserviceaccount.com&Expires=1747925386&Signature=JmqMdgy3CfEhrRhZMrz7CWQA2PoXA%2F%2B2BposODphXA6mPTSa5x%2FsRRf%2FuEIylZ8hmMCrMDBo%2F0bgFzBV6RL%2F6ZRxQvoOjSbq6zxQmMot4su3xF%2FwT3%2Fd%2FSZX7sgb%2ByRPhvG7knli0o5hna6jBtF5QI1ID5ZpTi6zWy3BU%2Fv%2Bni%2BIO5MLf7liRY1eSI1A2klJpwApLCNQ%2BAEhQk9tUX1Gg0gq4VBjknkn0Vombt7aX7ftVug3tkFIa4y8%2BtqqDi%2FhQqH1dSq0cvyw9wP4qofSsmUqCjBHRu1eINLJHLIopyAF3uIrGbnFJA20gxQOw%2Fw6B5z8Rr%2FYKlNBobR4SIfVOw%3D%3D"}
+[debug] [2025-05-22T14:19:46.283Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/df84daad-9d37-47af-9872-b31fae734d6c.zip GoogleAccessId=service-502812345014%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1747925386&Signature=JmqMdgy3CfEhrRhZMrz7CWQA2PoXA%2F%2B2BposODphXA6mPTSa5x%2FsRRf%2FuEIylZ8hmMCrMDBo%2F0bgFzBV6RL%2F6ZRxQvoOjSbq6zxQmMot4su3xF%2FwT3%2Fd%2FSZX7sgb%2ByRPhvG7knli0o5hna6jBtF5QI1ID5ZpTi6zWy3BU%2Fv%2Bni%2BIO5MLf7liRY1eSI1A2klJpwApLCNQ%2BAEhQk9tUX1Gg0gq4VBjknkn0Vombt7aX7ftVug3tkFIa4y8%2BtqqDi%2FhQqH1dSq0cvyw9wP4qofSsmUqCjBHRu1eINLJHLIopyAF3uIrGbnFJA20gxQOw%2Fw6B5z8Rr%2FYKlNBobR4SIfVOw%3D%3D
+[debug] [2025-05-22T14:19:46.283Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/df84daad-9d37-47af-9872-b31fae734d6c.zip [stream]
+[debug] [2025-05-22T14:19:46.485Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/df84daad-9d37-47af-9872-b31fae734d6c.zip 200
+[debug] [2025-05-22T14:19:46.485Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/df84daad-9d37-47af-9872-b31fae734d6c.zip [omitted]
+[info] ✔  functions: functions folder uploaded successfully 
+[info] i  functions: creating Node.js 22 (1st Gen) function sendScheduledDataMessageIsTurnTonight6PM(europe-west3)... 
+[debug] [2025-05-22T14:19:46.492Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:46.492Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:46.492Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions [none]
+[debug] [2025-05-22T14:19:46.492Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions {"name":"projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM","sourceUploadUrl":"https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/df84daad-9d37-47af-9872-b31fae734d6c.zip?GoogleAccessId=service-502812345014@gcf-admin-robot.iam.gserviceaccount.com&Expires=1747925386&Signature=JmqMdgy3CfEhrRhZMrz7CWQA2PoXA%2F%2B2BposODphXA6mPTSa5x%2FsRRf%2FuEIylZ8hmMCrMDBo%2F0bgFzBV6RL%2F6ZRxQvoOjSbq6zxQmMot4su3xF%2FwT3%2Fd%2FSZX7sgb%2ByRPhvG7knli0o5hna6jBtF5QI1ID5ZpTi6zWy3BU%2Fv%2Bni%2BIO5MLf7liRY1eSI1A2klJpwApLCNQ%2BAEhQk9tUX1Gg0gq4VBjknkn0Vombt7aX7ftVug3tkFIa4y8%2BtqqDi%2FhQqH1dSq0cvyw9wP4qofSsmUqCjBHRu1eINLJHLIopyAF3uIrGbnFJA20gxQOw%2Fw6B5z8Rr%2FYKlNBobR4SIfVOw%3D%3D","entryPoint":"sendScheduledDataMessageIsTurnTonight6PM","runtime":"nodejs22","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","deployment-scheduled":"true","firebase-functions-hash":"1fdea6f6f805a873c9c9406ee61e9acfea1635fd"},"eventTrigger":{"eventType":"google.pubsub.topic.publish","resource":"projects/cfq-dev-7c39a/topics/firebase-schedule-sendScheduledDataMessageIsTurnTonight6PM-europe-west3"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"cfq-dev-7c39a\",\"storageBucket\":\"cfq-dev-7c39a.firebasestorage.app\"}","GCLOUD_PROJECT":"cfq-dev-7c39a","EVENTARC_CLOUD_EVENT_SOURCE":"projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2025-05-22T14:19:46.794Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions 400
+[debug] [2025-05-22T14:19:46.794Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions {"error":{"code":400,"message":"Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]","status":"INVALID_ARGUMENT"}}
+[warn] ⚠  functions: failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM 
+[error] Failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM
+[debug] [2025-05-22T14:19:46.797Z] Total Function Deployment time: 307
+[debug] [2025-05-22T14:19:46.797Z] 1 Functions Deployed
+[debug] [2025-05-22T14:19:46.798Z] 1 Functions Errored
+[debug] [2025-05-22T14:19:46.798Z] 0 Function Deployments Aborted
+[debug] [2025-05-22T14:19:46.798Z] Average Function Deployment time: 306
+[info] 
+[info] Functions deploy had errors with the following functions:
+	sendScheduledDataMessageIsTurnTonight6PM(europe-west3)
+[debug] [2025-05-22T14:19:46.799Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:46.799Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:19:46.799Z] >>> [apiv2][query] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts [none]
+[debug] [2025-05-22T14:19:47.033Z] <<< [apiv2][status] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts 404
+[debug] [2025-05-22T14:19:47.033Z] <<< [apiv2][body] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[debug] [2025-05-22T14:19:47.034Z] Failed to check artifact cleanup policy for region europe-west3: Request to https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found. {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found.","status":404}
+[debug] [2025-05-22T14:19:47.034Z] Functions deploy failed.
+[debug] [2025-05-22T14:19:47.034Z] {
+  "endpoint": {
+    "id": "sendScheduledDataMessageIsTurnTonight6PM",
+    "project": "cfq-dev-7c39a",
+    "region": "europe-west3",
+    "entryPoint": "sendScheduledDataMessageIsTurnTonight6PM",
+    "platform": "gcfv1",
+    "runtime": "nodejs22",
+    "scheduleTrigger": {
+      "schedule": "30 18 * * *",
+      "timeZone": "Europe/Paris",
+      "retryConfig": {
+        "maxBackoffSeconds": null,
+        "minBackoffSeconds": null,
+        "maxRetrySeconds": null,
+        "retryCount": null,
+        "maxDoublings": null
+      }
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "serviceAccount": null,
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"cfq-dev-7c39a\",\"storageBucket\":\"cfq-dev-7c39a.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "cfq-dev-7c39a",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"
+    },
+    "codebase": "default",
+    "targetedByOnly": false,
+    "hash": "1fdea6f6f805a873c9c9406ee61e9acfea1635fd"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "context": {
+      "function": "projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"
+    },
+    "exit": 1,
+    "message": "Failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM",
+    "original": {
+      "name": "FirebaseError",
+      "children": [],
+      "context": {
+        "body": {
+          "error": {
+            "code": 400,
+            "message": "Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]",
+            "status": "INVALID_ARGUMENT"
+          }
+        },
+        "response": {
+          "statusCode": 400
+        }
+      },
+      "exit": 1,
+      "message": "Request to https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions had HTTP Error: 400, Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]",
+      "status": 400
+    },
+    "status": 400,
+    "code": 400
+  }
+}
+[debug] [2025-05-22T14:19:47.036Z] Error: Failed to create function sendScheduledDataMessageIsTurnTonight6PM in region europe-west3
+    at /opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:52:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Fabricator.createV1Function (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:182:32)
+    at async Fabricator.createEndpoint (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:134:13)
+    at async handle (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:89:17)
+[error] 
+[error] Error: There was an error deploying functions
+[debug] [2025-05-22T14:45:22.386Z] ----------------------------------------------------------------------
+[debug] [2025-05-22T14:45:22.390Z] Command:       /opt/homebrew/Cellar/node/23.7.0/bin/node /opt/homebrew/bin/firebase deploy
+[debug] [2025-05-22T14:45:22.390Z] CLI Version:   14.4.0
+[debug] [2025-05-22T14:45:22.390Z] Platform:      darwin
+[debug] [2025-05-22T14:45:22.390Z] Node Version:  v23.7.0
+[debug] [2025-05-22T14:45:22.391Z] Time:          Thu May 22 2025 16:45:22 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2025-05-22T14:45:22.391Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-22T14:45:22.476Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-22T14:45:22.477Z] > authorizing via signed-in user (calvignaccharles@gmail.com)
+[debug] [2025-05-22T14:45:22.477Z] [iam] checking project cfq-dev-7c39a for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-05-22T14:45:22.477Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:22.477Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:22.477Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions [none]
+[debug] [2025-05-22T14:45:22.478Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:22.478Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-05-22T14:45:22.983Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions 200
+[debug] [2025-05-22T14:45:22.983Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-05-22T14:45:22.983Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:22.983Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:22.984Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-05-22T14:45:22.984Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-05-22T14:45:23.807Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-05-22T14:45:23.808Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/cfq-dev-7c39a/serviceAccounts/cfq-dev-7c39a@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'cfq-dev-7c39a'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-05-22T14:45:24.314Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:24.314Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:24.314Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-05-22T14:45:24.314Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:25.386Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-05-22T14:45:25.386Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-05-22T14:45:25.387Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.387Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.387Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a [none]
+[debug] [2025-05-22T14:45:25.614Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a 200
+[debug] [2025-05-22T14:45:25.615Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a {"projectNumber":"502812345014","projectId":"cfq-dev-7c39a","lifecycleState":"ACTIVE","name":"CFQ-DEV","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-01-28T14:11:03.250616Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-05-22T14:45:25.621Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.621Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.621Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.621Z] Checked if tokens are valid: true, expires at: 1747926912801
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-05-22T14:45:25.622Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.622Z] Checked if tokens are valid: true, expires at: 1747926912801
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-05-22T14:45:25.622Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.622Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:25.623Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-05-22T14:45:25.623Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:25.624Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-05-22T14:45:25.624Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:25.627Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com [none]
+[debug] [2025-05-22T14:45:25.627Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:25.629Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com [none]
+[debug] [2025-05-22T14:45:25.629Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:26.556Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com 200
+[debug] [2025-05-22T14:45:26.556Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-05-22T14:45:26.558Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com 200
+[debug] [2025-05-22T14:45:26.558Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-05-22T14:45:26.559Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com 200
+[debug] [2025-05-22T14:45:26.559Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-05-22T14:45:26.561Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com 200
+[debug] [2025-05-22T14:45:26.561Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-05-22T14:45:26.561Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:26.561Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:26.562Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig [none]
+[debug] [2025-05-22T14:45:27.126Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig 200
+[debug] [2025-05-22T14:45:27.127Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/cfq-dev-7c39a/adminSdkConfig {"projectId":"cfq-dev-7c39a","storageBucket":"cfq-dev-7c39a.firebasestorage.app"}
+[debug] [2025-05-22T14:45:27.128Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:27.128Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:27.128Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs [none]
+[debug] [2025-05-22T14:45:27.528Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs 200
+[debug] [2025-05-22T14:45:27.528Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/cfq-dev-7c39a/configs {}
+[debug] [2025-05-22T14:45:27.531Z] Validating nodejs source
+[debug] [2025-05-22T14:45:28.135Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-05-22T14:45:28.135Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-05-22T14:45:28.135Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-05-22T14:45:28.142Z] Found firebase-functions binary at '/Users/calvignaccharles/Documents/Projets/appLunch/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8124
+
+[debug] [2025-05-22T14:45:28.397Z] Got response from /__/functions.yaml {"endpoints":{"sendScheduledDataMessageIsTurnTonight6PM":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west3"],"scheduleTrigger":{"schedule":"30 18 * * *","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":"Europe/Paris"},"labels":{},"entryPoint":"sendScheduledDataMessageIsTurnTonight6PM"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-05-22T14:45:32.419Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:32.419Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:32.419Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com [none]
+[debug] [2025-05-22T14:45:32.419Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:33.386Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com 200
+[debug] [2025-05-22T14:45:33.386Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/firebaseextensions.googleapis.com [omitted]
+[info] ✔  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2025-05-22T14:45:33.386Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-22T14:45:33.387Z] > authorizing via signed-in user (calvignaccharles@gmail.com)
+[debug] [2025-05-22T14:45:33.387Z] [iam] checking project cfq-dev-7c39a for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2025-05-22T14:45:33.387Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:33.387Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:33.387Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions [none]
+[debug] [2025-05-22T14:45:33.387Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:33.387Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-22T14:45:34.202Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions 200
+[debug] [2025-05-22T14:45:34.202Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-22T14:45:34.203Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:34.203Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:34.203Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances pageSize=100&pageToken=
+[debug] [2025-05-22T14:45:35.133Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances 200
+[debug] [2025-05-22T14:45:35.133Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/cfq-dev-7c39a/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged /Users/calvignaccharles/Documents/Projets/appLunch/functions (74.19 KB) for uploading 
+[debug] [2025-05-22T14:45:35.181Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:35.181Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:35.181Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions [none]
+[debug] [2025-05-22T14:45:35.892Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions 200
+[debug] [2025-05-22T14:45:35.893Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/-/functions {}
+[debug] [2025-05-22T14:45:35.894Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:35.894Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:35.894Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-05-22T14:45:36.427Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions 200
+[debug] [2025-05-22T14:45:36.427Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/cfq-dev-7c39a/locations/-/functions {}
+[info] i  functions: ensuring required API cloudscheduler.googleapis.com is enabled... 
+[debug] [2025-05-22T14:45:36.432Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:36.432Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:36.432Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com [none]
+[debug] [2025-05-22T14:45:36.432Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com x-goog-quota-user=projects/502812345014
+[debug] [2025-05-22T14:45:37.221Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com 200
+[debug] [2025-05-22T14:45:37.222Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/502812345014/services/cloudscheduler.googleapis.com [omitted]
+[info] ✔  functions: required API cloudscheduler.googleapis.com is enabled 
+[debug] [2025-05-22T14:45:37.225Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:37.225Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:37.225Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-05-22T14:45:37.225Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/cfq-dev-7c39a
+[debug] [2025-05-22T14:45:37.621Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-05-22T14:45:37.621Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/cfq-dev-7c39a/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-05-22T14:45:37.622Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:37.622Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:37.622Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a [none]
+[debug] [2025-05-22T14:45:37.870Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a 200
+[debug] [2025-05-22T14:45:37.871Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/cfq-dev-7c39a {"projectNumber":"502812345014","projectId":"cfq-dev-7c39a","lifecycleState":"ACTIVE","name":"CFQ-DEV","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-01-28T14:11:03.250616Z"}
+[debug] [2025-05-22T14:45:37.877Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:37.877Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:37.877Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo [none]
+[debug] [2025-05-22T14:45:38.472Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo 200
+[debug] [2025-05-22T14:45:38.472Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/cfq-dev-7c39a/billingInfo {"name":"projects/cfq-dev-7c39a/billingInfo","projectId":"cfq-dev-7c39a","billingAccountName":"billingAccounts/01A22D-21934A-5B9F69","billingEnabled":true}
+[debug] [2025-05-22T14:45:38.476Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:38.476Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:38.476Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl [none]
+[debug] [2025-05-22T14:45:38.476Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl {}
+[debug] [2025-05-22T14:45:39.669Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl 200
+[debug] [2025-05-22T14:45:39.670Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/ffa759ff-814a-4de7-96be-9d56f494fd53.zip?GoogleAccessId=service-502812345014@gcf-admin-robot.iam.gserviceaccount.com&Expires=1747926939&Signature=F2qxtmArWoifRZB1GgvN8M3bCX5Er1bFvat2YAke1iGMQUhxxs6T0FrKSsPRar06iYVUcPJc3j3vYkN0Z4DaDFe%2FeZxvdD50nhU9jvjaf5dlXsSS8xsWaeoTtPbynVJKD%2FZKfFEJsByEf6cXlI24zdkoXNaRH3MhGUVaTpz1NgyiTBA1QhJPP0O3%2F4j80pAopWzCNXmtfz4dKK2M3XO1RnkEJelUMdrSUgyyC1Aj5Lbkqj9LwwZCFJOI83vU7DNxbxPFLNAEI4OBa9DHQ43sH5ZHPYI4o9qdYl2y2hWMhia3cUtuMFLkiOSLKtf1ihSZj0xwFYJiaZ8831MuW8dEbw%3D%3D"}
+[debug] [2025-05-22T14:45:39.672Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/ffa759ff-814a-4de7-96be-9d56f494fd53.zip GoogleAccessId=service-502812345014%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1747926939&Signature=F2qxtmArWoifRZB1GgvN8M3bCX5Er1bFvat2YAke1iGMQUhxxs6T0FrKSsPRar06iYVUcPJc3j3vYkN0Z4DaDFe%2FeZxvdD50nhU9jvjaf5dlXsSS8xsWaeoTtPbynVJKD%2FZKfFEJsByEf6cXlI24zdkoXNaRH3MhGUVaTpz1NgyiTBA1QhJPP0O3%2F4j80pAopWzCNXmtfz4dKK2M3XO1RnkEJelUMdrSUgyyC1Aj5Lbkqj9LwwZCFJOI83vU7DNxbxPFLNAEI4OBa9DHQ43sH5ZHPYI4o9qdYl2y2hWMhia3cUtuMFLkiOSLKtf1ihSZj0xwFYJiaZ8831MuW8dEbw%3D%3D
+[debug] [2025-05-22T14:45:39.672Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/ffa759ff-814a-4de7-96be-9d56f494fd53.zip [stream]
+[debug] [2025-05-22T14:45:40.291Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/ffa759ff-814a-4de7-96be-9d56f494fd53.zip 200
+[debug] [2025-05-22T14:45:40.291Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/ffa759ff-814a-4de7-96be-9d56f494fd53.zip [omitted]
+[info] ✔  functions: functions folder uploaded successfully 
+[info] i  functions: creating Node.js 22 (1st Gen) function sendScheduledDataMessageIsTurnTonight6PM(europe-west3)... 
+[debug] [2025-05-22T14:45:40.302Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:40.302Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:40.302Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions [none]
+[debug] [2025-05-22T14:45:40.303Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions {"name":"projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM","sourceUploadUrl":"https://storage.googleapis.com/uploads-633079977888.europe-west3.cloudfunctions.appspot.com/ffa759ff-814a-4de7-96be-9d56f494fd53.zip?GoogleAccessId=service-502812345014@gcf-admin-robot.iam.gserviceaccount.com&Expires=1747926939&Signature=F2qxtmArWoifRZB1GgvN8M3bCX5Er1bFvat2YAke1iGMQUhxxs6T0FrKSsPRar06iYVUcPJc3j3vYkN0Z4DaDFe%2FeZxvdD50nhU9jvjaf5dlXsSS8xsWaeoTtPbynVJKD%2FZKfFEJsByEf6cXlI24zdkoXNaRH3MhGUVaTpz1NgyiTBA1QhJPP0O3%2F4j80pAopWzCNXmtfz4dKK2M3XO1RnkEJelUMdrSUgyyC1Aj5Lbkqj9LwwZCFJOI83vU7DNxbxPFLNAEI4OBa9DHQ43sH5ZHPYI4o9qdYl2y2hWMhia3cUtuMFLkiOSLKtf1ihSZj0xwFYJiaZ8831MuW8dEbw%3D%3D","entryPoint":"sendScheduledDataMessageIsTurnTonight6PM","runtime":"nodejs22","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","deployment-scheduled":"true","firebase-functions-hash":"1fdea6f6f805a873c9c9406ee61e9acfea1635fd"},"eventTrigger":{"eventType":"google.pubsub.topic.publish","resource":"projects/cfq-dev-7c39a/topics/firebase-schedule-sendScheduledDataMessageIsTurnTonight6PM-europe-west3"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"cfq-dev-7c39a\",\"storageBucket\":\"cfq-dev-7c39a.firebasestorage.app\"}","GCLOUD_PROJECT":"cfq-dev-7c39a","EVENTARC_CLOUD_EVENT_SOURCE":"projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2025-05-22T14:45:40.573Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions 400
+[debug] [2025-05-22T14:45:40.574Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions {"error":{"code":400,"message":"Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]","status":"INVALID_ARGUMENT"}}
+[warn] ⚠  functions: failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM 
+[error] Failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM
+[debug] [2025-05-22T14:45:40.581Z] Total Function Deployment time: 280
+[debug] [2025-05-22T14:45:40.582Z] 1 Functions Deployed
+[debug] [2025-05-22T14:45:40.582Z] 1 Functions Errored
+[debug] [2025-05-22T14:45:40.582Z] 0 Function Deployments Aborted
+[debug] [2025-05-22T14:45:40.582Z] Average Function Deployment time: 278
+[info] 
+[info] Functions deploy had errors with the following functions:
+	sendScheduledDataMessageIsTurnTonight6PM(europe-west3)
+[debug] [2025-05-22T14:45:40.584Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:40.584Z] Checked if tokens are valid: true, expires at: 1747926912801
+[debug] [2025-05-22T14:45:40.584Z] >>> [apiv2][query] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts [none]
+[debug] [2025-05-22T14:45:40.898Z] <<< [apiv2][status] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts 404
+[debug] [2025-05-22T14:45:40.898Z] <<< [apiv2][body] GET https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[debug] [2025-05-22T14:45:40.899Z] Failed to check artifact cleanup policy for region europe-west3: Request to https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found. {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://artifactregistry.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found.","status":404}
+[debug] [2025-05-22T14:45:40.900Z] Functions deploy failed.
+[debug] [2025-05-22T14:45:40.900Z] {
+  "endpoint": {
+    "id": "sendScheduledDataMessageIsTurnTonight6PM",
+    "project": "cfq-dev-7c39a",
+    "region": "europe-west3",
+    "entryPoint": "sendScheduledDataMessageIsTurnTonight6PM",
+    "platform": "gcfv1",
+    "runtime": "nodejs22",
+    "scheduleTrigger": {
+      "schedule": "30 18 * * *",
+      "timeZone": "Europe/Paris",
+      "retryConfig": {
+        "maxBackoffSeconds": null,
+        "minBackoffSeconds": null,
+        "maxRetrySeconds": null,
+        "retryCount": null,
+        "maxDoublings": null
+      }
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "serviceAccount": null,
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"cfq-dev-7c39a\",\"storageBucket\":\"cfq-dev-7c39a.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "cfq-dev-7c39a",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"
+    },
+    "codebase": "default",
+    "targetedByOnly": false,
+    "hash": "1fdea6f6f805a873c9c9406ee61e9acfea1635fd"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "context": {
+      "function": "projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM"
+    },
+    "exit": 1,
+    "message": "Failed to create function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM",
+    "original": {
+      "name": "FirebaseError",
+      "children": [],
+      "context": {
+        "body": {
+          "error": {
+            "code": 400,
+            "message": "Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]",
+            "status": "INVALID_ARGUMENT"
+          }
+        },
+        "response": {
+          "statusCode": 400
+        }
+      },
+      "exit": 1,
+      "message": "Request to https://cloudfunctions.googleapis.com/v1/projects/cfq-dev-7c39a/locations/europe-west3/functions had HTTP Error: 400, Failed to create 1st Gen function projects/cfq-dev-7c39a/locations/europe-west3/functions/sendScheduledDataMessageIsTurnTonight6PM: runtime: Runtime validation errors: [error_code: INVALID_RUNTIME\nmessage: \"Runtime \\\"nodejs22\\\" is not supported on GCF Gen1\"\n]",
+      "status": 400
+    },
+    "status": 400,
+    "code": 400
+  }
+}
+[debug] [2025-05-22T14:45:40.901Z] Error: Failed to create function sendScheduledDataMessageIsTurnTonight6PM in region europe-west3
+    at /opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:52:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Fabricator.createV1Function (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:182:32)
+    at async Fabricator.createEndpoint (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:134:13)
+    at async handle (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:89:17)
+[error] 
+[error] Error: There was an error deploying functions

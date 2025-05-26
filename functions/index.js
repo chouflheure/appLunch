@@ -4,6 +4,8 @@ const admin = require("firebase-admin");
 // Initialisation de Firebase Admin SDK
 admin.initializeApp();
 
+// Fonction planifiée pour s'exécuter toutes les 10 minutes
+
 /*
 exports.updateUserIsActive2PM = functions
     .region("europe-west2")
@@ -35,10 +37,11 @@ exports.updateUserIsActive2PM = functions
       }
     });
 */
+
 exports.sendScheduledDataMessageIsTurnTonight6PM = functions
     .region("europe-west2")
     .pubsub
-    .schedule("24 21 * * *")
+    .schedule("00 12 * * *")
     .timeZone("Europe/Paris")
     .onRun(async (context) => {
         const message = {
@@ -122,7 +125,7 @@ exports.sendScheduledMessage4AMIfTurnAlready = functions
         }
       }
     });
-
+*/
 
 exports.onNotificationCreated = functions
     .region("europe-west2")
@@ -213,4 +216,98 @@ exports.onNotificationCreated = functions
         return Promise.reject(error);
       }
     });
-*/
+
+
+exports.onCreateMessage = functions
+  .region("europe-west2")
+  .firestore
+  .document("conversations/{docId}/messages/{subDocId}")
+  .onCreate(async (snap, context) => {
+    try {
+      const newNotification = snap.data();
+      const docId = context.params.docId;
+
+      // Récupérer les informations de la conversation
+      const conversationDoc = await admin
+        .firestore()
+        .collection("conversations")
+        .doc(docId)
+        .get();
+
+      if (!conversationDoc.exists) {
+        console.log("Conversation non trouvée");
+        return { success: false, message: "Conversation non trouvée" };
+      }
+
+      const conversationData = conversationDoc.data();
+
+      // Récupérer TOUS les utilisateurs de la conversation
+      // messagesChannelId est un tableau, donc on utilise array-contains
+      const notificationIdUsersSnapshot = await admin
+        .firestore()
+        .collection("users")
+        .where("messagesChannelId", "array-contains", docId)
+        .get();
+
+      if (notificationIdUsersSnapshot.empty) {
+        console.log("Aucun utilisateur trouvé pour cette conversation");
+        return { success: false, message: "Aucun utilisateur trouvé" };
+      }
+
+      // Filtrer pour exclure l'expéditeur du message
+      const senderUID = newNotification.senderUID; // ou le champ qui contient l'ID de l'expéditeur
+      const recipientUsers = notificationIdUsersSnapshot.docs.filter(doc =>
+        doc.id !== senderUID && doc.data().tokenFCM // Exclure l'expéditeur ET vérifier que le token FCM existe
+      );
+
+      if (recipientUsers.length === 0) {
+        console.log("Aucun destinataire valide (tous sont l'expéditeur ou n'ont pas de token FCM)");
+        return { success: false, message: "Aucun destinataire valide" };
+      }
+
+      // Préparer les données de la notification en utilisant les données de la conversation
+      const conversationId = docId;
+      const content = newNotification.content || newNotification;
+      
+      // Utiliser le nom de la conversation depuis les données récupérées
+      const title = conversationData.titleConv;
+      const words = (conversationData.lastMessage || "").split(" ");
+      const messagePreview = words.length > 3 ? words.slice(0, 3).join(" ") + "..." : (conversationData.lastMessage || "");
+      const body = `${conversationData.lastMessageSender : || ""} ${messagePreview}`;
+
+      // Créer un tableau de tokens pour l'envoi en batch
+      const tokens = recipientUsers.map(doc => doc.data().tokenFCM);
+
+      const message = {
+        notification: {
+          title: title,
+          body: body,
+        },
+        topic: "new_message",
+        data: {
+          conversationId: conversationId,
+          conversationName: conversationData.name || conversationData.title || "",
+          type: "new_message" // Utile pour gérer différents types de notifications côté client
+        },
+        tokens: tokens, // Utiliser 'tokens' au lieu de 'token' pour l'envoi multiple
+      };
+
+      // Envoyer la notification à plusieurs destinataires
+      const response = await admin.messaging().sendEachForMulticast(message);
+      
+      if (response.failureCount > 0) {
+        console.log("Échecs:", response.responses.filter(r => !r.success));
+      }
+
+      return {
+        success: true,
+        successCount: response.successCount,
+        failureCount: response.failureCount,
+        totalRecipients: tokens.length
+      };
+
+    } catch (error) {
+      console.error("Erreur lors de l'envoi des notifications:", error);
+      return Promise.reject(error);
+    }
+  });

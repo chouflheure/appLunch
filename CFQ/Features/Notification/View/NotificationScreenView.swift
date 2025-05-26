@@ -1,9 +1,9 @@
-
 import SwiftUI
 
 struct NotificationScreenView: View {
     @ObservedObject var coordinator: Coordinator
-
+    @StateObject var vm = NotificationViewModel()
+    
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showNotificationScreen) {
             SafeAreaContainer {
@@ -21,10 +21,10 @@ struct NotificationScreenView: View {
                                     .frame(width: 24, height: 24)
                             })
                         Spacer()
-                        
+
                         Text("NOTIFICATIONS")
                             .tokenFont(.Title_Gigalypse_24)
-                        
+
                         Spacer()
                     }
                     .padding(.horizontal, 12)
@@ -34,34 +34,99 @@ struct NotificationScreenView: View {
                         .frame(height: 0.5)
                         .background(.white)
                         .padding(.bottom, 15)
-                    
+
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 24) {
                             Text("Aujourd'hui")
                                 .tokenFont(.Body_Inter_Medium_16)
                                 .padding(.horizontal, 12)
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl:
+                                        "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                    isActive: false
+                                ),
+                                onClick: {
+                                    showProfileFriend(
+                                        profileFriend:
+                                            UserContact(
+                                                uid: "",
+                                                name: "",
+                                                firstName: "",
+                                                pseudo: "Lisa",
+                                                profilePictureUrl:
+                                                    "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                                isActive: false
+                                            )
+                                    )
+                                }
+                            )
+
                             Text("Hier")
                                 .tokenFont(.Body_Inter_Medium_16)
                                 .padding(.horizontal, 12)
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
-                            CellRequestAction()
+
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl:
+                                        "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                    isActive: false
+                                ),
+                                onClick: {}
+                            )
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl:
+                                        "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                    isActive: false
+                                ),
+                                onClick: {}
+                            )
+                            CellRequestAction(
+                                userContact: UserContact(
+                                    uid: "",
+                                    name: "",
+                                    firstName: "",
+                                    pseudo: "Lisa",
+                                    profilePictureUrl:
+                                        "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
+                                    isActive: false
+                                ),
+                                onClick: {}
+                            )
                         }
                     }
                 }
             }
         }
     }
-}
 
+    func showProfileFriend(profileFriend: UserContact) {
+        coordinator.profileUserSelected = User(
+            uid: profileFriend.uid,
+            name: profileFriend.name,
+            firstName: profileFriend.firstName,
+            pseudo: profileFriend.pseudo,
+            profilePictureUrl: profileFriend.profilePictureUrl,
+            isActive: profileFriend.isActive
+        )
+        withAnimation {
+            coordinator.showProfileFriend = true
+        }
+    }
+}
 
 #Preview {
     SafeAreaContainer {

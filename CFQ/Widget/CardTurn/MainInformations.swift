@@ -43,16 +43,16 @@ struct MainInformationsPreviewView: View {
                     Image(.iconLocation)
                         .resizable()
                         .frame(width: 20, height: 20)
-                        .foregroundColor(.white)
+                        .foregroundColor(viewModel.placeTitle.isEmpty ? .gray : .white)
                     
-                    Text("Lieu")
-                        .foregroundColor(.white)
-                        
+                    Text(viewModel.placeTitle.isEmpty ? "Lieu" : viewModel.placeTitle)
+                        .tokenFont(viewModel.placeTitle.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
+
                     Text("|")
-                        .tokenFont(.Placeholder_Inter_Regular_16)
-                    
-                    Text("92240 Malakoff ")
                         .foregroundColor(.white)
+
+                    Text(viewModel.placeAdresse.isEmpty ? "Adress" : viewModel.placeAdresse)
+                        .tokenFont(.Placeholder_Inter_Regular_14)
                 }
                 .padding(.horizontal, 12)
             }

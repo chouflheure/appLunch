@@ -5,25 +5,35 @@ struct CellAskFriend: View {
     @Binding var isAskFriend: Bool
     @Binding var isAcceptedFriend: Bool
     @State var isShowProfile: Bool = false
-
+    var userContact: UserContact
+    var onClick: (() -> Void)
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Button(action: {
-                    isShowProfile = true
+                    onClick()
                 }) {
+                    CachedAsyncImageView(
+                        urlString: userContact.profilePictureUrl,
+                        designType: .scaleImageMessageProfile
+                    )
+                    .padding(.trailing, 5)
+                    /*
                     Image(.header)
                         .resizable()
                         .scaledToFill()
                         .clipShape(Circle())
                         .frame(width: 35, height: 35)
+                    */
                         .padding(.trailing, 5)
                 }
 
                 HStack {
-                    (Text("Mathilde ")
+                    (Text(userContact.pseudo)
                         .tokenFont(.Body_Inter_Medium_14)
                         .bold()
+                     + Text(" ")
                      + Text("veut t’ajouter à ces amis.")
                         .tokenFont(.Body_Inter_Medium_14)
                      + Text(" ")
@@ -72,16 +82,8 @@ struct CellAskFriend: View {
         .padding(.horizontal, 12)
         .frame(height: 70)
         .background(.gray.opacity(0.4))
-        .fullScreenCover(isPresented: $isShowProfile){
-            // FriendProfileView(show: $isShowProfile)
+        .onTapGesture {
+            onClick()
         }
     }
-}
-
-#Preview {
-    ZStack {
-        Color.black
-        CellAskFriend(isAskFriend: .constant(true), isAcceptedFriend: .constant(false))
-    }
-    .ignoresSafeArea()
 }

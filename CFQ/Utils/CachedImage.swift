@@ -71,6 +71,7 @@ internal enum PictureCacheDesignType {
     case fullScreenImageTurn
     case fullScreenImageTurnDetail
     case scaledToFill_Circle_CFQ
+    case scaleImageMessageProfile
 }
 
 struct CachedAsyncImageView: View {
@@ -110,6 +111,17 @@ struct CachedAsyncImageView: View {
                     animation
                         .playing()
                         .looping()
+                
+                case .scaleImageMessageProfile:
+                    Circle()
+                        .foregroundColor(.gray)
+                        .frame(width: 32, height: 32)
+                        .clipShape(Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(Color.black, lineWidth: 1)
+                                .frame(width: 34, height: 34)
+                        }
                 }
 
             case .success(let image):
@@ -152,6 +164,18 @@ struct CachedAsyncImageView: View {
                         .frame(width: UIScreen.main.bounds.width)
                         .contentShape(Rectangle())
                         .clipped()
+                
+                case .scaleImageMessageProfile:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 32, height: 32)
+                        .clipShape(Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(Color.black, lineWidth: 1)
+                                .frame(width: 34, height: 34)
+                        }
                 }
 
             case .failure(_):
@@ -182,6 +206,17 @@ struct CachedAsyncImageView: View {
                     animation
                         .playing()
                         .looping()
+                    
+                case .scaleImageMessageProfile:
+                    Circle()
+                        .foregroundColor(.gray)
+                        .frame(width: 32, height: 32)
+                        .clipShape(Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(Color.black, lineWidth: 1)
+                                .frame(width: 34, height: 34)
+                        }
                 }
 
             @unknown default:
@@ -212,6 +247,17 @@ struct CachedAsyncImageView: View {
                     animation
                         .playing()
                         .looping()
+                    
+                case .scaleImageMessageProfile:
+                    Circle()
+                        .foregroundColor(.gray)
+                        .frame(width: 32, height: 32)
+                        .clipShape(Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(Color.black, lineWidth: 1)
+                                .frame(width: 34, height: 34)
+                        }
                 }
             }
         }

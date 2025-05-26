@@ -2,12 +2,13 @@
 import SwiftUI
 
 struct CellMessagingView: View {
-    var data: MessageCellModel
+    var data: Conversation
+    var hasUnReadMessage: Bool
     var onTap: ((String) -> Void)
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(spacing: data.hasUnReadMessage ? 0 : 20) {
+            HStack(spacing: hasUnReadMessage ? 0 : 12) {
                 Image(.header)
                     .resizable()
                     .scaledToFill()
@@ -15,7 +16,7 @@ struct CellMessagingView: View {
                     .frame(width: 45, height: 45)
                     .padding(.trailing, 0)
                 
-                if data.hasUnReadMessage {
+                if hasUnReadMessage {
                     Circle()
                         .fill(.purpleLight)
                         .frame(width: 15, height: 15)
@@ -24,23 +25,24 @@ struct CellMessagingView: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
 
-                    Text(data.titleConversation)
+                    Text(data.titleConv)
                         .tokenFont(.Body_Inter_Medium_14)
+                        .bold()
                         .lineLimit(1)
 
-                    Text(data.hasUnReadMessage ? StringsToken.Messaging.newMessagePreview : data.messagePreview)
-                        .tokenFont(
-                            data.hasUnReadMessage ?
-                                .Body_Inter_Medium_14 :
-                                .Placeholder_Inter_Regular_14
-                        )
-                        .lineLimit(1)
-
-                }.bold(data.hasUnReadMessage)
+                    HStack(spacing: 0) {
+                        Text(data.lastMessageSender + " : ")
+                            .tokenFont(.Body_Inter_Medium_14)
+                            
+                        Text(data.lastMessage)
+                            .tokenFont(.Body_Inter_Medium_14)
+                            .lineLimit(1)
+                    }
+                }.bold(hasUnReadMessage)
 
                 Spacer()
 
-                Text(data.time)
+                Text(timeAgoSinceDate(data.lastMessageDate ?? Date()))
                     .tokenFont(.Placeholder_Inter_Regular_14)
             }
         }
@@ -49,20 +51,33 @@ struct CellMessagingView: View {
             onTap(data.uid)
         }
     }
+    
+    func timeAgoSinceDate(_ date: Date, numericDates: Bool = false) -> String {
+        let calendar = Calendar.current
+        let now = Date()
+        let earliest = now < date ? now : date
+        let latest = (earliest == now) ? date : now
+
+        let components: DateComponents = calendar.dateComponents(
+            [.minute, .hour, .day],
+            from: earliest,
+            to: latest
+        )
+
+        if let day = components.day, day > 0 {
+            return "\(day)j"
+        }
+
+        if let hour = components.hour, hour > 0 {
+            return "\(hour)h"
+        }
+
+        if let minute = components.minute, minute > 0 {
+            return "\(minute) min"
+        }
+
+        return "maintenant"
+    }
 }
 
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        CellMessagingView(
-            data: MessageCellModel(
-                    uid: "1",
-                    titleConversation: "Charles",
-                    messagePreview: "Coucou",
-                    time: "4min",
-                    hasUnReadMessage: true
-            ),
-            onTap: {_ in }
-        )
-    }.ignoresSafeArea()
-}
+
