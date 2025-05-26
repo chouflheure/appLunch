@@ -54,7 +54,7 @@ class Notification: ObservableObject, Encodable, Decodable {
         + "@@@ \nuid : \(uid)"
         + "@@@ \n typeNotif : \(typeNotif)"
         + "@@@ \n timestamp : \(timestamp)"
-        + "@@@ \n userContact : \(userContact)"
+        + "@@@ \n userContact : \(String(describing: userContact))"
         + "@@@ \n ------------------"
     }
 }

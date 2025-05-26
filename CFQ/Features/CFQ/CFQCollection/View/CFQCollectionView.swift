@@ -25,7 +25,7 @@ struct CFQCollectionView: View {
                                 .foregroundColor(.white)
                         }
                     ).padding(.leading, 20)
-                    ForEach(coordinator.userCFQ, id: \.self) { cfq in
+                    ForEach(coordinator.userCFQ, id: \.uid) { cfq in
                         // ?? 
                         if let userAdmin = coordinator.userFriends.first(where: { $0.uid == cfq.admin }) {
                             CFQMolecule(
@@ -34,6 +34,17 @@ struct CFQCollectionView: View {
                                 image: userAdmin.profilePictureUrl
                             )
                             .onTapGesture {
+                                coordinator.selectedConversation = Conversation(
+                                    uid: cfq.messagerieUUID,
+                                    titleConv: "",
+                                    pictureEventURL: "",
+                                    typeEvent: "",
+                                    eventUID: "",
+                                    lastMessageSender: "",
+                                    lastMessageDate: Date(),
+                                    lastMessage: "",
+                                    messageReader: [""]
+                                )
                                 withAnimation {
                                     coordinator.showMessagerieScreen = true
                                 }

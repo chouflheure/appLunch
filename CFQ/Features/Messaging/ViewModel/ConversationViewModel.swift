@@ -20,8 +20,7 @@ class PreviewMessagerieScreenViewModel: ObservableObject {
 extension PreviewMessagerieScreenViewModel {
     
     func fectchMessagesPreview() {
-        print("fetch conv ")
-        print("@@@ coordinator.user?.messagesChannelId = \(coordinator.user?.messagesChannelId)")
+
         firebaseService.getDataByIDs(
             from: .conversations,
             with: coordinator.user?.messagesChannelId ?? [],

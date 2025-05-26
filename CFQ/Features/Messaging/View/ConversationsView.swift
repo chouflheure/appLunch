@@ -68,7 +68,7 @@ struct ConversationsView: View {
 
     @ViewBuilder
     func destinationView() -> some View {
-        MessagerieScreenView(isPresented: $showDetail, coordinator: coordinator)
+        MessagerieView(isPresented: $showDetail, coordinator: coordinator)
     }
 }
 

@@ -71,7 +71,7 @@ extension CFQFormViewModel {
         
         let cfq = CFQ(
             uid: uuid.description,
-            title: "CFQ " + titleCFQ + (titleCFQ.last == "?" ? "" : "?"),
+            title: "CFQ " + titleCFQ + (titleCFQ.last == "?" ? "" : " ?"),
             admin: user.uid,
             messagerieUUID: messagerieUUID.description,
             users: adminUUIDs

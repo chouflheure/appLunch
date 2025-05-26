@@ -2,7 +2,7 @@
 import Foundation
 import SwiftUI
 
-class MessagerieScreenViewModel: ObservableObject {
+class MessagerieViewModel: ObservableObject {
     @Published var showSettingMessagerie: Bool = false
     @Published var showDetailGuest: Bool = false
     @Published var showConversationOptionView: Bool = false
@@ -15,15 +15,14 @@ class MessagerieScreenViewModel: ObservableObject {
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
         fetchMessages()
-        
     }
-    
+
     deinit {
         firebaseService.removeListener(for: ListenerType.conversation.rawValue)
     }
 }
 
-extension MessagerieScreenViewModel {
+extension MessagerieViewModel {
     
     func fetchMessages() {
 
@@ -57,7 +56,6 @@ extension MessagerieScreenViewModel {
         
         firebaseService.markMessageAsRead(conversationId: conversationID, userId: coordinator.user?.uid ?? "")
     }
-
     
     private func fetchUserContactMessages(at index: Int, adminID: String) {
         firebaseService.getDataByID(from: .users, with: adminID) { [weak self] (result: Result<UserContact, Error>) in

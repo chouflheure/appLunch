@@ -63,7 +63,7 @@ class CoreDataViewModel: ObservableObject {
         let context = container.viewContext
         
         // Créez l'entité en utilisant son nom exact dans le modèle
-        guard let entity = NSEntityDescription.entity(forEntityName: "FruitEntity", in: context) else {
+        guard NSEntityDescription.entity(forEntityName: "FruitEntity", in: context) != nil else {
             print("❌ Entité FruitEntity introuvable dans le modèle")
             return
         }

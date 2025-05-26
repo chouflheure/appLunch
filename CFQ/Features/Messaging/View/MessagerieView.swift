@@ -9,9 +9,9 @@ enum MessagerieHeaderType {
 }
 
 // Garder le paramètre isPresented pour pouvoir y accéder depuis différent endroit
-struct MessagerieScreenView: View {
+struct MessagerieView: View {
     @Binding var isPresented: Bool
-    @StateObject var viewModel: MessagerieScreenViewModel
+    @StateObject var viewModel: MessagerieViewModel
     @ObservedObject var coordinator: Coordinator
 
     @State private var text: String = ""
@@ -24,7 +24,7 @@ struct MessagerieScreenView: View {
     init(isPresented: Binding<Bool>, coordinator: Coordinator) {
         _isPresented = isPresented
         self.coordinator = coordinator
-        _viewModel = StateObject(wrappedValue: MessagerieScreenViewModel(coordinator: coordinator))
+        _viewModel = StateObject(wrappedValue: MessagerieViewModel(coordinator: coordinator))
     }
 
     var body: some View {

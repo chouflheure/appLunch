@@ -158,7 +158,7 @@ class TestRef {
 
             // Document initial existe, vous pouvez accéder aux données avec document.data()
             if let documentData = document.data() {
-                print("&&& Initial document data: \(documentData["referenceUser"])")
+                print("&&& Initial document data: \(String(describing: documentData["referenceUser"]))")
                 // Récupérer la référence depuis les données du document
                 if let referencePath = documentData["referenceUser"] as? String {
                     // Créer une référence au document référencé
@@ -182,7 +182,7 @@ class TestRef {
                         // Document référencé existe, vous pouvez accéder aux données avec userDocument.data()
                         if let userData = userDocument.data() {
                             let user = userData as? User
-                            print("&&& user = \(user?.printObject)")
+                            print("&&& user = \(String(describing: user?.printObject))")
                             print("&&& User data: \(userData)")
                             print("&&& User data: \(String(describing: userData["pseudo"] as? String))")
                             print("&&& User data: \(String(describing: userData["name"] as? String))")

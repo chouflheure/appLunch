@@ -186,7 +186,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showMessagerieScreen {
-                        MessagerieScreenView(isPresented: $coordinator.showMessagerieScreen, coordinator: coordinator)
+                        MessagerieView(isPresented: $coordinator.showMessagerieScreen, coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
