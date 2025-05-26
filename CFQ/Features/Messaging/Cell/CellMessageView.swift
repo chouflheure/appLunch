@@ -268,40 +268,41 @@ struct CellMessageSendByTheUserView: View {
                                 }
                         )
 
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            isShowPopover = true
-                        }) {
-                            Text("❤️ 😘 2")
-                                .foregroundColor(.white)
-                                .font(.system(size: 10))
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 12)
-                                .background(.blackLight)
-                                .cornerRadius(20)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(lineWidth: 0.3)
-                                        .foregroundColor(.black)
-                                }
-                                .popover(
-                                    isPresented: $isShowPopover,
-                                    arrowEdge: .bottom,
-                                    content: {
-                                        Text("Hello, World!")
-                                            .padding()
-                                            .presentationCompactAdaptation(
-                                                .none)
+                    if data.reactions?.count ?? 0 > 0 {
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                isShowPopover = true
+                            }) {
+                                Text("❤️ 😘 2")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 10))
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .background(.blackLight)
+                                    .cornerRadius(20)
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(lineWidth: 0.3)
+                                            .foregroundColor(.black)
                                     }
-                                )
-                                .zIndex(999)
+                                    .popover(
+                                        isPresented: $isShowPopover,
+                                        arrowEdge: .bottom,
+                                        content: {
+                                            Text("Hello, World!")
+                                                .padding()
+                                                .presentationCompactAdaptation(
+                                                    .none)
+                                        }
+                                    )
+                                    .zIndex(999)
+                            }
+                            
                         }
-                        
+                        .padding(.trailing, 20)
+                        .offset(y: -12)
                     }
-                    .padding(.trailing, 20)
-                    .offset(y: -12)
-
                 }
 
             }
@@ -357,38 +358,41 @@ struct CellMessageView3: View {
                 }
                 .padding(.trailing, 30)
 
-                HStack {
-                    Button(action: {
-                        isShowPopover = true
-                    }) {
-                        Text("❤️ 😘 2")
-                            .foregroundColor(.white)
-                            .font(.system(size: 10))
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(.blackLight)
-                            .cornerRadius(20)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(lineWidth: 0.3)
-                                    .foregroundColor(.black)
-                            }
-                            .popover(
-                                isPresented: $isShowPopover,
-                                arrowEdge: .bottom,
-                                content: {
-                                    Text("Hello, World!")
-                                        .padding()
-                                        .presentationCompactAdaptation(
-                                            .none)
+                if data.reactions?.count ?? 0 > 0 {
+                    HStack {
+                        Button(action: {
+                            isShowPopover = true
+                        }) {
+                            Text("❤️ 😘 2")
+                                .foregroundColor(.white)
+                                .font(.system(size: 10))
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(.blackLight)
+                                .cornerRadius(20)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(lineWidth: 0.3)
+                                        .foregroundColor(.black)
                                 }
-                            )
-                            .zIndex(999)
+                                .popover(
+                                    isPresented: $isShowPopover,
+                                    arrowEdge: .bottom,
+                                    content: {
+                                        Text("Hello, World!")
+                                            .padding()
+                                            .presentationCompactAdaptation(
+                                                .none)
+                                    }
+                                )
+                                .zIndex(999)
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                    .padding(.leading, 40)
+                    .offset(y: -12)
                 }
-                .padding(.leading, 40)
-                .offset(y: -12)
+                
             }
             .padding(.trailing, 30)
         }

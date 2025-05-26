@@ -8,6 +8,7 @@ class Message: ObservableObject, Encodable, Decodable {
     @Published var senderUID: String
     @Published var timestamp: Date
     @Published var userContact: UserContact?
+    @Published var reactions: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case uid
@@ -15,6 +16,7 @@ class Message: ObservableObject, Encodable, Decodable {
         case senderUID
         case timestamp
         case userContact
+        case reactions
     }
 
     init(
@@ -22,13 +24,15 @@ class Message: ObservableObject, Encodable, Decodable {
         message: String,
         senderUID: String,
         timestamp: Date,
-        userContact: UserContact?
+        userContact: UserContact? = nil,
+        reactions: [String: String]? = nil
     ) {
         self.uid = uid
         self.message = message
         self.senderUID = senderUID
         self.timestamp = timestamp
         self.userContact = userContact
+        self.reactions = reactions
     }
 
     required init(from decoder: Decoder) throws {
@@ -38,6 +42,7 @@ class Message: ObservableObject, Encodable, Decodable {
         senderUID = try values.decode(String.self, forKey: .senderUID)
         timestamp = try values.decode(Date.self, forKey: .timestamp)
         userContact = try values.decodeIfPresent(UserContact.self, forKey: .userContact)
+        reactions = try values.decodeIfPresent([String: String].self, forKey: .reactions)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -47,6 +52,7 @@ class Message: ObservableObject, Encodable, Decodable {
         try container.encode(senderUID, forKey: .senderUID)
         try container.encode(timestamp, forKey: .timestamp)
         try container.encodeIfPresent(userContact, forKey: .userContact)
+        try container.encodeIfPresent(reactions, forKey: .reactions)
     }
     
     var printObject: String {
@@ -56,6 +62,7 @@ class Message: ObservableObject, Encodable, Decodable {
         + "\n @@@ senderUID : \(senderUID)"
         + "\n @@@ timestamp : \(timestamp)"
         + "\n @@@ userContact : \(userContact)"
+        + "\n @@@ reactions : \(reactions)"
         + "\n ------------------"
     }
 }
