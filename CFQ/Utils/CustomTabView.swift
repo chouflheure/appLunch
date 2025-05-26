@@ -181,7 +181,7 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showMessageScreen {
-                        PreviewMessagerieScreenView(coordinator: coordinator)
+                        ConversationsView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
@@ -197,7 +197,7 @@ struct CustomTabView: View {
                     }
                 }
             )
-            .animation(.easeInOut, value: coordinator.showProfileFriend)
+            // .animation(.easeInOut, value: coordinator.showProfileFriend)
         }
     }
 }

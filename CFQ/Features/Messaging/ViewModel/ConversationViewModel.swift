@@ -20,10 +20,12 @@ class PreviewMessagerieScreenViewModel: ObservableObject {
 extension PreviewMessagerieScreenViewModel {
     
     func fectchMessagesPreview() {
+        print("fetch conv ")
+        print("@@@ coordinator.user?.messagesChannelId = \(coordinator.user?.messagesChannelId)")
         firebaseService.getDataByIDs(
             from: .conversations,
             with: coordinator.user?.messagesChannelId ?? [],
-            listenerKeyPrefix: ListenerType.team_group_listener.rawValue
+            listenerKeyPrefix: ListenerType.conversation.rawValue
         ) { [weak self] (result: Result<[Conversation], Error>) in
             guard self != nil else { return }
             

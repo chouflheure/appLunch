@@ -19,7 +19,7 @@ class MessagerieScreenViewModel: ObservableObject {
     }
     
     deinit {
-        firebaseService.removeListener(for: ListenerType.team_group_listener.rawValue)
+        firebaseService.removeListener(for: ListenerType.conversation.rawValue)
     }
 }
 

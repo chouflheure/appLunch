@@ -4,9 +4,10 @@ import SwiftUI
 struct FeedView: View {
     @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
-    @StateObject var viewModel = FeedViewModel()
+    @StateObject var viewModel: FeedViewModel
 
     init(coordinator: Coordinator) {
+        _viewModel = StateObject(wrappedValue:FeedViewModel(coordinator: coordinator))
         self.coordinator = coordinator
     }
 

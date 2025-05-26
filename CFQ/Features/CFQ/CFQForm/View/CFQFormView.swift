@@ -1,5 +1,6 @@
 
 import SwiftUI
+import Lottie
 
 struct CFQFormView: View {
 
@@ -14,73 +15,83 @@ struct CFQFormView: View {
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showCFQForm) {
             SafeAreaContainer {
-                VStack(alignment: .leading) {
-                    HeaderBackLeftScreen(
-                        onClickBack: {
-                            withAnimation {
-                                coordinator.showCFQForm = false
-                            }
-                        },
-                        titleScreen: "CFQ ?"
-                    )
+                if viewModel.isLoading {
+                    ZStack {
+                        LottieView(animation: .named(StringsToken.Animation.loaderCircle))
+                            .playing()
+                            .looping()
+                            .frame(width: 150, height: 150)
+                    }
+                    .zIndex(3)
+                } else {
+                    VStack(alignment: .leading) {
+                        HeaderBackLeftScreen(
+                            onClickBack: {
+                                withAnimation {
+                                    coordinator.showCFQForm = false
+                                }
+                            },
+                            titleScreen: "CFQ ?"
+                        )
 
-                    VStack {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            VStack {
-                                HStack(alignment: .center, spacing: 12) {
-                                    CachedAsyncImageView(urlString: coordinator.user?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
-                                        .frame(width: 50, height: 50)
-                                        .cornerRadius(100)
+                        VStack {
+                            ScrollView(.vertical, showsIndicators: false) {
+                                VStack {
+                                    HStack(alignment: .center, spacing: 12) {
+                                        CachedAsyncImageView(urlString: coordinator.user?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
+                                            .frame(width: 50, height: 50)
+                                            .cornerRadius(100)
+                                        
+                                        CustomTextField(
+                                            text: $viewModel.titleCFQ,
+                                            keyBoardType: .default,
+                                            placeHolder: "Demain",
+                                            textFieldType: .cfq
+                                        )
+                                    }
+                                    .padding(.top, 16)
+                                    .padding(.horizontal, 16)
                                     
-                                    CustomTextField(
-                                        text: $viewModel.titleCFQ,
-                                        keyBoardType: .default,
-                                        placeHolder: "Demain",
-                                        textFieldType: .cfq
-                                    )
-                                }
-                                .padding(.top, 16)
-                                .padding(.horizontal, 16)
-                                
-                                HStack {
-                                    Spacer()
-                                    PostEventButton(
-                                        action: {
-                                            viewModel.pushCFQ()
-                                        }, isEnable: $viewModel.isEnableButton
-                                    )
-                                    .padding(.trailing, 16)
-                                }
-                                .padding(.top, 5)
-                                
-                                SearchBarView(
-                                    text: $viewModel.researchText,
-                                    placeholder: StringsToken.SearchBar.placeholderFriend,
-                                    onRemoveText: {
-                                        viewModel.removeText()
-                                    },
-                                    onTapResearch: {
-                                        viewModel.researche()
+                                    HStack {
+                                        Spacer()
+                                        PostEventButton(
+                                            action: { viewModel.pushCFQ() },
+                                            isEnable: $viewModel.isEnableButton
+                                        )
+                                        .padding(.trailing, 16)
                                     }
-                                )
-                                .padding(.top, 16)
-                                
-                                AddFriendsAndListView(
-                                    arrayPicture: $viewModel.friendsAddToCFQ,
-                                    arrayFriends: $viewModel.friendsList,
-                                    coordinator: coordinator,
-                                    onRemove: { userRemoved in
-                                        viewModel.removeFriendsFromList(user: userRemoved)
-                                    },
-                                    onAdd: { userAdd in
-                                        viewModel.addFriendsToList(user: userAdd)
-                                    }
-                                )
-                                .padding(.top, 15)
+                                    .padding(.top, 5)
+                                    
+                                    SearchBarView(
+                                        text: $viewModel.researchText,
+                                        placeholder: StringsToken.SearchBar.placeholderFriend,
+                                        onRemoveText: {
+                                            viewModel.removeText()
+                                        },
+                                        onTapResearch: {
+                                            viewModel.researche()
+                                        }
+                                    )
+                                    .padding(.top, 16)
+                                    
+                                    AddFriendsAndListView(
+                                        arrayPicture: $viewModel.friendsAddToCFQ,
+                                        arrayFriends: $viewModel.friendsList,
+                                        coordinator: coordinator,
+                                        onRemove: { userRemoved in
+                                            viewModel.removeFriendsFromList(user: userRemoved)
+                                        },
+                                        onAdd: { userAdd in
+                                            viewModel.addFriendsToList(user: userAdd)
+                                        }
+                                    )
+                                    .padding(.top, 15)
+                                }
                             }
                         }
                     }
                 }
+                
             }
         }
     }

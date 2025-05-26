@@ -7,6 +7,9 @@ enum ListenerType: String {
     case team_user = "team_user"
     case friends = "friends"
     case cfq = "cfq"
+    case turn = "turn"
+    case conversation = "conversation"
+    case notification = "notification"
 }
 
 class FirebaseService: FirebaseServiceProtocol {
@@ -67,6 +70,28 @@ class FirebaseService: FirebaseServiceProtocol {
                 Logger.log(
                     "\(collection.rawValue) a été modifié avec succès",
                     level: .success)
+            }
+        }
+    }
+
+    func updateDataByIDs(
+        data: [String: Any],
+        to collection: CollectionFirebaseType,
+        at ids: [String]
+    ) {
+        let collectionName = collection.rawValue
+
+        for id in ids {
+            db.collection(collectionName).document(id).updateData(data) { error in
+                if let error = error {
+                    Logger.log(
+                        "Erreur lors de la modification de \(collection.rawValue) pour l'ID \(id) : \(error.localizedDescription)",
+                        level: .error)
+                } else {
+                    Logger.log(
+                        "\(collection.rawValue) avec l'ID \(id) a été modifié avec succès",
+                        level: .success)
+                }
             }
         }
     }
@@ -447,7 +472,7 @@ extension FirebaseService {
     ) {
         print("@@@ uploadImage in ")
 
-        guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
+        guard let imageData = picture.jpegData(compressionQuality: 0.5) else {
             print("@@@ error 1")
             completion(.failure(ImageUploadError.imageConversionFailed))
             return
