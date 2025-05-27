@@ -272,8 +272,9 @@ exports.onCreateMessage = functions
       // Utiliser le nom de la conversation depuis les données récupérées
       const title = conversationData.titleConv;
       const words = (conversationData.lastMessage || "").split(" ");
-      const messagePreview = words.length > 3 ? words.slice(0, 3).join(" ") + "..." : (conversationData.lastMessage || "");
-      const body = `${conversationData.lastMessageSender : || ""} ${messagePreview}`;
+      const messagePreview = words.length > 12 ? words.slice(0, 12).join(" ") + "..." : (conversationData.lastMessage || "");
+      const body = `${conversationData?.lastMessageSender ? conversationData.lastMessageSender + ": " : ""}${messagePreview}`;
+
 
       // Créer un tableau de tokens pour l'envoi en batch
       const tokens = recipientUsers.map(doc => doc.data().tokenFCM);
