@@ -2,20 +2,7 @@
 import Foundation
 import Combine
 import SwiftUI
-
-class Adresse: ObservableObject {
-    var placeTitle = String()
-    var placeAdresse = String()
-    var placeLatitude = Double()
-    var placeLongitude = Double()
-    
-    init(placeTitle: String = "", placeAdresse: String = "", placeLatitude: Double = 0, placeLongitude: Double = 0) {
-        self.placeTitle = placeTitle
-        self.placeAdresse = placeAdresse
-        self.placeLatitude = placeLatitude
-        self.placeLatitude = placeLongitude
-    }
-}
+import Firebase
 
 class TurnCardViewModel: ObservableObject {
 
@@ -47,32 +34,7 @@ class TurnCardViewModel: ObservableObject {
     var firebaseService = FirebaseService()
     var allFriends: Set<UserContact> = []
     
-    @Published var friendListToAdd = Set<UserContact>(
-        [
-            UserContact(
-                uid: "77MKZdb3FJX8EFvlRGotntxk6oi1",
-                name: "name1",
-                firstName: "firstName1",
-                pseudo: "pseudo1",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "EMZGTTeqJ1dv9SX0YaNOExaLjjw1",
-                name: "name2",
-                firstName: "firstName2",
-                pseudo: "pseudo2",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "ziOs7jn3d5hZ0tgkTQdCNGQqlB33",
-                name: "name3",
-                firstName: "firstName3",
-                pseudo: "pseudo3",
-                profilePictureUrl: ""
-            ),
-        ]
-    )
-    
+    @Published var friendListToAdd = Set<UserContact>()
     
     var disableButtonSend: Bool {
         return turn.titleEvent.isEmpty || turn.date == nil || moods.isEmpty || starthours == nil || imageSelected == nil || turn.description.isEmpty
@@ -124,6 +86,7 @@ class TurnCardViewModel: ObservableObject {
         placeLongitude = turn.placeLongitude
         placeTitle = turn.placeTitle
         
+        friendListToAdd = Set(coordinator.userFriends)
     }
     
     func textFormattedShortFormat() -> (jour: String, mois: String) {
@@ -157,7 +120,6 @@ class TurnCardViewModel: ObservableObject {
     
 }
 
-
 extension TurnCardViewModel {
     func pushDataTurn() {
 
@@ -172,7 +134,7 @@ extension TurnCardViewModel {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let urlString):
-                    self.uploadTurnOnDataBase(urlString: urlString)
+                    self.uploadTurnOnDataBase(urlStringImage: urlString)
 
                 case .failure(let error):
                     Logger.log(error.localizedDescription, level: .error)
@@ -181,38 +143,88 @@ extension TurnCardViewModel {
         }
     }
     
-    private func uploadTurnOnDataBase(urlString: String) {
-        print("@@@ here push")
+    private func uploadTurnOnDataBase(urlStringImage: String) {
         let uid = UUID()
         let messagerieUIID = UUID()
 
         var moodsInt: [Int] = []
+        var friends: [String] = []
         moods.forEach { moodsInt.append($0.convertMoodTypeToInt()) }
-        
+        setFriendsOnTurn.forEach { friends.append($0.uid) }
+
         let turn = Turn(
             uid: uid.description,
             titleEvent: titleEvent,
             date: dateEvent ?? Date(),
-            pictureURLString: urlString,
+            pictureURLString: urlStringImage,
             admin: adminUser.uid,
             description: description,
-            invited: [""],
-            participants:  [""],
+            invited: friends,
+            participants: [],
+            denied: [],
             mood: moodsInt,
             messagerieUUID: messagerieUIID.description,
             placeTitle: "",
             placeAdresse: "",
             placeLatitude: 1.1,
-            placeLongitude: 1.2
+            placeLongitude: 1.2,
+            timestamp: Date()
         )
         
         firebaseService.addData(data: turn, to: .turns) { (result: Result<Void, Error>) in
             switch result{
             case .success():
                 print("@@@ success")
+                self.addEventTurnOnFriendProfile(turn: turn)
             case .failure(let error):
                 print("@@@ error = \(error)")
             }
         }
+         
+    }
+    
+    func addEventTurnOnFriendProfile(turn: Turn) {
+        firebaseService.updateDataByID(
+            data: [
+                "messagesChannelId": FieldValue.arrayUnion([turn.messagerieUUID]),
+                "postedTurns": FieldValue.arrayUnion([turn.uid])
+            ],
+            to: .users,
+            at: turn.admin
+        )
+
+        firebaseService.addData(
+            data: Conversation(
+                uid: turn.messagerieUUID,
+                titleConv: turn.titleEvent,
+                pictureEventURL: adminUser.profilePictureUrl,
+                typeEvent: "turn",
+                eventUID: turn.uid,
+                lastMessageSender: "",
+                lastMessageDate: Date(),
+                lastMessage: "",
+                messageReader: [adminUser.uid]
+            ),
+            to: .conversations,
+            completion: { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    print("@@@ result yes conv ")
+                case .failure(let error):
+                    print("@@@ error = \(error)")
+                }
+
+                // self.isLoading = false
+            }
+        )
+        
+        firebaseService.updateDataByIDs(
+            data: [
+                "invitedTurns": FieldValue.arrayUnion([turn.uid]),
+                "messagesChannelId": FieldValue.arrayUnion([turn.messagerieUUID])
+            ],
+            to: .users,
+            at: turn.invited
+        )
     }
 }

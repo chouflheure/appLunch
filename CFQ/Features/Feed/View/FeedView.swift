@@ -57,7 +57,7 @@ struct FeedView: View {
                             .padding(.bottom, 8)
                             .padding(.leading, 16)
 
-                            ForEach(coordinator.userFriends, id: \.self) { friend in
+                            ForEach(coordinator.userFriends.sorted(by: { $0.isActive && !$1.isActive }), id: \.self) { friend in
                                 CirclePictureStatusAndPseudo(
                                     userPreview: friend,
                                     onClick: {

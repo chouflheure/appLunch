@@ -242,7 +242,6 @@ exports.onCreateMessage = functions
       const conversationData = conversationDoc.data();
 
       // Récupérer TOUS les utilisateurs de la conversation
-      // messagesChannelId est un tableau, donc on utilise array-contains
       const notificationIdUsersSnapshot = await admin
         .firestore()
         .collection("users")
@@ -255,9 +254,9 @@ exports.onCreateMessage = functions
       }
 
       // Filtrer pour exclure l'expéditeur du message
-      const senderUID = newNotification.senderUID; // ou le champ qui contient l'ID de l'expéditeur
+      const senderUID = newNotification.senderUID;
       const recipientUsers = notificationIdUsersSnapshot.docs.filter(doc =>
-        doc.id !== senderUID && doc.data().tokenFCM // Exclure l'expéditeur ET vérifier que le token FCM existe
+        doc.id !== senderUID && doc.data().tokenFCM
       );
 
       if (recipientUsers.length === 0) {
@@ -265,19 +264,17 @@ exports.onCreateMessage = functions
         return { success: false, message: "Aucun destinataire valide" };
       }
 
-      // Préparer les données de la notification en utilisant les données de la conversation
+      // Log des tokens FCM pour vérification
+      const tokens = recipientUsers.map(doc => doc.data().tokenFCM);
+      console.log("Tokens FCM:", tokens);
+
+      // Préparer les données de la notification
       const conversationId = docId;
       const content = newNotification.content || newNotification;
-      
-      // Utiliser le nom de la conversation depuis les données récupérées
       const title = conversationData.titleConv;
       const words = (conversationData.lastMessage || "").split(" ");
       const messagePreview = words.length > 12 ? words.slice(0, 12).join(" ") + "..." : (conversationData.lastMessage || "");
       const body = `${conversationData?.lastMessageSender ? conversationData.lastMessageSender + ": " : ""}${messagePreview}`;
-
-
-      // Créer un tableau de tokens pour l'envoi en batch
-      const tokens = recipientUsers.map(doc => doc.data().tokenFCM);
 
       const message = {
         notification: {
@@ -287,14 +284,18 @@ exports.onCreateMessage = functions
         topic: "new_message",
         data: {
           conversationId: conversationId,
-          conversationName: conversationData.name || conversationData.title || "",
-          type: "new_message" // Utile pour gérer différents types de notifications côté client
+          conversationName: conversationData.titleConv || conversationData.title || "",
+          type: "new_message"
         },
-        tokens: tokens, // Utiliser 'tokens' au lieu de 'token' pour l'envoi multiple
+        tokens: tokens,
       };
+        
+        console.log("Message : ", message)
 
       // Envoyer la notification à plusieurs destinataires
       const response = await admin.messaging().sendEachForMulticast(message);
+
+      console.log("response = ", response)
       
       if (response.failureCount > 0) {
         console.log("Échecs:", response.responses.filter(r => !r.success));

@@ -17,6 +17,7 @@ struct TeamView: View {
                 Text(StringsToken.Team.teamTitle)
                     .tokenFont(.Title_Gigalypse_24)
             }
+            .padding(.top, 50)
 
             ScrollView(.vertical, showsIndicators: false) {
                 Button(action: {
@@ -48,7 +49,8 @@ struct TeamView: View {
                 }
             }
             .padding(.horizontal, 12)
-        }.onChange(of: viewModel.teamsGlobal) { _ in
+        }
+        .onChange(of: viewModel.teamsGlobal) { _ in
             coordinator.teamDetail = viewModel.teamsGlobal[selectedTeam]
         }
     }

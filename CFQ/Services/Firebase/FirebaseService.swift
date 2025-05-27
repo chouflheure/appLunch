@@ -114,38 +114,73 @@ class FirebaseService: FirebaseServiceProtocol {
 
     func getDataByID<T: Codable>(
         from collection: CollectionFirebaseType, with id: String,
+        listenerKeyPrefix: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
-    ) {
+    ) -> ListenerRegistration? {
         let collectionName = collection.rawValue
 
-        db.collection(collectionName).document(id).getDocument {
-            document, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        if let keyPrefix = listenerKeyPrefix {
+            let listener = db.collection(collectionName).document(id).addSnapshotListener { documentSnapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let document = documentSnapshot, document.exists else {
+                    completion(
+                        .failure(
+                            NSError(
+                                domain: "", code: 0,
+                                userInfo: [
+                                    NSLocalizedDescriptionKey:
+                                        "Document non trouvé."
+                                ])))
+                    return
+                }
+
+                do {
+                    let data = try document.data(as: T.self)
+                    completion(.success(data))
+                } catch {
+                    completion(.failure(error))
+                }
             }
 
-            guard let document = document, document.exists else {
-                completion(
-                    .failure(
-                        NSError(
-                            domain: "", code: 0,
-                            userInfo: [
-                                NSLocalizedDescriptionKey:
-                                    "Document non trouvé."
-                            ])))
-                return
-            }
+            // Stocke le listener si un préfixe est fourni
+            let key = "\(keyPrefix)_\(id)"
+            listeners[key] = listener
+            return listener
+        } else {
+            db.collection(collectionName).document(id).getDocument { document, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
 
-            do {
-                let data = try document.data(as: T.self)
-                completion(.success(data))
-            } catch {
-                completion(.failure(error))
+                guard let document = document, document.exists else {
+                    completion(
+                        .failure(
+                            NSError(
+                                domain: "", code: 0,
+                                userInfo: [
+                                    NSLocalizedDescriptionKey:
+                                        "Document non trouvé."
+                                ])))
+                    return
+                }
+
+                do {
+                    let data = try document.data(as: T.self)
+                    completion(.success(data))
+                } catch {
+                    completion(.failure(error))
+                }
             }
+            return nil
         }
     }
 
+    
     func getDataByIDs<T: Codable>(
         from collection: CollectionFirebaseType,
         with ids: [String],

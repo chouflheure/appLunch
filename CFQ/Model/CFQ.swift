@@ -72,7 +72,9 @@ class CFQ: ObservableObject, Encodable, Decodable {
     let admin: String
     let messagerieUUID: String
     let users: [String]
+    let timestamp: Date
     let participants: [String]?
+    var userContact: UserContact?
 
     enum CodingKeys: String, CodingKey {
         case uid
@@ -80,6 +82,7 @@ class CFQ: ObservableObject, Encodable, Decodable {
         case admin
         case messagerieUUID
         case users
+        case timestamp
         case participants
     }
 
@@ -89,14 +92,18 @@ class CFQ: ObservableObject, Encodable, Decodable {
         admin: String,
         messagerieUUID: String,
         users: [String],
-        participants: [String]? = nil
+        timestamp: Date,
+        participants: [String]? = nil,
+        userContact: UserContact? = nil
     ) {
         self.uid = uid
         self.title = title
         self.admin = admin
         self.messagerieUUID = messagerieUUID
         self.users = users
+        self.timestamp = timestamp
         self.participants = participants
+        self.userContact = userContact
     }
 
     required init(from decoder: Decoder) throws {
@@ -106,6 +113,7 @@ class CFQ: ObservableObject, Encodable, Decodable {
         admin = try values.decode(String.self, forKey: .admin)
         messagerieUUID = try values.decode(String.self, forKey: .messagerieUUID)
         users = try values.decode([String].self, forKey: .users)
+        timestamp = try values.decode(Date.self, forKey: .timestamp)
         participants = try values.decodeIfPresent([String].self, forKey: .participants)
     }
 
@@ -116,6 +124,7 @@ class CFQ: ObservableObject, Encodable, Decodable {
         try container.encode(admin, forKey: .admin)
         try container.encode(messagerieUUID, forKey: .messagerieUUID)
         try container.encode(users, forKey: .users)
+        try container.encode(timestamp, forKey: .timestamp)
         try container.encodeIfPresent(participants, forKey: .participants)
     }
     
@@ -126,6 +135,7 @@ class CFQ: ObservableObject, Encodable, Decodable {
         + "@@@ \n admin : \(admin)"
         + "@@@ \n messagerieUUID : \(messagerieUUID)"
         + "@@@ \n users : \(users)"
+        + "@@@ \n timestamp : \(timestamp)"
         + "@@@ \n participants : \(String(describing: participants))"
         + "@@@ \n ------------------"
     }

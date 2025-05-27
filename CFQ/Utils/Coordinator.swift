@@ -1,6 +1,7 @@
 
 import FirebaseAuth
 import SwiftUI
+import Firebase
 
 class Coordinator: ObservableObject {
     @Published var currentView: AnyView?
@@ -30,12 +31,50 @@ class Coordinator: ObservableObject {
     @Published var userFriends: [UserContact] = []
     @Published var profileUserSelected: User = User()
     @Published var selectedConversation: Conversation?
+    @Published var selectedCFQ: CFQ?
 
     private var auth = Auth.auth()
     private var firebaseService = FirebaseService()
-
+    private var listeners = [ListenerRegistration?]()
+    
     func start(userUID: String?) {
         if let userUID = userUID {
+            
+            let listener = firebaseService.getDataByID(from: .users, with: userUID, listenerKeyPrefix: ListenerType.user.rawValue) { (result: Result<User, Error>) in
+                switch result {
+                case .success(let user):
+                    UserDefaults.standard.set(user.uid, forKey: "userUID")
+
+                    self.user = user
+
+                    if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
+                        self.firebaseService.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
+                    }
+
+                    self.catchDataAppToStart()
+                    self.catchAllUsersFriend(user: user)
+                    self.catchAllUserCFQ(user: user)
+                    
+                    self.currentView = AnyView(
+                        NavigationView {
+                            CustomTabView(coordinator: self)
+                                .environmentObject(user)
+                        }
+                    )
+                    Logger.log("User connected and have account ", level: .info)
+                    
+                    /// when user has an id but not account
+                case .failure(_):
+                    self.currentView = AnyView(
+                        NavigationView {
+                            SignScreen(coordinator: self)
+                        }
+                    )
+                    Logger.log("User connected but not account ", level: .info)
+                }
+            }
+            listeners.append(listener)
+            /*
             firebaseService.getDataByIDs(
                 from: .users,
                 with: [userUID],
@@ -73,7 +112,7 @@ class Coordinator: ObservableObject {
                     Logger.log("User connected but not account ", level: .info)
                 }
             }
-            
+            */
         } else {
             
             currentView = AnyView(

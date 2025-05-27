@@ -3,6 +3,7 @@ import SwiftUI
 
 struct TurnCardDetailsFeedView: View {
     @ObservedObject var coordinator: Coordinator
+    @State var showDetailTurnCard = false
 
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showTurnFeedDetail) {
@@ -37,19 +38,33 @@ struct TurnCardDetailsFeedView: View {
                         DescriptionTurnCardDetailFeedView(turn: checkTurnSelectedNotNull())
                             .padding(.horizontal, 16)
                             .padding(.bottom, 50)
+                     
+                        if coordinator.user?.uid == coordinator.turnSelected?.admin ?? "" {
+                            Button(action: {
+                                showDetailTurnCard = true
+                            }) {
+                                Text("@@@ Admin ")
+                            }
+                            
+                        }
                         
                         Spacer()
                     }
                 }
+                
+
             }
             .ignoresSafeArea()
+            .fullScreenCover(isPresented: $showDetailTurnCard) {
+                TurnCardDetailsView(viewModel: TurnCardViewModel(turn: TurnPreview(uid: "", titleEvent: "", date: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: nil), coordinator: coordinator), coordinator: coordinator)
+            }
         }
     }
 
     private func checkTurnSelectedNotNull() -> Turn {
         guard let turn = coordinator.turnSelected else {
             coordinator.showTurnFeedDetail = false
-            return Turn(uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "", invited: [""], participants: [""], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0)
+            return Turn(uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date())
         }
         
         return turn

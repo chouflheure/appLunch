@@ -41,7 +41,7 @@ class AuthViewModel: ObservableObject {
 struct ContentView: View {
     @StateObject var coordinator = Coordinator()
     @ObservedObject private var authViewModel = AuthViewModel()
-    @State var isFinishToLoad: Bool = true
+    @State private var hasCheckedAuthentication = false
 
     var body: some View {
         Group {
@@ -52,11 +52,14 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            checkAuthentication()
+            if !hasCheckedAuthentication {
+                checkAuthentication()
+                hasCheckedAuthentication = true
+            }
         }
         .onChange(of: authViewModel.isAuthenticated) { isAuthenticated in
-            if authViewModel.isAuthenticated == .connecte {
-                coordinator.start(userUID: authViewModel.userUID)
+            if authViewModel.isAuthenticated == .connecte, let userUID = authViewModel.userUID {
+                coordinator.start(userUID: userUID)
             } else {
                 coordinator.currentView = AnyView(
                     NavigationView {
@@ -66,7 +69,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func checkAuthentication() {
         authViewModel.checkAuthenticationStatus { uid in
             if let uid = uid {
@@ -78,6 +81,7 @@ struct ContentView: View {
         }
     }
 }
+
 
 struct LoadingFirstView: View {
 

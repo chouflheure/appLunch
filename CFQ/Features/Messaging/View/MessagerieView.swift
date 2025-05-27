@@ -13,7 +13,7 @@ struct MessagerieView: View {
     @Binding var isPresented: Bool
     @StateObject var viewModel: MessagerieViewModel
     @ObservedObject var coordinator: Coordinator
-
+    
     @State private var text: String = ""
     @State private var lastText: String = ""
     @State private var showReaction: Bool = false
@@ -44,11 +44,11 @@ struct MessagerieView: View {
                             }
 
                             Spacer()
-
+                            
                             CFQMolecule(
-                                name: "Charles",
-                                title: "CFQ Demain ?",
-                                image: ""
+                                name: coordinator.selectedCFQ?.userContact?.pseudo ?? "",
+                                title: coordinator.selectedCFQ?.title ?? "",
+                                image: coordinator.selectedCFQ?.userContact?.profilePictureUrl ?? ""
                             )
                             .onTapGesture {
                                 withAnimation {

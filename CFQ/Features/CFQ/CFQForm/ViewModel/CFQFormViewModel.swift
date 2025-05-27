@@ -74,10 +74,10 @@ extension CFQFormViewModel {
             title: "CFQ " + titleCFQ + (titleCFQ.last == "?" ? "" : " ?"),
             admin: user.uid,
             messagerieUUID: messagerieUUID.description,
-            users: adminUUIDs
+            users: adminUUIDs,
+            timestamp: Date()
         )
         
-        print(cfq.printObject)
         
         firebaseService.addData(
             data: cfq,
@@ -85,7 +85,6 @@ extension CFQFormViewModel {
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
-                    print("@@@ result yes")
                     self.addEventCFQOnFriendProfile(cfq: cfq)
                 case .failure(let error):
                     print("@@@ error = \(error)")
