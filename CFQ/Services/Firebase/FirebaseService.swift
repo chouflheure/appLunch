@@ -10,6 +10,7 @@ enum ListenerType: String {
     case turn = "turn"
     case conversation = "conversation"
     case notification = "notification"
+    case user = "user"
 }
 
 class FirebaseService: FirebaseServiceProtocol {

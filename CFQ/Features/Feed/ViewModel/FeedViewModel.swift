@@ -37,7 +37,6 @@ class FeedViewModel: ObservableObject {
                         self.coordinator.userCFQ = cfq
                         // self.cfq = cfq
                         cfq.forEach { (item) in
-                            print("@@@ cfq = \(item.uid)")
                         }
                     }
                 case .failure(let error):
@@ -50,6 +49,7 @@ class FeedViewModel: ObservableObject {
     
     func startListeningToTurn(user: User) {
         print("@@@ here 1")
+        print("@@@ user = \(user.invitedTurns)")
         firebaseService.getDataByIDs(
             from: .turns,
             with: user.invitedTurns ?? [""],
@@ -71,6 +71,7 @@ class FeedViewModel: ObservableObject {
                 }
             case .failure(let error):
                 Logger.log(error.localizedDescription, level: .error)
+                print("@@@ error")
             }
         }
     }

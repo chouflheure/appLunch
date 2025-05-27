@@ -36,25 +36,29 @@ class Coordinator: ObservableObject {
 
     func start(userUID: String?) {
         if let userUID = userUID {
-            firebaseService.getDataByID(from: .users, with: userUID) { (result: Result<User, Error>) in
+            firebaseService.getDataByIDs(
+                from: .users,
+                with: [userUID],
+                listenerKeyPrefix: ListenerType.user.rawValue
+            ) { (result: Result<[User], Error>) in
                 switch result {
                 case .success(let user):
-                    UserDefaults.standard.set(user.uid, forKey: "userUID")
+                    UserDefaults.standard.set(user[0].uid, forKey: "userUID")
 
-                    self.user = user
+                    self.user = user[0]
 
-                    if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user.tokenFCM != fcmToken {
-                        self.firebaseService.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user.uid)
+                    if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken"), user[0].tokenFCM != fcmToken {
+                        self.firebaseService.updateDataByID(data: ["tokenFCM": fcmToken], to: .users, at: user[0].uid)
                     }
-                    
+
                     self.catchDataAppToStart()
-                    self.catchAllUsersFriend(user: user)
-                    self.catchAllUserCFQ(user: user)
+                    self.catchAllUsersFriend(user: user[0])
+                    self.catchAllUserCFQ(user: user[0])
                     
                     self.currentView = AnyView(
                         NavigationView {
                             CustomTabView(coordinator: self)
-                                .environmentObject(user)
+                                .environmentObject(user[0])
                         }
                     )
                     Logger.log("User connected and have account ", level: .info)
@@ -150,9 +154,6 @@ class Coordinator: ObservableObject {
                 case .success(let cfq):
                     DispatchQueue.main.async {
                         self.userCFQ = cfq
-                        cfq.forEach { (item) in
-                            print("@@@ cfq = \(item.uid)")
-                        }
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")
