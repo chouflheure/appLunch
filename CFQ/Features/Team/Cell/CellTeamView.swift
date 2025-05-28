@@ -15,6 +15,7 @@ struct CellTeamView: View {
                     .foregroundColor(.white)
                     .bold()
                 PreviewProfile(
+                    // pictures: team.friends.flatMap({ $0.profilePictureUrl }),
                     pictures: team.friends,
                     previewProfileType: .userMemberTeam,
                     numberUsers: team.friends.count

@@ -7,6 +7,9 @@ class Notification: ObservableObject, Encodable, Decodable {
     @Published var typeNotif: String
     @Published var timestamp: Date
     @Published var uidUserNotif: String
+    @Published var uidEvent: String
+    @Published var titleEvent: String
+    @Published var userInitNotifPseudo: String
     @Published var userContact: UserContact?
 
     enum CodingKeys: String, CodingKey {
@@ -14,6 +17,9 @@ class Notification: ObservableObject, Encodable, Decodable {
         case typeNotif
         case timestamp
         case uidUserNotif
+        case uidEvent
+        case titleEvent
+        case userInitNotifPseudo
         case userContact
     }
 
@@ -22,12 +28,18 @@ class Notification: ObservableObject, Encodable, Decodable {
         typeNotif: String,
         timestamp: Date,
         uidUserNotif: String,
-        userContact: UserContact?
+        uidEvent: String,
+        titleEvent: String,
+        userInitNotifPseudo: String,
+        userContact: UserContact? = nil
     ) {
         self.uid = uid
         self.typeNotif = typeNotif
         self.timestamp = timestamp
         self.uidUserNotif = uidUserNotif
+        self.uidEvent = uidEvent
+        self.titleEvent = titleEvent
+        self.userInitNotifPseudo = userInitNotifPseudo
         self.userContact = userContact
     }
 
@@ -37,6 +49,9 @@ class Notification: ObservableObject, Encodable, Decodable {
         typeNotif = try values.decode(String.self, forKey: .typeNotif)
         timestamp = try values.decode(Date.self, forKey: .timestamp)
         uidUserNotif = try values.decode(String.self, forKey: .uidUserNotif)
+        uidEvent = try values.decode(String.self, forKey: .uidEvent)
+        titleEvent = try values.decode(String.self, forKey: .titleEvent)
+        userInitNotifPseudo = try values.decode(String.self, forKey: .userInitNotifPseudo)
         userContact = try values.decodeIfPresent(UserContact.self, forKey: .userContact)
     }
 
@@ -46,6 +61,9 @@ class Notification: ObservableObject, Encodable, Decodable {
         try container.encode(typeNotif, forKey: .typeNotif)
         try container.encode(timestamp, forKey: .timestamp)
         try container.encode(uidUserNotif, forKey: .uidUserNotif)
+        try container.encode(uidEvent, forKey: .uidEvent)
+        try container.encodeIfPresent(titleEvent, forKey: .titleEvent)
+        try container.encodeIfPresent(userInitNotifPseudo, forKey: .userInitNotifPseudo)
         try container.encodeIfPresent(userContact, forKey: .userContact)
     }
     

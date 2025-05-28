@@ -30,7 +30,7 @@ class TurnCardViewModel: ObservableObject {
     @ObservedObject var coordinator: Coordinator
 
     var turn: TurnPreview
-    var adminUser: User
+    var user: User
     var firebaseService = FirebaseService()
     var allFriends: Set<UserContact> = []
     
@@ -58,8 +58,8 @@ class TurnCardViewModel: ObservableObject {
     }
     
     private func verificationIdentificationUserUID(coordinator: Coordinator) {
-        if let adminUser = coordinator.user {
-            self.adminUser = adminUser
+        if let user = coordinator.user {
+            self.user = user
         } else {
             coordinator.showTurnCardView = false
         }
@@ -68,7 +68,7 @@ class TurnCardViewModel: ObservableObject {
     init(turn: TurnPreview, coordinator: Coordinator) {
 
         self.turn = turn
-        self.adminUser = coordinator.user ?? User(uid: "")
+        self.user = coordinator.user ?? User(uid: "")
         self.coordinator = coordinator
         self.allFriends = friendListToAdd
 
@@ -158,7 +158,7 @@ extension TurnCardViewModel {
             titleEvent: titleEvent,
             date: dateEvent ?? Date(),
             pictureURLString: urlStringImage,
-            admin: adminUser.uid,
+            admin: user.uid,
             description: description,
             invited: friends,
             participants: [],
@@ -198,13 +198,13 @@ extension TurnCardViewModel {
             data: Conversation(
                 uid: turn.messagerieUUID,
                 titleConv: turn.titleEvent,
-                pictureEventURL: adminUser.profilePictureUrl,
+                pictureEventURL: user.profilePictureUrl,
                 typeEvent: "turn",
                 eventUID: turn.uid,
                 lastMessageSender: "",
                 lastMessageDate: Date(),
                 lastMessage: "",
-                messageReader: [adminUser.uid]
+                messageReader: [user.uid]
             ),
             to: .conversations,
             completion: { (result: Result<Void, Error>) in
@@ -216,6 +216,31 @@ extension TurnCardViewModel {
                 }
 
                 // self.isLoading = false
+            }
+        )
+        
+        let uidNotification = UUID()
+        
+        firebaseService.addDataNotif(
+            data: Notification(
+                uid: uidNotification.description,
+                typeNotif: "turn_create",
+                timestamp: Date(),
+                uidUserNotif: user.uid,
+                uidEvent: turn.uid,
+                titleEvent: turn.titleEvent,
+                userInitNotifPseudo: user.pseudo
+            ),
+            userNotifications: ["JtISdWec8JV4Od1WszEGXkqEVAI2"],
+            completion: { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    print("@@@ result yes conv ")
+                case .failure(let error):
+                    print("@@@ error = \(error)")
+                }
+
+                
             }
         )
         

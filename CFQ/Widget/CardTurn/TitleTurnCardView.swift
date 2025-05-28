@@ -13,10 +13,10 @@ struct TitleTurnCardPreviewView: View {
                 .textCase(.uppercase)
 
             HStack {
-                CachedAsyncImageView(urlString: viewModel.adminUser.profilePictureUrl, designType: .scaledToFill_Circle)
+                CachedAsyncImageView(urlString: viewModel.user.profilePictureUrl, designType: .scaledToFill_Circle)
                     .frame(width: 50, height: 50)
 
-                Text(viewModel.adminUser.pseudo)
+                Text(viewModel.user.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
 
@@ -61,10 +61,10 @@ struct TitleTurnCardDetailView: View {
             .padding(.bottom, 16)
 */
             HStack {
-                CachedAsyncImageView(urlString: viewModel.adminUser.profilePictureUrl, designType: .scaledToFill_Circle)
+                CachedAsyncImageView(urlString: viewModel.user.profilePictureUrl, designType: .scaledToFill_Circle)
                     .frame(width: 50, height: 50)
 
-                Text(viewModel.adminUser.pseudo)
+                Text(viewModel.user.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
                     .lineLimit(1)
 

@@ -127,6 +127,31 @@ extension CFQFormViewModel {
             }
         )
         
+        let uidNotification = UUID()
+        
+        firebaseService.addDataNotif(
+            data: Notification(
+                uid: uidNotification.description,
+                typeNotif: "cfq_create",
+                timestamp: Date(),
+                uidUserNotif: user.uid,
+                uidEvent: cfq.uid,
+                titleEvent: cfq.title,
+                userInitNotifPseudo: user.pseudo
+            ),
+            userNotifications: ["JtISdWec8JV4Od1WszEGXkqEVAI2"],
+            completion: { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    print("@@@ result yes conv ")
+                case .failure(let error):
+                    print("@@@ error = \(error)")
+                }
+
+                self.isLoading = false
+            }
+        )
+
         firebaseService.updateDataByIDs(
             data: [
                 "invitedCfqs": FieldValue.arrayUnion([cfq.uid]),

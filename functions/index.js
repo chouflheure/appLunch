@@ -127,97 +127,6 @@ exports.sendScheduledMessage4AMIfTurnAlready = functions
     });
 */
 
-exports.onNotificationCreated = functions
-    .region("europe-west2")
-    .firestore
-    .document("notifications/{docId}/userNotifications/{subDocId}")
-    .onCreate(async (snap, context) => {
-      try {
-        const newNotification = snap.data();
-        const docId = context.params.docId;
-
-        const notificationIdUsersSnapshot = await admin
-            .firestore()
-            .collection("users")
-            .where("notificationsChannelId", "==", docId)
-            .get();
-
-        const doc = notificationIdUsersSnapshot.docs[0];
-        console.log(`@@@ Utilisateur trouvé : ${doc.id}`);
-        console.log("@@@ username :", doc.data().username);
-
-        const tokenFCM = doc.data().tokenFCM;
-
-        let title = "";
-        let body = "";
-        const conversationId = newNotification.content.conversationId;
-
-        const content = newNotification.content;
-        switch (newNotification.type) {
-          case "message": {
-            title = `Messages sur ${content.conversationName || "CFQ ?"}`;
-            const words = content.messageContent.split(" ");
-            const messagePreview = words.length > 3 ?
-                words.slice(0, 3).join(" ") + "..." :
-                content.messageContent;
-            body = `${content.senderUsername}: ${messagePreview}`;
-            break;
-          }
-          case "teamRequest":
-            title = "Nouvelle Team";
-            body = `T'es invité à rejoindre la team ${content.teamName}`;
-            break;
-          case "friendRequest":
-            title = "Demande d'ajout";
-            body = `${content.requesterUsername} veut t'ajouter`;
-            break;
-          case "eventInvitation":
-            if (content.isTurn) {
-              title = content.eventName;
-              body = `${content.organizerUsername} t'invite à son turn`;
-            } else {
-              title = content.eventName || "CFQ ?";
-              body = `${content.organizerUsername} a posté un CFQ`;
-            }
-            break;
-          case "attending":
-            title = content.turnName;
-            body = `${content.attendingUsername} vient à ${content.turnName}`;
-            break;
-          case "followUp":
-            title = content.cfqName || "CFQ ?";
-            body = `${content.followerUsername} ` +
-                  `suit ${content.cfqName || "CFQ"}`;
-            break;
-          case "acceptedTeamRequest":
-            title = content.teamName;
-            body = `${content.accepterUsername} a rejoint la team`;
-            break;
-          case "acceptedFriendRequest":
-            title = "Ami";
-            body = `${content.accepterUsername} t'a ajouté a ses amis`;
-            break;
-        }
-        const message = {
-          notification: {
-            title: title,
-            body: body,
-          },
-          data: {
-            conversationId: conversationId,
-          },
-          token: tokenFCM,
-        };
-        console.log("message", message);
-        const response = await admin.messaging().send(message);
-        return {success: true, messageId: response};
-      } catch (error) {
-        console.error("Erreur :", error);
-        return Promise.reject(error);
-      }
-    });
-
-
 exports.onCreateMessage = functions
   .region("europe-west2")
   .firestore
@@ -290,7 +199,7 @@ exports.onCreateMessage = functions
         tokens: tokens,
       };
         
-        console.log("Message : ", message)
+      console.log("Message : ", message)
 
       // Envoyer la notification à plusieurs destinataires
       const response = await admin.messaging().sendEachForMulticast(message);
@@ -313,3 +222,192 @@ exports.onCreateMessage = functions
       return Promise.reject(error);
     }
   });
+
+exports.onTurnCreated = functions
+    .region("europe-west2")
+    .firestore
+    .document("notifications/{docId}/userNotifications/{subDocId}")
+    .onCreate(async (snap, context) => {
+        try {
+          const newNotification = snap.data();
+          const docId = context.params.docId;
+        
+          console.log("test", newNotification);
+
+          const notificationIdUsersSnapshot = await admin
+            .firestore()
+            .collection("users")
+            .where("notificationsChannelId", "==", docId)
+            .get();
+
+            let title = "";
+            let body = "";
+
+            switch (newNotification.typeNotif) {
+              case "cfq_create": {
+                title = `${newNotification.userInitNotifPseudo || "CFQ ?"}`;
+                body = `${newNotification.titleEvent}`;
+                break;
+              }
+              case "turn_create": {
+                  title = `${newNotification.titleEvent || "CFQ ?"}`;
+                  body = `${newNotification.userInitNotifPseudo} t'invite à son turn`;
+                  break;
+              }
+                    /*
+              case "team_create":
+                title = "Nouvelle Team";
+                body = `T'es invité à rejoindre la team ${content.teamName}`;
+                break;
+              case "friendRequest":
+                title = "Demande d'ajout";
+                body = `${content.requesterUsername} veut t'ajouter`;
+                break;
+              case "eventInvitation":
+                if (content.isTurn) {
+                  title = content.eventName;
+                  body = `${content.organizerUsername} t'invite à son turn`;
+                } else {
+                  title = content.eventName || "CFQ ?";
+                  body = `${content.organizerUsername} a posté un CFQ`;
+                }
+                break;
+              case "attending":
+                title = content.turnName;
+                body = `${content.attendingUsername} vient à ${content.turnName}`;
+                break;
+              case "followUp":
+                title = content.cfqName || "CFQ ?";
+                body = `${content.followerUsername} ` +
+                      `suit ${content.cfqName || "CFQ"}`;
+                break;
+              case "acceptedTeamRequest":
+                title = content.teamName;
+                body = `${content.accepterUsername} a rejoint la team`;
+                break;
+              case "acceptedFriendRequest":
+                title = "Ami";
+                body = `${content.accepterUsername} t'a ajouté a ses amis`;
+                break;
+                     */
+            }
+
+            const doc = notificationIdUsersSnapshot.docs[0];
+
+            const tokenFCM = doc.data().tokenFCM;
+
+        const message = {
+          notification: {
+            title: title,
+            body: body,
+          },
+          token: tokenFCM,
+        };
+        
+        const response = await admin.messaging().send(message);
+
+        return {
+            success: true,
+            successCount: response.successCount,
+            failureCount: response.failureCount,
+            totalRecipients: 1
+        };
+
+        } catch (error) {
+            console.error("Erreur lors de l'envoi des notifications:", error);
+            return Promise.reject(error);
+        }
+    });
+
+
+/*
+ exports.onNotificationCreated = functions
+     .region("europe-west2")
+     .firestore
+     .document("notifications/{docId}/userNotifications/{subDocId}")
+     .onCreate(async (snap, context) => {
+       try {
+         const newNotification = snap.data();
+         const docId = context.params.docId;
+
+         const notificationIdUsersSnapshot = await admin
+             .firestore()
+             .collection("users")
+             .where("notificationsChannelId", "==", docId)
+             .get();
+
+         const doc = notificationIdUsersSnapshot.docs[0];
+         console.log(`@@@ Utilisateur trouvé : ${doc.id}`);
+         console.log("@@@ username :", doc.data().username);
+
+         const tokenFCM = doc.data().tokenFCM;
+
+         let title = "";
+         let body = "";
+         const conversationId = newNotification.content.conversationId;
+
+         const content = newNotification.content;
+         switch (newNotification.type) {
+           case "message": {
+             title = `Messages sur ${content.conversationName || "CFQ ?"}`;
+             const words = content.messageContent.split(" ");
+             const messagePreview = words.length > 3 ?
+                 words.slice(0, 3).join(" ") + "..." :
+                 content.messageContent;
+             body = `${content.senderUsername}: ${messagePreview}`;
+             break;
+           }
+           case "teamRequest":
+             title = "Nouvelle Team";
+             body = `T'es invité à rejoindre la team ${content.teamName}`;
+             break;
+           case "friendRequest":
+             title = "Demande d'ajout";
+             body = `${content.requesterUsername} veut t'ajouter`;
+             break;
+           case "eventInvitation":
+             if (content.isTurn) {
+               title = content.eventName;
+               body = `${content.organizerUsername} t'invite à son turn`;
+             } else {
+               title = content.eventName || "CFQ ?";
+               body = `${content.organizerUsername} a posté un CFQ`;
+             }
+             break;
+           case "attending":
+             title = content.turnName;
+             body = `${content.attendingUsername} vient à ${content.turnName}`;
+             break;
+           case "followUp":
+             title = content.cfqName || "CFQ ?";
+             body = `${content.followerUsername} ` +
+                   `suit ${content.cfqName || "CFQ"}`;
+             break;
+           case "acceptedTeamRequest":
+             title = content.teamName;
+             body = `${content.accepterUsername} a rejoint la team`;
+             break;
+           case "acceptedFriendRequest":
+             title = "Ami";
+             body = `${content.accepterUsername} t'a ajouté a ses amis`;
+             break;
+         }
+         const message = {
+           notification: {
+             title: title,
+             body: body,
+           },
+           data: {
+             conversationId: conversationId,
+           },
+           token: tokenFCM,
+         };
+         console.log("message", message);
+         const response = await admin.messaging().send(message);
+         return {success: true, messageId: response};
+       } catch (error) {
+         console.error("Erreur :", error);
+         return Promise.reject(error);
+       }
+     });
+ */

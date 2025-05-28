@@ -239,6 +239,125 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
 
+    func updateNotificationByIDs(
+        data: [String: Any],
+        at ids: [String]
+    ) {
+        for id in ids {
+            db.collection("notifications").document(id).updateData(data) { error in
+                if let error = error {
+                    Logger.log(
+                        "Erreur lors de la modification de notification pour l'ID \(id) : \(error.localizedDescription)",
+                        level: .error)
+                } else {
+                    Logger.log(
+                        "\notification avec l'ID \(id) a été modifié avec succès",
+                        level: .success)
+                }
+            }
+        }
+    }
+    
+    
+    func getNotificationsByIds(
+        notificationUID: String,
+        limit: Int = 15,
+        listenerKeyPrefix: String,
+        completion: @escaping (Result<[Notification], Error>) -> Void
+    ) {
+        let db = Firestore.firestore()
+        let messagesRef = db.collection("notifications").document(notificationUID).collection("messages")
+
+        // Query pour récupérer les 15 derniers messages triés par timestamp
+        let query =
+            messagesRef
+            .order(by: "timestamp", descending: true)  // Les plus récents d'abord
+            .limit(to: limit)
+
+        // Ajouter le listener
+        let listener = query.addSnapshotListener { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                print("@@@ failure ")
+                return
+            }
+
+            guard let documents = snapshot?.documents else {
+                completion(.success([]))
+                print("@@@ success ")
+                return
+            }
+
+            var notifications: [Notification] = []
+            for document in documents {
+                do {
+                    let notification = try document.data(as: Notification.self)
+                    notifications.append(notification)
+                } catch {
+                    print("Erreur de décodage du message: \(error)")
+                }
+            }
+
+            // Inverser l'ordre pour avoir les plus anciens en premier (pour l'affichage)
+            let sortedNotifications = notifications.reversed()
+            completion(.success(Array(sortedNotifications)))
+        }
+
+        // Stocker le listener pour pouvoir le supprimer plus tard
+        activeListeners[listenerKeyPrefix] = listener
+    }
+    
+    func addDataNotif(
+        data: Notification,
+        userNotifications: [String],
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let db = Firestore.firestore()
+        let dispatchGroup = DispatchGroup()
+
+        var encounteredError: Error?
+
+        for userNotification in userNotifications {
+            dispatchGroup.enter()
+
+            do {
+                try db.collection("notifications")
+                    .document(userNotification)
+                    .collection("userNotifications")
+                    .addDocument(from: data) { error in
+                        if let error = error {
+                            encounteredError = error
+                            Logger.log(
+                                "Erreur lors de l'ajout de la notification pour \(userNotification) : \(error.localizedDescription)",
+                                level: .error
+                            )
+                        } else {
+                            Logger.log(
+                                "Données ajoutées avec succès à notification pour \(userNotification)",
+                                level: .info
+                            )
+                        }
+                        dispatchGroup.leave()
+                    }
+            } catch {
+                encounteredError = error
+                Logger.log(
+                    "Erreur de conversion des données pour \(userNotification) : \(error.localizedDescription)",
+                    level: .error
+                )
+                dispatchGroup.leave()
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            if let error = encounteredError {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+    
     func getMessagesByIds(
         conversationID: String,
         limit: Int = 15,
