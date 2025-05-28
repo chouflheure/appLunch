@@ -3,7 +3,7 @@ import SwiftUI
 
 struct CellTeamView: View {
     @ObservedObject var coordinator: Coordinator
-    var team: Team
+    @State var team: Team
     var onClick: (() -> Void)
 
     var body: some View {
@@ -15,8 +15,9 @@ struct CellTeamView: View {
                     .foregroundColor(.white)
                     .bold()
                 PreviewProfile(
-                    pictures: [.header],
-                    previewProfileType: .userMemberTeam
+                    pictures: team.friends,
+                    previewProfileType: .userMemberTeam,
+                    numberUsers: team.friends.count
                 ).frame(height: 24)
             }.padding(.horizontal, 16)
         }

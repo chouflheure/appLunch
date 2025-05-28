@@ -48,7 +48,7 @@ struct TitleTurnCardFeedView: View {
                 )
             }
 
-            PreviewProfile(pictures: [], previewProfileType: .userComming)
+            PreviewProfile(pictures: [], previewProfileType: .userComming, numberUsers: 10)
                 .padding(.vertical, 8)
         }
         /*

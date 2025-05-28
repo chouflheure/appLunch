@@ -7,8 +7,13 @@ struct TeamFormView: View {
     @State private var selectedImage: Image?
     @State private var avatarPhotoItem: PhotosPickerItem?
     @State private var isPhotoPickerPresented = false
-    @StateObject var viewModel = TeamFormViewModel()
+    @StateObject var viewModel: TeamFormViewModel
 
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: TeamFormViewModel(coordinator: coordinator))
+    }
+    
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showCreateTeam) {
             SafeAreaContainer {
@@ -24,7 +29,7 @@ struct TeamFormView: View {
 
                     ZStack(alignment: .bottom) {
                         if let selectedImage = viewModel.imageProfile {
-                            selectedImage
+                            Image(uiImage: selectedImage)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 100, height: 100)
@@ -56,7 +61,7 @@ struct TeamFormView: View {
                             .loadTransferable(type: Data.self),
                             let uiImage = UIImage(data: data)
                         {
-                            viewModel.imageProfile = Image(uiImage: uiImage)
+                            viewModel.imageProfile = uiImage
                         }
                     }
 

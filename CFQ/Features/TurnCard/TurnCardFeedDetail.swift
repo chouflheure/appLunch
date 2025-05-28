@@ -165,7 +165,7 @@ struct TitleTurnCardDetailFeedView: View {
                 )
             }
             // TODO: - Add participants
-            PreviewProfile(pictures: [], previewProfileType: .userComming)
+            PreviewProfile(pictures: [], previewProfileType: .userComming, numberUsers: 12)
                 .padding(.vertical, 8)
         }
         .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {

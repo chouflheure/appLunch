@@ -503,7 +503,9 @@ extension FirebaseService {
      */
 
     func uploadImage(
-        picture: UIImage, uidUser: String,
+        picture: UIImage,
+        uidUser: String,
+        localisationImage: LocalisationImages,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
         print("@@@ uploadImage in ")
@@ -544,7 +546,7 @@ extension FirebaseService {
             }
 
             let storageRef = Storage.storage().reference().child(
-                "images/\(uidUser).jpg")
+                "\(localisationImage.rawValue)/\(uidUser).jpg")
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
             print("@@@ here 1")

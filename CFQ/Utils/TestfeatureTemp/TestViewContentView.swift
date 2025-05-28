@@ -1,5 +1,51 @@
 import SwiftUI
 
+struct CachedImageTest: View {
+    let imageUrls = [
+        "https://fastly.picsum.photos/id/259/300/200.jpg?hmac=e_J_gQv6y2AxQsJlXwfkBEowmdfiLmsjeGQIRDLQEuI",
+        "https://fastly.picsum.photos/id/1021/300/200.jpg?hmac=Uwq-p1xg_lU331olJw79oBVMPMWXSnwp5E9SsFgF87g",
+        "https://fastly.picsum.photos/id/613/300/200.jpg?hmac=HBef6BibNUIRVnUP6cjqz8gfXjGiA2spUhRV_R91eqo",
+        "https://fastly.picsum.photos/id/260/300/200.jpg?hmac=VffmZ4w9F53iikwGIGpglNpADhZiEqsuwJFwIGOE4Zg",
+        "https://fastly.picsum.photos/id/1054/300/200.jpg?hmac=QdR5jgF9dCDjHJSERQn6DN6dAeNWaVa54JbmsNZo2Q0"
+    ]
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 16) {
+                    ForEach(imageUrls, id: \.self) { url in
+                        ModernCachedAsyncImage(
+                            url: url,
+                            placeholder: Image(systemName: "photo.fill")
+                        )
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 150)
+                        .clipped()
+                        .cornerRadius(12)
+                        .shadow(radius: 4)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Images en Cache")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Vider Cache") {
+                        print("@@@ vider cache")
+                        ImageCacheManager.shared.clearCache()
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 struct GrowingTextView: UIViewRepresentable {
     @Binding var text: String
     @Binding var dynamicHeight: CGFloat

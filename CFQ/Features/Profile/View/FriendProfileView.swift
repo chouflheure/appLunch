@@ -119,7 +119,7 @@ struct FriendProfileView: View {
                     }
 
                     HStack {
-                        PreviewProfile(pictures: [.profile, .profile, .profile, .profile], previewProfileType: .userFriendInCommun)
+                        PreviewProfile(pictures: [], previewProfileType: .userFriendInCommun, numberUsers: 12)
                         Spacer()
                     }
                     

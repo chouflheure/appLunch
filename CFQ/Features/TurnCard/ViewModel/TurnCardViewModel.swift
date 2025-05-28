@@ -129,8 +129,9 @@ extension TurnCardViewModel {
     }
     
     private func uploadImageToDataBase() {
+        let uid = UUID()
         guard let imageSelected = imageSelected else { return }
-        firebaseService.uploadImage(picture: imageSelected, uidUser: "") { result in
+        firebaseService.uploadImage(picture: imageSelected, uidUser: uid.description, localisationImage: .turn) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let urlString):
