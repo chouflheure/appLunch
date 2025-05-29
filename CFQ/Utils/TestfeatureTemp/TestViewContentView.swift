@@ -1,5 +1,63 @@
 import SwiftUI
 
+
+import UIKit
+import FirebaseFirestore
+
+class SearchViewController: UIViewController, UISearchBarDelegate {
+
+    let searchBar = UISearchBar()
+    let db = Firestore.firestore()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupSearchBar()
+    }
+
+    private func setupSearchBar() {
+        searchBar.delegate = self
+        searchBar.placeholder = "Rechercher un utilisateur..."
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Appeler la fonction de recherche lorsque le texte change
+        searchUsers(with: searchText)
+    }
+
+    private func searchUsers(with query: String) {
+        // Assurez-vous que la requête n'est pas vide
+        guard !query.isEmpty else { return }
+
+        // Effectuer la recherche dans Firestore
+        db.collection("users")
+            .whereField("name", isGreaterThanOrEqualTo: query)
+            .whereField("name", isLessThanOrEqualTo: query + "\u{f8ff}")
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Erreur lors de la recherche d'utilisateurs : \(error.localizedDescription)")
+                    return
+                }
+
+                // Traiter les documents retournés
+                for document in querySnapshot?.documents ?? [] {
+                    let userData = document.data()
+                    print("Utilisateur trouvé : \(userData)")
+                    // Traiter les données de l'utilisateur comme nécessaire
+                }
+            }
+    }
+}
+
+
+
 struct CachedImageTest: View {
     let imageUrls = [
         "https://fastly.picsum.photos/id/259/300/200.jpg?hmac=e_J_gQv6y2AxQsJlXwfkBEowmdfiLmsjeGQIRDLQEuI",

@@ -2,6 +2,15 @@
 import Foundation
 import SwiftUI
 
+enum NotificationsType: String {
+    case teamCreated = "teamCreated"
+    case friendRequest = "friendRequest"
+    case acceptedFriendRequest = "acceptedFriendRequest"
+    case cfqCreated = "cfqCreated"
+    case turnCreated = "turnCreated"
+    case attending = "attending"
+}
+
 class Notification: ObservableObject, Encodable, Decodable {
     @Published var uid: String
     @Published var typeNotif: String
@@ -25,7 +34,7 @@ class Notification: ObservableObject, Encodable, Decodable {
 
     init(
         uid: String,
-        typeNotif: String,
+        typeNotif: NotificationsType,
         timestamp: Date,
         uidUserNotif: String,
         uidEvent: String,
@@ -34,7 +43,7 @@ class Notification: ObservableObject, Encodable, Decodable {
         userContact: UserContact? = nil
     ) {
         self.uid = uid
-        self.typeNotif = typeNotif
+        self.typeNotif = typeNotif.rawValue
         self.timestamp = timestamp
         self.uidUserNotif = uidUserNotif
         self.uidEvent = uidEvent

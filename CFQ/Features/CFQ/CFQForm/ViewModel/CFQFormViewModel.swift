@@ -56,6 +56,8 @@ class CFQFormViewModel: ObservableObject {
         friendsList = allFriends
         friendsList = filteredNames
     }
+    
+    
 }
 
 extension CFQFormViewModel {
@@ -132,7 +134,7 @@ extension CFQFormViewModel {
         firebaseService.addDataNotif(
             data: Notification(
                 uid: uidNotification.description,
-                typeNotif: "cfq_create",
+                typeNotif: .cfqCreated,
                 timestamp: Date(),
                 uidUserNotif: user.uid,
                 uidEvent: cfq.uid,

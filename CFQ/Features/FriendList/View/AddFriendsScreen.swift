@@ -2,8 +2,13 @@ import SwiftUI
 
 struct AddFriendsScreen: View {
 
-    @StateObject var viewModel = AddFriendsViewModel()
+    @StateObject var viewModel: AddFriendsViewModel
     @ObservedObject var coordinator: Coordinator
+
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(wrappedValue: AddFriendsViewModel(coordinator: coordinator))
+    }
 
     var body: some View {
         DraggableViewRight(isPresented: $coordinator.showFriendListScreen) {
@@ -30,6 +35,7 @@ struct AddFriendsScreen: View {
                                         viewModel.removeText()
                                     },
                                     onTapResearch: {
+                                        
                                         viewModel.researche()
                                     }
                                 )
@@ -38,12 +44,14 @@ struct AddFriendsScreen: View {
                                 VStack(alignment: .leading) {
                                     ForEach(
                                         Array(viewModel.friendsList), id: \.self
-                                    ) { user in
+                                    ) { userFriend in
                                         CellFriendPseudoNameAction(
-                                            user: user,
-                                            coordinator: Coordinator(),
+                                            user: userFriend,
+                                            coordinator: coordinator,
                                             type: .add,
-                                            isActionabled: { viewModel.addFriendsToList(user: user) }
+                                            isActionabled: {
+                                                viewModel.addFriendsToList(userFriend: userFriend)
+                                            }
                                         )
                                         .padding(.top, 15)
                                     }
@@ -55,12 +63,5 @@ struct AddFriendsScreen: View {
                 }
             }
         }
-    }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        AddFriendsScreen(coordinator: Coordinator())
     }
 }

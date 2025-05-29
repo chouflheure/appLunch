@@ -224,7 +224,7 @@ extension TurnCardViewModel {
         firebaseService.addDataNotif(
             data: Notification(
                 uid: uidNotification.description,
-                typeNotif: "turn_create",
+                typeNotif: .turnCreated,
                 timestamp: Date(),
                 uidUserNotif: user.uid,
                 uidEvent: turn.uid,

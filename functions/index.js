@@ -223,7 +223,7 @@ exports.onCreateMessage = functions
     }
   });
 
-exports.onTurnCreated = functions
+exports.onNotificationCreated = functions
     .region("europe-west2")
     .firestore
     .document("notifications/{docId}/userNotifications/{subDocId}")
@@ -244,52 +244,37 @@ exports.onTurnCreated = functions
             let body = "";
 
             switch (newNotification.typeNotif) {
-              case "cfq_create": {
+              case "cfqCreated": {
                 title = `${newNotification.userInitNotifPseudo || "CFQ ?"}`;
                 body = `${newNotification.titleEvent}`;
                 break;
               }
-              case "turn_create": {
+              case "turnCreated": {
                   title = `${newNotification.titleEvent || "CFQ ?"}`;
                   body = `${newNotification.userInitNotifPseudo} t'invite à son turn`;
                   break;
               }
-                    /*
-              case "team_create":
+              case "teamCreated":
                 title = "Nouvelle Team";
-                body = `T'es invité à rejoindre la team ${content.teamName}`;
+                body = `T'es invité à rejoindre la team ${newNotification.titleEvent}`;
                 break;
               case "friendRequest":
                 title = "Demande d'ajout";
-                body = `${content.requesterUsername} veut t'ajouter`;
+                body = `${newNotification.userInitNotifPseudo} veut t'ajouter à ses amis`;
                 break;
-              case "eventInvitation":
-                if (content.isTurn) {
-                  title = content.eventName;
-                  body = `${content.organizerUsername} t'invite à son turn`;
-                } else {
-                  title = content.eventName || "CFQ ?";
-                  body = `${content.organizerUsername} a posté un CFQ`;
-                }
-                break;
-              case "attending":
-                title = content.turnName;
-                body = `${content.attendingUsername} vient à ${content.turnName}`;
-                break;
+              //case "attending":
+                //title = content.turnName;
+                //body = `${content.attendingUsername} vient à ${content.turnName}`;
+                //break;
               case "followUp":
                 title = content.cfqName || "CFQ ?";
                 body = `${content.followerUsername} ` +
                       `suit ${content.cfqName || "CFQ"}`;
                 break;
-              case "acceptedTeamRequest":
-                title = content.teamName;
-                body = `${content.accepterUsername} a rejoint la team`;
-                break;
               case "acceptedFriendRequest":
                 title = "Ami";
-                body = `${content.accepterUsername} t'a ajouté a ses amis`;
+                body = `${content.userInitNotifPseudo} t'a ajouté a ses amis`;
                 break;
-                     */
             }
 
             const doc = notificationIdUsersSnapshot.docs[0];

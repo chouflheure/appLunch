@@ -17,6 +17,30 @@ class FirebaseService: FirebaseServiceProtocol {
     private var listeners: [String: ListenerRegistration] = [:]
     let db = Firestore.firestore()
 
+    
+    func searchUsers(with query: String) {
+            // Assurez-vous que la requête n'est pas vide
+            guard !query.isEmpty else { return }
+
+            // Effectuer la recherche dans Firestore
+            db.collection("users")
+                .whereField("pseudo", isGreaterThanOrEqualTo: query)
+                .whereField("pseudo", isLessThanOrEqualTo: query + "\u{f8ff}")
+                .getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        print("Erreur lors de la recherche d'utilisateurs : \(error.localizedDescription)")
+                        return
+                    }
+
+                    // Traiter les documents retournés
+                    for document in querySnapshot?.documents ?? [] {
+                        let userData = document.data()
+                        print("Utilisateur trouvé : \(userData)")
+                        // Traiter les données de l'utilisateur comme nécessaire
+                    }
+                }
+        }
+    
     func addData<T: Codable>(
         data: T, to collection: CollectionFirebaseType,
         completion: @escaping (Result<Void, Error>) -> (Void)
