@@ -64,7 +64,8 @@ class Coordinator: ObservableObject {
                     Logger.log("User connected and have account ", level: .info)
                     
                     /// when user has an id but not account
-                case .failure(_):
+                case .failure(let error):
+                    print("@@@ error \(error)")
                     self.currentView = AnyView(
                         NavigationView {
                             SignScreen(coordinator: self)

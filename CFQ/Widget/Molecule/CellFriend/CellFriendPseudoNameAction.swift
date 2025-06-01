@@ -1,16 +1,19 @@
 
 import SwiftUI
 
+enum CellFriendPseudoNameActionType {
+    case remove
+    case add
+    case followBack
+}
+
 struct CellFriendPseudoNameAction: View {
-    enum CellFriendPseudoNameActionType {
-        case remove
-        case add
-    }
+    
     
     var user: UserContact
     var coordinator: Coordinator
     var type: CellFriendPseudoNameActionType
-    var isActionabled: (() -> Void)
+    var isActionabled: ((CellFriendPseudoNameActionType) -> Void)
     
     var body: some View {
         HStack(spacing: 0) {
@@ -45,10 +48,13 @@ struct CellFriendPseudoNameAction: View {
             }
             
             Button(action: {
-                isActionabled()
+                isActionabled(type)
             }) {
                 if type == .remove {
                     Text("Supprimer")
+                        .tokenFont(.Body_Inter_Medium_14)
+                } else if type == .followBack {
+                    Text("Accepter")
                         .tokenFont(.Body_Inter_Medium_14)
                 } else {
                     Image(.iconCross)

@@ -51,7 +51,7 @@ struct ConfirmCodeScreen: View {
                     text: $otpCode,
                     keyBoardType: .phonePad,
                     placeHolder: StringsToken.Sign.PlaceholderConfimCode,
-                    textFieldType: .sign
+                    textFieldType: .signUp
                 ).textContentType(.oneTimeCode)
             }
 

@@ -85,8 +85,8 @@ class FirebaseService: FirebaseServiceProtocol {
         at id: String
     ) {
         let collectionName = collection.rawValue
-
         db.collection(collectionName).document(id).updateData(data) { error in
+       // db.collection(collectionName).document(id).updateData(data) { error in
             if let error = error {
                 Logger.log(
                     "Erreur lors de la modification de \(collection.rawValue) : \(error.localizedDescription)",

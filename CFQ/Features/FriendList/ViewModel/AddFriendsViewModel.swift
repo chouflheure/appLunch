@@ -1,6 +1,7 @@
 
 import Foundation
 import SwiftUI
+import Firebase
 
 class AddFriendsViewModel: ObservableObject {
     @Published var researchText = String()
@@ -12,19 +13,6 @@ class AddFriendsViewModel: ObservableObject {
     var firebaseService = FirebaseService()
     var user: User
     private var allFriends = Set<UserContact>()
-
-    
-    @Published var friendsAdd = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            )
-        ]
-    )
 
     @Published var friendsList = Set<UserContact>()
 
@@ -56,6 +44,14 @@ class AddFriendsViewModel: ObservableObject {
         friendsList = allFriends
         friendsList = filteredNames
     }
+    
+    func statusFriend(user: User, userFriend: UserContact) -> CellFriendPseudoNameActionType {
+        if user.friends.contains(userFriend.uid) {
+            return .remove
+        } else {
+            return .add
+        }
+    }
 }
 
 extension AddFriendsViewModel {
@@ -72,10 +68,10 @@ extension AddFriendsViewModel {
             }
         }
     }
-    
+
     func addFriendsToList(userFriend: UserContact) {
         firebaseService.updateDataByID(
-            data: ["requestsFriends": user.uid],
+            data: ["requestsFriends": FieldValue.arrayUnion([user.uid])],
             to: .users,
             at: userFriend.uid
         )
@@ -92,7 +88,7 @@ extension AddFriendsViewModel {
                 titleEvent: "Become friends",
                 userInitNotifPseudo: user.pseudo
             ),
-            userNotifications: ["JtISdWec8JV4Od1WszEGXkqEVAI2"],
+            userNotifications: [userFriend.uid],
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
@@ -100,19 +96,15 @@ extension AddFriendsViewModel {
                 case .failure(let error):
                     print("@@@ error = \(error)")
                 }
-
-                
             }
         )
-        
     }
-    /*
+
     func cancelFriendsToList(userFriend: UserContact) {
-        firebaseService.addData(
-            data: <#T##Decodable & Encodable#>,
-            to: <#T##CollectionFirebaseType#>,
-            completion: <#T##(Result<Void, any Error>) -> (Void)#>
+        firebaseService.updateDataByID(
+            data: ["requestsFriends": FieldValue.arrayRemove([userFriend.uid])],
+            to: .users,
+            at: userFriend.uid
         )
     }
-     */
 }

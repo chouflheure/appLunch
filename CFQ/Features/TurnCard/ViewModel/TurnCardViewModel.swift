@@ -231,16 +231,14 @@ extension TurnCardViewModel {
                 titleEvent: turn.titleEvent,
                 userInitNotifPseudo: user.pseudo
             ),
-            userNotifications: ["JtISdWec8JV4Od1WszEGXkqEVAI2"],
+            userNotifications: turn.invited,
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
-                    print("@@@ result yes conv ")
+                    print("@@@ result yes notif ")
                 case .failure(let error):
                     print("@@@ error = \(error)")
                 }
-
-                
             }
         )
         

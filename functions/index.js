@@ -281,6 +281,10 @@ exports.onNotificationCreated = functions
 
             const tokenFCM = doc.data().tokenFCM;
 
+            console.log(`@@@ Utilisateur trouvé : ${doc.id}`);
+            console.log("@@@ pseudo :", doc.data().pseudo);
+            console.log("@@@ tokenFCM :", doc.data().tokenFCM);
+
         const message = {
           notification: {
             title: title,

@@ -4,9 +4,11 @@ struct AddFriendsScreen: View {
 
     @StateObject var viewModel: AddFriendsViewModel
     @ObservedObject var coordinator: Coordinator
+    @ObservedObject var user: User
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
+        self.user = coordinator.user ?? User()
         self._viewModel = StateObject(wrappedValue: AddFriendsViewModel(coordinator: coordinator))
     }
 
@@ -42,17 +44,22 @@ struct AddFriendsScreen: View {
                                 .padding(.top, 20)
 
                                 VStack(alignment: .leading) {
-                                    ForEach(
-                                        Array(viewModel.friendsList), id: \.self
-                                    ) { userFriend in
+                                    ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
                                         CellFriendPseudoNameAction(
                                             user: userFriend,
                                             coordinator: coordinator,
-                                            type: .add,
-                                            isActionabled: {
-                                                viewModel.addFriendsToList(userFriend: userFriend)
+                                            type: viewModel.statusFriend(user: user, userFriend: userFriend), //userFriends.contains(userFriend) ? .remove : .add,
+                                            isActionabled: { type in
+                                                if type == .add || type == .followBack {
+                                                    viewModel.addFriendsToList(userFriend: userFriend)
+                                                } else {
+                                                    viewModel.cancelFriendsToList(userFriend: userFriend)
+                                                }
                                             }
-                                        )
+                                        ).onAppear {
+                                            print("@@@ coordinator.user?.friends = \(user.friends)")
+                                            print("@@@ userFriend.uid = \(userFriend.uid)")
+                                        }
                                         .padding(.top, 15)
                                     }
                                 }

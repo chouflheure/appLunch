@@ -21,7 +21,7 @@ class User: ObservableObject, Encodable, Decodable {
     @Published var tokenFCM: String
     @Published var unreadNotificationsCount: Int
     @Published var isPrivateAccount: Bool
-    @Published var requestsFriends: Set<String>
+    @Published var requestsFriends: [String]
     @Published var messagesChannelId: [String]
     // conversations
 
@@ -45,7 +45,7 @@ class User: ObservableObject, Encodable, Decodable {
         tokenFCM: String = "",
         unreadNotificationsCount: Int = 0,
         isPrivateAccount: Bool = true,
-        requestsFriends: Set<String> = [""],
+        requestsFriends: [String] = [""],
         messagesChannelId: [String] = []
     ) {
         self.uid = uid
@@ -116,7 +116,7 @@ class User: ObservableObject, Encodable, Decodable {
         tokenFCM = try values.decode(String.self, forKey: .tokenFCM)
         unreadNotificationsCount = try values.decode(Int.self, forKey: .unreadNotificationsCount)
         isPrivateAccount = try values.decode(Bool.self, forKey: .isPrivateAccount)
-        requestsFriends = try values.decode(Set<String>.self, forKey: .requestsFriends)
+        requestsFriends = try values.decode([String].self, forKey: .requestsFriends)
         messagesChannelId = try values.decode([String].self, forKey: .messagesChannelId)
     }
     

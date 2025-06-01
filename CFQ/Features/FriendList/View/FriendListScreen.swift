@@ -43,7 +43,7 @@ struct FriendListScreen: View {
                                         user: user,
                                         coordinator: coordinator,
                                         type: .remove,
-                                        isActionabled: {}
+                                        isActionabled: {_ in }
                                     )
                                     .padding(.top, 15)
                                 }

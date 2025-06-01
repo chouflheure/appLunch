@@ -141,7 +141,7 @@ extension CFQFormViewModel {
                 titleEvent: cfq.title,
                 userInitNotifPseudo: user.pseudo
             ),
-            userNotifications: ["JtISdWec8JV4Od1WszEGXkqEVAI2"],
+            userNotifications: cfq.users,
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():

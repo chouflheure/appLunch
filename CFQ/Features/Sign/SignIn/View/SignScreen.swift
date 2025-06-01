@@ -25,8 +25,8 @@ struct SignScreen: View {
                 CustomTextField(
                     text: $viewModel.phoneNumber,
                     keyBoardType: .phonePad,
-                    placeHolder: "• • • • • • • • • • •",
-                    textFieldType: .sign
+                    placeHolder: "06 ...",
+                    textFieldType: .signUp
                 )
             }
 
