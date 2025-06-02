@@ -94,6 +94,7 @@ struct FeedView: View {
                 LazyVStack(spacing: 20) {
                     ForEach(viewModel.turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
                         TurnCardFeedView(turn: turn, coordinator: coordinator)
+                            .padding(.horizontal, 12)
                     }
                 }.padding(.top, 24)
             }

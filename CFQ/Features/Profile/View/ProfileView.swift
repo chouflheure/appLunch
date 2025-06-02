@@ -66,10 +66,9 @@ struct ProfileView: View {
                     })
             }
             .padding(.bottom, 16)
-            
-            PageViewEvent(coordinator: coordinator, titles: ["TURNs", "CALENDRIER"], turns: viewModel.turns)
-           // CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns)
 
+            // PageViewEvent(coordinator: coordinator, titles: ["TURNs", "CALENDRIER"], turns: viewModel.turns)
+           CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns)
         }
         .padding(.horizontal, 16)
         .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
@@ -109,7 +108,7 @@ struct PageViewEvent: View {
             .padding(.top, 20)
 
             TabView(selection: $selectedIndex) {
-                ScrollView {
+                ScrollView (.vertical, showsIndicators: false) {
                     LazyVStack(spacing: 20) {
                         ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
                             TurnCardFeedView(turn: turn, coordinator: coordinator)
@@ -118,6 +117,7 @@ struct PageViewEvent: View {
                 }
                 .padding(.top, 24)
                 .tag(0)
+
                 Text("Empty")
                     .foregroundColor(.white)
                     .tag(1)
@@ -127,9 +127,6 @@ struct PageViewEvent: View {
     }
 }
 
-
-
-
 struct CustomTabViewDoubleProfile: View {
     @State private var selectedIndex = 0
     @ObservedObject var coordinator: Coordinator
@@ -138,7 +135,7 @@ struct CustomTabViewDoubleProfile: View {
 
     var body: some View {
         VStack {
-            // Votre header avec les titres
+            // Header fixe avec les titres
             HStack {
                 ForEach(0..<titles.count, id: \.self) { index in
                     VStack {
@@ -153,28 +150,27 @@ struct CustomTabViewDoubleProfile: View {
                     }
                     .frame(maxWidth: .infinity)
                     .onTapGesture {
-                        withAnimation {
-                            selectedIndex = index
-                        }
+                        selectedIndex = index
                     }
                 }
             }
             .padding(.top, 20)
 
-            if selectedIndex == 0 {
-                LazyVStack(spacing: 20) {
-                    ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
-                        TurnCardFeedView(turn: turn, coordinator: coordinator)
+            // Contenu défilable
+            ScrollView(.vertical, showsIndicators: false) {
+                if selectedIndex == 0 {
+                    LazyVStack(spacing: 20) {
+                        ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
+                            TurnCardFeedView(turn: turn, coordinator: coordinator)
+                        }
                     }
-                }.padding(.top, 24)
-                .transition(.move(edge: .leading))
-            } else {
-                Text("Empty")
-                    .tokenFont(.Label_Gigalypse_12)
-                .transition(.move(edge: .trailing))
+                    .padding(.top, 24)
+                } else {
+                    Text("Empty")
+                        .tokenFont(.Label_Gigalypse_12)
+                        .padding(.top, 50)
+                }
             }
         }
     }
 }
-
-
