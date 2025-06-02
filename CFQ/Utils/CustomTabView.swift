@@ -48,10 +48,11 @@ struct CustomTabView: View {
                                 .padding(.bottom, -30)
                                  */
                                 // ContentView8()
-                                CachedImageTest()
-                                //Text("Map")
-                                  //  .tokenFont(.Title_Gigalypse_24)
                                 
+                                Text("Map")
+                                    .tokenFont(.Title_Gigalypse_24)
+                                
+                                // CachedImageTest()
 
                             } else if coordinator.selectedTab == 2 {
                                 TurnListScreen(coordinator: coordinator)
