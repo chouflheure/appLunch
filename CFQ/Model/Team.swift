@@ -41,6 +41,17 @@ class Team: Codable, Hashable {
             admins: []
         )
     }
+    
+    var printObject: String {
+        return "@@@ ---------TEAM---------- "
+        + "\n @@@ uid : \(uid)"
+        + "\n @@@ title : \(title)"
+        + "\n @@@ pictureUrlString : \(pictureUrlString)"
+        + "\n @@@ friends : \(friends)"
+        + "\n @@@ admins : \(admins)"
+        + "\n ------------------"
+    }
+
 }
 
 
@@ -75,6 +86,16 @@ class TeamGlobal: Codable, Hashable {
         hasher.combine(pictureUrlString)
         hasher.combine(friends)
         hasher.combine(admins)
+    }
+    
+    var printObject: String {
+        return "@@@ ---------Message---------- "
+        + "\n @@@ uid : \(uid)"
+        + "\n @@@ title : \(title)"
+        + "\n @@@ pictureUrlString : \(pictureUrlString)"
+        + "\n @@@ friends : \(friends)"
+        + "\n @@@ admins : \(admins)"
+        + "\n ------------------"
     }
 }
 

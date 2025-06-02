@@ -9,13 +9,16 @@ struct CellMessagingView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack(spacing: hasUnReadMessage ? 0 : 12) {
+                
+                CachedAsyncImageView(urlString: data.pictureEventURL, designType: .scaleImageMessageProfile)
+                /*
                 Image(.header)
                     .resizable()
                     .scaledToFill()
                     .clipShape(Circle())
                     .frame(width: 45, height: 45)
                     .padding(.trailing, 0)
-                
+                */
                 if hasUnReadMessage {
                     Circle()
                         .fill(.purpleLight)
@@ -31,8 +34,12 @@ struct CellMessagingView: View {
                         .lineLimit(1)
 
                     HStack(spacing: 0) {
-                        Text(data.lastMessageSender + " : ")
+                        Text(data.lastMessageSender)
                             .tokenFont(.Body_Inter_Medium_14)
+                        
+                        Text((data.lastMessageSender.isEmpty ? "Pas de message" : " : "))
+                            .tokenFont(data.lastMessageSender.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
+                            .italic(data.lastMessageSender.isEmpty)
                             
                         Text(data.lastMessage)
                             .tokenFont(.Body_Inter_Medium_14)

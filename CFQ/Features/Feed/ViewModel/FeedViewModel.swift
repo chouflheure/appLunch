@@ -1,22 +1,54 @@
 
 import Foundation
+import SwiftUI
 
 class FeedViewModel: ObservableObject {
     var firebaseService = FirebaseService()
-    var turnsID = ["FP5UQvLXVpuSt8N0b9ML", "9BB80E71-84B3-4503-90E8-470836A22FB7", "DC77FECA-B535-4CBF-81F7-C9D09FA32049", "F2D2CE38-0C1E-44E7-ABFA-FF9C588676CB"]
-    @Published var turns: [Turn] = []
-        
+    @Published var cfq = [CFQ]()
+    @Published var turns = [Turn]()
+    @ObservedObject var coordinator: Coordinator
+    
     // TODO: - Mettre turnsID en set car si deux fois le même ca bug
 
-    init() {
-        startListeningToTeams()
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        guard let user = coordinator.user else {
+            print("@@@ else")
+            return
+        }
+        startListeningToTurn(user: user)
+        catchAllUserCFQ(user: user)
     }
-
-    func startListeningToTeams() {
+    
+    func catchAllUserCFQ(user: User) {
+        // user.invitedCfqs = removeEmptyIdInArray(data: user.invitedCfqs ?? [""])
+        if let invitedCfqs = user.invitedCfqs, !invitedCfqs.isEmpty {
+            firebaseService.getDataByIDs(
+                from: .cfqs,
+                with: invitedCfqs,
+                listenerKeyPrefix: ListenerType.cfq.rawValue
+            ){ (result: Result<[CFQ], Error>) in
+                switch result {
+                case .success(let cfq):
+                    DispatchQueue.main.async {
+                        self.coordinator.userCFQ = cfq
+                        // self.cfq = cfq
+                        cfq.forEach { (item) in
+                        }
+                    }
+                case .failure(let error):
+                    print("👎 Erreur : \(error.localizedDescription)")
+                    
+                }
+            }
+        }
+    }
+    
+    func startListeningToTurn(user: User) {
         firebaseService.getDataByIDs(
             from: .turns,
-            with: turnsID,
-            listenerKeyPrefix: ListenerType.team_group_listener.rawValue
+            with: user.invitedTurns ?? [""],
+            listenerKeyPrefix: ListenerType.turn.rawValue
         ) { [weak self] (result: Result<[Turn], Error>) in
             guard let self = self else { return }
             
@@ -33,6 +65,7 @@ class FeedViewModel: ObservableObject {
                 }
             case .failure(let error):
                 Logger.log(error.localizedDescription, level: .error)
+                print("@@@ error")
             }
         }
     }

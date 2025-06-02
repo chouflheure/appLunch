@@ -15,8 +15,8 @@ enum TextFieldType {
                 background: .clear,
                 foregroundColor: .white,
                 hasStoke: false,
-                titleCase: .lowercase,
-                titleCaseFunc: { $0.lowercased() },
+                // titleCase: .lowercase,
+                // titleCaseFunc: { $0.capitalized },
                 cornerRadius: 0,
                 leadingPadding: 5
             )
@@ -25,8 +25,8 @@ enum TextFieldType {
                 background: .black,
                 foregroundColor: .white,
                 hasStoke: true,
-                titleCase: .lowercase,
-                titleCaseFunc: { $0.lowercased() },
+                // titleCase: .lowercase,
+                // titleCaseFunc: { $0.capitalized() },
                 cornerRadius: 8,
                 leadingPadding: 5
             )
@@ -35,8 +35,8 @@ enum TextFieldType {
                 background: .clear,
                 foregroundColor: .purple,
                 hasStoke: false,
-                titleCase: .uppercase,
-                titleCaseFunc: { $0.uppercased() },
+                // titleCase: .uppercase,
+                // titleCaseFunc: { $0.uppercased() },
                 cornerRadius: 0,
                 leadingPadding: 0
             )
@@ -45,8 +45,8 @@ enum TextFieldType {
                 background: .clear,
                 foregroundColor: .white,
                 hasStoke: true,
-                titleCase: .lowercase,
-                titleCaseFunc: { $0.lowercased() },
+                // titleCase: .lowercase,
+                // titleCaseFunc: { $0.capitalized() },
                 iconResearch: "magnifyingglass",
                 iconCross: "xmark.circle",
                 cornerRadius: 30,
@@ -60,8 +60,8 @@ struct TextFieldData {
     let background: Color
     let foregroundColor: Color
     let hasStoke: Bool
-    let titleCase: Text.Case
-    let titleCaseFunc: (String) -> String
+    // let titleCase: Text.Case
+    // let titleCaseFunc: (String) -> String
     let iconResearch: String?
     let iconCross: String?
     let cornerRadius: CGFloat
@@ -71,8 +71,8 @@ struct TextFieldData {
         background: Color,
         foregroundColor: Color,
         hasStoke: Bool,
-        titleCase: Text.Case,
-        titleCaseFunc: @escaping (String) -> String,
+       // titleCase: Text.Case,
+        // titleCaseFunc: @escaping (String) -> String,
         iconResearch: String? = nil,
         iconCross: String? = nil,
         cornerRadius: CGFloat,
@@ -81,8 +81,8 @@ struct TextFieldData {
         self.background = background
         self.foregroundColor = foregroundColor
         self.hasStoke = hasStoke
-        self.titleCase = titleCase
-        self.titleCaseFunc = titleCaseFunc
+        // self.titleCase = titleCase
+        // self.titleCaseFunc = titleCaseFunc
         self.iconResearch = iconResearch
         self.iconCross = iconCross
         self.cornerRadius = cornerRadius
@@ -120,11 +120,11 @@ struct CustomTextField: View {
                     HStack {
                         Text(placeHolder)
                             .foregroundColor(.gray)
-                            .textCase(textFieldType.data.titleCase)
+                            // .textCase(textFieldType.data.titleCase)
                             .multilineTextAlignment(textFieldType == .sign ? .center : .leading)
                     }
             }.onChange(of: text) { newValue in
-                text = textFieldType.data.titleCaseFunc(newValue)
+                // text = textFieldType.data.titleCaseFunc(newValue)
                 if textFieldType == .searchBar {
                     onTapResearch?()
                 }

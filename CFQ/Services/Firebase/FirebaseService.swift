@@ -7,12 +7,40 @@ enum ListenerType: String {
     case team_user = "team_user"
     case friends = "friends"
     case cfq = "cfq"
+    case turn = "turn"
+    case conversation = "conversation"
+    case notification = "notification"
+    case user = "user"
 }
 
 class FirebaseService: FirebaseServiceProtocol {
     private var listeners: [String: ListenerRegistration] = [:]
     let db = Firestore.firestore()
 
+    
+    func searchUsers(with query: String) {
+            // Assurez-vous que la requête n'est pas vide
+            guard !query.isEmpty else { return }
+
+            // Effectuer la recherche dans Firestore
+            db.collection("users")
+                .whereField("pseudo", isGreaterThanOrEqualTo: query)
+                .whereField("pseudo", isLessThanOrEqualTo: query + "\u{f8ff}")
+                .getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        print("Erreur lors de la recherche d'utilisateurs : \(error.localizedDescription)")
+                        return
+                    }
+
+                    // Traiter les documents retournés
+                    for document in querySnapshot?.documents ?? [] {
+                        let userData = document.data()
+                        print("Utilisateur trouvé : \(userData)")
+                        // Traiter les données de l'utilisateur comme nécessaire
+                    }
+                }
+        }
+    
     func addData<T: Codable>(
         data: T, to collection: CollectionFirebaseType,
         completion: @escaping (Result<Void, Error>) -> (Void)
@@ -57,8 +85,8 @@ class FirebaseService: FirebaseServiceProtocol {
         at id: String
     ) {
         let collectionName = collection.rawValue
-
         db.collection(collectionName).document(id).updateData(data) { error in
+       // db.collection(collectionName).document(id).updateData(data) { error in
             if let error = error {
                 Logger.log(
                     "Erreur lors de la modification de \(collection.rawValue) : \(error.localizedDescription)",
@@ -67,6 +95,28 @@ class FirebaseService: FirebaseServiceProtocol {
                 Logger.log(
                     "\(collection.rawValue) a été modifié avec succès",
                     level: .success)
+            }
+        }
+    }
+
+    func updateDataByIDs(
+        data: [String: Any],
+        to collection: CollectionFirebaseType,
+        at ids: [String]
+    ) {
+        let collectionName = collection.rawValue
+
+        for id in ids {
+            db.collection(collectionName).document(id).updateData(data) { error in
+                if let error = error {
+                    Logger.log(
+                        "Erreur lors de la modification de \(collection.rawValue) pour l'ID \(id) : \(error.localizedDescription)",
+                        level: .error)
+                } else {
+                    Logger.log(
+                        "\(collection.rawValue) avec l'ID \(id) a été modifié avec succès",
+                        level: .success)
+                }
             }
         }
     }
@@ -88,38 +138,73 @@ class FirebaseService: FirebaseServiceProtocol {
 
     func getDataByID<T: Codable>(
         from collection: CollectionFirebaseType, with id: String,
+        listenerKeyPrefix: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
-    ) {
+    ) -> ListenerRegistration? {
         let collectionName = collection.rawValue
 
-        db.collection(collectionName).document(id).getDocument {
-            document, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        if let keyPrefix = listenerKeyPrefix {
+            let listener = db.collection(collectionName).document(id).addSnapshotListener { documentSnapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let document = documentSnapshot, document.exists else {
+                    completion(
+                        .failure(
+                            NSError(
+                                domain: "", code: 0,
+                                userInfo: [
+                                    NSLocalizedDescriptionKey:
+                                        "Document non trouvé."
+                                ])))
+                    return
+                }
+
+                do {
+                    let data = try document.data(as: T.self)
+                    completion(.success(data))
+                } catch {
+                    completion(.failure(error))
+                }
             }
 
-            guard let document = document, document.exists else {
-                completion(
-                    .failure(
-                        NSError(
-                            domain: "", code: 0,
-                            userInfo: [
-                                NSLocalizedDescriptionKey:
-                                    "Document non trouvé."
-                            ])))
-                return
-            }
+            // Stocke le listener si un préfixe est fourni
+            let key = "\(keyPrefix)_\(id)"
+            listeners[key] = listener
+            return listener
+        } else {
+            db.collection(collectionName).document(id).getDocument { document, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
 
-            do {
-                let data = try document.data(as: T.self)
-                completion(.success(data))
-            } catch {
-                completion(.failure(error))
+                guard let document = document, document.exists else {
+                    completion(
+                        .failure(
+                            NSError(
+                                domain: "", code: 0,
+                                userInfo: [
+                                    NSLocalizedDescriptionKey:
+                                        "Document non trouvé."
+                                ])))
+                    return
+                }
+
+                do {
+                    let data = try document.data(as: T.self)
+                    completion(.success(data))
+                } catch {
+                    completion(.failure(error))
+                }
             }
+            return nil
         }
     }
 
+    
     func getDataByIDs<T: Codable>(
         from collection: CollectionFirebaseType,
         with ids: [String],
@@ -178,6 +263,125 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
 
+    func updateNotificationByIDs(
+        data: [String: Any],
+        at ids: [String]
+    ) {
+        for id in ids {
+            db.collection("notifications").document(id).updateData(data) { error in
+                if let error = error {
+                    Logger.log(
+                        "Erreur lors de la modification de notification pour l'ID \(id) : \(error.localizedDescription)",
+                        level: .error)
+                } else {
+                    Logger.log(
+                        "\notification avec l'ID \(id) a été modifié avec succès",
+                        level: .success)
+                }
+            }
+        }
+    }
+    
+    
+    func getNotificationsByIds(
+        notificationUID: String,
+        limit: Int = 15,
+        listenerKeyPrefix: String,
+        completion: @escaping (Result<[Notification], Error>) -> Void
+    ) {
+        let db = Firestore.firestore()
+        let messagesRef = db.collection("notifications").document(notificationUID).collection("messages")
+
+        // Query pour récupérer les 15 derniers messages triés par timestamp
+        let query =
+            messagesRef
+            .order(by: "timestamp", descending: true)  // Les plus récents d'abord
+            .limit(to: limit)
+
+        // Ajouter le listener
+        let listener = query.addSnapshotListener { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                print("@@@ failure ")
+                return
+            }
+
+            guard let documents = snapshot?.documents else {
+                completion(.success([]))
+                print("@@@ success ")
+                return
+            }
+
+            var notifications: [Notification] = []
+            for document in documents {
+                do {
+                    let notification = try document.data(as: Notification.self)
+                    notifications.append(notification)
+                } catch {
+                    print("Erreur de décodage du message: \(error)")
+                }
+            }
+
+            // Inverser l'ordre pour avoir les plus anciens en premier (pour l'affichage)
+            let sortedNotifications = notifications.reversed()
+            completion(.success(Array(sortedNotifications)))
+        }
+
+        // Stocker le listener pour pouvoir le supprimer plus tard
+        activeListeners[listenerKeyPrefix] = listener
+    }
+    
+    func addDataNotif(
+        data: Notification,
+        userNotifications: [String],
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let db = Firestore.firestore()
+        let dispatchGroup = DispatchGroup()
+
+        var encounteredError: Error?
+
+        for userNotification in userNotifications {
+            dispatchGroup.enter()
+
+            do {
+                try db.collection("notifications")
+                    .document(userNotification)
+                    .collection("userNotifications")
+                    .addDocument(from: data) { error in
+                        if let error = error {
+                            encounteredError = error
+                            Logger.log(
+                                "Erreur lors de l'ajout de la notification pour \(userNotification) : \(error.localizedDescription)",
+                                level: .error
+                            )
+                        } else {
+                            Logger.log(
+                                "Données ajoutées avec succès à notification pour \(userNotification)",
+                                level: .info
+                            )
+                        }
+                        dispatchGroup.leave()
+                    }
+            } catch {
+                encounteredError = error
+                Logger.log(
+                    "Erreur de conversion des données pour \(userNotification) : \(error.localizedDescription)",
+                    level: .error
+                )
+                dispatchGroup.leave()
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            if let error = encounteredError {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+    
     func getMessagesByIds(
         conversationID: String,
         limit: Int = 15,
@@ -442,12 +646,14 @@ extension FirebaseService {
      */
 
     func uploadImage(
-        picture: UIImage, uidUser: String,
+        picture: UIImage,
+        uidUser: String,
+        localisationImage: LocalisationImages,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
         print("@@@ uploadImage in ")
 
-        guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
+        guard let imageData = picture.jpegData(compressionQuality: 0.5) else {
             print("@@@ error 1")
             completion(.failure(ImageUploadError.imageConversionFailed))
             return
@@ -483,7 +689,7 @@ extension FirebaseService {
             }
 
             let storageRef = Storage.storage().reference().child(
-                "images/\(uidUser).jpg")
+                "\(localisationImage.rawValue)/\(uidUser).jpg")
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
             print("@@@ here 1")

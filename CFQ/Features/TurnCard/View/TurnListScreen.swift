@@ -29,6 +29,7 @@ struct TurnListScreen: View {
 
                 Spacer()
             }
+            .padding(.top, 50)
             .padding(.bottom, 15)
 
             ScrollView(showsIndicators: false) {
@@ -49,7 +50,8 @@ struct TurnListScreen: View {
                                     .frame(width: 35, height: 35)
                             })
                         Spacer()
-                    }.padding(.bottom, 30)
+                    }
+                    .padding(.vertical, 30)
 
                     VStack(alignment: .leading) {
                         Text("Brouillon\(vm.savedTurns.count > 1 ? "s" : "") " + "(\(vm.savedTurns.count))")

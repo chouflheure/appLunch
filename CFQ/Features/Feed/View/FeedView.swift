@@ -4,9 +4,10 @@ import SwiftUI
 struct FeedView: View {
     @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
-    @StateObject var viewModel = FeedViewModel()
+    @StateObject var viewModel: FeedViewModel
 
     init(coordinator: Coordinator) {
+        _viewModel = StateObject(wrappedValue:FeedViewModel(coordinator: coordinator))
         self.coordinator = coordinator
     }
 
@@ -56,7 +57,7 @@ struct FeedView: View {
                             .padding(.bottom, 8)
                             .padding(.leading, 16)
 
-                            ForEach(coordinator.userFriends, id: \.self) { friend in
+                            ForEach(coordinator.userFriends.sorted(by: { $0.isActive && !$1.isActive }), id: \.self) { friend in
                                 CirclePictureStatusAndPseudo(
                                     userPreview: friend,
                                     onClick: {
@@ -91,7 +92,7 @@ struct FeedView: View {
                     .background(.white)
 
                 LazyVStack(spacing: 20) {
-                    ForEach(viewModel.turns, id: \.uid) { turn in
+                    ForEach(viewModel.turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
                         TurnCardFeedView(turn: turn, coordinator: coordinator)
                     }
                 }.padding(.top, 24)
@@ -157,7 +158,7 @@ class TestRef {
 
             // Document initial existe, vous pouvez accéder aux données avec document.data()
             if let documentData = document.data() {
-                print("&&& Initial document data: \(documentData["referenceUser"])")
+                print("&&& Initial document data: \(String(describing: documentData["referenceUser"]))")
                 // Récupérer la référence depuis les données du document
                 if let referencePath = documentData["referenceUser"] as? String {
                     // Créer une référence au document référencé
@@ -181,7 +182,7 @@ class TestRef {
                         // Document référencé existe, vous pouvez accéder aux données avec userDocument.data()
                         if let userData = userDocument.data() {
                             let user = userData as? User
-                            print("&&& user = \(user?.printObject)")
+                            print("&&& user = \(String(describing: user?.printObject))")
                             print("&&& User data: \(userData)")
                             print("&&& User data: \(String(describing: userData["pseudo"] as? String))")
                             print("&&& User data: \(String(describing: userData["name"] as? String))")

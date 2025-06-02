@@ -48,9 +48,11 @@ struct CustomTabView: View {
                                 .padding(.bottom, -30)
                                  */
                                 // ContentView8()
+                                
                                 Text("Map")
                                     .tokenFont(.Title_Gigalypse_24)
                                 
+                                // CachedImageTest()
 
                             } else if coordinator.selectedTab == 2 {
                                 TurnListScreen(coordinator: coordinator)
@@ -181,12 +183,12 @@ struct CustomTabView: View {
                     }
                     
                     if coordinator.showMessageScreen {
-                        PreviewMessagerieScreenView(coordinator: coordinator)
+                        ConversationsView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showMessagerieScreen {
-                        MessagerieScreenView(isPresented: $coordinator.showMessagerieScreen, coordinator: coordinator)
+                        MessagerieView(isPresented: $coordinator.showMessagerieScreen, coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
@@ -197,7 +199,7 @@ struct CustomTabView: View {
                     }
                 }
             )
-            .animation(.easeInOut, value: coordinator.showProfileFriend)
+            // .animation(.easeInOut, value: coordinator.showProfileFriend)
         }
     }
 }

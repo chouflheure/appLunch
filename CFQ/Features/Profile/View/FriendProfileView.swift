@@ -4,28 +4,24 @@ struct FriendProfileView: View {
 
     @EnvironmentObject var user: User
 
-    var profileFriend = User(
-        uid: "77MKZdb3FJX8EFvlRGotntxk6oi1",
-        name: "Profile",
-        firstName: "Friend",
-        pseudo: "Charles",
-        location: "Ici",
-        isPrivateAccount: true,
-        requestsFriends: ["1234567890"]
-    )
-
-    @StateObject var viewModel = FriendProfileViewModel()
+    @StateObject var viewModel: FriendProfileViewModel
     @ObservedObject var coordinator: Coordinator
 
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self._viewModel = StateObject(
+            wrappedValue: FriendProfileViewModel(coordinator: coordinator))
+    }
+
     var body: some View {
-        DraggableViewLeft(isPresented: $coordinator.showProfileFriend ) {
+        DraggableViewLeft(isPresented: $coordinator.showProfileFriend) {
             SafeAreaContainer {
                 VStack {
                     HStack(alignment: .center) {
                         Button(
                             action: {
                                 withAnimation {
-                                    coordinator.showProfileFriend  = false
+                                    coordinator.showProfileFriend = false
                                 }
                             },
                             label: {
@@ -52,24 +48,27 @@ struct FriendProfileView: View {
                             userPreview: UserContact(
                                 uid: coordinator.profileUserSelected.uid,
                                 name: coordinator.profileUserSelected.name,
-                                firstName: coordinator.profileUserSelected.firstName,
+                                firstName: coordinator.profileUserSelected
+                                    .firstName,
                                 pseudo: coordinator.profileUserSelected.pseudo,
-                                profilePictureUrl: coordinator.profileUserSelected.profilePictureUrl,
-                                isActive: coordinator.profileUserSelected.isActive
+                                profilePictureUrl: coordinator
+                                    .profileUserSelected.profilePictureUrl,
+                                isActive: coordinator.profileUserSelected
+                                    .isActive
                             ),
                             onClick: {}
                         )
                         .frame(width: 70, height: 70)
                         .padding(.trailing, 12)
 
-                        
                         VStack(alignment: .leading, spacing: 12) {
                             PreviewPseudoName(
                                 name: coordinator.profileUserSelected.name,
-                                firstName: coordinator.profileUserSelected.firstName,
+                                firstName: coordinator.profileUserSelected
+                                    .firstName,
                                 pseudo: coordinator.profileUserSelected.pseudo
                             )
-                            
+
                             HStack(alignment: .center) {
                                 Image(.iconLocation)
                                     .resizable()
@@ -80,57 +79,67 @@ struct FriendProfileView: View {
                             }
                         }
                         Spacer()
-                        
-                        if !viewModel.isRequestedToBeFriendByTheUser {
-                            Button(
-                                action: {
-                                    viewModel.onclickAddFriend()
-                                },
-                                label: {
-                                    ZStack {
+
+                        Button(
+                            action: {
+                                viewModel.onclickAddFriend()
+                            },
+                            label: {
+                                ZStack {
+                                    if viewModel.statusFriend != .requested {
                                         Rectangle()
                                             .frame(width: 44, height: 44)
                                             .cornerRadius(10)
-                                            .foregroundColor(viewModel.statusFriend.backgroungColorIcon)
+                                            .foregroundColor(
+                                                viewModel.statusFriend
+                                                    .backgroungColorIcon)
                                         
                                         Image(viewModel.statusFriend.icon)
                                             .resizable()
                                             .frame(width: 24, height: 24)
                                             .foregroundColor(.white)
                                             .overlay {
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .stroke(viewModel.statusFriend.strokeColor, lineWidth: 0.5)
-                                                    .frame(width: 44, height: 44)
+                                                RoundedRectangle(
+                                                    cornerRadius: 10
+                                                )
+                                                .stroke(
+                                                    viewModel.statusFriend
+                                                        .strokeColor,
+                                                    lineWidth: 0.5
+                                                )
+                                                .frame(width: 44, height: 44)
+                                            }
+                                    } else {
+                                        Text("Accepter")
+                                            .tokenFont(.Body_Inter_Medium_14)
+                                            .padding(.all, 3)
+                                            .overlay {
+                                                RoundedRectangle(cornerRadius: 5)
+                                                    .stroke(.white,
+                                                    lineWidth: 0.5)
                                             }
                                     }
-                                })
-                            .onAppear() {
-                                // viewModel.statusFriendButton(user: user, friend: profileFriend)
-
-                                // TODO: - call to have full user
-                                viewModel.statusFriendButton(user: user, friend: coordinator.profileUserSelected)
-                            }
-                        }
+                                }
+                            })
                     }
                     .padding(.bottom, 16)
-                    
-                    if viewModel.isRequestedToBeFriendByTheUser {
-                        AnswerFriendToTheProfile(viewModel: viewModel, profileFriend: coordinator.profileUserSelected)
-                    }
 
                     HStack {
-                        PreviewProfile(pictures: [.profile, .profile, .profile, .profile], previewProfileType: .userFriendInCommun)
+                        PreviewProfile(
+                            pictures: [],
+                            previewProfileType: .userFriendInCommun,
+                            numberUsers: 12)
                         Spacer()
                     }
-                    
-                    if viewModel.isPrivateAccount && profileFriend.isPrivateAccount {
+
+                    if viewModel.isPrivateAccount {
                         PrivateEventShow()
                     } else {
                         PageViewEventFriends()
                     }
                 }
                 .padding(.horizontal, 16)
-                
+
                 .sheet(isPresented: $viewModel.isShowingSettingsView) {
                     SignalAndBlockUserSheet(viewModel: viewModel)
                         .presentationDragIndicator(.visible)
@@ -140,35 +149,15 @@ struct FriendProfileView: View {
             .blur(radius: viewModel.isShowRemoveFriends ? 10 : 0)
             .allowsHitTesting(!viewModel.isShowRemoveFriends)
         }
-
-        /*
-        .onAppear() {
-            viewModel.statusFriendButton(user: user, friend: coordinator.profileUserSelected)
+        .onAppear {
+            // TODO: - call to have full user
+            viewModel.statusFriendButton()
         }
-         */
+
         if viewModel.isShowRemoveFriends {
-            PopUpRemoveFriendAlert(viewModel: viewModel)
+            PopUpRemoveFromFriends(
+                showPopup: $viewModel.isShowRemoveFriends, viewModel: viewModel)
         }
-    }
-}
-
-struct PopUpRemoveFriendAlert: View {
-    @StateObject var viewModel: FriendProfileViewModel
-
-    var body: some View {
-        Color.black.opacity(0.4)
-            .ignoresSafeArea()
-            .onTapGesture {
-                viewModel.isShowRemoveFriends = false
-                viewModel.statusFriend = .friend
-            }
-            .zIndex(1)
-        
-        PopUpRemoveFromFriends(
-            showPopup: $viewModel.isShowRemoveFriends,
-            viewModel: viewModel
-        )
-        .zIndex(2)
     }
 }
 
@@ -224,74 +213,18 @@ private struct SignalAndBlockUserSheet: View {
 
 private struct PrivateEventShow: View {
     var body: some View {
-        VStack() {
+        VStack {
             Image(.iconLock)
                 .resizable()
                 .frame(width: 44, height: 44)
                 .padding(.bottom, 16)
                 .foregroundColor(.white)
-            
+
             Text("COMPTE PRIVÉ")
                 .tokenFont(.Body_Inter_Medium_16)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.top, 40) // Ajuster selon vos besoins pour le centrage vertical
-    }
-}
-
-private struct AnswerFriendToTheProfile: View {
-    var viewModel: FriendProfileViewModel
-    var profileFriend: User
-
-    var body: some View {
-        HStack {
-            Text(profileFriend.pseudo + " " + StringsToken.Profile.AskAsFriend)
-                .tokenFont(.Title_Gigalypse_20)
-            Spacer()
-            Button(
-                action: {
-                    viewModel.becomeFriend(answer: true)
-                },
-                label: {
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 44, height: 44)
-                            .cornerRadius(10)
-                            .foregroundColor(viewModel.statusFriend.backgroungColorIcon)
-
-                        Image(.iconAccept)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.white)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(viewModel.statusFriend.strokeColor, lineWidth: 0.5)
-                                    .frame(width: 44, height: 44)
-                            }
-                    }
-                })
-            Button(
-                action: {
-                    viewModel.becomeFriend(answer: false)
-                },
-                label: {
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 44, height: 44)
-                            .cornerRadius(10)
-                            .foregroundColor(.clear)
-                        Image(.iconCross)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.white)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.white, lineWidth: 0.5)
-                                    .frame(width: 44, height: 44)
-                            }
-                    }
-                })
-        }
+        .padding(.top, 40)  // Ajuster selon vos besoins pour le centrage vertical
     }
 }
 
@@ -300,44 +233,50 @@ struct PopUpRemoveFromFriends: View {
     @StateObject var viewModel: FriendProfileViewModel
 
     var body: some View {
-        ZStack() {
+        ZStack {
             VStack(spacing: 20) {
                 Text("On retire de tes amis ?")
                     .tokenFont(.Title_Gigalypse_20)
                     .padding(.top, 30)
                     .padding(.horizontal, 15)
                     .multilineTextAlignment(.center)
-                
+
                 HStack(alignment: .center) {
-                    Button(action: {
-                        showPopup = false
-                        viewModel.statusFriend = .friend
-                    }, label: {
-                        Text("Non garder")
-                            .tokenFont(.Label_Gigalypse_12)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(
-                                        LinearGradient(
-                                            colors: [.blue, .purple],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        ),
+                    Button(
+                        action: {
+                            showPopup = false
+                            viewModel.statusFriend = .friend
+                        },
+                        label: {
+                            Text("Non garder")
+                                .tokenFont(.Label_Gigalypse_12)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .stroke(
+                                            LinearGradient(
+                                                colors: [.blue, .purple],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            ),
                                             lineWidth: 5
-                                    )
-                                    .frame(width: 130, height: 40)
-                            }
-                    })
+                                        )
+                                        .frame(width: 130, height: 40)
+                                }
+                        })
 
                     Spacer()
 
-                    Button(action: {
-                        viewModel.statusFriend = .noFriend
-                        showPopup = false
-                    }, label: {
-                        Text("Yes, retirer")
-                            .tokenFont(.Label_Gigalypse_12)
-                    })
+                    Button(
+                        action: {
+                            viewModel.statusFriend = .noFriend
+                            viewModel.actionOnClickButtonAddFriend(
+                                type: .remove)
+                            showPopup = false
+                        },
+                        label: {
+                            Text("Yes, retirer")
+                                .tokenFont(.Label_Gigalypse_12)
+                        })
                 }
                 .padding(.horizontal, 35)
                 .padding(.top, 20)
@@ -365,7 +304,6 @@ struct PopUpRemoveFromFriends: View {
     }
 }
 
-
 struct PageViewEventFriends: View {
     @State private var selectedIndex = 0
     let titles = ["TURNs", "CALENDRIER"]
@@ -377,11 +315,14 @@ struct PageViewEventFriends: View {
                     VStack {
                         Text(titles[index])
                             .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(selectedIndex == index ? .white : .gray)
+                            .foregroundColor(
+                                selectedIndex == index ? .white : .gray)
 
                         Rectangle()
                             .frame(height: 3)
-                            .foregroundColor(selectedIndex == index ? .white : .clear)
+                            .foregroundColor(
+                                selectedIndex == index ? .white : .clear
+                            )
                             .padding(.horizontal, 10)
                     }
                     .frame(maxWidth: .infinity)

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Firebase
 
 class TeamFormViewModel: ObservableObject {
     @Published var nameTeam = String()
@@ -9,19 +10,10 @@ class TeamFormViewModel: ObservableObject {
     @Published var isAdminEditing: Bool = false
     @Published var showSheetAddFriend: Bool = false
     @Published var team: Team?
-    @Published var imageProfile: Image?
+    @Published var imageProfile: UIImage?
+    @ObservedObject var coordinator: Coordinator
 
     var firebaseService = FirebaseService()
-    
-
-    // @EnvironmentObject var user: User
-    var user = User(
-        uid: "1",
-        name: "Charles",
-        firstName: "Charles",
-        pseudo: "Charles",
-        profilePictureUrl: ""
-    )
     
     let userContact: UserContact
 
@@ -32,77 +24,11 @@ class TeamFormViewModel: ObservableObject {
         set {}
     }
 
-    @Published var adminList = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            )
-        ]
-    )
+    @Published var adminList = Set<UserContact>()
 
-    @Published var friendsAdd = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            )
-        ]
-    )
+    @Published var friendsAdd = Set<UserContact>()
 
-    @Published var friendsList = Set<UserContact>(
-        [
-            UserContact(
-                uid: "1",
-                name: "Charles",
-                firstName: "Charles",
-                pseudo: "Charles",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "2",
-                name: "Lisa",
-                firstName: "Lisa",
-                pseudo: "Lisa",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "3",
-                name: "Thibault",
-                firstName: "Thibault",
-                pseudo: "Thibault",
-                profilePictureUrl: ""
-            ),
-
-            UserContact(
-                uid: "4",
-                name: "Nanou",
-                firstName: "Nanou",
-                pseudo: "Nanou",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "5",
-                name: "Clemence",
-                firstName: "Clemence",
-                pseudo: "Clemence",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "6",
-                name: "Nil",
-                firstName: "Nil",
-                pseudo: "Nil",
-                profilePictureUrl: ""
-            ),
-        ]
-    )
+    @Published var friendsList = Set<UserContact>()
 
     @Published var showFriendsList: Bool = false
     private var allFriends = Set<UserContact>()
@@ -116,14 +42,18 @@ class TeamFormViewModel: ObservableObject {
         }
     }
 
-    init() {
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        
         userContact = UserContact(
-            uid: user.uid,
-            name: user.name,
-            firstName: user.firstName,
-            pseudo: user.pseudo,
-            profilePictureUrl: user.profilePictureUrl
+            uid: coordinator.user?.uid ?? "",
+            name: coordinator.user?.name ?? "",
+            firstName: coordinator.user?.firstName ?? "",
+            pseudo: coordinator.user?.pseudo ?? "",
+            profilePictureUrl: coordinator.user?.profilePictureUrl ?? ""
         )
+        friendsList = Set(coordinator.userFriends)
+
         allFriends = friendsList
         
     }
@@ -150,27 +80,75 @@ class TeamFormViewModel: ObservableObject {
     }
 }
 
-// firebase functions
 extension TeamFormViewModel {
     
     func pushNewTeamToFirebase() {
-        let uuid = UUID()
-        print("@@@ uuid = \(uuid.description)")
-        let team = Team (
-            uid: uuid.description,
-            title: nameTeam,
-            pictureUrlString: "",
-            friends: [""],
-            admins: ["string"]
-        )
 
+        // TODO => Remove brouillon
+
+        uploadImageToDataBase()
+    }
+    
+    private func uploadImageToDataBase() {
+        guard let imageProfile = imageProfile else { return }
+        let uid = UUID()
+        firebaseService.uploadImage(picture: imageProfile, uidUser: uid.description, localisationImage: .team) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let urlString):
+                    print("@@@ urlString = \(urlString)")
+                    self.uploadTeamOnDataBase(urlStringImage: urlString)
+
+                case .failure(let error):
+                    Logger.log(error.localizedDescription, level: .error)
+                }
+            }
+        }
+    }
+    
+    private func uploadTeamOnDataBase(urlStringImage: String) {
+        let uid = UUID()
+        var friendsInTheTeam: [String] = []
+        friendsInTheTeam = friendsAdd.map( {$0.uid})
+        friendsInTheTeam.append(coordinator.user?.uid ?? "")
+
+        let team = Team (
+            uid: uid.description,
+            title: nameTeam,
+            pictureUrlString: urlStringImage,
+            friends: friendsInTheTeam,
+            admins: [coordinator.user?.uid ?? ""]
+        )
+        
         firebaseService.addData(data: team, to: .teams) { (result: Result<Void, Error>) in
             switch result{
             case .success():
                 print("@@@ success")
+                print("@@@ team = \(team.printObject)")
+                self.addEventTeamOnFriendProfile(team: team)
             case .failure(let error):
                 print("@@@ error = \(error)")
             }
         }
+         
+    }
+    
+    func addEventTeamOnFriendProfile(team: Team) {
+        
+        firebaseService.updateDataByID(
+            data: [
+                "teams": FieldValue.arrayUnion([team.uid])
+            ],
+            to: .users,
+            at: coordinator.user?.uid ?? ""
+        )
+        
+        firebaseService.updateDataByIDs(
+            data: [
+                "teams": FieldValue.arrayUnion([team.uid])
+            ],
+            to: .users,
+            at: team.friends
+        )
     }
 }

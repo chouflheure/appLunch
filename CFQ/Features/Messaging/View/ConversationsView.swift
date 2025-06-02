@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct PreviewMessagerieScreenView: View {
+struct ConversationsView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: PreviewMessagerieScreenViewModel
     @State private var showDetail = false
@@ -68,13 +68,13 @@ struct PreviewMessagerieScreenView: View {
 
     @ViewBuilder
     func destinationView() -> some View {
-        MessagerieScreenView(isPresented: $showDetail, coordinator: coordinator)
+        MessagerieView(isPresented: $showDetail, coordinator: coordinator)
     }
 }
 
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        PreviewMessagerieScreenView(coordinator: Coordinator())
+        ConversationsView(coordinator: Coordinator())
     }.ignoresSafeArea()
 }

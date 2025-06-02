@@ -129,7 +129,7 @@ class SignUpPageViewModel: ObservableObject {
 
     // TODO: - Update error messages
     private func uploadImageToDataBase() {
-        firebaseService.uploadImage(picture: picture, uidUser: uidUser) { result in
+        firebaseService.uploadImage(picture: picture, uidUser: uidUser, localisationImage: .profile) { result in
             DispatchQueue.main.async {
                 self.isLoadingPictureUpload = false
                 switch result {
@@ -159,6 +159,7 @@ class SignUpPageViewModel: ObservableObject {
         user.tokenFCM = UserDefaults.standard.string(forKey: "fcmToken") ?? ""
         user.profilePictureUrl = urlProfilePicture
         
+        print("@@@ userIci = \(user.printObject)")
         isLoadingCreateUser = true
         
         // TODO: - gérer erreur et isLoadingCreateUser
@@ -170,7 +171,7 @@ class SignUpPageViewModel: ObservableObject {
                 self.coordinator?.gotoCustomTabView(user: self.user)
             case .failure(let error):
                 self.isLoadingCreateUser = false
-                print("@@@ error = \(error)")
+                print("@@@ error update user = \(error)")
             }
         }
     }

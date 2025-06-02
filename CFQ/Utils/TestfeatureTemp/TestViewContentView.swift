@@ -1,5 +1,109 @@
 import SwiftUI
 
+
+import UIKit
+import FirebaseFirestore
+
+class SearchViewController: UIViewController, UISearchBarDelegate {
+
+    let searchBar = UISearchBar()
+    let db = Firestore.firestore()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupSearchBar()
+    }
+
+    private func setupSearchBar() {
+        searchBar.delegate = self
+        searchBar.placeholder = "Rechercher un utilisateur..."
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Appeler la fonction de recherche lorsque le texte change
+        searchUsers(with: searchText)
+    }
+
+    private func searchUsers(with query: String) {
+        // Assurez-vous que la requête n'est pas vide
+        guard !query.isEmpty else { return }
+
+        // Effectuer la recherche dans Firestore
+        db.collection("users")
+            .whereField("name", isGreaterThanOrEqualTo: query)
+            .whereField("name", isLessThanOrEqualTo: query + "\u{f8ff}")
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Erreur lors de la recherche d'utilisateurs : \(error.localizedDescription)")
+                    return
+                }
+
+                // Traiter les documents retournés
+                for document in querySnapshot?.documents ?? [] {
+                    let userData = document.data()
+                    print("Utilisateur trouvé : \(userData)")
+                    // Traiter les données de l'utilisateur comme nécessaire
+                }
+            }
+    }
+}
+
+
+
+struct CachedImageTest: View {
+    let imageUrls = [
+        "https://firebasestorage.googleapis.com/v0/b/cfq-dev-7c39a.firebasestorage.app/o/turn%2FFDE0F902-B26D-49A6-B56D-11456956EED1.jpg?alt=media&token=b0e792ae-857c-4f08-95f6-2a7a1b4fa32b",
+        "https://fastly.picsum.photos/id/1021/300/200.jpg?hmac=Uwq-p1xg_lU331olJw79oBVMPMWXSnwp5E9SsFgF87g",
+        "https://fastly.picsum.photos/id/613/300/200.jpg?hmac=HBef6BibNUIRVnUP6cjqz8gfXjGiA2spUhRV_R91eqo",
+        "https://fastly.picsum.photos/id/260/300/200.jpg?hmac=VffmZ4w9F53iikwGIGpglNpADhZiEqsuwJFwIGOE4Zg",
+        "https://fastly.picsum.photos/id/1054/300/200.jpg?hmac=QdR5jgF9dCDjHJSERQn6DN6dAeNWaVa54JbmsNZo2Q0"
+    ]
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 16) {
+                    ForEach(imageUrls, id: \.self) { url in
+                        ModernCachedAsyncImage(
+                            url: url,
+                            placeholder: Image(systemName: "photo.fill")
+                        )
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 150)
+                        .clipped()
+                        .cornerRadius(12)
+                        .shadow(radius: 4)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Images en Cache")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Vider Cache") {
+                        print("@@@ vider cache")
+                        ImageCacheManager.shared.clearCache()
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 struct GrowingTextView: UIViewRepresentable {
     @Binding var text: String
     @Binding var dynamicHeight: CGFloat

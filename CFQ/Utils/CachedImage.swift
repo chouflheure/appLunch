@@ -1,5 +1,6 @@
 import Lottie
 import SwiftUI
+import Foundation
 
 private class ImageCache {
     static private var cache: [URL: Image] = [:]
@@ -260,6 +261,172 @@ struct CachedAsyncImageView: View {
                         }
                 }
             }
+        }
+    }
+}
+
+
+import SwiftUI
+import Foundation
+
+// MARK: - Gestionnaire de cache d'images
+class ImageCacheManager: ObservableObject {
+    static let shared = ImageCacheManager()
+    
+    private let cache = NSCache<NSString, UIImage>()
+    private let fileManager = FileManager.default
+    private let cacheDirectory: URL
+    
+    private init() {
+        // Configuration du cache en mémoire
+        cache.countLimit = 100 // Limite de 100 images
+        cache.totalCostLimit = 50 * 1024 * 1024 // 50 MB
+        
+        // Création du répertoire de cache sur disque
+        let cachesDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        cacheDirectory = cachesDirectory.appendingPathComponent("ImageCache")
+        
+        if !fileManager.fileExists(atPath: cacheDirectory.path) {
+            try? fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+        }
+    }
+    
+    // MARK: - Méthodes publiques
+    func getImage(for url: String) -> UIImage? {
+        let key = NSString(string: url)
+        
+        // Vérifier d'abord le cache mémoire
+        if let cachedImage = cache.object(forKey: key) {
+            return cachedImage
+        }
+        
+        // Vérifier ensuite le cache disque
+        if let diskImage = loadImageFromDisk(url: url) {
+            cache.setObject(diskImage, forKey: key)
+            return diskImage
+        }
+        
+        return nil
+    }
+    
+    func cacheImage(_ image: UIImage, for url: String) {
+        let key = NSString(string: url)
+        
+        // Sauvegarder en mémoire
+        cache.setObject(image, forKey: key)
+        
+        // Sauvegarder sur disque
+        saveImageToDisk(image, url: url)
+    }
+    
+    func clearCache() {
+        cache.removeAllObjects()
+        try? fileManager.removeItem(at: cacheDirectory)
+        try? fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+    }
+    
+    // MARK: - Méthodes privées
+    private func loadImageFromDisk(url: String) -> UIImage? {
+        let filename = url.hash
+        let fileURL = cacheDirectory.appendingPathComponent("\(filename).jpg")
+        
+        guard let data = try? Data(contentsOf: fileURL),
+              let image = UIImage(data: data) else {
+            return nil
+        }
+        
+        return image
+    }
+    
+    private func saveImageToDisk(_ image: UIImage, url: String) {
+        guard let data = image.jpegData(compressionQuality: 0.8) else { return }
+        
+        let filename = url.hash
+        let fileURL = cacheDirectory.appendingPathComponent("\(filename).jpg")
+        
+        try? data.write(to: fileURL)
+    }
+}
+
+// MARK: - Version optimisée avec AsyncImage (iOS 15+)
+struct ModernCachedAsyncImage: View {
+    let url: String
+    let placeholder: Image
+    
+    @StateObject private var cacheManager = ImageCacheManager.shared
+    @State private var cachedImage: UIImage?
+    
+    init(url: String, placeholder: Image = Image(systemName: "photo")) {
+        self.url = url
+        self.placeholder = placeholder
+    }
+    
+    var body: some View {
+        Group {
+            if let cachedImage = cachedImage {
+                Image(uiImage: cachedImage)
+                    .resizable()
+            } else {
+                AsyncImage(url: URL(string: url)) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .onAppear {
+                                // Cache l'image téléchargée
+                                Task {
+                                    await cacheDownloadedImage(image)
+                                }
+                            }
+                    case .failure(_):
+                        VStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundColor(.red)
+                            Text("Erreur de chargement")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    case .empty:
+                        VStack {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                            Text("Chargement...")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    @unknown default:
+                        placeholder
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+        }
+        .onAppear {
+            cachedImage = cacheManager.getImage(for: url)
+        }
+    }
+    
+    // Méthode pour mettre en cache l'image téléchargée
+    @MainActor
+    private func cacheDownloadedImage(_ image: Image) async {
+        // Créer une UIImage à partir de l'image téléchargée
+        if let data = await downloadImageData(),
+           let uiImage = UIImage(data: data) {
+            cacheManager.cacheImage(uiImage, for: url)
+            cachedImage = uiImage
+        }
+    }
+    
+    // Télécharger les données de l'image pour le cache
+    private func downloadImageData() async -> Data? {
+        guard let imageURL = URL(string: url) else { return nil }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: imageURL)
+            return data
+        } catch {
+            print("Erreur lors du téléchargement pour le cache: \(error)")
+            return nil
         }
     }
 }

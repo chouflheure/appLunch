@@ -8,7 +8,5 @@ class NotificationViewModel: ObservableObject {
         
     }
     
-    func fetchNotifications() {
-        
-    }
+    
 }

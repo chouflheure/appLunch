@@ -61,8 +61,8 @@ class Message: ObservableObject, Encodable, Decodable {
         + "\n @@@ message : \(message)"
         + "\n @@@ senderUID : \(senderUID)"
         + "\n @@@ timestamp : \(timestamp)"
-        + "\n @@@ userContact : \(userContact)"
-        + "\n @@@ reactions : \(reactions)"
+        + "\n @@@ userContact : \(String(describing: userContact))"
+        + "\n @@@ reactions : \(String(describing: reactions))"
         + "\n ------------------"
     }
 }

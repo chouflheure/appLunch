@@ -139,22 +139,25 @@ struct TurnCardView: View {
                         }, label: {
                             HStack {
                                 Image(.iconSend)
-                                    .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
+                                    // .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
+                                    .foregroundColor(.white)
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
                                     .font(.system(size: 10, weight: .bold))
 
                                 Text("Publier")
-                                    .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
+                                    .foregroundColor(.white)
+                                    // .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
                                     .font(.system(size: 15, weight: .bold))
                             }
                         })
                         .frame(width: 150)
-                        .background(Color(hex: "B098E6").opacity(viewModel.disableButtonSend ? 0.5 : 1))
+                        // .background(Color(hex: "B098E6").opacity(viewModel.disableButtonSend ? 0.5 : 1))
+                        .background(Color(hex: "B098E6").opacity( 1))
                         .cornerRadius(10)
-                        .disabled(viewModel.disableButtonSend)
+                        // .disabled(viewModel.disableButtonSend)
                     }
                 }
             }

@@ -5,8 +5,7 @@ import Lottie
 
 struct CFQCollectionView: View {
     @ObservedObject var coordinator: Coordinator
-    @State var showDetail: Bool = false
-
+    
     var body: some View {
         VStack(alignment: .leading) {
             ScrollView(.horizontal, showsIndicators: false) {
@@ -25,8 +24,8 @@ struct CFQCollectionView: View {
                                 .foregroundColor(.white)
                         }
                     ).padding(.leading, 20)
-                    ForEach(coordinator.userCFQ, id: \.self) { cfq in
-                        // ?? 
+                    ForEach(coordinator.userCFQ.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { cfq in
+                        // ??
                         if let userAdmin = coordinator.userFriends.first(where: { $0.uid == cfq.admin }) {
                             CFQMolecule(
                                 name: userAdmin.pseudo,
@@ -34,6 +33,28 @@ struct CFQCollectionView: View {
                                 image: userAdmin.profilePictureUrl
                             )
                             .onTapGesture {
+                                coordinator.selectedCFQ = CFQ(
+                                    uid: cfq.uid,
+                                    title: cfq.title,
+                                    admin: cfq.admin,
+                                    messagerieUUID: cfq.messagerieUUID,
+                                    users: cfq.users,
+                                    timestamp: cfq.timestamp,
+                                    participants: cfq.participants,
+                                    userContact: userAdmin
+                                )
+
+                                coordinator.selectedConversation = Conversation(
+                                    uid: cfq.messagerieUUID,
+                                    titleConv: "",
+                                    pictureEventURL: "",
+                                    typeEvent: "",
+                                    eventUID: "",
+                                    lastMessageSender: "",
+                                    lastMessageDate: Date(),
+                                    lastMessage: "",
+                                    messageReader: [""]
+                                )
                                 withAnimation {
                                     coordinator.showMessagerieScreen = true
                                 }
