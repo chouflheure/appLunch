@@ -4,10 +4,12 @@ import SwiftUI
 struct FriendListScreen: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: FriendListViewModel
+    @ObservedObject var user: User
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
         self._viewModel = StateObject(wrappedValue: FriendListViewModel(coordinator: coordinator))
+        self.user = coordinator.user ?? User()
     }
 
     var body: some View {
@@ -37,17 +39,17 @@ struct FriendListScreen: View {
                                     }
                                 )
                                 .padding(.top, 15)
-                                /*
-                                ForEach(Array(viewModel.friendsList), id: \.self) { user in
+                                ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
                                     CellFriendPseudoNameAction(
                                         user: user,
+                                        userFriend: userFriend,
                                         coordinator: coordinator,
-                                        type: .remove,
-                                        isActionabled: {_ in }
+                                        isActionabled: { type in
+                                            viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
+                                        }
                                     )
                                     .padding(.top, 15)
                                 }
-                                 */
                             }
                         }
                     }

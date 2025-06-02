@@ -98,8 +98,23 @@ extension AddFriendsViewModel {
             }
         }
     }
+    
+    func actionOnClickButtonAddFriend(type: CellFriendPseudoNameActionType, userFriend: UserContact) {
+        if type == .add {
+            addFriendsToList(userFriend: userFriend)
+        }
+        if type == .accept {
+            acceptFriendsToList(userFriend: userFriend)
+        }
+        if type == .cancel {
+            cancelFriendsToList(userFriend: userFriend)
+        }
+        if type == .remove {
+            removeFriendsToList(userFriend: userFriend)
+        }
+    }
 
-    func addFriendsToList(userFriend: UserContact) {
+    private func addFriendsToList(userFriend: UserContact) {
         firebaseService.updateDataByID(
             data: ["sentFriendRequests": FieldValue.arrayUnion([userFriend.uid])],
             to: .users,
@@ -136,7 +151,7 @@ extension AddFriendsViewModel {
         )
     }
     
-    func acceptFriendsToList(userFriend: UserContact) {
+    private func acceptFriendsToList(userFriend: UserContact) {
         firebaseService.updateDataByID(
             data:
                 [
@@ -180,7 +195,7 @@ extension AddFriendsViewModel {
         )
     }
 
-    func cancelFriendsToList(userFriend: UserContact) {
+    private func cancelFriendsToList(userFriend: UserContact) {
         firebaseService.updateDataByID(
             data: ["requestsFriends": FieldValue.arrayRemove([user.uid])],
             to: .users,
@@ -194,7 +209,7 @@ extension AddFriendsViewModel {
         )
     }
     
-    func removeFriendsToList(userFriend: UserContact) {
+    private func removeFriendsToList(userFriend: UserContact) {
         firebaseService.updateDataByID(
             data: [
                 "friends": FieldValue.arrayRemove([user.uid]),

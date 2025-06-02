@@ -12,12 +12,22 @@ struct CellFriendPseudoNameAction: View {
 
     @ObservedObject var user: User
     var userFriend: UserContact
-    @ObservedObject var viewModel: AddFriendsViewModel
     var coordinator: Coordinator
     var isActionabled: ((CellFriendPseudoNameActionType) -> Void)
     
+    
     private var currentType: CellFriendPseudoNameActionType {
-        viewModel.statusFriend(user: user, userFriend: userFriend)
+        if user.friends.contains(userFriend.uid) {
+            return .remove
+        }
+        if user.sentFriendRequests.contains(userFriend.uid) {
+            return .cancel
+        }
+        if user.requestsFriends.contains(userFriend.uid) {
+            return .accept
+        } else {
+            return .add
+        }
     }
 
     var body: some View {

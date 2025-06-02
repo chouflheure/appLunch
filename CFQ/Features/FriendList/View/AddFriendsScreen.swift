@@ -89,21 +89,9 @@ struct CustomTabViewDouble: View {
                                 CellFriendPseudoNameAction(
                                     user: user,
                                     userFriend: userFriend,
-                                    viewModel: viewModel,
                                     coordinator: coordinator,
                                     isActionabled: { type in
-                                        if type == .add {
-                                            viewModel.addFriendsToList(userFriend: userFriend)
-                                        }
-                                        if type == .accept {
-                                            viewModel.acceptFriendsToList(userFriend: userFriend)
-                                        }
-                                        if type == .cancel {
-                                            viewModel.cancelFriendsToList(userFriend: userFriend)
-                                        }
-                                        if type == .remove {
-                                            viewModel.removeFriendsToList(userFriend: userFriend)
-                                        }
+                                        viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
                                     }
                                 )
                                 .padding(.top, 15)
@@ -134,14 +122,9 @@ struct CustomTabViewDouble: View {
                                 CellFriendPseudoNameAction(
                                     user: user,
                                     userFriend: userFriend,
-                                    viewModel: viewModel,
                                     coordinator: coordinator,
                                     isActionabled: { type in
-                                        if type == .add || type == .accept {
-                                            viewModel.addFriendsToList(userFriend: userFriend)
-                                        } else {
-                                            viewModel.cancelFriendsToList(userFriend: userFriend)
-                                        }
+                                        viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
                                     }
                                 )
                                 .padding(.top, 15)
