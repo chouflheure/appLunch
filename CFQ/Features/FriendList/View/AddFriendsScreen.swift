@@ -13,10 +13,10 @@ struct AddFriendsScreen: View {
     }
 
     var body: some View {
-        DraggableViewRight(isPresented: $coordinator.showFriendListScreen) {
+        DraggableViewLeft(isPresented: $coordinator.showFriendListScreen) {
             SafeAreaContainer {
                 VStack(spacing: 0) {
-                    HeaderBackRightScreen(
+                    HeaderBackLeftScreen(
                         onClickBack: {
                             withAnimation {
                                 coordinator.showFriendListScreen = false
@@ -27,47 +27,130 @@ struct AddFriendsScreen: View {
                     )
 
                     VStack(spacing: 0) {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            VStack {
-                                SearchBarView(
-                                    text: $viewModel.researchText,
-                                    placeholder: StringsToken.SearchBar
-                                        .placeholderFriend,
-                                    onRemoveText: {
-                                        viewModel.removeText()
-                                    },
-                                    onTapResearch: {
-                                        
-                                        viewModel.researche()
-                                    }
-                                )
-                                .padding(.top, 20)
+                        CustomTabViewDouble(titles: ["Recherche", "Les demandes"], viewModel: viewModel, coordinator: coordinator, user: user)
+                    }
+                }
+            }
+        }
+    }
+}
 
-                                VStack(alignment: .leading) {
-                                    ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
-                                        CellFriendPseudoNameAction(
-                                            user: userFriend,
-                                            coordinator: coordinator,
-                                            type: viewModel.statusFriend(user: user, userFriend: userFriend), //userFriends.contains(userFriend) ? .remove : .add,
-                                            isActionabled: { type in
-                                                if type == .add || type == .followBack {
-                                                    viewModel.addFriendsToList(userFriend: userFriend)
-                                                } else {
-                                                    viewModel.cancelFriendsToList(userFriend: userFriend)
-                                                }
-                                            }
-                                        ).onAppear {
-                                            print("@@@ coordinator.user?.friends = \(user.friends)")
-                                            print("@@@ userFriend.uid = \(userFriend.uid)")
-                                        }
-                                        .padding(.top, 15)
-                                    }
-                                }
-                                .padding(.horizontal, 12)
-                            }
+struct CustomTabViewDouble: View {
+    @State private var selectedIndex = 0
+    let titles: [String]
+    @ObservedObject var viewModel: AddFriendsViewModel
+    @ObservedObject var coordinator: Coordinator
+    @ObservedObject var user: User
+
+    var body: some View {
+        VStack {
+            // Votre header avec les titres
+            HStack {
+                ForEach(0..<titles.count, id: \.self) { index in
+                    VStack {
+                        Text(titles[index])
+                            .tokenFont(.Body_Inter_Medium_12)
+                            .foregroundColor(selectedIndex == index ? .white : .gray)
+
+                        Rectangle()
+                            .frame(height: 2)
+                            .foregroundColor(selectedIndex == index ? .white : .clear)
+                            .padding(.horizontal, 30)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .onTapGesture {
+                        withAnimation {
+                            selectedIndex = index
                         }
                     }
                 }
+            }
+            .padding(.top, 20)
+
+            if selectedIndex == 0 {
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack {
+                        SearchBarView(
+                            text: $viewModel.researchText,
+                            placeholder: StringsToken.SearchBar
+                                .placeholderFriend,
+                            onRemoveText: {
+                                viewModel.removeText()
+                            },
+                            onTapResearch: {
+                                
+                                viewModel.researche()
+                            }
+                        )
+                        .padding(.top, 20)
+
+                        VStack(alignment: .leading) {
+                            ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
+                                CellFriendPseudoNameAction(
+                                    user: user,
+                                    userFriend: userFriend,
+                                    viewModel: viewModel,
+                                    coordinator: coordinator,
+                                    isActionabled: { type in
+                                        if type == .add {
+                                            viewModel.addFriendsToList(userFriend: userFriend)
+                                        }
+                                        if type == .accept {
+                                            viewModel.acceptFriendsToList(userFriend: userFriend)
+                                        }
+                                        if type == .cancel {
+                                            viewModel.cancelFriendsToList(userFriend: userFriend)
+                                        }
+                                        if type == .remove {
+                                            viewModel.removeFriendsToList(userFriend: userFriend)
+                                        }
+                                    }
+                                )
+                                .padding(.top, 15)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                    }
+                }
+                .transition(.move(edge: .leading))
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack {
+                        SearchBarView(
+                            text: $viewModel.researchText,
+                            placeholder: StringsToken.SearchBar
+                                .placeholderFriend,
+                            onRemoveText: {
+                                viewModel.removeText()
+                            },
+                            onTapResearch: {
+                                viewModel.researche()
+                            }
+                        )
+                        .padding(.top, 20)
+
+                        VStack(alignment: .leading) {
+                            ForEach(Array(viewModel.requestsFriends), id: \.self) { userFriend in
+                                CellFriendPseudoNameAction(
+                                    user: user,
+                                    userFriend: userFriend,
+                                    viewModel: viewModel,
+                                    coordinator: coordinator,
+                                    isActionabled: { type in
+                                        if type == .add || type == .accept {
+                                            viewModel.addFriendsToList(userFriend: userFriend)
+                                        } else {
+                                            viewModel.cancelFriendsToList(userFriend: userFriend)
+                                        }
+                                    }
+                                )
+                                .padding(.top, 15)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                    }
+                }
+                .transition(.move(edge: .trailing))
             }
         }
     }

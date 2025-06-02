@@ -14,7 +14,6 @@ class FeedViewModel: ObservableObject {
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
-        print("@@@ here")
         guard let user = coordinator.user else {
             print("@@@ else")
             return
@@ -48,8 +47,6 @@ class FeedViewModel: ObservableObject {
     }
     
     func startListeningToTurn(user: User) {
-        print("@@@ here 1")
-        print("@@@ user = \(user.invitedTurns)")
         firebaseService.getDataByIDs(
             from: .turns,
             with: user.invitedTurns ?? [""],
@@ -60,7 +57,6 @@ class FeedViewModel: ObservableObject {
             switch result {
             case .success(let fetchedTurns):
                 // Stockez les turns récupérés
-                print("@@@ turns = \(turns)")
                 DispatchQueue.main.async {
                     self.turns = fetchedTurns
                     

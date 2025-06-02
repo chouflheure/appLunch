@@ -37,7 +37,7 @@ struct FriendListScreen: View {
                                     }
                                 )
                                 .padding(.top, 15)
-                                
+                                /*
                                 ForEach(Array(viewModel.friendsList), id: \.self) { user in
                                     CellFriendPseudoNameAction(
                                         user: user,
@@ -47,6 +47,7 @@ struct FriendListScreen: View {
                                     )
                                     .padding(.top, 15)
                                 }
+                                 */
                             }
                         }
                     }

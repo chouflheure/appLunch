@@ -38,6 +38,7 @@ class Coordinator: ObservableObject {
     private var listeners = [ListenerRegistration?]()
     
     func start(userUID: String?) {
+        print("@@@ userUID = \(userUID)")
         if let userUID = userUID {
             
             let listener = firebaseService.getDataByID(from: .users, with: userUID, listenerKeyPrefix: ListenerType.user.rawValue) { (result: Result<User, Error>) in
@@ -182,6 +183,7 @@ class Coordinator: ObservableObject {
     }
     
     func catchAllUserCFQ(user: User) {
+        print("@@@  user.invitedCfqs = \(user.invitedCfqs)")
         user.invitedCfqs = removeEmptyIdInArray(data: user.invitedCfqs ?? [""])
 
         if let invitedCfqs = user.invitedCfqs, !invitedCfqs.isEmpty {
@@ -204,8 +206,9 @@ class Coordinator: ObservableObject {
     }
     
     func catchAllUsersFriend(user: User) {
+        print("@@@ user.friends = \(user.friends)")
         user.friends = removeEmptyIdInArray(data: user.friends)
-        
+
         if !user.friends.isEmpty {
              
             firebaseService.getDataByIDs(

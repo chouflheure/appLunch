@@ -11,10 +11,11 @@ class AddFriendsViewModel: ObservableObject {
     @ObservedObject var coordinator: Coordinator
 
     var firebaseService = FirebaseService()
-    var user: User
+    @Published var user: User
     private var allFriends = Set<UserContact>()
 
     @Published var friendsList = Set<UserContact>()
+    @Published var requestsFriends = Set<UserContact>()
 
     var filteredNames: Set<UserContact> {
         let searchWords = researchText.lowercased().split(separator: " ")
@@ -34,6 +35,7 @@ class AddFriendsViewModel: ObservableObject {
         self.user = user
 
         fecthAllUsers()
+        fetchRequestsFriends(requestsFriendsIds: self.user.requestsFriends)
     }
 
     func removeText() {
@@ -48,6 +50,12 @@ class AddFriendsViewModel: ObservableObject {
     func statusFriend(user: User, userFriend: UserContact) -> CellFriendPseudoNameActionType {
         if user.friends.contains(userFriend.uid) {
             return .remove
+        }
+        if user.sentFriendRequests.contains(userFriend.uid) {
+            return .cancel
+        }
+        if user.requestsFriends.contains(userFriend.uid) {
+            return .accept
         } else {
             return .add
         }
@@ -56,12 +64,34 @@ class AddFriendsViewModel: ObservableObject {
 
 extension AddFriendsViewModel {
     
+    func fetchRequestsFriends(requestsFriendsIds: [String]) {
+        firebaseService.getDataByIDs(
+            from: .users,
+            with: requestsFriendsIds,
+            onUpdate: {(result: Result<[UserContact], Error>) in
+                switch result {
+                case .success(let users):
+                    self.requestsFriends = Set(users)
+                case .failure(let error):
+                    print("- Erreur :", error.localizedDescription)
+                }
+            }
+        )
+    }
+
     func fecthAllUsers() {
         firebaseService.getAllData(from: .users) { (result: Result<[UserContact], Error>) in
             switch result {
             case .success(let users):
+                
                 self.friendsList = Set(users)
                 self.allFriends = Set(users)
+                
+                if let userToRemove = users.first(where: { $0.uid == self.user.uid }) {
+                    self.friendsList.remove(userToRemove)
+                    self.allFriends.remove(userToRemove)
+                }
+                
                 // completion(users)
             case .failure(let error):
                 print("- Erreur :", error.localizedDescription)
@@ -70,6 +100,12 @@ extension AddFriendsViewModel {
     }
 
     func addFriendsToList(userFriend: UserContact) {
+        firebaseService.updateDataByID(
+            data: ["sentFriendRequests": FieldValue.arrayUnion([userFriend.uid])],
+            to: .users,
+            at: self.user.uid
+        )
+        
         firebaseService.updateDataByID(
             data: ["requestsFriends": FieldValue.arrayUnion([user.uid])],
             to: .users,
@@ -99,12 +135,80 @@ extension AddFriendsViewModel {
             }
         )
     }
+    
+    func acceptFriendsToList(userFriend: UserContact) {
+        firebaseService.updateDataByID(
+            data:
+                [
+                    "sentFriendRequests": FieldValue.arrayRemove([user.uid]),
+                    "friends": FieldValue.arrayUnion([user.uid])
+                ],
+            to: .users,
+            at: userFriend.uid
+        )
+        
+        firebaseService.updateDataByID(
+            data: [
+                "requestsFriends": FieldValue.arrayRemove([userFriend.uid]),
+                "friends": FieldValue.arrayUnion([userFriend.uid])
+            ],
+            to: .users,
+            at: self.user.uid
+        )
+
+        let uidNotification = UUID()
+
+        firebaseService.addDataNotif(
+            data: Notification(
+                uid: uidNotification.description,
+                typeNotif: .acceptedFriendRequest,
+                timestamp: Date(),
+                uidUserNotif: userFriend.uid,
+                uidEvent: "",
+                titleEvent: "Accept friends",
+                userInitNotifPseudo: user.pseudo
+            ),
+            userNotifications: [userFriend.uid],
+            completion: { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    print("@@@ result yes conv ")
+                case .failure(let error):
+                    print("@@@ error = \(error)")
+                }
+            }
+        )
+    }
 
     func cancelFriendsToList(userFriend: UserContact) {
         firebaseService.updateDataByID(
-            data: ["requestsFriends": FieldValue.arrayRemove([userFriend.uid])],
+            data: ["requestsFriends": FieldValue.arrayRemove([user.uid])],
             to: .users,
             at: userFriend.uid
+        )
+        
+        firebaseService.updateDataByID(
+            data: ["sentFriendRequests": FieldValue.arrayRemove([userFriend.uid])],
+            to: .users,
+            at: self.user.uid
+        )
+    }
+    
+    func removeFriendsToList(userFriend: UserContact) {
+        firebaseService.updateDataByID(
+            data: [
+                "friends": FieldValue.arrayRemove([user.uid]),
+            ],
+            to: .users,
+            at: userFriend.uid
+        )
+        
+        firebaseService.updateDataByID(
+            data: [
+                "friends": FieldValue.arrayRemove([userFriend.uid]),
+            ],
+            to: .users,
+            at: self.user.uid
         )
     }
 }

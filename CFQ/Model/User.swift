@@ -23,6 +23,7 @@ class User: ObservableObject, Encodable, Decodable {
     @Published var isPrivateAccount: Bool
     @Published var requestsFriends: [String]
     @Published var messagesChannelId: [String]
+    @Published var sentFriendRequests: [String]
     // conversations
 
     init(
@@ -34,19 +35,20 @@ class User: ObservableObject, Encodable, Decodable {
         location: String = "",
         // birthDate: Date? = nil,
         isActive: Bool = true,
-        favorite: [String] = [""] ,
-        friends: [String] = [""],
-        invitedCfqs: [String] = [""],
-        invitedTurns: [String] = [""],
+        favorite: [String] = [] ,
+        friends: [String] = [],
+        invitedCfqs: [String] = [],
+        invitedTurns: [String] = [],
         notificationsChannelId: String = "",
-        postedCfqs: [String] = [""],
-        postedTurns: [String] = [""],
-        teams: [String] = [""],
+        postedCfqs: [String] = [],
+        postedTurns: [String] = [],
+        teams: [String] = [],
         tokenFCM: String = "",
         unreadNotificationsCount: Int = 0,
         isPrivateAccount: Bool = true,
-        requestsFriends: [String] = [""],
-        messagesChannelId: [String] = []
+        requestsFriends: [String] = [],
+        messagesChannelId: [String] = [],
+        sentFriendRequests: [String] = []
     ) {
         self.uid = uid
         self.name = name
@@ -69,6 +71,7 @@ class User: ObservableObject, Encodable, Decodable {
         self.isPrivateAccount = isPrivateAccount
         self.requestsFriends = requestsFriends
         self.messagesChannelId = messagesChannelId
+        self.sentFriendRequests = sentFriendRequests
     }
 
     enum CodingKeys: String, CodingKey {
@@ -93,6 +96,7 @@ class User: ObservableObject, Encodable, Decodable {
         case isPrivateAccount
         case requestsFriends
         case messagesChannelId
+        case sentFriendRequests
     }
     
     required init(from decoder:Decoder) throws {
@@ -118,6 +122,7 @@ class User: ObservableObject, Encodable, Decodable {
         isPrivateAccount = try values.decode(Bool.self, forKey: .isPrivateAccount)
         requestsFriends = try values.decode([String].self, forKey: .requestsFriends)
         messagesChannelId = try values.decode([String].self, forKey: .messagesChannelId)
+        sentFriendRequests = try values.decode([String].self, forKey: .sentFriendRequests)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -143,6 +148,7 @@ class User: ObservableObject, Encodable, Decodable {
         try container.encode(isPrivateAccount, forKey: .isPrivateAccount)
         try container.encode(requestsFriends, forKey: .requestsFriends)
         try container.encode(messagesChannelId, forKey: .messagesChannelId)
+        try container.encode(sentFriendRequests, forKey: .sentFriendRequests)
     }
 
     var guestMode: User {
@@ -167,7 +173,8 @@ class User: ObservableObject, Encodable, Decodable {
         unreadNotificationsCount: 0,
         isPrivateAccount: true,
         requestsFriends: [""],
-        messagesChannelId: []
+        messagesChannelId: [],
+        sentFriendRequests: []
        )
     }
     // TODO: - For debug
