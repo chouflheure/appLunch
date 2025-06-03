@@ -38,7 +38,7 @@ struct MainInformationsPreviewView: View {
                         .tokenFont(.Placeholder_Inter_Regular_16)
                 }
 
-                HStack(alignment: .top) {
+                HStack(alignment: .center) {
                     
                     Image(.iconLocation)
                         .resizable()
@@ -47,12 +47,14 @@ struct MainInformationsPreviewView: View {
                     
                     Text(viewModel.placeTitle.isEmpty ? "Lieu" : viewModel.placeTitle)
                         .tokenFont(viewModel.placeTitle.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
+                        .lineLimit(1)
 
                     Text("|")
                         .foregroundColor(.white)
 
                     Text(viewModel.placeAdresse.isEmpty ? "Adress" : viewModel.placeAdresse)
                         .tokenFont(.Placeholder_Inter_Regular_14)
+                        .lineLimit(1)
                 }
                 .padding(.horizontal, 12)
             }

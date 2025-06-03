@@ -153,6 +153,9 @@ extension TurnCardViewModel {
         moods.forEach { moodsInt.append($0.convertMoodTypeToInt()) }
         setFriendsOnTurn.forEach { friends.append($0.uid) }
 
+        print("@@@ placeTitle = \(placeTitle)")
+        print("@@@ placeAdresse = \(placeAdresse)")
+
         let turn = Turn(
             uid: uid.description,
             titleEvent: titleEvent,
@@ -165,8 +168,8 @@ extension TurnCardViewModel {
             denied: [],
             mood: moodsInt,
             messagerieUUID: messagerieUIID.description,
-            placeTitle: "",
-            placeAdresse: "",
+            placeTitle: placeTitle,
+            placeAdresse: placeAdresse,
             placeLatitude: 1.1,
             placeLongitude: 1.2,
             timestamp: Date()

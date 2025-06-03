@@ -653,7 +653,7 @@ extension FirebaseService {
     ) {
         print("@@@ uploadImage in ")
 
-        guard let imageData = picture.jpegData(compressionQuality: 0.5) else {
+        guard let imageData = picture.jpegData(compressionQuality: 0.1) else {
             print("@@@ error 1")
             completion(.failure(ImageUploadError.imageConversionFailed))
             return

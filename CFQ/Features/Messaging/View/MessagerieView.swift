@@ -106,7 +106,7 @@ struct MessagerieView: View {
                                                         .padding(.horizontal, 12)
                                                         .rotationEffect(.degrees(180))
                                                     } else {
-                                                        CellMessageView3(
+                                                        CellMessageViewReceived(
                                                             data: viewModel.messages[index]
                                                         )
                                                         .padding(.horizontal, 12)

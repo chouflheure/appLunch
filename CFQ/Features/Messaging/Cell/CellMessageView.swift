@@ -245,29 +245,32 @@ struct CellMessageSendByTheUserView: View {
             VStack(alignment: .trailing) {
 
                 ReponseMessage {
-
-                    Text(data.message)
-                        .tokenFont(.Body_Inter_Medium_12)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
-                        .background(.blackLight)
-                        .cornerRadius(20)
-                        .simultaneousGesture(
-                            LongPressGesture()
-                                .onEnded { _ in
-                                    print("@@@ long Tap")
-                                    showReaction = true
-                                }
-                        )
-                        .simultaneousGesture(
-                            TapGesture(count: 2)
-                                .onEnded {
-                                    onDoubleTap()
-                                    print("@@@ double Tap")
-                                    // showReaction = true
-                                }
-                        )
-
+                    
+                    HStack {
+                        Spacer()
+                        Text(data.message)
+                            .tokenFont(.Body_Inter_Medium_12)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .background(.blackLight)
+                            .cornerRadius(20)
+                            .simultaneousGesture(
+                                LongPressGesture()
+                                    .onEnded { _ in
+                                        print("@@@ long Tap")
+                                        showReaction = true
+                                    }
+                            )
+                            .simultaneousGesture(
+                                TapGesture(count: 2)
+                                    .onEnded {
+                                        onDoubleTap()
+                                        print("@@@ double Tap")
+                                        // showReaction = true
+                                    }
+                            )
+                       
+                    }
                     if data.reactions?.count ?? 0 > 0 {
                         HStack {
                             Spacer()
@@ -312,7 +315,7 @@ struct CellMessageSendByTheUserView: View {
     }
 }
 
-struct CellMessageView3: View {
+struct CellMessageViewReceived: View {
     @State private var dragOffset: CGFloat = 0
     @State private var showReaction: Bool = false
     @State private var isShowPopover = false
@@ -399,7 +402,10 @@ struct CellMessageView3: View {
     }
 }
 
-
+#Preview {
+    CellMessageViewReceived(data: Message(uid: "", message: "Hello poulette", senderUID: "", timestamp: Date()))
+    CellMessageSendByTheUserView(data: Message(uid: "", message: "Hello poulette", senderUID: "", timestamp: Date()), onDoubleTap: {})
+}
 
 
 

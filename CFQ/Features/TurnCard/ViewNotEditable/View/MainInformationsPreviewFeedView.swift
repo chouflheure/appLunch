@@ -42,24 +42,27 @@ struct MainInformationsPreviewFeedView: View {
 
                     Text(formattedDateAndTime.textFormattedHours(hours: turn.date))
                         .tokenFont(.Placeholder_Inter_Regular_16)
+                        
                 }
 
-                HStack(alignment: .top) {
+                HStack(alignment: .center) {
                     
                     Image(.iconLocation)
                         .resizable()
                         .frame(width: 20, height: 20)
                         .foregroundColor(.white)
                     
-                    Text("Lieu")
+                    Text(turn.placeTitle)
                         .foregroundColor(.white)
+                        .lineLimit(1)
                         
                     Text("|")
                         .foregroundColor(.white)
                     
-                    Text("92240 Malakoff ")
+                    Text(turn.placeAdresse)
                         .tokenFont(.Placeholder_Inter_Regular_16)
                         .foregroundColor(.white)
+                        .lineLimit(1)
                 }
                 .padding(.horizontal, 12)
             }
