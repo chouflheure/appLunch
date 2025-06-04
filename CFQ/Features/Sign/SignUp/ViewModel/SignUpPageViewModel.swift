@@ -129,7 +129,7 @@ class SignUpPageViewModel: ObservableObject {
 
     // TODO: - Update error messages
     private func uploadImageToDataBase() {
-        firebaseService.uploadImage(picture: picture, uidUser: uidUser, localisationImage: .profile) { result in
+        firebaseService.uploadThumbnail(picture: picture, uidUser: uidUser, localisationImage: .profile) { result in
             DispatchQueue.main.async {
                 self.isLoadingPictureUpload = false
                 switch result {

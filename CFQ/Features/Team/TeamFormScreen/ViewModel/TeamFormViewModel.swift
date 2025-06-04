@@ -92,7 +92,11 @@ extension TeamFormViewModel {
     private func uploadImageToDataBase() {
         guard let imageProfile = imageProfile else { return }
         let uid = UUID()
-        firebaseService.uploadImage(picture: imageProfile, uidUser: uid.description, localisationImage: .team) { result in
+        firebaseService.uploadImageStandard(
+            picture: imageProfile,
+            uidUser: uid.description,
+            localisationImage: .team
+        ) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let urlString):
