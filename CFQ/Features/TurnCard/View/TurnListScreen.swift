@@ -23,7 +23,7 @@ struct TurnListScreen: View {
             HStack {
                 Spacer()
 
-                Text("TURN")
+                Text(StringsToken.Turn.titleTurn)
                     .bold()
                     .tokenFont(.Title_Gigalypse_24)
 
@@ -36,6 +36,9 @@ struct TurnListScreen: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Spacer()
+                        Text(StringsToken.Turn.newTurn)
+                            .textCase(.uppercase)
+                            .padding(.bottom, 5)
                         Button(
                             action: {
                                 withAnimation {
@@ -54,7 +57,7 @@ struct TurnListScreen: View {
                     .padding(.vertical, 30)
 
                     VStack(alignment: .leading) {
-                        Text("Brouillon\(vm.savedTurns.count > 1 ? "s" : "") " + "(\(vm.savedTurns.count))")
+                        Text(StringsToken.Turn.brouillon + "\(vm.savedTurns.count > 1 ? "s" : "") " + "(\(vm.savedTurns.count))")
                             .tokenFont(.Body_Inter_Medium_14)
                             .padding(.bottom, 20)
 

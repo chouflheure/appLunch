@@ -108,6 +108,8 @@ enum StringsToken {
         static let noParticipantsYet = "0 Personne y va pour l'instant"
         static let placeholderTitleEvent = "Titre du TURN"
         static let addYourFriendToTheEvent = "Ajoute tes amis à l'évent"
+        static let newTurn = "NOUVEAU"
+        static let brouillon = "Brouillon"
     }
     
     enum SearchBar {
