@@ -8,7 +8,6 @@ struct CellFriendCanRemove: View {
     var body: some View {
         ZStack {
             CellRoundedImageAndName(userPreview: userPreview)
-            .padding(.leading, 17)
 
             Button(action: {
                 onRemove()

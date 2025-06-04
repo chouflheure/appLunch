@@ -16,12 +16,12 @@ struct TurnCardDetailsView: View {
                         .frame(height: 200)
 
                     // Title ( Title / Guest )
-                    TitleTurnCardDetailView(viewModel: viewModel, coordinator: coordinator)
+                    TitleTurnCardDetailView(viewModel: viewModel)
                         .padding(.horizontal, 16)
                         .zIndex(2)
                     
                     // Informations ( Mood / Date / Loc )
-                    MainInformationsDetailView(viewModel: viewModel)
+                    MainInformationsDetailView(viewModel: viewModel, coordinator: coordinator)
                         .padding(.horizontal, 16)
                     
                     // Description ( Bio event )
