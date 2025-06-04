@@ -18,12 +18,13 @@ struct TitleTurnCardPreviewView: View {
 
                 Text(viewModel.user.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
+                    .textCase(.lowercase)
                     .lineLimit(1)
 
                 Spacer()
 
                 Button(action: {}) {
-                    Image(systemName: "message")
+                    Image(.iconMessage)
                         .foregroundColor(.white)
                 }
 
@@ -41,25 +42,15 @@ struct TitleTurnCardDetailView: View {
 
     @FocusState private var isFocused: Bool
     @ObservedObject var viewModel: TurnCardViewModel
-    @ObservedObject var coordinator: Coordinator
-    
     @State var showFriendProfile: Bool = false
 
     var body: some View {
         VStack(alignment: .leading) {
-            TextField("title event", text: $viewModel.titleEvent)
+            TextField("Le titre", text: $viewModel.titleEvent)
+                .tokenFont(.Title_Gigalypse_24)
                 .focused($isFocused)
                 .padding(.bottom, 16)
-            /*
-            CustomTextField(
-                text: $viewModel.turn.titleEvent,
-                keyBoardType: .default,
-                placeHolder: StringsToken.TurnCardInformation.PlaceholderTitle,
-                textFieldType: .turn
-            )
-            .focused($isFocused)
-            .padding(.bottom, 16)
-*/
+
             HStack {
                 CachedAsyncImageView(urlString: viewModel.user.profilePictureUrl, designType: .scaledToFill_Circle)
                     .frame(width: 50, height: 50)
@@ -71,64 +62,13 @@ struct TitleTurnCardDetailView: View {
                 Spacer()
 
                 Button(action: {}) {
-                    Image(systemName: "message")
+                    Image(.iconMessage)
                         .foregroundColor(.white)
                 }
 
                 ButtonParticipate(action: {}, selectedOption: .constant(.yes))
 
             }
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                VStack {
-                    HStack {
-                        ForEach(Array(viewModel.setFriendsOnTurn), id: \.self) { user in
-                            CellFriendCanRemove(userPreview: user) {
-                                viewModel.removeFriendsFromList(
-                                    user: user
-                                )
-                            }
-                            .onTapGesture {
-                                showFriendProfile = true
-                                
-                                coordinator.profileUserSelected = User(
-                                    uid: user.uid,
-                                    name: user.name,
-                                    firstName: user.firstName,
-                                    pseudo: user.pseudo,
-                                    profilePictureUrl: user
-                                        .profilePictureUrl,
-                                    isActive: user.isActive
-                                )
-                                
-                            }
-                        }.frame(height: 100)
-                    }
-                }
-            }
-            .padding(.top, 15)
-            
-            Button(action: {
-                viewModel.showFriendsList = true
-            }) {
-                HStack {
-                    Image(.iconAddfriend)
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.white)
-
-                    Text(StringsToken.Turn.addYourFriendToTheEvent)
-                        .tokenFont(.Body_Inter_Medium_16)
-                }
-            }.padding(.vertical, 10)
-        }
-        .fullScreenCover(isPresented: $viewModel.showFriendsList) {
-            ListFriendToAdd(
-                isPresented: $viewModel.showFriendsList,
-                coordinator: viewModel.coordinator,
-                friendsOnTeam: $viewModel.setFriendsOnTurn,
-                allFriends: $viewModel.friendListToAdd
-            )
         }
     }
 }

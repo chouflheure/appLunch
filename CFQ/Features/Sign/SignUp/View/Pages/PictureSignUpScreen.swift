@@ -13,8 +13,7 @@ struct PictureSignUpScreen: View {
 
             VStack {
                 Text(StringsToken.Sign.TitleAddPicture)
-                    .foregroundColor(.white)
-                    .font(.title)
+                    .tokenFont(.Title_Gigalypse_24)
                     .textCase(.uppercase)
                     .padding(.bottom, 50)
 
@@ -82,7 +81,7 @@ struct PictureSignUpScreen: View {
                 selectedImage = uiImage
             }
         }
-        .fullBackground(imageName: "backgroundNeon")
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }

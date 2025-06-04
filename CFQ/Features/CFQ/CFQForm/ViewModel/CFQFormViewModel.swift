@@ -8,9 +8,10 @@ class CFQFormViewModel: ObservableObject {
     @Published var friendsAddToCFQ = Set<UserContact>()
     @Published var isLoading: Bool = false
 
-    var user: User
-    var firebaseService = FirebaseService()
+    private var user: User
+    private var firebaseService = FirebaseService()
     private var allFriends = Set<UserContact>()
+    private var errorService = ErrorService()
 
     @Published var titleCFQ: String = ""
 
@@ -62,7 +63,7 @@ class CFQFormViewModel: ObservableObject {
 
 extension CFQFormViewModel {
 
-    func pushCFQ() {
+    func pushCFQ(completion: @escaping (Bool, String) -> Void) {
         
         isLoading = true
         let uuid = UUID()
@@ -87,9 +88,12 @@ extension CFQFormViewModel {
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
-                    self.addEventCFQOnFriendProfile(cfq: cfq)
+                    self.addEventCFQOnFriendProfile(cfq: cfq) { success, message in
+                        completion(success, message)
+                    }
                 case .failure(let error):
                     print("@@@ error = \(error)")
+                    completion(false, error.localizedDescription)
                 }
 
                 self.isLoading = false
@@ -97,7 +101,7 @@ extension CFQFormViewModel {
         )
     }
     
-    func addEventCFQOnFriendProfile(cfq: CFQ) {
+    func addEventCFQOnFriendProfile(cfq: CFQ, completion: @escaping (Bool, String) -> Void) {
         firebaseService.updateDataByID(
             data: ["messagesChannelId": FieldValue.arrayUnion([cfq.messagerieUUID])],
             to: .users,
@@ -120,9 +124,9 @@ extension CFQFormViewModel {
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
-                    print("@@@ result yes conv ")
+                    completion(true, "")
                 case .failure(let error):
-                    print("@@@ error = \(error)")
+                    completion(false, error.localizedDescription)
                 }
 
                 self.isLoading = false

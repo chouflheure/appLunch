@@ -23,7 +23,7 @@ struct TurnListScreen: View {
             HStack {
                 Spacer()
 
-                Text("TURN")
+                Text(StringsToken.Turn.titleTurn)
                     .bold()
                     .tokenFont(.Title_Gigalypse_24)
 
@@ -36,25 +36,30 @@ struct TurnListScreen: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Spacer()
-                        Button(
-                            action: {
-                                withAnimation {
-                                    coordinator.turnSelectedPreview = nil
-                                    coordinator.showTurnCardView = true
-                                }
-                            },
-                            label: {
-                                Image(.iconPlus)
-                                    .resizable()
-                                    .foregroundColor(.white)
-                                    .frame(width: 35, height: 35)
-                            })
+                        VStack {
+                            Text(StringsToken.Turn.newTurn)
+                                .textCase(.uppercase)
+                                .padding(.bottom, 5)
+                            Button(
+                                action: {
+                                    withAnimation {
+                                        coordinator.turnSelectedPreview = nil
+                                        coordinator.showTurnCardView = true
+                                    }
+                                },
+                                label: {
+                                    Image(.iconPlus)
+                                        .resizable()
+                                        .foregroundColor(.white)
+                                        .frame(width: 35, height: 35)
+                                })
+                        }
                         Spacer()
                     }
-                    .padding(.vertical, 30)
+                    .padding(.all, 30)
 
                     VStack(alignment: .leading) {
-                        Text("Brouillon\(vm.savedTurns.count > 1 ? "s" : "") " + "(\(vm.savedTurns.count))")
+                        Text(StringsToken.Turn.brouillon + "\(vm.savedTurns.count > 1 ? "s" : "") " + "(\(vm.savedTurns.count))")
                             .tokenFont(.Body_Inter_Medium_14)
                             .padding(.bottom, 20)
 

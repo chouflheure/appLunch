@@ -63,20 +63,20 @@ struct TurnCardView: View {
                             HeaderCardPreviewView(viewModel: viewModel)
                                 .padding(.bottom, 15)
                                 .frame(height: 150)
-                            
+
                             // Title ( Title / Guest )
                             TitleTurnCardPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
                                 .padding(.top, 20)
-                            
+
                             // Informations ( Mood / Date / Loc )
                             MainInformationsPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
-                            
+
                             // Description ( Bio event )
                             DescriptionTurnCardPreviewView(viewModel: viewModel)
                                 .padding(.horizontal, 16)
-                            
+
                             Spacer()
                         }
                     }
@@ -85,7 +85,7 @@ struct TurnCardView: View {
                     .frame(height: 550)
                     .padding(.bottom, 30)
                     .zIndex(1)
-                    
+
                     Spacer()
 
                     HStack(spacing: 30) {
@@ -107,7 +107,6 @@ struct TurnCardView: View {
                                     imageEvent: viewModel.imageSelected
                                 )
                             )
-                            //TurnCoreDataViewModel().addTurn(turn: TurnPreview(uid: "", titleEvent: "Modifier", date: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: viewModel.imageSelected))
                         }, label: {
                             HStack {
                                 Image(.iconSave)
@@ -118,10 +117,11 @@ struct TurnCardView: View {
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
 
-                                Text("Enregistrer")
+                                Text("Brouillon")
                                     .tokenFont(.Body_Inter_Medium_14)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
+                                    .font(.system(size: 15, weight: .bold))
                             }
                         })
                         .frame(width: 150)
@@ -139,7 +139,6 @@ struct TurnCardView: View {
                         }, label: {
                             HStack {
                                 Image(.iconSend)
-                                    // .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
                                     .foregroundColor(.white)
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
@@ -147,17 +146,14 @@ struct TurnCardView: View {
 
                                 Text("Publier")
                                     .foregroundColor(.white)
-                                    // .foregroundColor(viewModel.disableButtonSend ? .whiteTertiary : .white)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
                                     .font(.system(size: 15, weight: .bold))
                             }
                         })
                         .frame(width: 150)
-                        // .background(Color(hex: "B098E6").opacity(viewModel.disableButtonSend ? 0.5 : 1))
                         .background(Color(hex: "B098E6").opacity( 1))
                         .cornerRadius(10)
-                        // .disabled(viewModel.disableButtonSend)
                     }
                 }
             }

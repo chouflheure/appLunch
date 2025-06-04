@@ -24,19 +24,19 @@ struct LocalisationSignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {viewModel.goNext()},
-                        title: StringsToken.Sign.AlmostThere,
+                        title: StringsToken.Sign.Next,
                         largeButtonType: .signNext,
                         isDisabled: viewModel.user.location.isEmpty
                     ).padding(.horizontal, 20)
 
                     LargeButtonView(
                         action: {viewModel.goBack()},
-                        title: StringsToken.Sign.TitleBackStep,
+                        title: StringsToken.Sign.Back,
                         largeButtonType: .signBack
                     ).padding(.horizontal, 20)
                 }
             }
-            .fullBackground(imageName: "backgroundNeon")
+            .fullBackground(imageName: StringsToken.Image.fullBackground)
             .onTapGesture {
                 UIApplication.shared.endEditing()
             }

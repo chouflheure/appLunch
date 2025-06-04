@@ -20,11 +20,13 @@ struct CFQMolecule: View {
         ZStack(alignment: .leading) {
             VStack(alignment: .leading, spacing: 5) {
                 Text(name)
+                    .tokenFont(.Body_Inter_Regular_10_white_secondary)
+                    .textCase(.lowercase)
                     .padding(.leading, 55)
-                    .padding(.top, 5)
-                    .foregroundColor(.white)
+                    // .padding(.top, 5)
 
                 Text(title)
+                    .tokenFont(.Body_Inter_Medium_14)
                     .frame(height: 30)
                     .font(.system(size: 14))
                     .padding(.leading, 55)

@@ -43,7 +43,6 @@ struct TurnCardFeedView: View {
             }
             .frame(height: 550)
             .cornerRadius(20)
-            .padding(.horizontal, 12)
             .zIndex(1)
         }
         .onTapGesture {

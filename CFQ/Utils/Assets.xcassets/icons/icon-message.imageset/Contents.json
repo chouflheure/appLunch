@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "icon-mood-soiree.svg",
+      "filename" : "icon-message.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon-mood-soiree 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon-mood-soiree 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

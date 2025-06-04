@@ -17,7 +17,7 @@ struct DatePickerMainInformations: View {
     var body: some View {
         HStack {
             HStack {
-                Image(systemName: "calendar")
+                Image(.iconDate)
                     .foregroundColor(viewModel.textFormattedLongFormat.isEmpty ? .gray : .white)
                 
                 Text(viewModel.textFormattedLongFormat.isEmpty ? "Date" : viewModel.textFormattedLongFormat)

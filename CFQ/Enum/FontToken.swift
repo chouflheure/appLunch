@@ -31,6 +31,7 @@ enum FontToken {
     case Body_Inter_Medium_12
     case Body_Inter_Regular_12
     case Body_Inter_Regular_10
+    case Body_Inter_Regular_10_white_secondary
     
     func font() -> Font {
         switch self {
@@ -66,7 +67,7 @@ enum FontToken {
             return .custom(FontType.InterMedium.rawValue, size: 12)
         case .Body_Inter_Regular_12:
             return .custom(FontType.InterRegular.rawValue, size: 12)
-        case .Body_Inter_Regular_10:
+        case .Body_Inter_Regular_10, .Body_Inter_Regular_10_white_secondary:
             return .custom(FontType.InterRegular.rawValue, size: 10)
         case .Placeholder_Gigalypse_14:
             return .custom(FontType.GigalypseTrial.rawValue, size: 14)
@@ -92,6 +93,9 @@ enum FontToken {
                 .Body_Inter_Semibold_12,
                 .Body_Inter_Regular_10 :
             return .whitePrimary
+
+        case .Body_Inter_Regular_10_white_secondary:
+            return .whiteSecondary
 
         case .Placeholder_Inter_Regular_16, .Placeholder_Inter_Regular_14, .Body_Inter_Regular_12, .Placeholder_Gigalypse_14, .Placeholder_Gigalypse_24 :
             return .whiteTertiary

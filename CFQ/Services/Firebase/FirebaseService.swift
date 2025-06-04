@@ -582,87 +582,133 @@ enum ImageUploadError: Error {
 
 // Firebase Storage
 extension FirebaseService {
-
-    /*
-    func uploadImage(picture: UIImage, uidUser: String, completion: @escaping (Result<String, Error>) -> Void ) {
-        print("@@@ uploadImage in ")
-        guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
-            print("@@@ error 1")
-            completion(.failure(ImageUploadError.imageConversionFailed))
-            return
+    
+    // FONCTION 1: Miniatures de qualité acceptable (15KB max)
+    func createThumbnail(_ image: UIImage) -> Data? {
+        // Thumbnail raisonnable : 200x200 max
+        let thumbnailSize: CGFloat = 200
+        let ratio = min(thumbnailSize / image.size.width, thumbnailSize / image.size.height)
+        let newSize = CGSize(width: image.size.width * ratio, height: image.size.height * ratio)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0) // false = transparence si besoin
+        image.draw(in: CGRect(origin: .zero, size: newSize))
+        let thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        guard let thumbnailImage = thumbnail else { return nil }
+        
+        // Compression progressive pour atteindre 15KB max avec qualité décente
+        var compressionQuality: CGFloat = 0.7 // Commencer à 70% au lieu de 5%
+        var imageData = thumbnailImage.jpegData(compressionQuality: compressionQuality)
+        
+        while let data = imageData, data.count > 15 * 1024 && compressionQuality > 0.3 {
+            compressionQuality -= 0.1
+            imageData = thumbnailImage.jpegData(compressionQuality: compressionQuality)
         }
-
-        let storageRef = Storage.storage().reference().child("images/\(uidUser).jpg")
-        let metadata = StorageMetadata()
-        metadata.contentType = "image/jpeg"
-        print("@@@ here 1")
-
-        storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
-            print("@@@ here 2")
-            if let error = error {
-                print("@@@ error 2")
-                // Handle different types of errors
-                var userFriendlyErrorMessage = "An unknown error occurred."
-
-                if let errCode = (error as NSError?)?.code {
-                    switch errCode {
-                    case -1009: // NSURLErrorNotConnectedToInternet
-                        userFriendlyErrorMessage = "No internet connection. Please check your network settings."
-                    case -1001: // NSURLErrorTimedOut
-                        userFriendlyErrorMessage = "The request timed out. Please try again later."
-                    case -1004: // NSURLErrorCannotConnectToHost
-                        userFriendlyErrorMessage = "Cannot connect to the server. Please try again later."
-                    default:
-                        userFriendlyErrorMessage = "An error occurred: \(error.localizedDescription)"
-                    }
-                    print("@@@ error = \(errCode)")
-                }
-
-                print("@@@ Error uploading image: \(userFriendlyErrorMessage)")
-                completion(.failure(error))
-                return
-            }
-
-            print("@@@ here 3")
-
-            storageRef.downloadURL { (url, error) in
-                print("@@@ here 4")
-                if let error = error {
-                    print("@@@ error 3")
-                    print("@@@ Error getting download URL: \(error.localizedDescription)")
-                    completion(.failure(error))
-                    return
-                }
-                print("@@@ here 5")
-                if let url = url {
-                    print("@@ Download URL: \(url.absoluteString)")
-                    completion(.success(url.absoluteString))
-                    print("@@@ here 6")
-                }
-            }
-        }
-        print("@@@ uploadImage out ")
+        
+        print("@@@ Thumbnail size: \(imageData?.count ?? 0) bytes, quality: \(compressionQuality)")
+        return imageData
     }
-     */
-
-    func uploadImage(
+    
+    // FONCTION 2: Images optimisées de bonne qualité (50KB max)
+    func optimizeImageStandard(_ image: UIImage) -> Data? {
+        // ÉTAPE 1: Redimensionner à 800px max (au lieu de 512px)
+        var workingImage = image
+        let maxDimension: CGFloat = 800
+        
+        if image.size.width > maxDimension || image.size.height > maxDimension {
+            let ratio = min(maxDimension / image.size.width, maxDimension / image.size.height)
+            let newSize = CGSize(width: image.size.width * ratio, height: image.size.height * ratio)
+            
+            UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0) // Garder la transparence
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+            workingImage = UIGraphicsGetImageFromCurrentImageContext() ?? image
+            UIGraphicsEndImageContext()
+        }
+        
+        // ÉTAPE 2: Si encore trop grande, redimensionner à 600px (au lieu de 256px)
+        var currentData = workingImage.jpegData(compressionQuality: 0.8)
+        if let data = currentData, data.count > 50 * 1024 {
+            let mediumDimension: CGFloat = 600
+            if workingImage.size.width > mediumDimension || workingImage.size.height > mediumDimension {
+                let ratio = min(mediumDimension / workingImage.size.width, mediumDimension / workingImage.size.height)
+                let newSize = CGSize(width: workingImage.size.width * ratio, height: workingImage.size.height * ratio)
+                
+                UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+                workingImage.draw(in: CGRect(origin: .zero, size: newSize))
+                workingImage = UIGraphicsGetImageFromCurrentImageContext() ?? workingImage
+                UIGraphicsEndImageContext()
+            }
+        }
+        
+        // ÉTAPE 3: Compression progressive avec qualité décente
+        var compressionQuality: CGFloat = 0.8 // Commencer à 80%
+        var imageData = workingImage.jpegData(compressionQuality: compressionQuality)
+        
+        while let data = imageData, data.count > 50 * 1024 && compressionQuality > 0.4 {
+            compressionQuality -= 0.1
+            imageData = workingImage.jpegData(compressionQuality: compressionQuality)
+        }
+        
+        print("@@@ Standard image size: \(imageData?.count ?? 0) bytes, quality: \(compressionQuality)")
+        return imageData
+    }
+    
+    // FONCTION UPLOAD POUR MINIATURES (15KB)
+    func uploadThumbnail(
         picture: UIImage,
         uidUser: String,
         localisationImage: LocalisationImages,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
-        print("@@@ uploadImage in ")
-
-        guard let imageData = picture.jpegData(compressionQuality: 0.5) else {
-            print("@@@ error 1")
+        print("@@@ uploadThumbnail in ")
+        
+        // Créer une miniature de 15KB max
+        guard let imageData = createThumbnail(picture) else {
+            print("@@@ error creating thumbnail")
             completion(.failure(ImageUploadError.imageConversionFailed))
             return
         }
-
+        
+        print("@@@ Thumbnail optimized, size: \(imageData.count) bytes")
+        
+        uploadImageData(imageData, uidUser: uidUser, localisationImage: localisationImage, suffix: "_thumb", completion: completion)
+    }
+    
+    // FONCTION UPLOAD POUR IMAGES STANDARD (50KB)
+    func uploadImageStandard(
+        picture: UIImage,
+        uidUser: String,
+        localisationImage: LocalisationImages,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        print("@@@ uploadImageStandard in ")
+        
+        // Optimiser l'image à 50KB max
+        guard let imageData = optimizeImageStandard(picture) else {
+            print("@@@ error optimizing image")
+            completion(.failure(ImageUploadError.imageConversionFailed))
+            return
+        }
+        
+        print("@@@ Image optimized, size: \(imageData.count) bytes")
+        
+        uploadImageData(imageData, uidUser: uidUser, localisationImage: localisationImage, suffix: "", completion: completion)
+    }
+    
+    // FONCTION COMMUNE POUR L'UPLOAD
+    private func uploadImageData(
+        _ imageData: Data,
+        uidUser: String,
+        localisationImage: LocalisationImages,
+        suffix: String,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        
         let monitor = NWPathMonitor()
         let queue = DispatchQueue(label: "NetworkMonitor")
         var hasConnection = false
-
+        
         monitor.pathUpdateHandler = { path in
             if path.status == .satisfied {
                 hasConnection = true
@@ -681,53 +727,53 @@ extension FirebaseService {
             monitor.cancel()
         }
         monitor.start(queue: queue)
-
+        
         // Wait a short period to check connectivity
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             if !hasConnection {
                 return
             }
-
+            
             let storageRef = Storage.storage().reference().child(
-                "\(localisationImage.rawValue)/\(uidUser).jpg")
+                "\(localisationImage.rawValue)/\(uidUser)\(suffix).jpg")
             let metadata = StorageMetadata()
             metadata.contentType = "image/jpeg"
             print("@@@ here 1")
-
+            
             storageRef.putData(imageData, metadata: metadata) {
                 (metadata, error) in
                 print("@@@ here 2")
                 if let error = error {
                     print("@@@ error 2")
                     var userFriendlyErrorMessage = "An unknown error occurred."
-
+                    
                     if let errCode = (error as NSError?)?.code {
                         switch errCode {
                         case -1009:
                             userFriendlyErrorMessage =
-                                "No internet connection. Please check your network settings."
+                            "No internet connection. Please check your network settings."
                         case -1001:
                             userFriendlyErrorMessage =
-                                "The request timed out. Please try again later."
+                            "The request timed out. Please try again later."
                         case -1004:
                             userFriendlyErrorMessage =
-                                "Cannot connect to the server. Please try again later."
+                            "Cannot connect to the server. Please try again later."
                         default:
                             userFriendlyErrorMessage =
-                                "An error occurred: \(error.localizedDescription)"
+                            "An error occurred: \(error.localizedDescription)"
                         }
                         print("@@@ error = \(errCode)")
                     }
-
+                    
                     print(
                         "@@@ Error uploading image: \(userFriendlyErrorMessage)"
                     )
                     completion(.failure(error))
                     return
                 }
-
+                
                 print("@@@ here 3")
-
+                
                 storageRef.downloadURL { (url, error) in
                     print("@@@ here 4")
                     if let error = error {
@@ -746,10 +792,9 @@ extension FirebaseService {
                     }
                 }
             }
-            print("@@@ uploadImage out ")
+            print("@@@ uploadImageData out ")
         }
     }
-
 }
 
 extension FirebaseService {

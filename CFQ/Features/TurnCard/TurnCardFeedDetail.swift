@@ -146,12 +146,13 @@ struct TitleTurnCardDetailFeedView: View {
 
                 Text(turn.adminContact?.pseudo ?? "")
                     .tokenFont(.Body_Inter_Medium_16)
+                    .textCase(.lowercase)
                     .lineLimit(1)
 
                 Spacer()
 
                 Button(action: {}) {
-                    Image(systemName: "message")
+                    Image(.iconMessage)
                         .foregroundColor(.white)
                 }
 
@@ -215,20 +216,19 @@ struct MainInformationsDetailFeedView: View {
                     .tokenFont(.Placeholder_Inter_Regular_16)
             }
 
-            HStack(alignment: .top) {
-                
-                Image(.iconLocation)
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
-                
-                Text("Lieu")
-                    .foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(alignment: .center) {
                     
-                Text("|")
-                    .foregroundColor(.white)
-                
-                Text("92240 Malakoff ")
+                    Image(.iconLocation)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.white)
+                    
+                    Text(turn.placeTitle)
+                        .foregroundColor(.white)
+                }
+
+                Text(turn.placeAdresse)
                     .tokenFont(.Placeholder_Inter_Regular_16)
                     .foregroundColor(.white)
             }

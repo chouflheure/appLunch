@@ -90,7 +90,7 @@ struct NameSignUpScreen: View {
                 ).padding(.horizontal, 20)
             }
         }
-        .fullBackground(imageName: "backgroundNeon")
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }

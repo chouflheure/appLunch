@@ -13,6 +13,7 @@ class FeedViewModel: ObservableObject {
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
         guard let user = coordinator.user else {
+        // TODO: - quand erreure ici -> reload le feed
             print("@@@ else")
             return
         }

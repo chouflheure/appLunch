@@ -1,29 +1,23 @@
-
-import SwiftUI
 import Lottie
+import SwiftUI
 
 struct CFQFormView: View {
 
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: CFQFormViewModel
+    @State private var toast: Toast? = nil
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
-        self._viewModel = StateObject(wrappedValue: CFQFormViewModel(coordinator: coordinator))
+        self._viewModel = StateObject(
+            wrappedValue: CFQFormViewModel(coordinator: coordinator))
     }
-    
+
     var body: some View {
         DraggableViewLeft(isPresented: $coordinator.showCFQForm) {
             SafeAreaContainer {
-                if viewModel.isLoading {
-                    ZStack {
-                        LottieView(animation: .named(StringsToken.Animation.loaderCircle))
-                            .playing()
-                            .looping()
-                            .frame(width: 150, height: 150)
-                    }
-                    .zIndex(3)
-                } else {
+
+                ZStack {
                     VStack(alignment: .leading) {
                         HeaderBackLeftScreen(
                             onClickBack: {
@@ -38,10 +32,14 @@ struct CFQFormView: View {
                             ScrollView(.vertical, showsIndicators: false) {
                                 VStack {
                                     HStack(alignment: .center, spacing: 12) {
-                                        CachedAsyncImageView(urlString: coordinator.user?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
-                                            .frame(width: 50, height: 50)
-                                            .cornerRadius(100)
-                                        
+                                        CachedAsyncImageView(
+                                            urlString: coordinator.user?
+                                                .profilePictureUrl ?? "",
+                                            designType: .scaledToFill_Circle
+                                        )
+                                        .frame(width: 50, height: 50)
+                                        .cornerRadius(100)
+
                                         CustomTextField(
                                             text: $viewModel.titleCFQ,
                                             keyBoardType: .default,
@@ -51,20 +49,35 @@ struct CFQFormView: View {
                                     }
                                     .padding(.top, 16)
                                     .padding(.horizontal, 16)
-                                    
+
                                     HStack {
                                         Spacer()
                                         PostEventButton(
-                                            action: { viewModel.pushCFQ() },
+                                            action: {
+                                                viewModel.pushCFQ {
+                                                    success, message in
+                                                    if success {
+                                                        withAnimation {
+                                                            coordinator.showCFQForm = false
+                                                        }
+                                                    } else {
+                                                        toast = Toast(
+                                                            style: .error,
+                                                            message: message
+                                                        )
+                                                    }
+                                                }
+                                            },
                                             isEnable: $viewModel.isEnableButton
                                         )
                                         .padding(.trailing, 16)
                                     }
                                     .padding(.top, 5)
-                                    
+
                                     SearchBarView(
                                         text: $viewModel.researchText,
-                                        placeholder: StringsToken.SearchBar.placeholderFriend,
+                                        placeholder: StringsToken.SearchBar
+                                            .placeholderFriend,
                                         onRemoveText: {
                                             viewModel.removeText()
                                         },
@@ -73,16 +86,19 @@ struct CFQFormView: View {
                                         }
                                     )
                                     .padding(.top, 16)
-                                    
+
                                     AddFriendsAndListView(
-                                        arrayPicture: $viewModel.friendsAddToCFQ,
+                                        arrayPicture: $viewModel
+                                            .friendsAddToCFQ,
                                         arrayFriends: $viewModel.friendsList,
                                         coordinator: coordinator,
                                         onRemove: { userRemoved in
-                                            viewModel.removeFriendsFromList(user: userRemoved)
+                                            viewModel.removeFriendsFromList(
+                                                user: userRemoved)
                                         },
                                         onAdd: { userAdd in
-                                            viewModel.addFriendsToList(user: userAdd)
+                                            viewModel.addFriendsToList(
+                                                user: userAdd)
                                         }
                                     )
                                     .padding(.top, 15)
@@ -90,9 +106,22 @@ struct CFQFormView: View {
                             }
                         }
                     }
+                    .blur(radius: viewModel.isLoading ? 10 : 0)
+                    .allowsHitTesting(!viewModel.isLoading)
+
+                    if viewModel.isLoading {
+                        ZStack {
+                            LottieView(animation: .named(StringsToken.Animation.loaderCircle))
+                                .playing()
+                                .looping()
+                                .frame(width: 150, height: 150)
+                        }
+                        .zIndex(3)
+                    }
                 }
-                
+
             }
+            .toastView(toast: $toast)
         }
     }
 }
@@ -104,14 +133,13 @@ struct CFQFormView: View {
     }.ignoresSafeArea()
 }
 
-
 struct CellFriendsAdd: View {
     // var name: String
     var userPreview: UserContact
     var onAdd: (() -> Void)
 
     var body: some View {
-        HStack(spacing: 0){
+        HStack(spacing: 0) {
             CirclePicture(urlStringImage: userPreview.profilePictureUrl)
                 .frame(width: 48, height: 48)
             HStack {

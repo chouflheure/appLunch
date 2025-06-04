@@ -20,16 +20,19 @@ struct SignUpPageView: View {
             }
             .tag(0)
     
-            LocalisationSignUpScreen(viewModel: viewModel)
+            BirthdaySignUpScreen(viewModel: viewModel)
                 .tag(1)
+
+            LocalisationSignUpScreen(viewModel: viewModel)
+                .tag(2)
                 
             PictureSignUpScreen(viewModel: viewModel)
-                .tag(2)
+                .tag(3)
                 
             FriendSignUpScreen(viewModel: viewModel, coordinator: coordinator) {
                 dismiss()
             }
-            .tag(3)
+            .tag(4)
         }
     }
 }

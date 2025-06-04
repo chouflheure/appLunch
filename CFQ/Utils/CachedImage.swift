@@ -73,6 +73,8 @@ internal enum PictureCacheDesignType {
     case fullScreenImageTurnDetail
     case scaledToFill_Circle_CFQ
     case scaleImageMessageProfile
+    case scaleImageTeam
+    
 }
 
 struct CachedAsyncImageView: View {
@@ -123,6 +125,16 @@ struct CachedAsyncImageView: View {
                                 .stroke(Color.black, lineWidth: 1)
                                 .frame(width: 34, height: 34)
                         }
+                case .scaleImageTeam:
+                    ZStack {
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 90, height: 90)
+                        
+                        animation
+                            .playing()
+                            .looping()
+                    }
                 }
 
             case .success(let image):
@@ -177,6 +189,13 @@ struct CachedAsyncImageView: View {
                                 .stroke(Color.black, lineWidth: 1)
                                 .frame(width: 34, height: 34)
                         }
+                case .scaleImageTeam:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .foregroundColor(.white)
+                        .frame(width: 90, height: 90)
+                        .clipShape(Circle())
                 }
 
             case .failure(_):
@@ -184,13 +203,13 @@ struct CachedAsyncImageView: View {
                     
                 case .scaledToFill_Circle_CFQ:
                     ZStack {
-                        animation
-                            .playing()
-                            .looping()
-
                         Circle()
                             .foregroundColor(.gray)
                             .frame(width: 60, height: 60)
+                        
+                        animation
+                            .playing()
+                            .looping()
                     }
 
                 case .scaledToFill_Circle:
@@ -218,6 +237,16 @@ struct CachedAsyncImageView: View {
                                 .stroke(Color.black, lineWidth: 1)
                                 .frame(width: 34, height: 34)
                         }
+                case .scaleImageTeam:
+                    ZStack {
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 90, height: 90)
+                        
+                        animation
+                            .playing()
+                            .looping()
+                    }
                 }
 
             @unknown default:
@@ -259,6 +288,17 @@ struct CachedAsyncImageView: View {
                                 .stroke(Color.black, lineWidth: 1)
                                 .frame(width: 34, height: 34)
                         }
+                    
+                case .scaleImageTeam:
+                    ZStack {
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 90, height: 90)
+                        
+                        animation
+                            .playing()
+                            .looping()
+                    }
                 }
             }
         }

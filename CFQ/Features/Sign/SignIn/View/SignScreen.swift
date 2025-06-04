@@ -95,7 +95,7 @@ struct SignScreen: View {
                 )
             }
         }
-        .fullBackground(imageName: "backgroundNeon")
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
         .toastView(toast: $toast)
         .onChange(of: viewModel.isConfirmScreenActive || viewModel.isSignFinish) {
             isLoadingSendButton = $0

@@ -5,9 +5,14 @@ struct ProfileView: View {
     var isUserProfile: Bool = true
     @ObservedObject var coordinator: Coordinator
     @State private var showFriendList = false
+    @ObservedObject var user: User
+    @StateObject var viewModel: ProfileViewModel
 
-    @EnvironmentObject var user: User
-    @StateObject var viewModel = ProfileViewModel()
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        self.user = coordinator.user ?? User()
+        self._viewModel = StateObject(wrappedValue: ProfileViewModel(coordinator: coordinator))
+    }
 
     var body: some View {
         VStack {
@@ -61,9 +66,9 @@ struct ProfileView: View {
                     })
             }
             .padding(.bottom, 16)
-            
-            PageViewEvent()
 
+            // PageViewEvent(coordinator: coordinator, titles: ["TURNs", "CALENDRIER"], turns: viewModel.turns)
+           CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns)
         }
         .padding(.horizontal, 16)
         .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
@@ -74,8 +79,10 @@ struct ProfileView: View {
 
 struct PageViewEvent: View {
     @State private var selectedIndex = 0
-    let titles = ["TURNs", "CALENDRIER"]
-
+    @ObservedObject var coordinator: Coordinator
+    let titles: [String]
+    let turns: [Turn]
+    
     var body: some View {
         VStack {
             HStack {
@@ -101,9 +108,16 @@ struct PageViewEvent: View {
             .padding(.top, 20)
 
             TabView(selection: $selectedIndex) {
-                Text("Empty")
-                    .foregroundColor(.white)
-                    .tag(0)
+                ScrollView (.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 20) {
+                        ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
+                            TurnCardFeedView(turn: turn, coordinator: coordinator)
+                        }
+                    }
+                }
+                .padding(.top, 24)
+                .tag(0)
+
                 Text("Empty")
                     .foregroundColor(.white)
                     .tag(1)
@@ -113,10 +127,49 @@ struct PageViewEvent: View {
     }
 }
 
+struct CustomTabViewDoubleProfile: View {
+    @State private var selectedIndex = 0
+    @ObservedObject var coordinator: Coordinator
+    let titles: [String]
+    let turns: [Turn]
 
-#Preview {
-    ZStack {
-        Color.black
-        ProfileView(coordinator: .init())
-    }.ignoresSafeArea()
+    var body: some View {
+        VStack {
+            // Header fixe avec les titres
+            HStack {
+                ForEach(0..<titles.count, id: \.self) { index in
+                    VStack {
+                        Text(titles[index])
+                            .tokenFont(selectedIndex == index ? .Body_Inter_Medium_14 : .Placeholder_Inter_Regular_14)
+
+                        Rectangle()
+                            .frame(height: 2)
+                            .foregroundColor(selectedIndex == index ? .white : .clear)
+                            .padding(.horizontal, 30)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .onTapGesture {
+                        selectedIndex = index
+                    }
+                }
+            }
+            .padding(.top, 20)
+
+            // Contenu défilable
+            ScrollView(.vertical, showsIndicators: false) {
+                if selectedIndex == 0 {
+                    LazyVStack(spacing: 20) {
+                        ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
+                            TurnCardFeedView(turn: turn, coordinator: coordinator)
+                        }
+                    }
+                    .padding(.top, 24)
+                } else {
+                    Text("Feature en cours")
+                        .tokenFont(.Label_Gigalypse_12)
+                        .padding(.top, 50)
+                }
+            }
+        }
+    }
 }
