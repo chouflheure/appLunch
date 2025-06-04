@@ -8,9 +8,10 @@ class CFQFormViewModel: ObservableObject {
     @Published var friendsAddToCFQ = Set<UserContact>()
     @Published var isLoading: Bool = false
 
-    var user: User
-    var firebaseService = FirebaseService()
+    private var user: User
+    private var firebaseService = FirebaseService()
     private var allFriends = Set<UserContact>()
+    private var errorService = ErrorService()
 
     @Published var titleCFQ: String = ""
 

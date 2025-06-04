@@ -113,8 +113,7 @@ class SignUpPageViewModel: ObservableObject {
                         try store.enumerateContacts(with: fetchRequest) {
                             (contact, stop) in
                             if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
-                                print("@@ phoneNumber = \(phoneNumber)")
-                                let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
+                                let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+33", with: "0")
                                 phoneNumberIds.append(formattedPhoneNumber)
                             }
                         }
