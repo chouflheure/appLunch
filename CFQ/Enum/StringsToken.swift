@@ -19,13 +19,13 @@ enum StringsToken {
         
         // Inscription
         static let TitleWhichIsYourIdentifier = "Ton petit nom"
-        static let TitleWhichIsYourBirthday = "Quel est ta date d'anniversarie"
+        static let TitleWhichIsYourBirthday = "TON BIRTHDAAAY "
         static let TitleWhichIsYourLocalisation = "T'es où ?"
         static let TitleFindYourFriends = "Trouve tes amis"
         static let TitleAddPicture = "ta photo"
         static let TitleBackStep = "Revenir en arrière"
-        static let Next = "Next"
-        static let Back = "Back"
+        static let Next = "Ensuite"
+        static let Back = "Retour"
         static let BackToSign = "Retour à l'inscription"
         static let WelcomeToCFQ = "Bienvenue sur CFQ 🎉"
         static let AlmostThere = "Tu y es presque"
@@ -123,6 +123,10 @@ enum StringsToken {
         static let loaderError = "loaderError"
         static let loaderCircle = "loaderCircle"
         static let loaderPicture = "loaderPicture"
+    }
+
+    enum Image {
+        static let fullBackground = "backgroundNeon"
     }
 }
 

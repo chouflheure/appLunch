@@ -114,6 +114,7 @@ struct MessagerieView: View {
                                                     }
                                                 }
                                             }
+                                            .padding(.bottom, 15)
                                         }
                                         .frame(maxWidth: .infinity)
                                     }

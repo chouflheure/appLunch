@@ -13,8 +13,10 @@ struct CirclePictureStatusAndPseudo: View {
             )
             .frame(width: 72, height: 72)
             .padding(.bottom, 4)
+            
             Text(userPreview.pseudo)
-                .tokenFont(.Body_Inter_Medium_14)
+                .tokenFont(.Body_Inter_Medium_12)
+                .textCase(.lowercase)
         }
     }
 }

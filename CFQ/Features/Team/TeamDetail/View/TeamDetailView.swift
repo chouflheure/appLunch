@@ -4,14 +4,19 @@ struct TeamDetailView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel = TeamDetailViewModel()
     @State var isPresentedSeetings = false
-
     @EnvironmentObject var user: User
+
+    private var team: TeamGlobal
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
-        if self.coordinator.teamDetail == nil {
+        guard let teamDetail = coordinator.teamDetail else {
             coordinator.showTeamDetail = false
+            self.team = TeamGlobal(uid: "", title: "Error", pictureUrlString: "", friends: [], admins: [])
+            return
         }
+
+        self.team = teamDetail
     }
 
     var body: some View {
@@ -31,7 +36,7 @@ struct TeamDetailView: View {
                         
                         Spacer()
 
-                        Text(dataTeam())
+                        Text(team.title)
                             .foregroundColor(.white)
                             .tokenFont(.Title_Gigalypse_24)
                         
@@ -54,16 +59,10 @@ struct TeamDetailView: View {
 
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack {
-                            Button(action: {}) {
-                                Image(.header)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .foregroundColor(.white)
-                                    .frame(width: 90, height: 90)
-                                    .clipShape(Circle())
-                            }
-                            .padding(.vertical, 16)
-                            .padding(.bottom, 16)
+                            CachedAsyncImageView(urlString: team.pictureUrlString, designType: .scaleImageTeam)
+                                .frame(width: 90, height: 90)
+                                .padding(.vertical, 16)
+                                .padding(.bottom, 16)
 
                             HStack {
                                 Button(action: {
@@ -169,13 +168,4 @@ struct TeamDetailView: View {
         }
         .padding(.vertical, 30)
     }
-
-    private func dataTeam() -> String {
-        guard let data = coordinator.teamDetail else {
-            coordinator.showTeamDetail = false
-            return "Error"
-        }
-        return data.title
-    }
-
 }

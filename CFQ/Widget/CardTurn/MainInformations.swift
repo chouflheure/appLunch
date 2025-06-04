@@ -104,13 +104,13 @@ struct MainInformationsDetailView: View {
                             .foregroundColor(.white)
 
                         Text(viewModel.placeTitle.isEmpty ? "Lieu" : viewModel.placeTitle)
-                            .tokenFont(viewModel.placeTitle.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
+                            .tokenFont(viewModel.placeTitle.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
 
                         Text("|")
                             .foregroundColor(.white)
 
                         Text(viewModel.placeAdresse.isEmpty ? "Adress" : viewModel.placeAdresse)
-                            .tokenFont(.Placeholder_Inter_Regular_14)
+                            .tokenFont(.Placeholder_Inter_Regular_16)
                     }
                 }
                 .padding(.horizontal, 12)

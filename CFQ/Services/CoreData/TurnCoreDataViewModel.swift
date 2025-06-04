@@ -116,6 +116,6 @@ struct TurnCoreDataView: View {
             Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title6", date: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background2)) }, label: {
                 Text("click")
             })
-        }.fullBackground(imageName: "backgroundNeon")
+        }.fullBackground(imageName: StringsToken.Image.fullBackground)
     }
 }

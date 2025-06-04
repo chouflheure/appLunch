@@ -249,7 +249,7 @@ struct CellMessageSendByTheUserView: View {
                     HStack {
                         Spacer()
                         Text(data.message)
-                            .tokenFont(.Body_Inter_Medium_12)
+                            .tokenFont(.Body_Inter_Medium_14)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
                             .background(.blackLight)
@@ -338,7 +338,7 @@ struct CellMessageViewReceived: View {
                     )
 
                     Text(data.message)
-                        .tokenFont(.Body_Inter_Medium_12)
+                        .tokenFont(.Body_Inter_Medium_14)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
                         .background(.blackLight)

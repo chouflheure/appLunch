@@ -69,7 +69,7 @@ struct OnboardingView: View {
                 }
             }
         }
-        .fullBackground(imageName: "backgroundNeon")
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
     }
 }
 
@@ -277,7 +277,7 @@ struct OnboardingView2: View {
                 }
             }
         }
-        .fullBackground(imageName: "backgroundNeon")
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
     }
 }
 

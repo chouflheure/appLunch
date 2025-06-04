@@ -119,7 +119,7 @@ struct ConfirmCodeScreen: View {
             isLoadingSendButton = false
         }
         .toastView(toast: $toast)
-        .fullBackground(imageName: "backgroundNeon")
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }

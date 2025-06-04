@@ -42,15 +42,16 @@ class SignUpPageViewModel: ObservableObject {
         pseudo: "",
         profilePictureUrl: "",
         location: "",
+        birthDate: Date(),
         isActive: true,
-        favorite: [""],
-        friends: [""],
-        invitedCfqs: [""],
-        invitedTurns: [""],
+        favorite: [],
+        friends: [],
+        invitedCfqs: [],
+        invitedTurns: [],
         notificationsChannelId: "",
-        postedCfqs: [""],
-        postedTurns: [""],
-        teams: [""],
+        postedCfqs: [],
+        postedTurns: [],
+        teams: [],
         tokenFCM: "",
         unreadNotificationsCount: 0
     )
@@ -60,9 +61,9 @@ class SignUpPageViewModel: ObservableObject {
     }
 
     func goNext() {
-        if index + 1 < 4 {
+        if index + 1 < 5 {
             withAnimation {
-                index = min(index + 1, 3)
+                index = min(index + 1, 4)
             }
         }
     }
@@ -75,6 +76,21 @@ class SignUpPageViewModel: ObservableObject {
         }
     }
 
+    func formattedDate() -> (isPlaceholder: Bool, titleButton: String) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        var isPlaceholder: Bool = false
+
+        let calendar = Calendar.current
+        if calendar.isDate(birthday, inSameDayAs: Date()) {
+            isPlaceholder = true
+            return (isPlaceholder, "01/01/2001")
+        } else {
+            isPlaceholder = false
+            return (isPlaceholder, formatter.string(from: birthday))
+        }
+    }
+    
     func fetchContacts() {
         isFetchingContacts = true
         print("@@ isFetchingContacts = \(isFetchingContacts)")
@@ -160,17 +176,15 @@ class SignUpPageViewModel: ObservableObject {
         user.profilePictureUrl = urlProfilePicture
         
         print("@@@ userIci = \(user.printObject)")
-        isLoadingCreateUser = true
+        
         
         // TODO: - gérer erreur et isLoadingCreateUser
 
         firebaseService.addData(data: user, to: .users) { (result: Result<Void, Error>) in
             switch result {
             case .success():
-                self.isLoadingCreateUser = false
-                self.coordinator?.gotoCustomTabView(user: self.user)
+                print("@@@ good")
             case .failure(let error):
-                self.isLoadingCreateUser = false
                 print("@@@ error update user = \(error)")
             }
         }

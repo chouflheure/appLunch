@@ -18,12 +18,13 @@ struct TitleTurnCardPreviewView: View {
 
                 Text(viewModel.user.pseudo)
                     .tokenFont(.Body_Inter_Medium_16)
+                    .textCase(.lowercase)
                     .lineLimit(1)
 
                 Spacer()
 
                 Button(action: {}) {
-                    Image(systemName: "message")
+                    Image(.iconMessage)
                         .foregroundColor(.white)
                 }
 
@@ -71,7 +72,7 @@ struct TitleTurnCardDetailView: View {
                 Spacer()
 
                 Button(action: {}) {
-                    Image(systemName: "message")
+                    Image(.iconMessage)
                         .foregroundColor(.white)
                 }
 

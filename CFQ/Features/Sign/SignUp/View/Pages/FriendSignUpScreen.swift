@@ -143,7 +143,7 @@ struct FriendSignUpScreen: View {
                     .zIndex(3)
             }
         }
-        .fullBackground(imageName: "backgroundNeon")
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }

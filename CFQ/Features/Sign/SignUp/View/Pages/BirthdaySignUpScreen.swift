@@ -2,50 +2,102 @@ import SwiftUI
 
 struct BirthdaySignUpScreen: View {
     @ObservedObject var viewModel: SignUpPageViewModel
-
+    @State var showPicker = false
+    
     var body: some View {
-        SafeAreaContainer {
+
+        VStack {
+            ProgressBar(index: $viewModel.index)
+                .padding(.bottom, 30)
+
             VStack {
-                ProgressBar(index: $viewModel.index)
-                    .padding(.vertical, 50)
-                    .padding(.bottom, 30)
+                Text(StringsToken.Sign.TitleWhichIsYourBirthday)
+                    .tokenFont(.Title_Gigalypse_24)
+                    .textCase(.uppercase)
+                    .padding(.bottom, 50)
 
-                VStack {
-                    Text(StringsToken.Sign.TitleWhichIsYourBirthday)
-                        .tokenFont(.Title_Gigalypse_24)
-                        .textCase(.uppercase)
-                        .padding(.bottom, 50)
-
-                    CustomTextField(
-                        text: $viewModel.name,
-                        keyBoardType: .default,
-                        placeHolder: "01/01/2000",
-                        textFieldType: .signUp
+                Button(action: {
+                    showPicker = true
+                }) {
+                    HStack {
+                        Text(viewModel.formattedDate().titleButton)
+                            .tokenFont(viewModel.formattedDate().isPlaceholder ?
+                                .Placeholder_Inter_Regular_14 : .Body_Inter_Regular_14
+                            )
+                            .padding(.leading, 15)
+                            
+                        Spacer()
+                    }
+                    .frame(width: UIScreen.main.bounds.width - 40, height: 40)
+                    .background(.black)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(.white, lineWidth: 0.5)
                     )
-                    .padding(.bottom, 20)
-                    .padding(.horizontal, 20)
-                }
-
-                Spacer()
-
-                VStack {
-                    LargeButtonView(
-                        action: {viewModel.goNext()},
-                        title: StringsToken.Sign.CheckConfirmCode,
-                        largeButtonType: .signNext
-                    ).padding(.horizontal, 20)
-                    
-                    LargeButtonView(
-                        action: {viewModel.goBack()},
-                        title: StringsToken.Sign.TitleBackStep,
-                        largeButtonType: .signBack
-                    ).padding(.horizontal, 20)
+                    .padding(.all, 10)
                 }
             }
+
+            Spacer()
+
+            VStack {
+                LargeButtonView(
+                    action: { viewModel.goNext() },
+                    title: StringsToken.Sign.Next,
+                    largeButtonType: .signNext
+                ).padding(.horizontal, 20)
+
+                LargeButtonView(
+                    action: { viewModel.goBack() },
+                    title: StringsToken.Sign.Back,
+                    largeButtonType: .signBack
+                ).padding(.horizontal, 20)
+            }
+        }
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
+        .sheet(isPresented: $showPicker) {
+            BirthdayPickerView(birthday: $viewModel.birthday, onClose: {
+                showPicker = false
+            })
+            .presentationDragIndicator(.visible)
+            .presentationDetents([.height(450)])
         }
     }
 }
 
 #Preview {
-    BirthdaySignUpScreen(viewModel: .init(uidUser: ""))
+    ZStack {
+        NeonBackgroundImage()
+        BirthdaySignUpScreen(viewModel: .init(uidUser: ""))
+    }
+}
+
+private struct BirthdayPickerView: View {
+    @Binding var birthday: Date
+    var onClose: () -> Void
+    var body: some View {
+        
+        Form {
+            DatePicker(StringsToken.Sign.TitleWhichIsYourBirthday, selection: $birthday, displayedComponents: .date)
+                .datePickerStyle(GraphicalDatePickerStyle())
+            }
+        .environment(\.locale, Locale.init(identifier: "fr_FR"))
+        .tint(.white)
+        .colorScheme(.dark)
+        
+        Button(action: onClose, label: {
+            Text("Done")
+                .foregroundColor(.white)
+                .padding(.horizontal, 30)
+                .padding(.vertical, 10)
+                .background(.black)
+                .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.white, lineWidth: 0.5)
+                )
+            
+        })
+    }
 }

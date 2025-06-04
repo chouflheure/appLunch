@@ -26,6 +26,7 @@ struct TitleTurnCardFeedView: View {
 
                 Text(turn.adminContact?.pseudo ?? "")
                     .tokenFont(.Body_Inter_Medium_16)
+                    .textCase(.lowercase)
                     .lineLimit(1)
 
                 Spacer()
@@ -33,7 +34,7 @@ struct TitleTurnCardFeedView: View {
                 Button(action: {
 
                 }) {
-                    Image(systemName: "message")
+                    Image(.iconMessage)
                         .foregroundColor(.white)
                 }
 

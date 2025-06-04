@@ -140,8 +140,7 @@ struct CustomTabViewDoubleProfile: View {
                 ForEach(0..<titles.count, id: \.self) { index in
                     VStack {
                         Text(titles[index])
-                            .tokenFont(.Body_Inter_Medium_12)
-                            .foregroundColor(selectedIndex == index ? .white : .gray)
+                            .tokenFont(selectedIndex == index ? .Body_Inter_Medium_14 : .Placeholder_Inter_Regular_14)
 
                         Rectangle()
                             .frame(height: 2)
@@ -166,7 +165,7 @@ struct CustomTabViewDoubleProfile: View {
                     }
                     .padding(.top, 24)
                 } else {
-                    Text("Empty")
+                    Text("Feature en cours")
                         .tokenFont(.Label_Gigalypse_12)
                         .padding(.top, 50)
                 }

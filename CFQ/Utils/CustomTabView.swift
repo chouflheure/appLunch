@@ -174,7 +174,7 @@ struct CustomTabView: View {
                     
                     if coordinator.showFriendListScreen {
                         AddFriendsScreen(coordinator: coordinator)
-                            .transition(.move(edge: .leading))
+                            .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showCFQForm {

@@ -12,6 +12,7 @@ struct CellFriendPseudoNoAction: View {
                     .frame(width: 48, height: 48)
                 
                 Text(pseudo)
+                    .textCase(.lowercase)
                     .foregroundColor(.white)
                     .padding(.leading, 8)
                 

@@ -10,7 +10,8 @@ struct DescriptionTurnCardDetailView: View {
             AutoGrowingTextView(
                 text: $viewModel.description,
                 minHeight: 100,
-                calculatedHeight: $textViewHeight
+                calculatedHeight: $textViewHeight,
+                placeholder: StringsToken.Turn.placeholderDescriptionEvent
             )
             .foregroundColor(.white)
             .frame(height: textViewHeight)
@@ -41,7 +42,7 @@ struct DescriptionTurnCardPreviewView: View {
 
         HStack {
             Text(viewModel.description.isEmpty ? StringsToken.Turn.placeholderDescriptionEvent : viewModel.description)
-                .tokenFont(viewModel.description.isEmpty ? .Placeholder_Gigalypse_14 : .Body_Inter_Regular_14)
+                .tokenFont(viewModel.description.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Regular_14)
                 .padding(.bottom, 20)
                 .padding(.top, 10)
                 .lineLimit(3)
@@ -51,10 +52,12 @@ struct DescriptionTurnCardPreviewView: View {
     }
 }
 
+
 struct AutoGrowingTextView: UIViewRepresentable {
     @Binding var text: String
     var minHeight: CGFloat
     @Binding var calculatedHeight: CGFloat
+    var placeholder: String
 
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
@@ -62,19 +65,39 @@ struct AutoGrowingTextView: UIViewRepresentable {
         textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.delegate = context.coordinator
         textView.backgroundColor = .clear
-        textView.setContentCompressionResistancePriority(
-            .defaultLow, for: .horizontal)
+        textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         textView.textColor = .white
+
+        // Configuration du placeholder
+        let placeholderLabel = UILabel()
+        placeholderLabel.text = placeholder
+        placeholderLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        placeholderLabel.sizeToFit()
+        placeholderLabel.textColor = .lightGray
+        textView.addSubview(placeholderLabel)
+        placeholderLabel.frame.origin = CGPoint(x: 5, y: 8)
+
+        // Masquer le placeholder si le texte n'est pas vide
+        updatePlaceholderVisibility(textView: textView, placeholderLabel: placeholderLabel)
+
         return textView
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
         if uiView.text != self.text {
             uiView.text = self.text
+            // Mettre à jour la visibilité du placeholder
+            if let placeholderLabel = uiView.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                updatePlaceholderVisibility(textView: uiView, placeholderLabel: placeholderLabel)
+            }
         }
 
         AutoGrowingTextView.recalculateHeight(
             view: uiView, result: $calculatedHeight, minHeight: minHeight)
+    }
+
+    private func updatePlaceholderVisibility(textView: UITextView, placeholderLabel: UILabel) {
+        placeholderLabel.isHidden = !textView.text.isEmpty
     }
 
     static func recalculateHeight(
@@ -89,43 +112,49 @@ struct AutoGrowingTextView: UIViewRepresentable {
 
     func makeCoordinator() -> Coordinator {
         return Coordinator(
-            text: $text, height: $calculatedHeight, minHeight: minHeight)
+            text: $text,
+            height: $calculatedHeight,
+            minHeight: minHeight,
+            placeholder: placeholder
+        )
     }
 
     class Coordinator: NSObject, UITextViewDelegate {
         var text: Binding<String>
         var height: Binding<CGFloat>
         var minHeight: CGFloat
+        var placeholder: String
 
         init(
-            text: Binding<String>, height: Binding<CGFloat>, minHeight: CGFloat
+            text: Binding<String>, height: Binding<CGFloat>, minHeight: CGFloat, placeholder: String
         ) {
             self.text = text
             self.height = height
             self.minHeight = minHeight
+            self.placeholder = placeholder
         }
 
         func textViewDidChange(_ textView: UITextView) {
             text.wrappedValue = textView.text
-            AutoGrowingTextView.recalculateHeight(
-                view: textView, result: height, minHeight: minHeight)
+            AutoGrowingTextView.recalculateHeight(view: textView, result: height, minHeight: minHeight)
+            updatePlaceholderVisibility(textView: textView)
         }
 
-        func textView(
-            _ textView: UITextView,
-            shouldChangeTextIn range: NSRange,
-            replacementText text: String
-        ) -> Bool {
-            if text == "\n" {
-                // Tu peux ajouter ici une logique comme :
-                // - Ajouter une puce
-                // - Déclencher une validation
-                // - Modifier ton texte manuellement
+        private func updatePlaceholderVisibility(textView: UITextView) {
+            if let placeholderLabel = textView.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                placeholderLabel.isHidden = !textView.text.isEmpty
             }
-            return true  // important pour que le saut de ligne fonctionne
+        }
+
+        func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+            if text == "\n" {
+                // Ajoutez ici votre logique personnalisée
+            }
+            return true
         }
     }
 }
+
 
 
 import SwiftUI
