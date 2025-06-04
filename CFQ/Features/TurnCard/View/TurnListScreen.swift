@@ -36,25 +36,27 @@ struct TurnListScreen: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Spacer()
-                        Text(StringsToken.Turn.newTurn)
-                            .textCase(.uppercase)
-                            .padding(.bottom, 5)
-                        Button(
-                            action: {
-                                withAnimation {
-                                    coordinator.turnSelectedPreview = nil
-                                    coordinator.showTurnCardView = true
-                                }
-                            },
-                            label: {
-                                Image(.iconPlus)
-                                    .resizable()
-                                    .foregroundColor(.white)
-                                    .frame(width: 35, height: 35)
-                            })
+                        VStack {
+                            Text(StringsToken.Turn.newTurn)
+                                .textCase(.uppercase)
+                                .padding(.bottom, 5)
+                            Button(
+                                action: {
+                                    withAnimation {
+                                        coordinator.turnSelectedPreview = nil
+                                        coordinator.showTurnCardView = true
+                                    }
+                                },
+                                label: {
+                                    Image(.iconPlus)
+                                        .resizable()
+                                        .foregroundColor(.white)
+                                        .frame(width: 35, height: 35)
+                                })
+                        }
                         Spacer()
                     }
-                    .padding(.vertical, 30)
+                    .padding(.all, 30)
 
                     VStack(alignment: .leading) {
                         Text(StringsToken.Turn.brouillon + "\(vm.savedTurns.count > 1 ? "s" : "") " + "(\(vm.savedTurns.count))")
