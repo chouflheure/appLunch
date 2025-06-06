@@ -4,6 +4,7 @@ struct MainInformationsPreviewFeedView: View {
 
     @ObservedObject var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
+    @State private var isShowMaps: Bool = false
 
     init(turn: Turn) {
         self.turn = turn
@@ -47,33 +48,57 @@ struct MainInformationsPreviewFeedView: View {
 
             }
 
-            HStack(alignment: .center) {
+            Button(action: {
+                isShowMaps = true
+            }) {
+                HStack(alignment: .center) {
 
-                Image(.iconLocation)
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
+                    Image(.iconLocation)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.white)
 
-                Text(turn.placeTitle)
-                    .foregroundColor(.white)
-                    .lineLimit(1)
+                    Text(turn.placeTitle)
+                        .foregroundColor(.white)
+                        .lineLimit(1)
 
-                Text("|")
-                    .foregroundColor(.white)
+                    Text("|")
+                        .foregroundColor(.white)
 
-                Button(action: {
-                    print()
-                    let url = URL(string: "comgooglemaps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)&query_place_id=ChIJKxjxuaNqkFQR3CK6O1HNNqY")
-                    // let url = URL(string: "maps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)")
-                    if UIApplication.shared.canOpenURL(url!) {
-                        UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-                    }
-                }) {
                     Text(turn.placeAdresse)
                         .tokenFont(.Placeholder_Inter_Regular_16)
                         .foregroundColor(.white)
                         .lineLimit(1)
                 }
+                .alert(
+                    "Ouvrir l'adresse dans :", isPresented: $isShowMaps,
+                    actions: {
+                        Button("Ouvrir avec Apple Maps") {
+                            let url = URL(
+                                string:
+                                    "maps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)"
+                            )
+                            if UIApplication.shared.canOpenURL(url!) {
+                                UIApplication.shared.open(
+                                    url!, options: [:], completionHandler: nil)
+                            }
+                        }
+
+                        Button("Ouvrir avec Google Maps") {
+                            let url = URL(
+                                string:
+                                    "comgooglemaps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)"
+                            )
+                            if UIApplication.shared.canOpenURL(url!) {
+                                UIApplication.shared.open(
+                                    url!, options: [:], completionHandler: nil)
+                            }
+                        }
+
+                        Button("Annuler", role: .cancel) {
+                            isShowMaps = false
+                        }
+                    })
             }
             .padding(.horizontal, 12)
 

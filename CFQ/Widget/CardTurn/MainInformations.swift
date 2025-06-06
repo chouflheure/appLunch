@@ -139,7 +139,7 @@ struct MainInformationsDetailView: View {
                         Image(.iconLocation)
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
+                            .foregroundColor(viewModel.placeTitle.isEmpty ? .whiteTertiary : .white)
                         
                         Text(
                             viewModel.placeTitle.isEmpty
@@ -170,7 +170,7 @@ struct MainInformationsDetailView: View {
                         Image(.iconLink)
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
+                            .foregroundColor(viewModel.link.isEmpty ? .whiteTertiary : .white)
                         
                         Text(viewModel.linkTitle.isEmpty ? "Un lien" : viewModel.linkTitle)
                             .tokenFont(viewModel.linkTitle.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)

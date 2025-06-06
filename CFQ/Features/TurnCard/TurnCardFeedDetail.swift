@@ -182,6 +182,7 @@ struct TitleTurnCardDetailFeedView: View {
 struct MainInformationsDetailFeedView: View {
     var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
+    @State private var isShowMaps: Bool = false
 
     init(turn: Turn) {
         self.turn = turn
@@ -216,23 +217,57 @@ struct MainInformationsDetailFeedView: View {
                     .tokenFont(.Placeholder_Inter_Regular_16)
             }
 
-            VStack(alignment: .leading, spacing: 5) {
-                HStack(alignment: .center) {
+            Button(action: {
+                isShowMaps = true
+            }) {
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack(alignment: .center) {
+                        
+                        Image(.iconLocation)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Text(turn.placeTitle)
+                            .foregroundColor(.white)
+                    }
                     
-                    Image(.iconLocation)
-                        .resizable()
-                        .frame(width: 20, height: 20)
+                    Text(turn.placeAdresse)
+                        .tokenFont(.Placeholder_Inter_Regular_16)
                         .foregroundColor(.white)
-                    
-                    Text(turn.placeTitle)
-                        .foregroundColor(.white)
+                        .padding(.leading, 20)
                 }
-
-                Text(turn.placeAdresse)
-                    .tokenFont(.Placeholder_Inter_Regular_16)
-                    .foregroundColor(.white)
             }
             .padding(.horizontal, 12)
+            .alert(
+                "Ouvrir l'adresse dans :", isPresented: $isShowMaps,
+                actions: {
+                    Button("Ouvrir avec Apple Maps") {
+                        let url = URL(
+                            string:
+                                "maps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)"
+                        )
+                        if UIApplication.shared.canOpenURL(url!) {
+                            UIApplication.shared.open(
+                                url!, options: [:], completionHandler: nil)
+                        }
+                    }
+
+                    Button("Ouvrir avec Google Maps") {
+                        let url = URL(
+                            string:
+                                "comgooglemaps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)"
+                        )
+                        if UIApplication.shared.canOpenURL(url!) {
+                            UIApplication.shared.open(
+                                url!, options: [:], completionHandler: nil)
+                        }
+                    }
+
+                    Button("Annuler", role: .cancel) {
+                        isShowMaps = false
+                    }
+                })
             
             if ((turn.link?.isEmpty) != nil) {
                 HStack(alignment: .center) {
