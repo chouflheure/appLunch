@@ -32,7 +32,7 @@ class SearchCompleter: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 }
 
-struct ContentView8: View {
+struct SelectLocalisationView: View {
     @State private var searchText = ""
     @StateObject private var searchCompleter = SearchCompleter()
     @ObservedObject var viewModel: TurnCardViewModel

@@ -14,6 +14,8 @@ class TurnCardViewModel: ObservableObject {
     @Published var description = String()
     @Published var invited = [String]()
     @Published var messagerieUUID = String()
+    @Published var link = String()
+    @Published var linkTitle = String()
     @Published var adminUID = String()
     @Published var placeTitle = String()
     @Published var placeAdresse = String()
@@ -156,7 +158,7 @@ extension TurnCardViewModel {
         print("@@@ placeTitle = \(placeTitle)")
         print("@@@ placeAdresse = \(placeAdresse)")
 
-        let turn = Turn(
+        var turn = Turn(
             uid: uid.description,
             titleEvent: titleEvent,
             date: dateEvent ?? Date(),
@@ -174,7 +176,12 @@ extension TurnCardViewModel {
             placeLongitude: 1.2,
             timestamp: Date()
         )
-        
+
+        if !linkTitle.isEmpty && !link.isEmpty {
+            turn.linkTitle = linkTitle
+            turn.link = link
+        }
+
         firebaseService.addData(data: turn, to: .turns) { (result: Result<Void, Error>) in
             switch result{
             case .success():
@@ -184,7 +191,6 @@ extension TurnCardViewModel {
                 print("@@@ error = \(error)")
             }
         }
-         
     }
     
     func addEventTurnOnFriendProfile(turn: Turn) {

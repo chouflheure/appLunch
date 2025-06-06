@@ -65,6 +65,21 @@ struct MainInformationsPreviewFeedView: View {
                         .lineLimit(1)
                 }
                 .padding(.horizontal, 12)
+                
+                if ((turn.link?.isEmpty) != nil) {
+                    HStack(alignment: .center) {
+                        
+                        Image(.iconLink)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Link(turn.linkTitle ?? "", destination: URL(string: turn.link ?? "") ?? URL(string: "https://www.google.com")!)
+                            .tokenFont(.Body_Inter_Medium_14)
+                            .lineLimit(1)
+                    }
+                    .padding(.horizontal, 12)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 15)

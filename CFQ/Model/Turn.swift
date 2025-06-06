@@ -21,6 +21,8 @@ class Turn: ObservableObject, Encodable, Decodable {
     @Published var timestamp: Date
     @Published var imageEvent: UIImage?
     @Published var adminContact: UserContact?
+    @Published var link: String?
+    @Published var linkTitle: String?
     // @Published var adminRef: User
     
 
@@ -41,6 +43,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         case placeLatitude
         case placeLongitude
         case timestamp
+        case link
+        case linkTitle
         // case adminRef
         
     }
@@ -61,8 +65,9 @@ class Turn: ObservableObject, Encodable, Decodable {
         placeAdresse: String,
         placeLatitude: Double,
         placeLongitude: Double,
-        timestamp: Date
-        
+        timestamp: Date,
+        link: String? = nil,
+        lintiTitle: String? = nil
         // adminRef: User
     ) {
         self.uid = uid
@@ -81,6 +86,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         self.placeLatitude = placeLatitude
         self.placeLongitude = placeLongitude
         self.timestamp = timestamp
+        self.link = link
+        self.linkTitle = lintiTitle
         // self.adminRef = adminRef
     }
 
@@ -102,6 +109,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         placeLatitude = try values.decode(Double.self, forKey: .placeLatitude)
         placeLongitude = try values.decode(Double.self, forKey: .placeLongitude)
         timestamp = try values.decode(Date.self, forKey: .timestamp)
+        linkTitle = try values.decodeIfPresent(String.self, forKey: .linkTitle)
+        link = try values.decodeIfPresent(String.self, forKey: .link)
         // adminRef = try values.decode(User.self, forKey: .adminRef)
         
     }
@@ -124,6 +133,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         try container.encode(placeLatitude, forKey: .placeLatitude)
         try container.encode(placeLongitude, forKey: .placeLongitude)
         try container.encode(timestamp, forKey: .timestamp)
+        try container.encodeIfPresent(linkTitle, forKey: .linkTitle)
+        try container.encodeIfPresent(link, forKey: .link)
         // try container.encode(adminRef, forKey: .adminRef)
         
     }
@@ -143,6 +154,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         + "\n placeAdresse : \(placeAdresse)"
         + "\n placeLatitude : \(placeLatitude)"
         + "\n placeLongitude : \(placeLongitude)"
+        + "\n link : \(link)"
+        + "\n linkTitle : \(linkTitle)"
         // + "\n adminContact : \(adminRef.uid)"
         // + "\n adminContact : \(adminRef.name)"
         // + "\n adminContact : \(adminRef.pseudo)"

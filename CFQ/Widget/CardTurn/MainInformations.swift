@@ -76,6 +76,21 @@ struct MainInformationsPreviewView: View {
                 .lineLimit(1)
             }
             .padding(.horizontal, 12)
+            
+            if !viewModel.link.isEmpty {
+                HStack(alignment: .center) {
+                    
+                    Image(.iconLink)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.white)
+                    
+                    Link(viewModel.linkTitle, destination: URL(string: viewModel.link) ?? URL(string: "https://www.google.com")!)
+                        .tokenFont(.Body_Inter_Medium_14)
+                        .lineLimit(1)
+                }
+                .padding(.horizontal, 12)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, 15)
@@ -90,6 +105,7 @@ struct MainInformationsDetailView: View {
     @State private var showMoods = false
     @ObservedObject var viewModel: TurnCardViewModel
     @State var isPresentedLocalisation = false
+    @State var isPresentedLink = false
     @State var showFriendProfile: Bool = false
     @ObservedObject var coordinator: Coordinator
 
@@ -142,6 +158,23 @@ struct MainInformationsDetailView: View {
                             ? "Adress" : viewModel.placeAdresse
                         )
                         .tokenFont(.Placeholder_Inter_Regular_16)
+                    }
+                }
+                .padding(.horizontal, 12)
+                
+                HStack(alignment: .top) {
+                    
+                    Button(action: {
+                        isPresentedLink = true
+                    }) {
+                        Image(.iconLink)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Text(viewModel.linkTitle.isEmpty ? "Un lien" : viewModel.linkTitle)
+                            .tokenFont(viewModel.linkTitle.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
+                            .lineLimit(1)
                     }
                 }
                 .padding(.horizontal, 12)
@@ -206,8 +239,14 @@ struct MainInformationsDetailView: View {
                 allFriends: $viewModel.friendListToAdd
             )
         }
+        .sheet(isPresented: $isPresentedLink) {
+            SelectLinkView(
+                isPresented: $isPresentedLink, viewModel: viewModel
+            )
+            .presentationDragIndicator(.visible)
+        }
         .sheet(isPresented: $isPresentedLocalisation) {
-            ContentView8(
+            SelectLocalisationView(
                 viewModel: viewModel, isPresented: $isPresentedLocalisation
             )
             .presentationDragIndicator(.visible)
@@ -240,9 +279,23 @@ struct MainInformationsDetailView: View {
     }
 }
 
-#Preview {
-    ZStack {
-        Color.blue.edgesIgnoringSafeArea(.all)
-        // MainInformationsView(viewModel: TurnCardViewModel())
+struct SelectLinkView: View {
+    @Binding var isPresented: Bool
+    @ObservedObject var viewModel: TurnCardViewModel
+
+    var body: some View {
+        VStack {
+            TextField("Titre du lien", text: $viewModel.linkTitle)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            TextField("lien url", text: $viewModel.link)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            Button(action: {
+                isPresented = false
+            }) {
+                Text("Done")
+            }
+        }.padding(.top, 40)
+        Spacer()
     }
 }
