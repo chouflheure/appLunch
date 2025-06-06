@@ -157,6 +157,8 @@ extension TurnCardViewModel {
 
         print("@@@ placeTitle = \(placeTitle)")
         print("@@@ placeAdresse = \(placeAdresse)")
+        print("@@@ placeLatitude = \(placeLatitude)")
+        print("@@@ placeLongitude = \(placeLongitude)")
 
         var turn = Turn(
             uid: uid.description,
@@ -172,8 +174,8 @@ extension TurnCardViewModel {
             messagerieUUID: messagerieUIID.description,
             placeTitle: placeTitle,
             placeAdresse: placeAdresse,
-            placeLatitude: 1.1,
-            placeLongitude: 1.2,
+            placeLatitude: placeLatitude,
+            placeLongitude: placeLongitude,
             timestamp: Date()
         )
 

@@ -42,15 +42,15 @@ struct SelectLocalisationView: View {
         center: CLLocationCoordinate2D(latitude: 48.8566, longitude: 2.3522), // Paris coordinates
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     )
+
     @State private var showingSafariView = false
     @State private var selectedURL: URL?
     @State private var selectedLocation: IdentifiableMapItem?
+    @State private var selectedResult: MKLocalSearchCompletion?
 
     var body: some View {
-        VStack {
-            TextField("Enter location name", text: $searchText, onEditingChanged: { _ in }, onCommit: {
-                // Optional: Handle commit action if needed
-            })
+        VStack(spacing: 0) {
+            TextField("Où faire l'event ?", text: $searchText, onEditingChanged: { _ in }, onCommit: {})
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding()
             .padding(.top, 20)
@@ -60,13 +60,13 @@ struct SelectLocalisationView: View {
 
             ScrollView(showsIndicators: false) {
                 ForEach(searchCompleter.results, id: \.self) { result in
-                    VStack(alignment: .leading) {
-                        HStack {
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack(spacing: 0) {
                             Text(result.title)
                             Spacer()
-                        }
+                        }.padding(.bottom, 5)
 
-                        HStack {
+                        HStack(spacing: 0) {
                             Text(result.subtitle)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
@@ -75,39 +75,23 @@ struct SelectLocalisationView: View {
                         }
                     }
                     .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                    .background(selectedResult == result ? .grayCard : .clear)
                     .onTapGesture {
-                        viewModel.placeTitle = result.title
-                        viewModel.placeAdresse = result.subtitle
-                        searchForLocation(completion: result)
-                        print("@@@ viewModel.adresse.placeTitle \(viewModel.placeTitle)")
-                        print("@@@ viewModel.adresse.placeAdresse \(viewModel.placeAdresse)")
+                        DispatchQueue.main.async {
+                            viewModel.placeTitle = result.title
+                            viewModel.placeAdresse = result.subtitle
+                            searchForLocation(completion: result)
+                            selectedResult = result
+                        }
                     }
                     
                     Divider()
                         .background(.white)
                         .padding(.horizontal, 12)
-                        .padding(.vertical, 10)
-                        
                 }
             }
 
-/*
-            List(searchCompleter.results, id: \.self) { result in
-                VStack(alignment: .leading) {
-                    Text(result.title)
-                    Text(result.subtitle)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .onTapGesture {
-                    viewModel.placeTitle = result.title
-                    viewModel.placeAdresse = result.subtitle
-                    searchForLocation(completion: result)
-                    print("@@@ viewModel.adresse.placeTitle \(viewModel.placeTitle)")
-                    print("@@@ viewModel.adresse.placeAdresse \(viewModel.placeAdresse)")
-                }
-            }
-*/
             if let selectedLocation = selectedLocation {
                 ZStack {
                     Map(coordinateRegion: $mapRegion, annotationItems: [selectedLocation]) { location in
@@ -127,30 +111,8 @@ struct SelectLocalisationView: View {
                 .frame(width: 150)
                 .background(Color(hex: "B098E6").opacity(viewModel.disableButtonSend ? 0.5 : 1))
                 .cornerRadius(10)
-                
-                
-                    /*
-                    let latitude = selectedLocation.mapItem.placemark.coordinate.latitude
-                    let longitude = selectedLocation.mapItem.placemark.coordinate.longitude
-                    let googleSearchURLString = "https://www.google.com/maps/search/?api=1&query=\(latitude),\(longitude)"
-                     */
-                    /*
-                    if let url = URL(string: googleSearchURLString) {
-                        selectedURL = url
-                        showingSafariView = true
-                    }
-                     */
-                    
-               
             }
         }
-        /*
-        .sheet(isPresented: $showingSafariView) {
-            if let selectedURL = selectedURL {
-                SafariView(url: selectedURL)
-            }
-        }
-         */
     }
 
     func searchForLocation(completion: MKLocalSearchCompletion) {
@@ -172,10 +134,6 @@ struct SelectLocalisationView: View {
 
                 viewModel.placeLatitude = mapItem.placemark.coordinate.latitude
                 viewModel.placeLongitude = mapItem.placemark.coordinate.longitude
-
-                print("@@@ Found location: \(mapItem.name ?? "No name")")
-                print("@@@ mapItem.placemark.coordinate: \(mapItem.placemark.coordinate.longitude)")
-                print("@@@ mapItem.placemark.coordinate: \(mapItem.placemark.coordinate.latitude)")
             }
         }
     }
