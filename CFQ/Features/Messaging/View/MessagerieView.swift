@@ -130,7 +130,7 @@ struct MessagerieView: View {
                                     
                                 }
                                 Spacer()
-                                    .frame(height: textViewHeight + 30)
+                                    .frame(height: textViewHeight + 40)
                             }
 
                             VStack {
