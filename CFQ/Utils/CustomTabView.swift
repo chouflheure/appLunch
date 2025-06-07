@@ -12,6 +12,7 @@ struct CustomTabView: View {
     @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
+    @State private var navigationPath = NavigationPath() // Ajout du navigationPath
 
     @State var text = ""
     var body: some View {
@@ -182,21 +183,26 @@ struct CustomTabView: View {
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showProfileFriend {
+                        FriendProfileView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+                    
                     if coordinator.showMessageScreen {
                         ConversationsView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
                     if coordinator.showMessagerieScreen {
-                        MessagerieView(isPresented: $coordinator.showMessagerieScreen, coordinator: coordinator)
-                            .transition(.move(edge: .trailing))
+                        MessagerieView(
+                            isPresented: $coordinator.showMessagerieScreen,
+                            coordinator: coordinator,
+                            conversation: coordinator.selectedConversation ?? Conversation(uid: "", titleConv: "", pictureEventURL: "", typeEvent: "", eventUID: "", lastMessageSender: "", lastMessageDate: Date(), lastMessage: "", messageReader: [])
+                        )
+                        .transition(.move(edge: .trailing))
                     }
                     
-                    if coordinator.showProfileFriend {
-                        FriendProfileView(coordinator: coordinator)
-                            .transition(.move(edge: .trailing))
-                            .zIndex(100)
-                    }
+                    
                 }
             )
             // .animation(.easeInOut, value: coordinator.showProfileFriend)

@@ -4,6 +4,7 @@ import SwiftUI
 struct TurnCardFeedView: View {
     @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
+    @State var showDetail: Bool = false
 
     init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn

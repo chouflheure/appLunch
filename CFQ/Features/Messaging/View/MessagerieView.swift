@@ -2,11 +2,33 @@ import Combine
 import SwiftUI
 import UIKit
 
-enum MessagerieHeaderType {
-    case cfq
-    case people
-    case event
+public enum MessagerieHeaderTypeData {
+    case cfq(name: String, title: String, image: String)
+    case people(participants: [String])
+    case event(name: String, date: Date)
 }
+
+struct HeaderMessagerieView: View {
+    var type: MessagerieHeaderTypeData
+    
+    var body: some View {
+        switch type {
+        case .cfq(let name, let title, let image):
+            CFQMolecule(
+                name: name,
+                title: title,
+                image: image
+            )
+            
+        case .people(let participants):
+            Text("people")
+
+        case .event(let name, let date):
+            Text("event")
+        }
+    }
+}
+
 
 // Garder le paramètre isPresented pour pouvoir y accéder depuis différent endroit
 struct MessagerieView: View {
@@ -20,10 +42,13 @@ struct MessagerieView: View {
     @State private var isKeyboardVisible = false
     @State private var textViewHeight: CGFloat = 20
     @State private var keyboardHeight: CGFloat = 0
+    
+    var conversation: Conversation
 
-    init(isPresented: Binding<Bool>, coordinator: Coordinator) {
+    init(isPresented: Binding<Bool>, coordinator: Coordinator, conversation: Conversation) {
         _isPresented = isPresented
         self.coordinator = coordinator
+        self.conversation = conversation
         _viewModel = StateObject(wrappedValue: MessagerieViewModel(coordinator: coordinator))
     }
 
@@ -44,11 +69,9 @@ struct MessagerieView: View {
                             }
 
                             Spacer()
-                            
-                            CFQMolecule(
-                                name: coordinator.selectedCFQ?.userContact?.pseudo ?? "",
-                                title: coordinator.selectedCFQ?.title ?? "",
-                                image: coordinator.selectedCFQ?.userContact?.profilePictureUrl ?? ""
+
+                            HeaderMessagerieView(
+                                type: viewModel.convertMessageTypeToMessageTypeData(messagerieType: coordinator.selectedConversation?.typeEvent ?? "", conversation: conversation)
                             )
                             .onTapGesture {
                                 withAnimation {

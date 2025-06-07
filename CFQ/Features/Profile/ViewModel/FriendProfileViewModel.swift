@@ -9,6 +9,8 @@ class FriendProfileViewModel: ObservableObject {
     @Published var isPrivateAccount: Bool = false
     @Published var user: User
     @Published var userFriend: User
+    @Published var turns: [Turn] = []
+
     var firebaseService = FirebaseService()
     
     @Published var statusFriend: UsersAreFriendsStatusType = .noFriend {
@@ -194,5 +196,59 @@ class FriendProfileViewModel: ObservableObject {
             at: self.user.uid
         )
     }
+}
+
+extension FriendProfileViewModel {
+    func catchAllDataProfileUser(uid: String) {
+        firebaseService.getDataByID(
+            from: .users,
+            with: uid,
+            completion: { (result: Result<User, Error>) in
+                print("uid = \(uid)")
+                switch result {
+                case .success(let user):
+                DispatchQueue.main.async {
+                    self.userFriend = user
+                    self.startListeningToTurn(user: user)
+                }
+                case .failure(let error):
+                    print("@@@ error")
+                    print("@@@ error \(error)")
+                    Logger.log(error.localizedDescription, level: .error)
+                }
+            }
+        )
+    }
     
+    func startListeningToTurn(user: User) {
+        print("@@@ user.postedTurns = \(user.postedTurns)")
+        firebaseService.getDataByIDs(
+            from: .turns,
+            with: user.postedTurns ?? []
+        ) { [weak self] (result: Result<[Turn], Error>) in
+            guard let self = self else { return }
+            print("@@@ here")
+            switch result {
+            case .success(let fetchedTurns):
+                // Stockez les turns récupérés
+                print("@@@ success")
+                DispatchQueue.main.async {
+                    self.turns = fetchedTurns
+                    self.turns.forEach({ turn in
+                        turn.adminContact = UserContact(
+                            uid: user.uid,
+                            name: user.uid,
+                            firstName: user.firstName,
+                            pseudo: user.pseudo,
+                            profilePictureUrl: user.profilePictureUrl,
+                            isActive: user.isActive
+                        )
+                    })
+                }
+            case .failure(let error):
+                Logger.log(error.localizedDescription, level: .error)
+                print("@@@ error")
+            }
+        }
+    }
 }

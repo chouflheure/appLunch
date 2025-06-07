@@ -5,6 +5,7 @@ struct ConversationsView: View {
     @StateObject var viewModel: PreviewMessagerieScreenViewModel
     @State private var showDetail = false
     @State private var showDetailPopUp = false
+    @State var messagerieType: String?
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
@@ -44,6 +45,7 @@ struct ConversationsView: View {
                                 CellMessagingView(data: data, hasUnReadMessage: !data.messageReader.contains(coordinator.user?.uid ?? "")) { _ in
                                     coordinator.selectedConversation = data
                                     withAnimation {
+                                        messagerieType = data.typeEvent
                                         showDetail = true
                                     }
                                 }.padding(.top, 16)
@@ -68,7 +70,7 @@ struct ConversationsView: View {
 
     @ViewBuilder
     func destinationView() -> some View {
-        MessagerieView(isPresented: $showDetail, coordinator: coordinator)
+        MessagerieView(isPresented: $showDetail, coordinator: coordinator, conversation: coordinator.selectedConversation!)
     }
 }
 

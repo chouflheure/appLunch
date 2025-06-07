@@ -26,7 +26,7 @@ struct CFQCollectionView: View {
                     ).padding(.leading, 20)
                     ForEach(coordinator.userCFQ.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { cfq in
                         // ??
-                        if let userAdmin = coordinator.userFriends.first(where: { $0.uid == cfq.admin }) {
+                        if let userAdmin = coordinator.user?.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
                             CFQMolecule(
                                 name: userAdmin.pseudo,
                                 title: cfq.title,
@@ -46,7 +46,7 @@ struct CFQCollectionView: View {
 
                                 coordinator.selectedConversation = Conversation(
                                     uid: cfq.messagerieUUID,
-                                    titleConv: "",
+                                    titleConv: cfq.title,
                                     pictureEventURL: "",
                                     typeEvent: "",
                                     eventUID: "",

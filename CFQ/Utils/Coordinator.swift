@@ -179,7 +179,8 @@ class Coordinator: ObservableObject {
                 switch result {
                 case .success(let userContact):
                     DispatchQueue.main.async {
-                        self.userFriends = userContact
+                        self.user?.userFriendsContact = userContact
+                        // self.userFriends = userContact
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")

@@ -6,6 +6,7 @@ struct FriendProfileView: View {
 
     @StateObject var viewModel: FriendProfileViewModel
     @ObservedObject var coordinator: Coordinator
+    @State private var showDetail = false
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
@@ -46,15 +47,12 @@ struct FriendProfileView: View {
                     HStack {
                         CirclePictureStatus(
                             userPreview: UserContact(
-                                uid: coordinator.profileUserSelected.uid,
-                                name: coordinator.profileUserSelected.name,
-                                firstName: coordinator.profileUserSelected
-                                    .firstName,
-                                pseudo: coordinator.profileUserSelected.pseudo,
-                                profilePictureUrl: coordinator
-                                    .profileUserSelected.profilePictureUrl,
-                                isActive: coordinator.profileUserSelected
-                                    .isActive
+                                uid: viewModel.userFriend.uid,
+                                name:  viewModel.userFriend.name,
+                                firstName: viewModel.userFriend.firstName,
+                                pseudo:  viewModel.userFriend.pseudo,
+                                profilePictureUrl:  viewModel.userFriend.profilePictureUrl,
+                                isActive:  viewModel.userFriend.isActive
                             ),
                             onClick: {}
                         )
@@ -63,10 +61,9 @@ struct FriendProfileView: View {
 
                         VStack(alignment: .leading, spacing: 12) {
                             PreviewPseudoName(
-                                name: coordinator.profileUserSelected.name,
-                                firstName: coordinator.profileUserSelected
-                                    .firstName,
-                                pseudo: coordinator.profileUserSelected.pseudo
+                                name: viewModel.userFriend.name,
+                                firstName: viewModel.userFriend.firstName,
+                                pseudo: viewModel.userFriend.pseudo
                             )
 
                             HStack(alignment: .center) {
@@ -74,7 +71,7 @@ struct FriendProfileView: View {
                                     .resizable()
                                     .frame(width: 16, height: 16)
                                     .foregroundColor(.white)
-                                Text(coordinator.profileUserSelected.location)
+                                Text(viewModel.userFriend.location)
                                     .tokenFont(.Body_Inter_Medium_16)
                             }
                         }
@@ -135,7 +132,7 @@ struct FriendProfileView: View {
                     if viewModel.isPrivateAccount {
                         PrivateEventShow()
                     } else {
-                        PageViewEventFriends()
+                        CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -152,6 +149,7 @@ struct FriendProfileView: View {
         .onAppear {
             // TODO: - call to have full user
             viewModel.statusFriendButton()
+            viewModel.catchAllDataProfileUser(uid: coordinator.profileUserSelected.uid)
         }
 
         if viewModel.isShowRemoveFriends {
