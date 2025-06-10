@@ -28,7 +28,6 @@ class Coordinator: ObservableObject {
     @Published var turnSelectedPreview: TurnPreview?
     
     @Published var userCFQ: [CFQ] = []
-    @Published var userFriends: [UserContact] = []
     @Published var profileUserSelected: User = User()
     @Published var selectedConversation: Conversation?
     @Published var selectedCFQ: CFQ?

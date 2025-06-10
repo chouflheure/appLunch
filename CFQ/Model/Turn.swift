@@ -12,6 +12,7 @@ class Turn: ObservableObject, Encodable, Decodable {
     @Published var invited: [String]
     @Published var participants: [String]
     @Published var denied: [String]
+    @Published var mayBeParticipate: [String]
     @Published var mood: [Int]
     @Published var messagerieUUID: String
     @Published var placeTitle: String
@@ -36,6 +37,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         case invited
         case participants
         case denied
+        case mayBeParticipate
         case mood
         case messagerieUUID
         case placeTitle
@@ -59,6 +61,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         invited: [String],
         participants: [String],
         denied: [String],
+        mayBeParticipate: [String],
         mood: [Int],
         messagerieUUID: String,
         placeTitle: String,
@@ -79,6 +82,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         self.invited = invited
         self.participants = participants
         self.denied = denied
+        self.mayBeParticipate = mayBeParticipate
         self.mood = mood
         self.messagerieUUID = messagerieUUID
         self.placeTitle = placeTitle
@@ -102,6 +106,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         invited = try values.decode([String].self, forKey: .invited)
         participants = try values.decode([String].self, forKey: .participants)
         denied = try values.decode([String].self, forKey: .denied)
+        mayBeParticipate = try values.decode([String].self, forKey: .mayBeParticipate)
         mood = try values.decode([Int].self, forKey: .mood)
         messagerieUUID = try values.decode(String.self, forKey: .messagerieUUID)
         placeTitle = try values.decode(String.self, forKey: .placeTitle)
@@ -126,6 +131,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         try container.encode(invited, forKey: .invited)
         try container.encode(participants, forKey: .participants)
         try container.encode(denied, forKey: .denied)
+        try container.encode(mayBeParticipate, forKey: .mayBeParticipate)
         try container.encode(mood, forKey: .mood)
         try container.encode(messagerieUUID, forKey: .messagerieUUID)
         try container.encode(placeTitle, forKey: .placeTitle)
@@ -149,13 +155,15 @@ class Turn: ObservableObject, Encodable, Decodable {
         + "\n description : \(description)"
         + "\n invited : \(invited)"
         + "\n participants : \(participants)"
+        + "\n denied : \(denied)"
+        + "\n mayBeParticipate : \(mayBeParticipate)"
         + "\n mood : \(mood)"
         + "\n placeTitle : \(placeTitle)"
         + "\n placeAdresse : \(placeAdresse)"
         + "\n placeLatitude : \(placeLatitude)"
         + "\n placeLongitude : \(placeLongitude)"
-        + "\n link : \(link)"
-        + "\n linkTitle : \(linkTitle)"
+        + "\n link : \(String(describing: link))"
+        + "\n linkTitle : \(String(describing: linkTitle))"
         // + "\n adminContact : \(adminRef.uid)"
         // + "\n adminContact : \(adminRef.name)"
         // + "\n adminContact : \(adminRef.pseudo)"

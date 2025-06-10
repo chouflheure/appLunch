@@ -52,7 +52,7 @@ class TeamFormViewModel: ObservableObject {
             pseudo: coordinator.user?.pseudo ?? "",
             profilePictureUrl: coordinator.user?.profilePictureUrl ?? ""
         )
-        friendsList = Set(coordinator.userFriends)
+        friendsList = Set(coordinator.user?.userFriendsContact ?? [])
 
         allFriends = friendsList
         

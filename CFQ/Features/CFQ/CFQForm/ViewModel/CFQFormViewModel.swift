@@ -33,7 +33,7 @@ class CFQFormViewModel: ObservableObject {
 
     init(coordinator: Coordinator) {
         self.user = coordinator.user ?? User(uid: "")
-        friendsList = Set(coordinator.userFriends)
+        friendsList = Set(coordinator.user?.userFriendsContact ?? [])
         allFriends = friendsList
     }
 

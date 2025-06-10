@@ -53,4 +53,5 @@ struct TurnCardFeedView: View {
             }
         }
     }
+    
 }

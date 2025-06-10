@@ -24,6 +24,7 @@ struct CFQCollectionView: View {
                                 .foregroundColor(.white)
                         }
                     ).padding(.leading, 20)
+
                     ForEach(coordinator.userCFQ.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { cfq in
                         // ??
                         if let userAdmin = coordinator.user?.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {

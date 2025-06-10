@@ -108,15 +108,21 @@ struct CustomTabViewDoubleProfile: View {
             ScrollView(.vertical, showsIndicators: false) {
                 if selectedIndex == 0 {
                     LazyVStack(spacing: 20) {
-                        ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
-                            TurnCardFeedView(turn: turn, coordinator: coordinator)
+                        if turns.isEmpty {
+                            Text("Pas de turn posté")
+                                .tokenFont(.Label_Gigalypse_12)
+                                .padding(.top, 200)
+                        } else {
+                            ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
+                                TurnCardFeedView(turn: turn, coordinator: coordinator)
+                            }
                         }
                     }
                     .padding(.top, 24)
                 } else {
                     Text("Feature en cours")
                         .tokenFont(.Label_Gigalypse_12)
-                        .padding(.top, 50)
+                        .padding(.top, 200)
                 }
             }
         }

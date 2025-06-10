@@ -13,8 +13,9 @@ struct CustomTabView: View {
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
     @State private var navigationPath = NavigationPath() // Ajout du navigationPath
-
     @State var text = ""
+    
+    
     var body: some View {
         SafeAreaContainer {
             ZStack {
@@ -134,6 +135,7 @@ struct CustomTabView: View {
                     }
                 }
             }
+            // TODO: - Update : https://claude.ai/chat/e9ddf0dd-c34f-466d-b385-54249198efd4
             .overlay(
                 Group {
                     if coordinator.showCreateTeam {
@@ -162,11 +164,6 @@ struct CustomTabView: View {
                         TurnCardView(coordinator: coordinator, coreDataViewModel: TurnCoreDataViewModel())
                             .transition(.move(edge: .trailing))
                     }
-                    
-                    if coordinator.showTurnFeedDetail {
-                        TurnCardDetailsFeedView(coordinator: coordinator)
-                            .transition(.move(edge: .trailing))
-                    }
 
                     if coordinator.showNotificationScreen {
                         NotificationScreenView(coordinator: coordinator)
@@ -193,6 +190,11 @@ struct CustomTabView: View {
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showTurnFeedDetail {
+                        TurnCardDetailsFeedView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+                    
                     if coordinator.showMessagerieScreen {
                         MessagerieView(
                             isPresented: $coordinator.showMessagerieScreen,
@@ -201,8 +203,6 @@ struct CustomTabView: View {
                         )
                         .transition(.move(edge: .trailing))
                     }
-                    
-                    
                 }
             )
             // .animation(.easeInOut, value: coordinator.showProfileFriend)
