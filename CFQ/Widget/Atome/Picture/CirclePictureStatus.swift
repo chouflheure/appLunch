@@ -25,8 +25,6 @@ struct CirclePictureStatus: View {
     var body: some View {
         ZStack {
             ModernCachedAsyncImage(url: userPreview.profilePictureUrl, placeholder: Image(systemName: "photo.fill"))
-            //CachedAsyncImageView(urlString: userPreview.profilePictureUrl, designType: .scaledToFill_Circle)
-                //.resizable()
                 .scaledToFill()
                 .clipShape(Circle())
                 .shadow(color: userPreview.isActive ? .active : .inactive, radius: 4)

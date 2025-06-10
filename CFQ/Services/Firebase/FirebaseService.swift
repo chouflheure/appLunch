@@ -13,6 +13,9 @@ enum ListenerType: String {
     case user = "user"
 }
 
+// TODO: - Update call firebase
+// https://claude.ai/chat/91dee304-c7de-43cd-a448-93a5933d73d3
+
 class FirebaseService: FirebaseServiceProtocol {
     private var listeners: [String: ListenerRegistration] = [:]
     let db = Firestore.firestore()

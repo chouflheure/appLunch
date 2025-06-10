@@ -28,7 +28,6 @@ class Coordinator: ObservableObject {
     @Published var turnSelectedPreview: TurnPreview?
     
     @Published var userCFQ: [CFQ] = []
-    @Published var userFriends: [UserContact] = []
     @Published var profileUserSelected: User = User()
     @Published var selectedConversation: Conversation?
     @Published var selectedCFQ: CFQ?
@@ -179,7 +178,8 @@ class Coordinator: ObservableObject {
                 switch result {
                 case .success(let userContact):
                     DispatchQueue.main.async {
-                        self.userFriends = userContact
+                        self.user?.userFriendsContact = userContact
+                        // self.userFriends = userContact
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")

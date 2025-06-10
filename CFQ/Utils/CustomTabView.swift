@@ -12,8 +12,10 @@ struct CustomTabView: View {
     @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
     @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
-
+    @State private var navigationPath = NavigationPath() // Ajout du navigationPath
     @State var text = ""
+    
+    
     var body: some View {
         SafeAreaContainer {
             ZStack {
@@ -133,6 +135,7 @@ struct CustomTabView: View {
                     }
                 }
             }
+            // TODO: - Update : https://claude.ai/chat/e9ddf0dd-c34f-466d-b385-54249198efd4
             .overlay(
                 Group {
                     if coordinator.showCreateTeam {
@@ -161,11 +164,6 @@ struct CustomTabView: View {
                         TurnCardView(coordinator: coordinator, coreDataViewModel: TurnCoreDataViewModel())
                             .transition(.move(edge: .trailing))
                     }
-                    
-                    if coordinator.showTurnFeedDetail {
-                        TurnCardDetailsFeedView(coordinator: coordinator)
-                            .transition(.move(edge: .trailing))
-                    }
 
                     if coordinator.showNotificationScreen {
                         NotificationScreenView(coordinator: coordinator)
@@ -182,20 +180,28 @@ struct CustomTabView: View {
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showProfileFriend {
+                        FriendProfileView(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+                    
                     if coordinator.showMessageScreen {
                         ConversationsView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
-                    if coordinator.showMessagerieScreen {
-                        MessagerieView(isPresented: $coordinator.showMessagerieScreen, coordinator: coordinator)
+                    if coordinator.showTurnFeedDetail {
+                        TurnCardDetailsFeedView(coordinator: coordinator)
                             .transition(.move(edge: .trailing))
                     }
                     
-                    if coordinator.showProfileFriend {
-                        FriendProfileView(coordinator: coordinator)
-                            .transition(.move(edge: .trailing))
-                            .zIndex(100)
+                    if coordinator.showMessagerieScreen {
+                        MessagerieView(
+                            isPresented: $coordinator.showMessagerieScreen,
+                            coordinator: coordinator,
+                            conversation: coordinator.selectedConversation ?? Conversation(uid: "", titleConv: "", pictureEventURL: "", typeEvent: "", eventUID: "", lastMessageSender: "", lastMessageDate: Date(), lastMessage: "", messageReader: [])
+                        )
+                        .transition(.move(edge: .trailing))
                     }
                 }
             )

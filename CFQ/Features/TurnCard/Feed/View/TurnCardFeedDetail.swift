@@ -64,7 +64,7 @@ struct TurnCardDetailsFeedView: View {
     private func checkTurnSelectedNotNull() -> Turn {
         guard let turn = coordinator.turnSelected else {
             coordinator.showTurnFeedDetail = false
-            return Turn(uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date())
+            return Turn(uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date())
         }
         
         return turn
@@ -123,6 +123,7 @@ struct TitleTurnCardDetailFeedView: View {
     var turn: Turn
     @ObservedObject var coordinator: Coordinator
     @State var status: TypeParticipateButton = .none
+    @State var showSheetParticipateAnswers: Bool = false
 
     init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
@@ -141,17 +142,48 @@ struct TitleTurnCardDetailFeedView: View {
                 .padding(.bottom, 16)
 
             HStack {
-                CachedAsyncImageView(urlString: turn.adminContact?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
-                    .frame(width: 50, height: 50)
-
-                Text(turn.adminContact?.pseudo ?? "")
-                    .tokenFont(.Body_Inter_Medium_16)
-                    .textCase(.lowercase)
-                    .lineLimit(1)
-
+                Button(action: {
+                    
+                    coordinator.profileUserSelected = User(
+                        uid: turn.adminContact?.uid ?? "",
+                        name: turn.adminContact?.name ?? "",
+                        firstName: turn.adminContact?.firstName ?? "",
+                        pseudo: turn.adminContact?.pseudo ?? "",
+                        profilePictureUrl: turn.adminContact?.profilePictureUrl ?? "",
+                        isActive: turn.adminContact?.isActive ?? true
+                    )
+                    withAnimation {
+                        coordinator.showProfileFriend = true
+                    }
+                }) {
+                    CachedAsyncImageView(urlString: turn.adminContact?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
+                        .frame(width: 50, height: 50)
+                    
+                    Text(turn.adminContact?.pseudo ?? "")
+                        .tokenFont(.Body_Inter_Medium_16)
+                        .textCase(.lowercase)
+                        .lineLimit(1)
+                }
                 Spacer()
 
-                Button(action: {}) {
+                Button(action: {
+                    // coordinator.turnSelected = turn
+                    
+                    coordinator.selectedConversation = Conversation(
+                        uid: turn.messagerieUUID,
+                        titleConv: turn.titleEvent,
+                        pictureEventURL: "",
+                        typeEvent: "",
+                        eventUID: "",
+                        lastMessageSender: "",
+                        lastMessageDate: Date(),
+                        lastMessage: "",
+                        messageReader: [""]
+                    )
+                    withAnimation {
+                        coordinator.showMessagerieScreen = true
+                    }
+                }) {
                     Image(.iconMessage)
                         .foregroundColor(.white)
                 }
@@ -159,17 +191,44 @@ struct TitleTurnCardDetailFeedView: View {
                 ButtonParticipate(
                     action: {
                         withAnimation {
-                            coordinator.showSheetParticipateAnswers = coordinator.turnSelected?.adminContact?.uid != coordinator.user?.uid
+                            showSheetParticipateAnswers = coordinator.turnSelected?.adminContact?.uid != coordinator.user?.uid
                         }
                     },
-                    selectedOption: (coordinator.turnSelected?.adminContact?.uid == coordinator.user?.uid) ? .constant(.yes) : $status
-                )
+                    selectedOption: (turn.adminContact?.uid == coordinator.user?.uid) ? .constant(.yes) : $status
+                ).onAppear {
+                    print("@@@ turn.participants = \(turn.participants)")
+                    if turn.participants.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
+                        $status.wrappedValue = .yes
+                        print("@@@ yes ")
+                    }
+                    print("@@@ turn.mayBeParticipate = \(turn.mayBeParticipate)")
+                    if turn.mayBeParticipate.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
+                        print("@@@ maybe ")
+                        $status.wrappedValue = .maybe
+                    }
+                    print("@@@ turn.denied = \(turn.denied)")
+                    if turn.denied.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
+                        print("@@@ no")
+                        $status.wrappedValue = .no
+                    }
+                }.onChange(of: status) { newValue in
+                    switch status {
+                    case .yes:
+                        turn.participants.append(coordinator.user?.uid ?? "")
+                    case .maybe:
+                        turn.mayBeParticipate.append(coordinator.user?.uid ?? "")
+                    case .no:
+                        turn.denied.append(coordinator.user?.uid ?? "")
+                    case .none:
+                        break
+                    }
+                }
             }
             // TODO: - Add participants
             PreviewProfile(pictures: [], previewProfileType: .userComming, numberUsers: 12)
                 .padding(.vertical, 8)
         }
-        .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
+        .sheet(isPresented: $showSheetParticipateAnswers) {
             AllOptionsAnswerParticpateButton(participateButtonSelected: $status)
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(250)])
@@ -182,6 +241,7 @@ struct TitleTurnCardDetailFeedView: View {
 struct MainInformationsDetailFeedView: View {
     var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
+    @State private var isShowMaps: Bool = false
 
     init(turn: Turn) {
         self.turn = turn
@@ -216,23 +276,57 @@ struct MainInformationsDetailFeedView: View {
                     .tokenFont(.Placeholder_Inter_Regular_16)
             }
 
-            VStack(alignment: .leading, spacing: 5) {
-                HStack(alignment: .center) {
+            Button(action: {
+                isShowMaps = true
+            }) {
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack(alignment: .center) {
+                        
+                        Image(.iconLocation)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Text(turn.placeTitle)
+                            .foregroundColor(.white)
+                    }
                     
-                    Image(.iconLocation)
-                        .resizable()
-                        .frame(width: 20, height: 20)
+                    Text(turn.placeAdresse)
+                        .tokenFont(.Placeholder_Inter_Regular_16)
                         .foregroundColor(.white)
-                    
-                    Text(turn.placeTitle)
-                        .foregroundColor(.white)
+                        .padding(.leading, 20)
                 }
-
-                Text(turn.placeAdresse)
-                    .tokenFont(.Placeholder_Inter_Regular_16)
-                    .foregroundColor(.white)
             }
             .padding(.horizontal, 12)
+            .alert(
+                "Ouvrir l'adresse dans :", isPresented: $isShowMaps,
+                actions: {
+                    Button("Ouvrir avec Apple Maps") {
+                        let url = URL(
+                            string:
+                                "maps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)"
+                        )
+                        if UIApplication.shared.canOpenURL(url!) {
+                            UIApplication.shared.open(
+                                url!, options: [:], completionHandler: nil)
+                        }
+                    }
+
+                    Button("Ouvrir avec Google Maps") {
+                        let url = URL(
+                            string:
+                                "comgooglemaps://?saddr=&daddr=\(turn.placeLatitude),\(turn.placeLongitude)"
+                        )
+                        if UIApplication.shared.canOpenURL(url!) {
+                            UIApplication.shared.open(
+                                url!, options: [:], completionHandler: nil)
+                        }
+                    }
+
+                    Button("Annuler", role: .cancel) {
+                        isShowMaps = false
+                    }
+                })
             
             if ((turn.link?.isEmpty) != nil) {
                 HStack(alignment: .center) {

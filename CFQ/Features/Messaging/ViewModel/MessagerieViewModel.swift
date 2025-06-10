@@ -20,6 +20,19 @@ class MessagerieViewModel: ObservableObject {
     deinit {
         firebaseService.removeListener(for: ListenerType.conversation.rawValue)
     }
+    
+    func convertMessageTypeToMessageTypeData(messagerieType: String, conversation: Conversation) -> MessagerieHeaderTypeData {
+        switch messagerieType {
+        case "cfq":
+            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
+        case "people":
+            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
+        case "event":
+            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
+        default:
+            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
+        }
+    }
 }
 
 extension MessagerieViewModel {

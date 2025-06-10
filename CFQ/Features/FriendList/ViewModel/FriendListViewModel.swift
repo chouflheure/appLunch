@@ -25,7 +25,7 @@ class FriendListViewModel: ObservableObject {
 
     
     init(coordinator: Coordinator) {
-        friendsList = Set(coordinator.userFriends)
+        friendsList = Set(coordinator.user?.userFriendsContact ?? [])
         
         guard let user = coordinator.user else {
             self.user = User()
