@@ -95,6 +95,14 @@ exports.cleanupTurnCollection = functions.pubsub
   });
 */
 
+// Remove expired CFQs created by user
+
+// Remove expired Turns created by user
+
+// Remove expired Turns
+
+// Remove expired Messagerie
+
 // Remove expired CFQs
 exports.cleanupCfqCollection = functions.pubsub
   .schedule('00 12 * * *') // Cron: tous les jours à 12:00 UTC
@@ -132,6 +140,8 @@ exports.cleanupCfqCollection = functions.pubsub
         batch.delete(doc.ref);
         deleteCount++;
       });
+        
+      
       
       // Exécuter la suppression en batch
       await batch.commit();
