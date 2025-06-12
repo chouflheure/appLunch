@@ -11,10 +11,9 @@ struct CustomTabView: View {
 
     @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
-    @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
-    @State private var navigationPath = NavigationPath() // Ajout du navigationPath
+    @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = false
+
     @State var text = ""
-    
     
     var body: some View {
         SafeAreaContainer {
@@ -22,6 +21,7 @@ struct CustomTabView: View {
 
                 if !hasAlreadyOnboarded {
                     OnboardingView()
+                        .zIndex(100)
                 }
 
                 if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
