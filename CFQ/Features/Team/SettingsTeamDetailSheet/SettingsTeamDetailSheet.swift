@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct SettingsTeamDetailSheet: View {
-    @StateObject var coordinator: Coordinator
+    @ObservedObject var coordinator: Coordinator
     var isAdmin: Bool
     @Binding var isPresented: Bool
     // @StateObject var viewModel: TeamFormViewModel

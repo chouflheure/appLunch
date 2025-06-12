@@ -69,7 +69,7 @@ struct BirthdaySignUpScreen: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        BirthdaySignUpScreen(viewModel: .init(uidUser: ""))
+        BirthdaySignUpScreen(viewModel: .init(uidUser: "", phoneNumber: ""))
     }
 }
 

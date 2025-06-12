@@ -2,7 +2,11 @@
 import SwiftUI
 
 struct SheetDatePicker: View {
-    @ObservedObject var viewModel: TurnCardViewModel
+    // @ObservedObject var viewModel: TurnCardViewModel
+    @Binding var dateEvent: Date?
+    @Binding var hoursEvent: Date?
+    var limiteDate: Date? = Date()
+
     var onClose: () -> Void
     
     var body: some View {
@@ -10,10 +14,10 @@ struct SheetDatePicker: View {
             DatePicker(
                 "",
                 selection: Binding(
-                    get: { viewModel.dateEvent ?? Date() },
-                    set: { viewModel.dateEvent = $0 }
+                    get: { dateEvent ?? Date() },
+                    set: { dateEvent = $0 }
                 ),
-                in: Date.now...,
+                in: (limiteDate ?? Date())...,
                 displayedComponents: .date
             )
             .datePickerStyle(GraphicalDatePickerStyle())
@@ -24,10 +28,10 @@ struct SheetDatePicker: View {
             DatePicker(
                 "",
                 selection: Binding(
-                    get: { viewModel.starthours ?? Date() },
-                    set: { viewModel.starthours = $0 }
+                    get: { hoursEvent ?? Date() },
+                    set: { hoursEvent = $0 }
                 ),
-                in: Date.now...,
+                // in: Date.now...,
                 displayedComponents: .hourAndMinute
             )
             .datePickerStyle(GraphicalDatePickerStyle())

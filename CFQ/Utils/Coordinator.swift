@@ -23,7 +23,7 @@ class Coordinator: ObservableObject {
     @Published var showMessagerieScreen = false
     
     @Published var dataApp = DataApp()
-    @Published var teamDetail: TeamGlobal?
+    @Published var teamDetail: Team?
     @Published var turnSelected: Turn?
     @Published var turnSelectedPreview: TurnPreview?
     
@@ -36,8 +36,9 @@ class Coordinator: ObservableObject {
     private var firebaseService = FirebaseService()
     private var listeners = [ListenerRegistration?]()
     
+    private var invalidCFQIds = Set<String>()
+    
     func start(userUID: String?) {
-        print("@@@ userUID = \(userUID)")
         if let userUID = userUID {
             
             let listener = firebaseService.getDataByID(from: .users, with: userUID, listenerKeyPrefix: ListenerType.user.rawValue) { (result: Result<User, Error>) in
@@ -142,30 +143,37 @@ class Coordinator: ObservableObject {
     }
     
     func catchAllUserCFQ(user: User) {
-        print("@@@  user.invitedCfqs = \(user.invitedCfqs)")
         user.invitedCfqs = removeEmptyIdInArray(data: user.invitedCfqs ?? [""])
 
         if let invitedCfqs = user.invitedCfqs, !invitedCfqs.isEmpty {
             firebaseService.getDataByIDs(
                 from: .cfqs,
                 with: invitedCfqs,
-                listenerKeyPrefix: ListenerType.cfq.rawValue
-            ){ (result: Result<[CFQ], Error>) in
-                switch result {
-                case .success(let cfq):
-                    DispatchQueue.main.async {
-                        self.userCFQ = cfq
+                listenerKeyPrefix: ListenerType.cfq.rawValue,
+                onUpdate: { (result: Result<[CFQ], Error>) in
+                    switch result {
+                    case .success(let cfq):
+                        DispatchQueue.main.async {
+                            self.userCFQ = cfq
+                        }
+                    case .failure(let error):
+                        print("👎 Erreur : \(error.localizedDescription)")
+                        
                     }
-                case .failure(let error):
-                    print("👎 Erreur : \(error.localizedDescription)")
-                    
+                },
+                onInvalidIds: { invalidIds in
+                    self.firebaseService.updateDataByID(
+                        data: [
+                            "invitedCfqs": FieldValue.arrayRemove(Array(invalidIds))],
+                        to: .users,
+                        at: user.uid
+                    )
                 }
-            }
+            )
         }
     }
     
     func catchAllUsersFriend(user: User) {
-        print("@@@ user.friends = \(user.friends)")
         user.friends = removeEmptyIdInArray(data: user.friends)
 
         if !user.friends.isEmpty {

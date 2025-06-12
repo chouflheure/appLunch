@@ -49,7 +49,6 @@ struct FriendProfileView: View {
                             userPreview: UserContact(
                                 uid: viewModel.userFriend.uid,
                                 name:  viewModel.userFriend.name,
-                                firstName: viewModel.userFriend.firstName,
                                 pseudo:  viewModel.userFriend.pseudo,
                                 profilePictureUrl:  viewModel.userFriend.profilePictureUrl,
                                 isActive:  viewModel.userFriend.isActive
@@ -62,7 +61,6 @@ struct FriendProfileView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             PreviewPseudoName(
                                 name: viewModel.userFriend.name,
-                                firstName: viewModel.userFriend.firstName,
                                 pseudo: viewModel.userFriend.pseudo
                             )
 
@@ -132,7 +130,7 @@ struct FriendProfileView: View {
                     if viewModel.isPrivateAccount {
                         PrivateEventShow()
                     } else {
-                        CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns)
+                        CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turnsInCommun(coordinator: coordinator))
                     }
                 }
                 .padding(.horizontal, 16)

@@ -5,13 +5,14 @@ struct MainInformationsPreviewFeedView: View {
     @ObservedObject var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
     @State private var isShowMaps: Bool = false
+    private var paddinBottom = 12.0
 
     init(turn: Turn) {
         self.turn = turn
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading) {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(Array(turn.mood), id: \.self) { moodIndex in
@@ -25,6 +26,7 @@ struct MainInformationsPreviewFeedView: View {
                     }
                 }
             }
+            .padding(.bottom, paddinBottom)
 
             HStack {
 
@@ -34,18 +36,33 @@ struct MainInformationsPreviewFeedView: View {
                     .foregroundColor(.white)
                     .padding(.leading, 12)
 
-                Text(
-                    formattedDateAndTime.textFormattedLongFormat(
-                        date: turn.date)
-                )
-                .tokenFont(.Body_Inter_Medium_16)
+                Text(formattedDateAndTime.textFormattedLongFormat(date: turn.dateStartEvent))
+                    .tokenFont(.Body_Inter_Medium_16)
 
                 Text(" | ")
                     .foregroundColor(.white)
 
-                Text(formattedDateAndTime.textFormattedHours(hours: turn.date))
+                Text(formattedDateAndTime.textFormattedHours(hours: turn.dateStartEvent))
                     .tokenFont(.Placeholder_Inter_Regular_16)
 
+            }
+            .padding(.bottom, !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty ? 0 : paddinBottom)
+            
+            if !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty {
+                HStack {
+                    Text(" ~ ")
+                        .foregroundColor(.white)
+                    Text(formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent))
+                        .tokenFont(.Body_Inter_Medium_16)
+                    
+                    Text(" | ")
+                        .foregroundColor(.white)
+                    
+                    Text(formattedDateAndTime.textFormattedHours(hours: turn.dateEndEvent))
+                        .tokenFont(.Placeholder_Inter_Regular_16)
+                }
+                .padding(.leading, 12)
+                .padding(.bottom, !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty ? paddinBottom : 0)
             }
 
             Button(action: {
@@ -95,12 +112,13 @@ struct MainInformationsPreviewFeedView: View {
                             }
                         }
 
-                        Button("Annuler", role: .cancel) {
+                        Button(StringsToken.General.cancel, role: .cancel) {
                             isShowMaps = false
                         }
                     })
             }
             .padding(.horizontal, 12)
+            .padding(.bottom, (turn.link?.isEmpty) != nil ? paddinBottom : 5)
 
             if (turn.link?.isEmpty) != nil {
                 HStack(alignment: .center) {

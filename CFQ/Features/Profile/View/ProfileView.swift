@@ -38,7 +38,6 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     PreviewPseudoName(
                         name: user.name,
-                        firstName: user.firstName,
                         pseudo: user.pseudo
                     )
 

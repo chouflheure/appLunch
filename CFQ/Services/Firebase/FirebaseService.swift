@@ -84,12 +84,12 @@ class FirebaseService: FirebaseServiceProtocol {
     }
 
     func updateDataByID(
-        data: [String: Any], to collection: CollectionFirebaseType,
+        data: [String: Any],
+        to collection: CollectionFirebaseType,
         at id: String
     ) {
         let collectionName = collection.rawValue
         db.collection(collectionName).document(id).updateData(data) { error in
-       // db.collection(collectionName).document(id).updateData(data) { error in
             if let error = error {
                 Logger.log(
                     "Erreur lors de la modification de \(collection.rawValue) : \(error.localizedDescription)",
@@ -207,7 +207,156 @@ class FirebaseService: FirebaseServiceProtocol {
         }
     }
 
+    func getDataByIDs<T: Codable>(
+        from collection: CollectionFirebaseType,
+        with ids: [String],
+        listenerKeyPrefix: String? = nil,
+        onUpdate: @escaping (Result<[T], Error>) -> Void,
+        onInvalidIds: ((Set<String>) -> Void)? = nil  // Nouveau callback pour les IDs invalides
+    ) {
+        let collectionName = collection.rawValue
+        var currentData: [String: T] = [:]
+        var firstLoadCompleted = Set<String>()
+        var invalidIds = Set<String>()  // Set pour stocker les IDs invalides
+        var processedIds = Set<String>()  // Pour suivre quels IDs ont été traités
+        
+        guard !ids.isEmpty else {
+            onUpdate(.success([]))
+            return
+        }
+
+        for id in ids {
+            let documentRef = db.collection(collectionName).document(id)
+
+            let registration = documentRef.addSnapshotListener { [weak self]
+                documentSnapshot, error in
+                
+                // Marquer cet ID comme traité
+                processedIds.insert(id)
+                
+                if let error = error {
+                    print("❌ Error listening to document \(id): \(error.localizedDescription)")
+                    invalidIds.insert(id)
+                } else if let document = documentSnapshot, document.exists {
+                    // Document existe et est valide
+                    do {
+                        let data = try document.data(as: T.self)
+                        currentData[id] = data
+                        firstLoadCompleted.insert(id)
+                        print("✅ Document \(id) loaded successfully")
+                    } catch {
+                        print("❌ Error decoding document \(id): \(error.localizedDescription)")
+                        invalidIds.insert(id)
+                    }
+                } else {
+                    // Document n'existe pas
+                    print("📭 Document \(id) not found")
+                    invalidIds.insert(id)
+                }
+
+                // Vérifier si tous les IDs ont été traités
+                if processedIds.count == ids.count {
+                    // Tous les documents ont été traités
+                    
+                    // Émettre les IDs invalides si le callback est fourni
+                    if !invalidIds.isEmpty {
+                        print("🧹 Found \(invalidIds.count) invalid document IDs: \(invalidIds)")
+                        onInvalidIds?(invalidIds)
+                    }
+                    
+                    // Émettre les résultats valides dans l'ordre original
+                    let orderedResults = ids.compactMap { currentData[$0] }
+                    print("📊 Successfully loaded \(orderedResults.count)/\(ids.count) documents")
+                    print("📊 Successfully loaded \(orderedResults.forEach({$0}))")
+                    onUpdate(.success(orderedResults))
+                }
+            }
+
+            // Stocke le listener si un préfixe est fourni
+            if let keyPrefix = listenerKeyPrefix {
+                let key = "\(keyPrefix)_\(id)"
+                listeners[key] = registration
+            }
+        }
+    }
     
+    func getUsersByPhoneNumbersBatch<T: Codable>(
+        from collection: CollectionFirebaseType,
+        phoneNumbers: [String],
+        onUpdate: @escaping (Result<[T], Error>) -> Void,
+        onInvalidPhones: ((Set<String>) -> Void)? = nil
+    ) {
+        let collectionName = collection.rawValue
+        
+        guard !phoneNumbers.isEmpty else {
+            onUpdate(.success([]))
+            return
+        }
+        
+        print("🔍 Batch searching for users with \(phoneNumbers.count) phone numbers")
+        
+        // Normaliser les numéros
+        let normalizedPhones = phoneNumbers.map { phone in
+            phone.replacingOccurrences(of: " ", with: "")
+        }
+        
+        // Firestore limite les requêtes "in" à 10 éléments max
+        let chunks = normalizedPhones.chunked(into: 10)
+        var allFoundUsers: [T] = []
+        var allInvalidPhones = Set<String>()
+        var processedChunks = 0
+        
+        for chunk in chunks {
+            let query = db.collection(collectionName)
+                .whereField("phoneNumber", in: chunk)
+            
+            query.getDocuments { querySnapshot, error in
+                processedChunks += 1
+                
+                if let error = error {
+                    print("❌ Error in batch query: \(error.localizedDescription)")
+                    allInvalidPhones.formUnion(chunk)
+                } else if let snapshot = querySnapshot {
+                    var foundPhonesInChunk = Set<String>()
+                    
+                    for document in snapshot.documents {
+                        do {
+                            let userData = try document.data(as: T.self)
+                            allFoundUsers.append(userData)
+                            
+                            // Récupérer le numéro de téléphone du document
+                            if let userPhone = document.data()["phoneNumber"] as? String {
+                                foundPhonesInChunk.insert(userPhone)
+                            }
+                            
+                            print("✅ User found: \(document.documentID)")
+                        } catch {
+                            print("❌ Error decoding user: \(error.localizedDescription)")
+                        }
+                    }
+                    
+                    // Identifier les numéros non trouvés dans ce chunk
+                    let notFoundInChunk = Set(chunk).subtracting(foundPhonesInChunk)
+                    allInvalidPhones.formUnion(notFoundInChunk)
+                }
+                
+                // Vérifier si tous les chunks ont été traités
+                if processedChunks == chunks.count {
+                    if !allInvalidPhones.isEmpty {
+                        print("📱 Phone numbers without users: \(allInvalidPhones.count)")
+                        onInvalidPhones?(allInvalidPhones)
+                    }
+                    
+                    print("📊 Batch search completed: \(allFoundUsers.count) users found")
+                    onUpdate(.success(allFoundUsers))
+                }
+            }
+        }
+    }
+    
+    
+    
+    /*
     func getDataByIDs<T: Codable>(
         from collection: CollectionFirebaseType,
         with ids: [String],
@@ -265,6 +414,7 @@ class FirebaseService: FirebaseServiceProtocol {
             }
         }
     }
+*/
 
     func updateNotificationByIDs(
         data: [String: Any],

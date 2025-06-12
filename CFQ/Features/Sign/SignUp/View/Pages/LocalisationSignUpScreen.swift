@@ -44,5 +44,5 @@ struct LocalisationSignUpScreen: View {
 }
 
 #Preview {
-    LocalisationSignUpScreen(viewModel: .init(uidUser: ""))
+    LocalisationSignUpScreen(viewModel: .init(uidUser: "", phoneNumber: ""))
 }

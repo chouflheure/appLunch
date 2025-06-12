@@ -44,7 +44,6 @@ struct NotificationScreenView: View {
                                 userContact: UserContact(
                                     uid: "",
                                     name: "",
-                                    firstName: "",
                                     pseudo: "Lisa",
                                     profilePictureUrl:
                                         "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
@@ -56,7 +55,6 @@ struct NotificationScreenView: View {
                                             UserContact(
                                                 uid: "",
                                                 name: "",
-                                                firstName: "",
                                                 pseudo: "Lisa",
                                                 profilePictureUrl:
                                                     "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
@@ -74,7 +72,6 @@ struct NotificationScreenView: View {
                                 userContact: UserContact(
                                     uid: "",
                                     name: "",
-                                    firstName: "",
                                     pseudo: "Lisa",
                                     profilePictureUrl:
                                         "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
@@ -86,7 +83,6 @@ struct NotificationScreenView: View {
                                 userContact: UserContact(
                                     uid: "",
                                     name: "",
-                                    firstName: "",
                                     pseudo: "Lisa",
                                     profilePictureUrl:
                                         "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
@@ -98,7 +94,6 @@ struct NotificationScreenView: View {
                                 userContact: UserContact(
                                     uid: "",
                                     name: "",
-                                    firstName: "",
                                     pseudo: "Lisa",
                                     profilePictureUrl:
                                         "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
@@ -117,7 +112,6 @@ struct NotificationScreenView: View {
         coordinator.profileUserSelected = User(
             uid: profileFriend.uid,
             name: profileFriend.name,
-            firstName: profileFriend.firstName,
             pseudo: profileFriend.pseudo,
             profilePictureUrl: profileFriend.profilePictureUrl,
             isActive: profileFriend.isActive

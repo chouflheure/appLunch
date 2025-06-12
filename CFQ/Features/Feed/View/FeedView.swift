@@ -64,7 +64,6 @@ struct FeedView: View {
                                         coordinator.profileUserSelected = User(
                                             uid: friend.uid,
                                             name: friend.name,
-                                            firstName: friend.firstName,
                                             pseudo: friend.pseudo,
                                             profilePictureUrl: friend.profilePictureUrl,
                                             isActive: friend.isActive

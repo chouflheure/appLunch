@@ -75,16 +75,8 @@ struct EditProfileUserView: View {
                                 textFieldType: .editProfile
                             )
 
-                            CustomTextField(
-                                text: $viewModel.firstName,
-                                keyBoardType: .default,
-                                placeHolder: user.firstName,
-                                textFieldType: .editProfile
-                            )
-
                             CollectionViewLocalisations(
-                                selectedItem: $viewModel.localisation,
-                                scrollDisabled: true
+                                selectedItem: $viewModel.localisation
                             )
                         }
                         .padding(.top, 20)

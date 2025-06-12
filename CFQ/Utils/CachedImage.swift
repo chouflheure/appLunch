@@ -118,12 +118,12 @@ struct CachedAsyncImageView: View {
                 case .scaleImageMessageProfile:
                     Circle()
                         .foregroundColor(.gray)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 42, height: 42)
                         .clipShape(Circle())
                         .overlay {
                             Circle()
                                 .stroke(Color.black, lineWidth: 1)
-                                .frame(width: 34, height: 34)
+                                .frame(width: 44, height: 44)
                         }
                 case .scaleImageTeam:
                     ZStack {
@@ -182,12 +182,12 @@ struct CachedAsyncImageView: View {
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 32, height: 32)
+                        .frame(width: 42, height: 42)
                         .clipShape(Circle())
                         .overlay {
                             Circle()
                                 .stroke(Color.black, lineWidth: 1)
-                                .frame(width: 34, height: 34)
+                                .frame(width: 44, height: 44)
                         }
                 case .scaleImageTeam:
                     image
@@ -281,12 +281,12 @@ struct CachedAsyncImageView: View {
                 case .scaleImageMessageProfile:
                     Circle()
                         .foregroundColor(.gray)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 42, height: 42)
                         .clipShape(Circle())
                         .overlay {
                             Circle()
                                 .stroke(Color.black, lineWidth: 1)
-                                .frame(width: 34, height: 34)
+                                .frame(width: 44, height: 44)
                         }
                     
                 case .scaleImageTeam:

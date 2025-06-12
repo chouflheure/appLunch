@@ -40,6 +40,16 @@ class FriendProfileViewModel: ObservableObject {
         }
     }
     
+    func turnsInCommun(coordinator: Coordinator) -> [Turn]{
+        var turnShowByUser: [Turn] = []
+        turns.forEach({ turn in
+            if turn.invited.contains(coordinator.user?.uid ?? "1") {
+                turnShowByUser.append(turn)
+            }
+        })
+        return turnShowByUser
+    }
+    
     func statusFriendButton() {
         if user.friends.contains(userFriend.uid) {
             statusFriend = .friend
@@ -238,7 +248,6 @@ extension FriendProfileViewModel {
                         turn.adminContact = UserContact(
                             uid: user.uid,
                             name: user.uid,
-                            firstName: user.firstName,
                             pseudo: user.pseudo,
                             profilePictureUrl: user.profilePictureUrl,
                             isActive: user.isActive

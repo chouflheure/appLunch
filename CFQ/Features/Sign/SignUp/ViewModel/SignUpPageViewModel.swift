@@ -6,6 +6,7 @@ import SwiftUI
 
 class SignUpPageViewModel: ObservableObject {
     private var uidUser: String
+    private var phoneNumber: String
 
     @Published var index = 0
     @Published var name = String()
@@ -16,8 +17,10 @@ class SignUpPageViewModel: ObservableObject {
     @Published var picture = UIImage()
     @Published var isDoneUpdateUser = false
     @Published var friends: [String] = []
-    @Published var contacts: [UserContact] = []
+    @Published var contacts: [UserContactPhoneNumber] = []
     @Published var isFetchingContacts: Bool = false
+    @Published var sentFriendRequests = Set<String>()
+    
 
     // isLoadingPictureUpload
     @Published var isLoadingPictureUpload: Bool = false
@@ -56,8 +59,9 @@ class SignUpPageViewModel: ObservableObject {
         unreadNotificationsCount: 0
     )
 
-    init(uidUser: String) {
+    init(uidUser: String, phoneNumber: String) {
         self.uidUser = uidUser
+        self.phoneNumber = phoneNumber
     }
 
     func goNext() {
@@ -93,10 +97,8 @@ class SignUpPageViewModel: ObservableObject {
     
     func fetchContacts() {
         isFetchingContacts = true
-        print("@@ isFetchingContacts = \(isFetchingContacts)")
         DispatchQueue.global(qos: .userInitiated).async {
             let store = CNContactStore()
-            var phoneNumberIds: [String] = []
 
             store.requestAccess(for: .contacts) {
                 [weak self] (isAuthorized, error) in
@@ -110,29 +112,36 @@ class SignUpPageViewModel: ObservableObject {
                     let fetchRequest = CNContactFetchRequest(keysToFetch: keysToFetch)
 
                     do {
-                        try store.enumerateContacts(with: fetchRequest) {
-                            (contact, stop) in
+                        // Récupérer tous les contacts téléphoniques
+                        var phoneContacts: [(name: String, phoneNumber: String)] = []
+                        
+                        try store.enumerateContacts(with: fetchRequest) { (contact, stop) in
                             if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
-                                let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+33", with: "0")
-                                phoneNumberIds.append(formattedPhoneNumber)
+                                let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
+                                let fullName = "\(contact.givenName) \(contact.familyName)".trimmingCharacters(in: .whitespaces)
+                                phoneContacts.append((name: fullName, phoneNumber: formattedPhoneNumber))
                             }
                         }
-
-                        self?.fetchDataContactUser { users in
-                            print("@@ users = \(users)")
-                            var arrayUsersContact: [UserContact] = []
+                        
+                        print("📱 Contacts téléphoniques récupérés: \(phoneContacts.count)")
+                        
+                        // Récupérer les utilisateurs de la base
+                        self?.fetchDataContactUser(phoneNumbers: phoneContacts.compactMap({$0.phoneNumber})) { users in
+                            print("👥 Utilisateurs en base: \(users.count)")
+                            
                             DispatchQueue.main.async {
-                                for user in users {
-                                    if phoneNumberIds.contains(user.uid) {
-                                        arrayUsersContact.append(user)
-                                    }
+                                let finalContacts = self?.mergeContactsWithUsers(phoneContacts: phoneContacts, users: users) ?? []
+                                
+                                self?.contacts = finalContacts
+                                print("✅ Contacts finaux fusionnés: \(finalContacts.count)")
+
+                                finalContacts.forEach { contact in
+                                    print("📋 \(contact.printObject)")
                                 }
-                                self?.contacts = Array(Set(arrayUsersContact))
-                                self?.contacts.forEach { print("@@@ Contact: \($0.pseudo)") }
                             }
                         }
                     } catch {
-                        print("@@@ Error fetching contacts: \(error)")
+                        print("❌ Erreur lors de la récupération des contacts: \(error)")
                     }
                 } else {
                     print("Access denied to contacts.")
@@ -140,6 +149,38 @@ class SignUpPageViewModel: ObservableObject {
             }
         }
         isFetchingContacts = false
+    }
+
+    private func mergeContactsWithUsers(
+        phoneContacts: [(name: String, phoneNumber: String)],
+        users: [UserContactPhoneNumber]
+    ) -> [UserContactPhoneNumber] {
+
+        let usersByPhone: [String: UserContactPhoneNumber] = Dictionary(
+            uniqueKeysWithValues: users.compactMap { user in
+                let formattedPhone = user.phoneNumber
+                    .replacingOccurrences(of: " ", with: "")
+                return (formattedPhone, user)
+            }
+        )
+        
+        var mergedContacts: [UserContactPhoneNumber] = []
+        
+        
+        for phoneContact in phoneContacts {
+            if let matchedUser = usersByPhone[phoneContact.phoneNumber] {
+                let mergedContact = UserContactPhoneNumber(
+                    uid: matchedUser.uid,
+                    name: phoneContact.name,
+                    pseudo: matchedUser.pseudo,
+                    phoneNumber: phoneContact.phoneNumber,
+                    profilePictureUrl: matchedUser.profilePictureUrl
+                )
+                mergedContacts.append(mergedContact)
+            }
+        }
+
+        return Array(Set(mergedContacts))
     }
 
     // TODO: - Update error messages
@@ -155,7 +196,6 @@ class SignUpPageViewModel: ObservableObject {
                     self.urlProfilePicture = urlString
                     self.isLoadingPictureUploadError = false
                     self.isLoadingPictureUploadDone = true
-                    print("@@@ here success")
                     self.uploadDataUser()
 
                 case .failure(let error):
@@ -173,31 +213,33 @@ class SignUpPageViewModel: ObservableObject {
         user.uid = uidUser
         user.tokenFCM = UserDefaults.standard.string(forKey: "fcmToken") ?? ""
         user.profilePictureUrl = urlProfilePicture
-        
-        print("@@@ userIci = \(user.printObject)")
-        
+        user.sentFriendRequests = Array(sentFriendRequests)
+        user.phoneNumber = phoneNumber
         
         // TODO: - gérer erreur et isLoadingCreateUser
 
         firebaseService.addData(data: user, to: .users) { (result: Result<Void, Error>) in
             switch result {
             case .success():
-                print("@@@ good")
+                self.addFriendsToList(userFriendIds: Array(self.sentFriendRequests))
             case .failure(let error):
                 print("@@@ error update user = \(error)")
             }
         }
     }
 
-    private func fetchDataContactUser(completion: @escaping ([UserContact]) -> Void) {
-        firebaseService.getAllData(from: .usersPreviews) { (result: Result<[UserContact], Error>) in
-            switch result {
-            case .success(let users):
-                completion(users)
-            case .failure(let error):
-                print("- Erreur :", error.localizedDescription)
+    private func fetchDataContactUser(phoneNumbers: [String], completion: @escaping ([UserContactPhoneNumber]) -> Void) {
+        firebaseService.getUsersByPhoneNumbersBatch(
+            from: .users,
+            phoneNumbers: phoneNumbers
+        ) { (result: Result<[UserContactPhoneNumber], Error>) in
+                switch result {
+                case .success(let users):
+                    completion(users)
+                case .failure(let error):
+                    print("- Erreur :", error.localizedDescription)
+                }
             }
-        }
     }
 
     func addUserDataOnDataBase(coordinator: Coordinator, completion: @escaping (Bool, String) -> Void) {
@@ -206,4 +248,43 @@ class SignUpPageViewModel: ObservableObject {
         uploadImageToDataBase()
     }
 
+    func askToBeFriend(isAskToBeFriend: Bool, userFriendId: String) {
+        if isAskToBeFriend {
+            sentFriendRequests.insert(userFriendId)
+        } else {
+            sentFriendRequests.remove(userFriendId)
+        }
+    }
+    
+    private func addFriendsToList(userFriendIds: [String]) {
+
+        firebaseService.updateDataByIDs(
+            data: ["requestsFriends": FieldValue.arrayUnion([user.uid])],
+            to: .users,
+            at: userFriendIds
+        )
+
+        let uidNotification = UUID()
+
+        firebaseService.addDataNotif(
+            data: Notification(
+                uid: uidNotification.description,
+                typeNotif: .friendRequest,
+                timestamp: Date(),
+                uidUserNotif: self.user.uid,
+                uidEvent: "",
+                titleEvent: "Become friends",
+                userInitNotifPseudo: user.pseudo
+            ),
+            userNotifications: userFriendIds,
+            completion: { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    print("@@@ result yes conv ")
+                case .failure(let error):
+                    print("@@@ error = \(error)")
+                }
+            }
+        )
+    }
 }

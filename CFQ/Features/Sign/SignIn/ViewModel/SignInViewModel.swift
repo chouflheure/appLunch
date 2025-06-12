@@ -7,6 +7,7 @@ import Combine
 class SignInViewModel: ObservableObject {
     @Published var uidUser = String()
     @Published var phoneNumber = String()
+    var formattedNumber = String()
     @Published var verificationID = String()
     @Published var user: User? = nil
     @Published var isUserExist = false
@@ -59,7 +60,7 @@ class SignInViewModel: ObservableObject {
     }
 
     private func formatPhoneNumber(for phoneNumber: String) -> String {
-        var formattedNumber = phoneNumber
+        formattedNumber = phoneNumber
 
         if formattedNumber.hasPrefix("0") {
             formattedNumber = "+33" + formattedNumber.dropFirst()

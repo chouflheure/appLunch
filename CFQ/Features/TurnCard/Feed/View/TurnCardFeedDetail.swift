@@ -56,7 +56,7 @@ struct TurnCardDetailsFeedView: View {
             }
             .ignoresSafeArea()
             .fullScreenCover(isPresented: $showDetailTurnCard) {
-                TurnCardDetailsView(viewModel: TurnCardViewModel(turn: TurnPreview(uid: "", titleEvent: "", date: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: nil), coordinator: coordinator), coordinator: coordinator)
+                TurnCardDetailsView(viewModel: TurnCardViewModel(turn: TurnPreview(uid: "", titleEvent: "", dateStartEvent: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: nil), coordinator: coordinator), coordinator: coordinator)
             }
         }
     }
@@ -64,7 +64,7 @@ struct TurnCardDetailsFeedView: View {
     private func checkTurnSelectedNotNull() -> Turn {
         guard let turn = coordinator.turnSelected else {
             coordinator.showTurnFeedDetail = false
-            return Turn(uid: "", titleEvent: "", date: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date())
+            return Turn(uid: "", titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date())
         }
         
         return turn
@@ -105,8 +105,8 @@ struct HeaderCardViewFeedDetailView: View {
                         Spacer()
 
                         DateLabel(
-                            dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).jour,
-                            monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).mois
+                            dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.dateStartEvent).jour,
+                            monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.dateStartEvent).mois
                         )
                     }
                     .padding(.top, 100)
@@ -147,7 +147,6 @@ struct TitleTurnCardDetailFeedView: View {
                     coordinator.profileUserSelected = User(
                         uid: turn.adminContact?.uid ?? "",
                         name: turn.adminContact?.name ?? "",
-                        firstName: turn.adminContact?.firstName ?? "",
                         pseudo: turn.adminContact?.pseudo ?? "",
                         profilePictureUrl: turn.adminContact?.profilePictureUrl ?? "",
                         isActive: turn.adminContact?.isActive ?? true
@@ -248,7 +247,7 @@ struct MainInformationsDetailFeedView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading) {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(Array(turn.mood), id: \.self) { moodIndex in
@@ -257,6 +256,7 @@ struct MainInformationsDetailFeedView: View {
                             .padding(.trailing, moodIndex == Array(turn.mood).last ? 12 : 0)
                     }
                 }
+                .padding(.bottom, 20)
             }
             
             HStack {
@@ -266,14 +266,32 @@ struct MainInformationsDetailFeedView: View {
                     .foregroundColor(.white)
                     .padding(.leading, 12)
                 
-                Text(formattedDateAndTime.textFormattedLongFormat(date: turn.date))
+                Text(formattedDateAndTime.textFormattedLongFormat(date: turn.dateStartEvent))
                     .tokenFont(.Body_Inter_Medium_16)
 
                 Text(" | ")
                     .foregroundColor(.white)
 
-                Text(formattedDateAndTime.textFormattedHours(hours: turn.date))
+                Text(formattedDateAndTime.textFormattedHours(hours: turn.dateStartEvent))
                     .tokenFont(.Placeholder_Inter_Regular_16)
+            }
+            .padding(.bottom, !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty ? 0 : 20)
+            
+            if !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty {
+                HStack {
+                    Text(" ~ ")
+                        .foregroundColor(.white)
+                    Text(formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent))
+                        .tokenFont(.Body_Inter_Medium_16)
+                    
+                    Text(" | ")
+                        .foregroundColor(.white)
+                    
+                    Text(formattedDateAndTime.textFormattedHours(hours: turn.dateEndEvent))
+                        .tokenFont(.Placeholder_Inter_Regular_16)
+                }
+                .padding(.leading, 12)
+                .padding(.bottom, !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty ? 20 : 0)
             }
 
             Button(action: {
@@ -323,10 +341,11 @@ struct MainInformationsDetailFeedView: View {
                         }
                     }
 
-                    Button("Annuler", role: .cancel) {
+                    Button(StringsToken.General.cancel, role: .cancel) {
                         isShowMaps = false
                     }
                 })
+            .padding(.bottom, (turn.link?.isEmpty) != nil ? 20 : 5)
             
             if ((turn.link?.isEmpty) != nil) {
                 HStack(alignment: .center) {

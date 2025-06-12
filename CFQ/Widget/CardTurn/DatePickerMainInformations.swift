@@ -3,8 +3,8 @@ import SwiftUI
 
 struct DatePickerMainInformations: View {
     @State private var date = Date.now
-    @State private var showPicker = false
-    @State private var showPicker2 = false
+    @State private var showPickerStartEvent = false
+    @State private var showPickerEndEvent = false
     @State var hours: Int = 0
     var isPreviewCard: Bool? = false
 
@@ -15,31 +15,60 @@ struct DatePickerMainInformations: View {
 
     
     var body: some View {
-        HStack {
+        VStack(alignment: .leading) {
             HStack {
                 Image(.iconDate)
-                    .foregroundColor(viewModel.textFormattedLongFormat.isEmpty ? .gray : .white)
+                    .foregroundColor(viewModel.textFormattedLongFormatStartEvent.isEmpty ? .gray : .white)
                 
-                Text(viewModel.textFormattedLongFormat.isEmpty ? "Date" : viewModel.textFormattedLongFormat)
-                    .tokenFont(viewModel.textFormattedLongFormat.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+                Text(viewModel.textFormattedLongFormatStartEvent.isEmpty ? "Date de début" : viewModel.textFormattedLongFormatStartEvent)
+                    .tokenFont(viewModel.textFormattedLongFormatStartEvent.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
                     .onTapGesture {
-                        showPicker = true
+                        showPickerStartEvent = true
                     }
 
                 Text(" | ")
                     .foregroundColor(.white)
                 
-                Text(viewModel.textFormattedHours.isEmpty ? "Heure de début" : viewModel.textFormattedHours)
-                    .tokenFont(viewModel.textFormattedHours.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+                Text(viewModel.textFormattedHoursStartEvent.isEmpty ? "Heure de début" : viewModel.textFormattedHoursStartEvent)
+                    .tokenFont(.Placeholder_Inter_Regular_16)
                     .onTapGesture {
-                        showPicker = true
+                        showPickerStartEvent = true
                     }
             }
-            .sheet(isPresented: $showPicker) {
+            .sheet(isPresented: $showPickerStartEvent) {
                 ZStack {
                     NeonBackgroundImage()
-                    SheetDatePicker(viewModel: viewModel, onClose: {
-                        showPicker = false
+                    SheetDatePicker(dateEvent: $viewModel.dateEventStart, hoursEvent: $viewModel.startHours, onClose: {
+                        showPickerStartEvent = false
+                    })
+                }
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(500)])
+            }
+            
+            HStack {
+
+                Text(viewModel.textFormattedLongFormatEndEvent.isEmpty ? "Date de fin ( optionnelle )" : viewModel.textFormattedLongFormatEndEvent)
+                    .tokenFont(viewModel.textFormattedLongFormatEndEvent.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+                    .onTapGesture {
+                        showPickerEndEvent = true
+                    }
+
+                Text(" | ")
+                    .foregroundColor(.white)
+                
+                Text(viewModel.textFormattedHoursEndEvent.isEmpty ? "Heure de fin ( optionnelle )" : viewModel.textFormattedHoursEndEvent)
+                    .tokenFont(.Placeholder_Inter_Regular_16)
+                    .onTapGesture {
+                        showPickerEndEvent = true
+                    }
+            }
+            .padding(.leading, 32)
+            .sheet(isPresented: $showPickerEndEvent) {
+                ZStack {
+                    NeonBackgroundImage()
+                    SheetDatePicker(dateEvent: $viewModel.dateEventEnd, hoursEvent: $viewModel.endHours, limiteDate: viewModel.dateEventStart, onClose: {
+                        showPickerEndEvent = false
                     })
                 }
                 .presentationDragIndicator(.visible)

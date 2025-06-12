@@ -7,7 +7,6 @@ class EditProfileViewModel: ObservableObject {
 
     @Published var name: String = ""
     @Published var pseudo: String = ""
-    @Published var firstName: String = ""
     @Published var localisation: String = ""
     
     @State var avatarPhotoItem: PhotosPickerItem?
@@ -35,10 +34,6 @@ class EditProfileViewModel: ObservableObject {
         
         if !pseudo.isEmpty {
             editDate = ["pseudo": pseudo]
-        }
-        
-        if !firstName.isEmpty {
-            editDate = ["firstName": firstName]
         }
 
         if !localisation.isEmpty {

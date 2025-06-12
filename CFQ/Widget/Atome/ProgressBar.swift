@@ -19,13 +19,12 @@ struct ProgressBar: View {
                 )
 
             Rectangle()
-                .frame(maxWidth:  UIScreen.main.bounds.width * ( Double(index) + 1 ) / 4 - 20)
+                .frame(maxWidth:  UIScreen.main.bounds.width * ( Double(index) + 1 ) / 5 - 20)
                 .frame(height: 15)
                 .foregroundColor(.white)
                 .cornerRadius(50)
         }
         .padding()
-        // .padding(.top, 30)
     }
 }
 

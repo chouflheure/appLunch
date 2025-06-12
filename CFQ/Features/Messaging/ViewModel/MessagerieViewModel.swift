@@ -107,7 +107,6 @@ extension MessagerieViewModel {
             userContact: UserContact(
                 uid: coordinator.user?.uid ?? "",
                 name: coordinator.user?.name ?? "",
-                firstName: coordinator.user?.firstName ?? "",
                 pseudo: coordinator.user?.pseudo ?? "",
                 profilePictureUrl: coordinator.user?.profilePictureUrl ?? ""
             )

@@ -68,7 +68,7 @@ struct TurnListScreen: View {
                                 turn: TurnPreview(
                                     uid: element.id.debugDescription,
                                     titleEvent: element.titleEvent ?? "",
-                                    date: element.dateEvent,
+                                    dateStartEvent: element.dateEvent,
                                     admin: coordinator.user?.uid ?? "",
                                     description: element.descriptionEvent ?? "",
                                     invited: [""],
@@ -139,7 +139,7 @@ struct CellPreviewCardTurn: View {
         VStack(spacing: 0) {
             ZStack {
                 HStack {
-                    if let date = turn.date {
+                    if let date = turn.dateStartEvent {
                         VStack(alignment: .center) {
                             Text(textFormattedShortFormat(date: date).jour)
                                 .tokenFont(.Title_Inter_semibold_24)

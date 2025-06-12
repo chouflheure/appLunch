@@ -7,7 +7,6 @@ struct TitleTurnCardFeedView: View {
     @ObservedObject var coordinator: Coordinator
     @State var status: TypeParticipateButton = .none
     private var viewModel = TurnCardFeedViewModel()
-    @State var showTurnDetailFeed = false
 
     init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
@@ -77,35 +76,21 @@ struct TitleTurnCardFeedView: View {
                 .padding(.vertical, 8)
         }
         .onAppear {
-            print("@@@ turn.Appear")
             if turn.participants.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
                 $status.wrappedValue = .yes
             }
-            print("@@@ turn.mayBeParticipate = \(turn.mayBeParticipate)")
             if turn.mayBeParticipate.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
                 $status.wrappedValue = .maybe
             }
-            print("@@@ turn.denied = \(turn.denied)")
             if turn.denied.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
                 $status.wrappedValue = .no
             }
-        }
-        .fullScreenCover(isPresented: $showTurnDetailFeed) {
-            TurnCardDetailsFeedView(coordinator: coordinator)
-                // .transition(.move(edge: .trailing))
         }
         /*
         .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
             AllOptionsAnswerParticpateButton(participateButtonSelected: $status)
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(250)])
-        }
-         */
-        /*
-        .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
-            AllOptionsAnswerParticpateButton(participateButtonSelected: $status)
-                .presentationDragIndicator(.visible)
-                .presentationDetents([.height(350)])
         }
          */
     }

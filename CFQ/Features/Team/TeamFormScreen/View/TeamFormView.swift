@@ -86,7 +86,6 @@ struct TeamFormView: View {
                                         coordinator.profileUserSelected = User(
                                             uid: user.uid,
                                             name: user.name,
-                                            firstName: user.firstName,
                                             pseudo: user.pseudo,
                                             profilePictureUrl: user
                                                 .profilePictureUrl,
