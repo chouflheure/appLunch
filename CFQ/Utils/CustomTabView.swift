@@ -15,17 +15,24 @@ struct CustomTabView: View {
 
     @State var text = ""
     
+    @State private var zIndexOnboarding: Double = 100
+    
     var body: some View {
         SafeAreaContainer {
             ZStack {
 
                 if !hasAlreadyOnboarded {
-                    OnboardingView()
-                        .zIndex(100)
+                    OnboardingView() {
+                        withAnimation {
+                            zIndexOnboarding = 0
+                         }
+                    }
+                    .zIndex(zIndexOnboarding)
                 }
 
                 if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
                     PopUpMAJView()
+                        .zIndex(99)
                 }
 
                 else {
