@@ -126,7 +126,10 @@ struct FriendProfileView: View {
                                 if !showImages {
                                     // Placeholder
                                     HStack(spacing: -15) {
-                                        ForEach(0..<min(4, viewModel.userFriend.userFriendsContact?.count ?? 4), id: \.self) { index in
+                                        ForEach(
+                                            0..<min(4, viewModel.userFriend.userFriendsContact?.count ?? 4),
+                                            id: \.self
+                                        ) { index in
                                             Circle()
                                                 .fill(.gray)
                                                 .frame(width: 24, height: 24)
@@ -139,7 +142,10 @@ struct FriendProfileView: View {
                                 } else {
                                     // Images réelles
                                     HStack(spacing: -15) {
-                                        ForEach(Array((viewModel.userFriend.userFriendsContact?.compactMap({ $0.profilePictureUrl }) ?? []).prefix(4).enumerated()), id: \.offset) { index, imageUrl in
+                                        ForEach(
+                                            Array((viewModel.friendsInCommun.compactMap({ $0.profilePictureUrl })).prefix(4).enumerated()),
+                                            id: \.offset
+                                        ) { index, imageUrl in
                                             CachedAsyncImageView(
                                                 urlString: imageUrl,
                                                 designType: .scaleImageMessageProfile
@@ -149,16 +155,22 @@ struct FriendProfileView: View {
                                 }
                             }
                             .animation(.easeInOut(duration: 0.3), value: showImages)
-                            
-                            Text("\(String(describing: viewModel.userFriend.userFriendsContact?.count))")
-                                .foregroundStyle(.white)
-                                .bold()
-                            Text("members")
-                                .foregroundStyle(.white)
-                            
+
+                            if viewModel.friendsInCommun.count > 0 {
+                                Text("\(viewModel.friendsInCommun.count)")
+                                    .foregroundStyle(.white)
+                                    .bold()
+
+                                Text("Ami\(viewModel.friendsInCommun.count > 1 ? "s" : "") en commun")
+                                    .foregroundStyle(.white)
+                            } else {
+                                Text("Pas d'ami en commun")
+                            }
                             Spacer()
                         }
                         .frame(height: 24)
+                    }
+                    .onTapGesture {
                         
                     }
                     /*

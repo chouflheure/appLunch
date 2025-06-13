@@ -10,14 +10,18 @@ class FriendProfileViewModel: ObservableObject {
     @Published var user: User
     @Published var userFriend: User
     @Published var turns: [Turn] = []
-    var friendsInCommun: [UserContact] = []
-
     var firebaseService = FirebaseService()
-    
+
     @Published var statusFriend: UsersAreFriendsStatusType = .noFriend {
         didSet {
             handleStatusChange()
         }
+    }
+    
+    var friendsInCommun: [UserContact] {
+        guard let contacts = userFriend.userFriendsContact else { return [] }
+        let commonIds = Set(user.friends).intersection(Set(userFriend.friends))
+        return contacts.filter { commonIds.contains($0.uid) }
     }
 
     init(coordinator: Coordinator) {
@@ -211,7 +215,7 @@ class FriendProfileViewModel: ObservableObject {
 
 extension FriendProfileViewModel {
     func catchAllDataProfileUser(uid: String) {
-        
+
         firebaseService.getDataByID(
             from: .users,
             with: uid,
@@ -232,7 +236,6 @@ extension FriendProfileViewModel {
             }
         )
     }
-    
    
     private func startListeningToUsersFriends(friendsIds: [String]) {
         firebaseService.getDataByIDs(
@@ -252,7 +255,6 @@ extension FriendProfileViewModel {
     }
     
     func startListeningToTurn(user: User) {
-        print("@@@ user.postedTurns = \(user.postedTurns)")
         firebaseService.getDataByIDs(
             from: .turns,
             with: user.postedTurns ?? []
