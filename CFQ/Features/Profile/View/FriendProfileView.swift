@@ -171,7 +171,9 @@ struct FriendProfileView: View {
                         .frame(height: 24)
                     }
                     .onTapGesture {
-                        
+                        withAnimation {
+                            coordinator.showFriendInCommum = true
+                        }
                     }
                     /*
                     HStack {

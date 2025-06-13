@@ -202,6 +202,11 @@ struct CustomTabView: View {
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showFriendInCommum {
+                        FriendCommumScreen(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+
                     if coordinator.showMessagerieScreen {
                         MessagerieView(
                             isPresented: $coordinator.showMessagerieScreen,

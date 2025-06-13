@@ -10,6 +10,8 @@ class FriendProfileViewModel: ObservableObject {
     @Published var user: User
     @Published var userFriend: User
     @Published var turns: [Turn] = []
+    @ObservedObject var coordinator: Coordinator
+
     var firebaseService = FirebaseService()
 
     @Published var statusFriend: UsersAreFriendsStatusType = .noFriend {
@@ -25,6 +27,7 @@ class FriendProfileViewModel: ObservableObject {
     }
 
     init(coordinator: Coordinator) {
+        self.coordinator = coordinator
         self.userFriend = coordinator.profileUserSelected
 
         guard let user = coordinator.user else {
@@ -48,7 +51,7 @@ class FriendProfileViewModel: ObservableObject {
     func turnsInCommun(coordinator: Coordinator) -> [Turn]{
         var turnShowByUser: [Turn] = []
         turns.forEach({ turn in
-            if turn.invited.contains(coordinator.user?.uid ?? "1") {
+            if turn.invited.contains(coordinator.user?.uid ?? "id") {
                 turnShowByUser.append(turn)
             }
         })
@@ -245,6 +248,7 @@ extension FriendProfileViewModel {
             switch result {
                 case .success(let userContact):
                     DispatchQueue.main.async {
+                        self.coordinator.profileUserSelected.userFriendsContact = userContact
                         self.userFriend.userFriendsContact = userContact
                     }
                 case .failure(let error):

@@ -21,7 +21,8 @@ class Coordinator: ObservableObject {
     @Published var showTurnFeedDetail = false
     @Published var showSheetParticipateAnswers = false
     @Published var showMessagerieScreen = false
-    
+    @Published var showFriendInCommum = false
+
     @Published var dataApp = DataApp()
     @Published var teamDetail: Team?
     @Published var turnSelected: Turn?
