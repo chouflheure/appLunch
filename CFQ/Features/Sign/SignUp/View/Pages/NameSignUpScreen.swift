@@ -2,7 +2,7 @@ import SwiftUI
 
 private enum Field {
     case name
-    case firstName
+    // case firstName
     case pseudo
 }
 
@@ -23,6 +23,7 @@ struct NameSignUpScreen: View {
                     .textCase(.uppercase)
                     .padding(.bottom, 50)
 
+                /*
                 CustomTextField(
                     text: $viewModel.user.firstName,
                     keyBoardType: .default,
@@ -33,14 +34,15 @@ struct NameSignUpScreen: View {
                 .submitLabel(.next)
                 .padding(.bottom, 20)
                 .padding(.horizontal, 20)
+                 */
 
                 CustomTextField(
                     text: $viewModel.user.name,
                     keyBoardType: .default,
-                    placeHolder: "Nom",
+                    placeHolder: "Prenom",
                     textFieldType: .signUp
                 )
-                .focused($focusedField, equals: .firstName)
+                .focused($focusedField, equals: .name)
                 .submitLabel(.next)
                 .padding(.bottom, 20)
                 .padding(.horizontal, 20)
@@ -59,9 +61,10 @@ struct NameSignUpScreen: View {
             .onSubmit {
                 switch focusedField {
                 case .name:
-                    focusedField = .firstName
-                case .firstName:
                     focusedField = .pseudo
+                    // focusedField = .firstName
+                // case .firstName:
+                    // focusedField = .pseudo
                 case .pseudo:
                     focusedField = .none
                 case .none:
@@ -79,8 +82,8 @@ struct NameSignUpScreen: View {
                     title: StringsToken.Sign.Next,
                     largeButtonType: .signNext,
                     isDisabled: viewModel.user.name.isEmpty
-                        || viewModel.user.firstName.isEmpty
                         || viewModel.user.pseudo.isEmpty
+                        // || viewModel.user.firstName.isEmpty
                 ).padding(.horizontal, 20)
 
                 LargeButtonView(
@@ -98,5 +101,5 @@ struct NameSignUpScreen: View {
 }
 
 #Preview {
-    NameSignUpScreen(viewModel: SignUpPageViewModel(uidUser: "")) {}
+    NameSignUpScreen(viewModel: SignUpPageViewModel(uidUser: "", phoneNumber: "")) {}
 }

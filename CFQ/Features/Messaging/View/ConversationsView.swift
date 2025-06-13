@@ -28,6 +28,7 @@ struct ConversationsView: View {
                         Spacer()
                             .frame(height: 12)
                         VStack(alignment: .leading) {
+                            /*
                             SearchBarView(
                                 text: $viewModel.researchText,
                                 placeholder: StringsToken.SearchBar
@@ -39,6 +40,7 @@ struct ConversationsView: View {
                                     // viewModel.researche()
                                 }
                             ).padding(.top, 16)
+                            */
 
                             ForEach(viewModel.messageList.sorted { $0.lastMessageDate ?? Date() > $1.lastMessageDate ?? Date() }, id: \.uid) {
                                 data in

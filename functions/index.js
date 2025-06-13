@@ -38,10 +38,133 @@ exports.updateUserIsActive2PM = functions
     });
 */
 
+// Remove expired Turns
+/*
+exports.cleanupTurnCollection = functions.pubsub
+  .schedule('00 16 * * *') // Cron: tous les jours à 12:00 UTC
+  .timeZone('Europe/Paris') // Changer selon votre timezone
+  .onRun(async (context) => {
+    console.log('Starting CFQ collection cleanup...');
+    
+    try {
+      const db = admin.firestore();
+      const cfqCollection = db.collection('turns');
+      
+      // Calculer la date limite (24h avant maintenant)
+      const now = admin.firestore.Timestamp.now();
+      const twentyFourHoursAgo = new Date(now.toDate().getTime() - (24 * 60 * 60 * 1000));
+      const cutoffTimestamp = admin.firestore.Timestamp.fromDate(twentyFourHoursAgo);
+      
+      console.log(`Deleting documents older than: ${twentyFourHoursAgo.toISOString()}`);
+      
+      // Query pour trouver les documents plus anciens que 24h
+      // Remplacez 'createdAt' par le nom de votre champ timestamp
+      const query = cfqCollection.where('timestamp', '<', cutoffTimestamp);
+      const snapshot = await query.get();
+      
+      if (snapshot.empty) {
+        console.log('No documents to delete');
+        return null;
+      }
+      
+      // Créer un batch pour supprimer plusieurs documents en une fois
+      const batch = db.batch();
+      let deleteCount = 0;
+      
+      snapshot.forEach((doc) => {
+        console.log(`Marking document for deletion: ${doc.id}`);
+        batch.delete(doc.ref);
+        deleteCount++;
+      });
+      
+      // Exécuter la suppression en batch
+      await batch.commit();
+      
+      console.log(`Successfully deleted ${deleteCount} documents from CFQ collection`);
+      
+      return {
+        success: true,
+        deletedCount: deleteCount,
+        timestamp: now.toDate().toISOString()
+      };
+      
+    } catch (error) {
+      console.error('Error during CFQ cleanup:', error);
+      throw new functions.https.HttpsError('internal', 'Cleanup failed', error);
+    }
+  });
+*/
+
+// Remove expired CFQs created by user
+
+// Remove expired Turns created by user
+
+// Remove expired Turns
+
+// Remove expired Messagerie
+
+// Remove expired CFQs
+exports.cleanupCfqCollection = functions.pubsub
+  .schedule('00 12 * * *') // Cron: tous les jours à 12:00 UTC
+  .timeZone('Europe/Paris') // Changer selon votre timezone
+  .onRun(async (context) => {
+    console.log('Starting CFQ collection cleanup...');
+    
+    try {
+      const db = admin.firestore();
+      const cfqCollection = db.collection('cfqs');
+      
+      // Calculer la date limite (24h avant maintenant)
+      const now = admin.firestore.Timestamp.now();
+      const twentyFourHoursAgo = new Date(now.toDate().getTime() - (24 * 60 * 60 * 1000));
+      const cutoffTimestamp = admin.firestore.Timestamp.fromDate(twentyFourHoursAgo);
+      
+      console.log(`Deleting documents older than: ${twentyFourHoursAgo.toISOString()}`);
+      
+      // Query pour trouver les documents plus anciens que 24h
+      // Remplacez 'createdAt' par le nom de votre champ timestamp
+      const query = cfqCollection.where('timestamp', '<', cutoffTimestamp);
+      const snapshot = await query.get();
+      
+      if (snapshot.empty) {
+        console.log('No documents to delete');
+        return null;
+      }
+      
+      // Créer un batch pour supprimer plusieurs documents en une fois
+      const batch = db.batch();
+      let deleteCount = 0;
+      
+      snapshot.forEach((doc) => {
+        console.log(`Marking document for deletion: ${doc.id}`);
+        batch.delete(doc.ref);
+        deleteCount++;
+      });
+        
+      
+      
+      // Exécuter la suppression en batch
+      await batch.commit();
+      
+      console.log(`Successfully deleted ${deleteCount} documents from CFQ collection`);
+      
+      return {
+        success: true,
+        deletedCount: deleteCount,
+        timestamp: now.toDate().toISOString()
+      };
+      
+    } catch (error) {
+      console.error('Error during CFQ cleanup:', error);
+      throw new functions.https.HttpsError('internal', 'Cleanup failed', error);
+    }
+  });
+
+
 exports.sendScheduledDataMessageIsTurnTonight6PM = functions
     .region("europe-west2")
     .pubsub
-    .schedule("00 12 * * *")
+    .schedule("00 18 * * *")
     .timeZone("Europe/Paris")
     .onRun(async (context) => {
         const message = {

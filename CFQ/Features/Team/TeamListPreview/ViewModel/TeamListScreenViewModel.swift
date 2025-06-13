@@ -5,27 +5,6 @@ import FirebaseFirestore
 class TeamListScreenViewModel: ObservableObject {
     var firebaseService = FirebaseService()
     @Published var teams = [Team]()
-
-    @Published var teamsGlobal = [
-        TeamGlobal(
-            uid: "",
-            title: "",
-            pictureUrlString: "",
-            friends: [UserContact()],
-            admins: [UserContact()]
-        )
-    ]
-/*
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici",
-        friends: ["EMZGTTeqJ1dv9SX0YaNOExaLjjw1", "77MKZdb3FJX8EFvlRGotntxk6oi1", "ziOs7jn3d5hZ0tgkTQdCNGQqlB33"],
-        teams: ["1"]
-    )
-*/
     var user: User
     
     init(coordinator: Coordinator) {
@@ -46,18 +25,12 @@ class TeamListScreenViewModel: ObservableObject {
                     teams.indices.forEach { index in
                         self.startListeningToUsersOnTeam(friendsIds: teams[index].friends, uidTeam: teams[index].uid) { data, error in
                             if !data.isEmpty {
-                                if index >= self.teamsGlobal.count {
-                                    self.teamsGlobal.append(teams[index].toTeamGlobal())
-                                } else {
-                                    self.teamsGlobal[index] = teams[index].toTeamGlobal()
-                                }
-
-                                self.teamsGlobal[index].friends = data
-
+                                self.teams[index].friendsContact = data
+                                
                                 let uuidSet = Set(teams[index].admins)
                                 // Filtrer les objets pour ne conserver que ceux dont l'UUID est dans l'ensemble
                                 let commonObjects = data.filter { uuidSet.contains($0.uid) }
-                                self.teamsGlobal[index].admins = commonObjects
+                                self.teams[index].adminsContact = commonObjects
 
                             } else {
                                 print("@@@ data NOOOO")

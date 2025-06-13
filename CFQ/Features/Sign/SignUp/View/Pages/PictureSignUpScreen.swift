@@ -95,5 +95,5 @@ struct PictureSignUpScreen: View {
 }
 
 #Preview {
-    PictureSignUpScreen(viewModel: .init(uidUser: ""))
+    PictureSignUpScreen(viewModel: .init(uidUser: "", phoneNumber: ""))
 }

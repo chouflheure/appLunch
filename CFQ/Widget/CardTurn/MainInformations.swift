@@ -25,27 +25,41 @@ struct MainInformationsPreviewView: View {
                     .resizable()
                     .frame(width: 20, height: 20)
                     .foregroundColor(
-                        viewModel.textFormattedLongFormat.isEmpty
+                        viewModel.textFormattedLongFormatStartEvent.isEmpty
                             ? .gray : .white
                     )
                     .padding(.leading, 12)
 
                 Text(
-                    viewModel.textFormattedLongFormat.isEmpty
-                        ? "Date" : viewModel.textFormattedLongFormat
+                    viewModel.textFormattedLongFormatStartEvent.isEmpty
+                    ? "Date de debut" : viewModel.textFormattedLongFormatStartEvent
                 )
                 .tokenFont(
-                    viewModel.textFormattedLongFormat.isEmpty
+                    viewModel.textFormattedLongFormatStartEvent.isEmpty
                         ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
 
                 Text(" | ")
                     .foregroundColor(.white)
 
                 Text(
-                    viewModel.textFormattedHours.isEmpty
-                        ? "Heure de début" : viewModel.textFormattedHours
+                    viewModel.textFormattedHoursStartEvent.isEmpty
+                    ? "Heure de début" : viewModel.textFormattedHoursStartEvent
                 )
                 .tokenFont(.Placeholder_Inter_Regular_16)
+            }
+            
+            if !viewModel.textFormattedLongFormatEndEvent.isEmpty {
+                HStack {
+                    Text(viewModel.textFormattedLongFormatEndEvent)
+                        .tokenFont(.Body_Inter_Medium_16)
+                    
+                    Text(" | ")
+                        .foregroundColor(.white)
+                    
+                    Text(viewModel.textFormattedHoursEndEvent)
+                        .tokenFont(.Placeholder_Inter_Regular_16)
+                }
+                .padding(.leading, 32)
             }
 
             HStack(alignment: .center) {
@@ -201,7 +215,6 @@ struct MainInformationsDetailView: View {
                                     coordinator.profileUserSelected = User(
                                         uid: user.uid,
                                         name: user.name,
-                                        firstName: user.firstName,
                                         pseudo: user.pseudo,
                                         profilePictureUrl: user
                                             .profilePictureUrl,

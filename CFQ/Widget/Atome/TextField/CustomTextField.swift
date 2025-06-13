@@ -56,6 +56,10 @@ enum TextFieldType {
     }
 }
 
+private func uppercaseText(text: String) -> String {
+    return text.uppercased()
+}
+
 struct TextFieldData {
     let background: Color
     let foregroundColor: Color
@@ -100,14 +104,14 @@ struct CustomTextField: View {
 
     var body: some View {
         HStack {
-            
+
             if textFieldType == .searchBar {
                 Image(systemName: textFieldType.data.iconResearch ?? "")
                     .padding(.leading, 8)
                     .foregroundColor(.white)
                     .padding(.leading, textFieldType.data.leadingPadding)
             }
-            
+
             if textFieldType == .cfq {
                 Text("CFQ")
                     .tokenFont(.Body_Inter_Medium_16)
@@ -125,6 +129,10 @@ struct CustomTextField: View {
                     }
             }.onChange(of: text) { newValue in
                 // text = textFieldType.data.titleCaseFunc(newValue)
+                if textFieldType == .cfq || textFieldType == .turn {
+                    text = uppercaseText(text: newValue)
+                }
+
                 if textFieldType == .searchBar {
                     onTapResearch?()
                 }

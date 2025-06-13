@@ -6,7 +6,7 @@ class TeamEditViewModel: ObservableObject {
 
     @Published var showEditTeam: Bool = false
     @Published var showSheetSettingTeam: Bool = false
-    @Published var imageProfile: Image?
+    @Published var imageProfile: UIImage?
     
     @Published var uuidTeam = String()
     @Published var titleTeam = String()
@@ -15,31 +15,7 @@ class TeamEditViewModel: ObservableObject {
     @Published var setAdmins = Set<UserContact>()
     @Published var showFriendsList: Bool = false
 
-    @Published var allFriends = Set<UserContact>(
-        [
-            UserContact(
-                uid: "77MKZdb3FJX8EFvlRGotntxk6oi1",
-                name: "name1",
-                firstName: "firstName1",
-                pseudo: "pseudo1",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "EMZGTTeqJ1dv9SX0YaNOExaLjjw1",
-                name: "name2",
-                firstName: "firstName2",
-                pseudo: "pseudo2",
-                profilePictureUrl: ""
-            ),
-            UserContact(
-                uid: "ziOs7jn3d5hZ0tgkTQdCNGQqlB33",
-                name: "name3",
-                firstName: "firstName3",
-                pseudo: "pseudo3",
-                profilePictureUrl: ""
-            ),
-        ]
-    )
+    @Published var allFriends = Set<UserContact>()
 
     var firebaseService = FirebaseService()
     @EnvironmentObject var user: User
@@ -47,7 +23,7 @@ class TeamEditViewModel: ObservableObject {
 }
 
 extension TeamEditViewModel {
-    
+
     func listFriendsOnTeamAndToAdd() {
         firebaseService.getDataByIDs(
             from: .users,
@@ -63,10 +39,11 @@ extension TeamEditViewModel {
             }
         )
     }
-    
+
     func pushEditTeamToFirebase(uuidTeam: String) {
         var friendsUUID = [String]()
         var adminsUUID = [String]()
+        
         
         setFriends.forEach({
             friendsUUID.append($0.uid)
@@ -74,14 +51,38 @@ extension TeamEditViewModel {
         
         setAdmins.forEach({
             adminsUUID.append($0.uid)
-        })
+       })
 
         if !titleTeam.isEmpty || !pictureUrlString.isEmpty || !friendsUUID.isEmpty || !adminsUUID.isEmpty {
-            firebaseService.updateDataByID(
-                data: ["admins": adminsUUID, "title": titleTeam, "friends": friendsUUID],
-                to: .teams,
-                at: uuidTeam
-            )
+            if let image = imageProfile {
+                firebaseService.uploadImageStandard(
+                    picture: imageProfile ?? UIImage(),
+                    uidUser: uuidTeam,
+                    localisationImage: .team,
+                    completion: { result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let urlString):
+                                print("@@@ urlString = \(urlString)")
+                                self.firebaseService.updateDataByID(
+                                    data: ["admins": adminsUUID, "title": self.titleTeam, "friends": friendsUUID, "imageProfile": urlString],
+                                    to: .teams,
+                                    at: uuidTeam
+                                )
+
+                            case .failure(let error):
+                                Logger.log(error.localizedDescription, level: .error)
+                            }
+                        }
+                    }
+                )
+            } else {
+                firebaseService.updateDataByID(
+                    data: ["admins": adminsUUID, "title": titleTeam, "friends": friendsUUID],
+                    to: .teams,
+                    at: uuidTeam
+                )
+            }
         } else {
             print("@@@ No send")
         }

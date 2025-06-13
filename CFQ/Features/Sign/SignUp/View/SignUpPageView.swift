@@ -39,5 +39,5 @@ struct SignUpPageView: View {
 
 #Preview {
     SignUpPageView(
-        viewModel: SignUpPageViewModel(uidUser: ""), coordinator: Coordinator())
+        viewModel: SignUpPageViewModel(uidUser: "", phoneNumber: ""), coordinator: Coordinator())
 }

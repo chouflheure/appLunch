@@ -43,7 +43,7 @@ struct CFQFormView: View {
                                         CustomTextField(
                                             text: $viewModel.titleCFQ,
                                             keyBoardType: .default,
-                                            placeHolder: "Demain",
+                                            placeHolder: "DEMAIN",
                                             textFieldType: .cfq
                                         )
                                     }

@@ -14,8 +14,8 @@ struct TeamEditViewScreen: View {
             viewModel.uuidTeam = coordinator.teamDetail?.uid ?? ""
             viewModel.titleTeam = coordinator.teamDetail?.title ?? ""
             viewModel.pictureUrlString = coordinator.teamDetail?.pictureUrlString ?? ""
-            viewModel.setFriends = Set(coordinator.teamDetail?.friends ?? [UserContact()])
-            viewModel.setAdmins = Set(coordinator.teamDetail?.admins ?? [UserContact()])
+            viewModel.setFriends = Set(coordinator.teamDetail?.friendsContact ?? [UserContact()])
+            viewModel.setAdmins = Set(coordinator.teamDetail?.adminsContact ?? [UserContact()])
         } else {
             withAnimation {
                 coordinator.showTeamDetailEdit = false
@@ -50,31 +50,56 @@ struct TeamEditViewScreen: View {
                     .padding(.horizontal, 16)
 
                     VStack {
-                        Button(action: {
-                            showPhotoPicker()
-                        }) {
-                            Image(.header)
+                        if viewModel.imageProfile == nil {
+                            Button(action: {
+                                showPhotoPicker()
+                            }) {
+                                CachedAsyncImageView(
+                                    urlString: viewModel.pictureUrlString,
+                                    designType: .scaleImageTeam
+                                )
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.bottom, 16)
+                            .photosPicker(
+                                isPresented: $isPhotoPickerPresented,
+                                selection: $avatarPhotoItem,
+                                matching: .images
+                            )
+                            .task(id: avatarPhotoItem) {
+                                
+                                if let data = try? await avatarPhotoItem?
+                                    .loadTransferable(type: Data.self),
+                                    let uiImage = UIImage(data: data)
+                                {
+                                    viewModel.imageProfile = uiImage
+                                }
+                            }
+                            
+                        } else {
+                            Image(uiImage: viewModel.imageProfile ?? UIImage())
                                 .resizable()
                                 .scaledToFill()
                                 .foregroundColor(.white)
                                 .frame(width: 90, height: 90)
                                 .clipShape(Circle())
+                                .padding(.vertical, 16)
+                                .padding(.bottom, 16)
+                                .photosPicker(
+                                    isPresented: $isPhotoPickerPresented,
+                                    selection: $avatarPhotoItem,
+                                    matching: .images
+                                )
+                                .task(id: avatarPhotoItem) {
+                                    if let data = try? await avatarPhotoItem?
+                                        .loadTransferable(type: Data.self),
+                                        let uiImage = UIImage(data: data)
+                                    {
+                                        viewModel.imageProfile = uiImage
+                                    }
+                                }
                         }
-                        .padding(.vertical, 16)
-                        .padding(.bottom, 16)
-                        .photosPicker(
-                            isPresented: $isPhotoPickerPresented,
-                            selection: $avatarPhotoItem,
-                            matching: .images
-                        )
-                        .task(id: avatarPhotoItem) {
-                            if let data = try? await avatarPhotoItem?
-                                .loadTransferable(type: Data.self),
-                                let uiImage = UIImage(data: data)
-                            {
-                                viewModel.imageProfile = Image(uiImage: uiImage)
-                            }
-                        }
+                        
                         Divider()
                             .overlay(.white)
 
@@ -144,7 +169,7 @@ struct TeamEditViewScreen: View {
                                         .padding(.leading, 15)
                                         .padding(.vertical, 10)
                                         .font(.system(size: 10, weight: .bold))
-                                    Text("Annuler")
+                                    Text(StringsToken.General.cancel)
                                         .foregroundColor(.white)
                                         .padding(.trailing, 15)
                                         .padding(.vertical, 10)

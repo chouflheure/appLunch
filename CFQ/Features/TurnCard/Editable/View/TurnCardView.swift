@@ -14,7 +14,7 @@ struct TurnCardView: View {
         let turn = coordinator.turnSelectedPreview ?? TurnPreview(
                 uid: "",
                 titleEvent: "",
-                date: nil,
+                dateStartEvent: nil,
                 admin: "",
                 description: "",
                 invited: [""],
@@ -100,7 +100,7 @@ struct TurnCardView: View {
                                     turn: TurnPreview(
                                         uid: UUID().description,
                                         titleEvent: viewModel.titleEvent,
-                                        date: viewModel.dateEvent,
+                                        dateStartEvent: viewModel.dateEventStart,
                                         admin: coordinator.user?.uid ?? "",
                                         description: viewModel.description,
                                         invited: [],
@@ -122,6 +122,7 @@ struct TurnCardView: View {
                                         .foregroundColor(.white)
                                         .padding(.leading, 15)
                                         .padding(.vertical, 10)
+                                        .font(.system(size: 10, weight: .bold))
                                     
                                     Text("Brouillon")
                                         .tokenFont(.Body_Inter_Medium_14)
@@ -161,17 +162,16 @@ struct TurnCardView: View {
                                         .foregroundColor(.white)
                                         .padding(.leading, 15)
                                         .padding(.vertical, 10)
-                                        .font(.system(size: 10, weight: .bold))
                                     
                                     Text("Publier")
-                                        .foregroundColor(.white)
+                                        .tokenFont(.Body_Inter_Medium_14)
                                         .padding(.trailing, 15)
                                         .padding(.vertical, 10)
                                         .font(.system(size: 15, weight: .bold))
                                 }
                             })
                             .frame(width: 150)
-                            .background(Color(hex: "B098E6").opacity( 1))
+                            .background(Color(hex: "B098E6").opacity(1))
                             .cornerRadius(10)
                         }
                     }

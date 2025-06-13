@@ -1,37 +1,65 @@
+import Foundation
 
-class Team: Codable, Hashable {
+class Team: ObservableObject, Encodable, Decodable{
     let uid: String
     let title: String
     let pictureUrlString: String
     let friends: [String]
     let admins: [String]
-
-    init(uid: String, title: String, pictureUrlString: String, friends: [String], admins: [String]) {
+    @Published var friendsContact: [UserContact]?
+    @Published var adminsContact: [UserContact]?
+    
+    init(
+        uid: String,
+        title: String,
+        pictureUrlString: String,
+        friends: [String],
+        admins: [String],
+        friendsContact: [UserContact]? = nil,
+        adminsContact: [UserContact]? = nil
+    ) {
         self.uid = uid
         self.title = title
         self.pictureUrlString = pictureUrlString
         self.friends = friends
         self.admins = admins
+        self.friendsContact = friendsContact
+        self.adminsContact = adminsContact
     }
     
-    // Conformité à Equatable
-    static func == (lhs: Team, rhs: Team) -> Bool {
-        return lhs.uid == rhs.uid &&
-               lhs.title == rhs.title &&
-               lhs.pictureUrlString == rhs.pictureUrlString &&
-               lhs.friends == rhs.friends &&
-               lhs.admins == rhs.admins
+    enum CodingKeys: String, CodingKey {
+        case uid
+        case title
+        case pictureUrlString
+        case friends
+        case admins
+        case friendsContact
+        case adminsContact
     }
 
-    // Conformité à Hashable
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(uid)
-        hasher.combine(title)
-        hasher.combine(pictureUrlString)
-        hasher.combine(friends)
-        hasher.combine(admins)
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        uid = try values.decode(String.self, forKey: .uid)
+        title = try values.decode(String.self, forKey: .title)
+        pictureUrlString = try values.decode(String.self, forKey: .pictureUrlString)
+        friends = try values.decode([String].self, forKey: .friends)
+        admins = try values.decode([String].self, forKey: .admins)
+        friendsContact = try values.decodeIfPresent([UserContact].self, forKey: .friendsContact)
+        adminsContact = try values.decodeIfPresent([UserContact].self, forKey: .adminsContact)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uid, forKey: .uid)
+        try container.encode(title, forKey: .title)
+        try container.encode(pictureUrlString, forKey: .pictureUrlString)
+        try container.encode(friends, forKey: .friends)
+        try container.encode(admins, forKey: .admins)
+        try container.encodeIfPresent(friendsContact, forKey: .friendsContact)
+        try container.encodeIfPresent(adminsContact, forKey: .adminsContact)
     }
     
+    /*
     func toTeamGlobal() -> TeamGlobal {
         return TeamGlobal(
             uid: self.uid,
@@ -41,6 +69,7 @@ class Team: Codable, Hashable {
             admins: []
         )
     }
+    */
     
     var printObject: String {
         return "@@@ ---------TEAM---------- "
@@ -54,7 +83,7 @@ class Team: Codable, Hashable {
 
 }
 
-
+/*
 class TeamGlobal: Codable, Hashable {
     var uid: String
     var title: String
@@ -100,3 +129,4 @@ class TeamGlobal: Codable, Hashable {
 }
 
 
+*/

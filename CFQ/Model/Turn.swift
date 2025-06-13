@@ -5,7 +5,8 @@ import SwiftUI
 class Turn: ObservableObject, Encodable, Decodable {
     @Published var uid: String
     @Published var titleEvent: String
-    @Published var date: Date?
+    @Published var dateStartEvent: Date?
+    @Published var dateEndEvent: Date?
     @Published var pictureURLString: String
     @Published var admin: String
     @Published var description: String
@@ -30,7 +31,8 @@ class Turn: ObservableObject, Encodable, Decodable {
     enum CodingKeys: String, CodingKey {
         case uid
         case titleEvent
-        case date
+        case dateStartEvent
+        case dateEndEvent
         case pictureURLString
         case admin
         case description
@@ -54,7 +56,8 @@ class Turn: ObservableObject, Encodable, Decodable {
     init(
         uid: String,
         titleEvent: String,
-        date: Date?,
+        dateStartEvent: Date?,
+        dateEndEvent: Date? = nil,
         pictureURLString: String,
         admin: String,
         description: String,
@@ -75,7 +78,8 @@ class Turn: ObservableObject, Encodable, Decodable {
     ) {
         self.uid = uid
         self.titleEvent = titleEvent
-        self.date = date
+        self.dateStartEvent = dateStartEvent
+        self.dateEndEvent = dateEndEvent
         self.pictureURLString = pictureURLString
         self.admin = admin
         self.description = description
@@ -99,7 +103,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         uid = try values.decode(String.self, forKey: .uid)
         titleEvent = try values.decode(String.self, forKey: .titleEvent)
-        date = try values.decodeIfPresent(Date.self, forKey: .date)
+        dateStartEvent = try values.decodeIfPresent(Date.self, forKey: .dateStartEvent)
+        dateEndEvent = try values.decodeIfPresent(Date.self, forKey: .dateEndEvent)
         pictureURLString = try values.decode(String.self, forKey: .pictureURLString)
         admin = try values.decode(String.self, forKey: .admin)
         description = try values.decode(String.self, forKey: .description)
@@ -124,7 +129,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(uid, forKey: .uid)
         try container.encode(titleEvent, forKey: .titleEvent)
-        try container.encodeIfPresent(date, forKey: .date)
+        try container.encodeIfPresent(dateStartEvent, forKey: .dateStartEvent)
+        try container.encodeIfPresent(dateEndEvent, forKey: .dateEndEvent)
         try container.encode(pictureURLString, forKey: .pictureURLString)
         try container.encode(admin, forKey: .admin)
         try container.encode(description, forKey: .description)
@@ -149,7 +155,6 @@ class Turn: ObservableObject, Encodable, Decodable {
         return "@@@ ---------TURN--------- "
         + "\nuid : \(uid)"
         + "\n titleEvent : \(titleEvent)"
-        + "\n date : \(String(describing: date))"
         + "\n pictureUrlString : \(pictureURLString)"
         + "\n admin : \(admin)"
         + "\n description : \(description)"
@@ -172,11 +177,11 @@ class Turn: ObservableObject, Encodable, Decodable {
 }
 
 
-
 class TurnPreview: ObservableObject, Encodable {
     @Published var uid: String
     @Published var titleEvent: String
-    @Published var date: Date?
+    @Published var dateStartEvent: Date?
+    @Published var dateEndEvent: Date?
     @Published var admin: String
     @Published var description: String
     @Published var invited: [String]
@@ -193,7 +198,8 @@ class TurnPreview: ObservableObject, Encodable {
     enum CodingKeys: String, CodingKey {
         case uid
         case titleEvent
-        case date
+        case dateStartEvent
+        case dateEndEvent
         case admin
         case description
         case invited
@@ -211,7 +217,8 @@ class TurnPreview: ObservableObject, Encodable {
     init(
         uid: String,
         titleEvent: String,
-        date: Date?,
+        dateStartEvent: Date?,
+        dateEndEvent: Date? = nil,
         admin: String,
         description: String,
         invited: [String],
@@ -226,7 +233,8 @@ class TurnPreview: ObservableObject, Encodable {
     ) {
         self.uid = uid
         self.titleEvent = titleEvent
-        self.date = date
+        self.dateStartEvent = dateStartEvent
+        self.dateEndEvent = dateEndEvent
         self.admin = admin
         self.description = description
         self.invited = invited
@@ -244,7 +252,8 @@ class TurnPreview: ObservableObject, Encodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(uid, forKey: .uid)
         try container.encode(titleEvent, forKey: .titleEvent)
-        try container.encodeIfPresent(date, forKey: .date)
+        try container.encodeIfPresent(dateStartEvent, forKey: .dateStartEvent)
+        try container.encodeIfPresent(dateEndEvent, forKey: .dateEndEvent)
         try container.encode(admin, forKey: .admin)
         try container.encode(description, forKey: .description)
         try container.encode(invited, forKey: .invited)
@@ -262,7 +271,8 @@ class TurnPreview: ObservableObject, Encodable {
         return "@@@ ---------TURN--------- "
         + "\nuid : \(uid)"
         + "\n titleEvent : \(titleEvent)"
-        + "\n date : \(String(describing: date))"
+        + "\n dateStartEvent : \(String(describing: dateStartEvent))"
+        + "\n dateEndEvent : \(String(describing: dateEndEvent))"
         + "\n admin : \(admin)"
         + "\n description : \(description)"
         + "\n invited : \(invited)"
@@ -271,9 +281,6 @@ class TurnPreview: ObservableObject, Encodable {
         + "\n placeAdresse : \(placeAdresse)"
         + "\n placeLatitude : \(placeLatitude)"
         + "\n placeLongitude : \(placeLongitude)"
-        // + "\n adminContact : \(adminRef.uid)"
-        // + "\n adminContact : \(adminRef.name)"
-        // + "\n adminContact : \(adminRef.pseudo)"
         + "\n ------------------"
     }
 }

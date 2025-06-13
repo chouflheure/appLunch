@@ -39,8 +39,8 @@ struct TeamView: View {
                         team: viewModel.teams[index],
                         onClick: {
                             selectedTeam = index
-                            coordinator.teamDetail = viewModel.teamsGlobal[selectedTeam]
-                            withAnimation(.easeInOut(duration: 0.3)) {
+                            coordinator.teamDetail = viewModel.teams[selectedTeam]
+                            withAnimation {
                                 coordinator.showTeamDetail = true
                             }
                         }
@@ -49,9 +49,6 @@ struct TeamView: View {
                 }
             }
             .padding(.horizontal, 12)
-        }
-        .onChange(of: viewModel.teamsGlobal) { _ in
-            coordinator.teamDetail = viewModel.teamsGlobal[selectedTeam]
         }
     }
 }

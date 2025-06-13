@@ -11,21 +11,28 @@ struct CustomTabView: View {
 
     @EnvironmentObject var user: User
     @ObservedObject var coordinator: Coordinator
-    @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = true
-    @State private var navigationPath = NavigationPath() // Ajout du navigationPath
+    @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = false
+
     @State var text = ""
     
+    @State private var zIndexOnboarding: Double = 100
     
     var body: some View {
         SafeAreaContainer {
             ZStack {
 
                 if !hasAlreadyOnboarded {
-                    OnboardingView()
+                    OnboardingView() {
+                        withAnimation {
+                            zIndexOnboarding = 0
+                         }
+                    }
+                    .zIndex(zIndexOnboarding)
                 }
 
                 if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
                     PopUpMAJView()
+                        .zIndex(99)
                 }
 
                 else {
@@ -195,6 +202,11 @@ struct CustomTabView: View {
                             .transition(.move(edge: .trailing))
                     }
                     
+                    if coordinator.showFriendInCommum {
+                        FriendCommumScreen(coordinator: coordinator)
+                            .transition(.move(edge: .trailing))
+                    }
+
                     if coordinator.showMessagerieScreen {
                         MessagerieView(
                             isPresented: $coordinator.showMessagerieScreen,

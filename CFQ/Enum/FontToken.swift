@@ -24,6 +24,7 @@ enum FontToken {
     case Label_Inter_Medium_12
     case Label_Gigalypse_12
     case Body_Inter_Medium_16
+    case Body_Inter_Medium_18
     case Body_Inter_Regular_16
     case Body_Inter_Medium_14
     case Body_Inter_Regular_14
@@ -32,7 +33,7 @@ enum FontToken {
     case Body_Inter_Regular_12
     case Body_Inter_Regular_10
     case Body_Inter_Regular_10_white_secondary
-    
+
     func font() -> Font {
         switch self {
         case .Title_Inter_semibold_24:
@@ -55,6 +56,8 @@ enum FontToken {
             return .custom(FontType.GigalypseTrial.rawValue, size: 14)
         case .Body_Inter_Medium_16:
             return .custom(FontType.InterMedium.rawValue, size: 16)
+        case .Body_Inter_Medium_18:
+            return .custom(FontType.InterMedium.rawValue, size: 18)
         case .Body_Inter_Regular_16:
             return .custom(FontType.InterRegular.rawValue, size: 16)
         case .Body_Inter_Medium_14:
@@ -75,12 +78,13 @@ enum FontToken {
             return .custom(FontType.GigalypseTrial.rawValue, size: 24)
         }
     }
-    
+
     func color() -> Color {
         switch self {
         case .Body_Inter_Medium_12,
                 .Body_Inter_Medium_14,
                 .Body_Inter_Medium_16,
+                .Body_Inter_Medium_18,
                 .Label_Inter_Semibold_14,
                 .Label_Inter_Semibold_16,
                 .Label_Inter_Medium_12,
@@ -91,7 +95,7 @@ enum FontToken {
                 .Body_Inter_Regular_16,
                 .Body_Inter_Regular_14,
                 .Body_Inter_Semibold_12,
-                .Body_Inter_Regular_10 :
+                .Body_Inter_Regular_10:
             return .whitePrimary
 
         case .Body_Inter_Regular_10_white_secondary:

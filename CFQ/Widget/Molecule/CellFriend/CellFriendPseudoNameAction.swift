@@ -42,8 +42,6 @@ struct CellFriendPseudoNameAction: View {
                     HStack {
                         Text(userFriend.name)
                             .tokenFont(.Body_Inter_Regular_12)
-                        Text((userFriend.firstName.first?.uppercased() ?? "") + ".")
-                            .tokenFont(.Body_Inter_Regular_12)
                     }
                 }.padding(.leading, 8)
                 
@@ -54,7 +52,6 @@ struct CellFriendPseudoNameAction: View {
                 coordinator.profileUserSelected = User(
                     uid: userFriend.uid,
                     name: userFriend.name,
-                    firstName: userFriend.firstName,
                     pseudo: userFriend.pseudo,
                     profilePictureUrl: userFriend.profilePictureUrl
                 )

@@ -10,16 +10,24 @@ class FriendProfileViewModel: ObservableObject {
     @Published var user: User
     @Published var userFriend: User
     @Published var turns: [Turn] = []
+    @ObservedObject var coordinator: Coordinator
 
     var firebaseService = FirebaseService()
-    
+
     @Published var statusFriend: UsersAreFriendsStatusType = .noFriend {
         didSet {
             handleStatusChange()
         }
     }
+    
+    var friendsInCommun: [UserContact] {
+        guard let contacts = userFriend.userFriendsContact else { return [] }
+        let commonIds = Set(user.friends).intersection(Set(userFriend.friends))
+        return contacts.filter { commonIds.contains($0.uid) }
+    }
 
     init(coordinator: Coordinator) {
+        self.coordinator = coordinator
         self.userFriend = coordinator.profileUserSelected
 
         guard let user = coordinator.user else {
@@ -38,6 +46,16 @@ class FriendProfileViewModel: ObservableObject {
         } else {
             isPrivateAccount = false
         }
+    }
+    
+    func turnsInCommun(coordinator: Coordinator) -> [Turn]{
+        var turnShowByUser: [Turn] = []
+        turns.forEach({ turn in
+            if turn.invited.contains(coordinator.user?.uid ?? "id") {
+                turnShowByUser.append(turn)
+            }
+        })
+        return turnShowByUser
     }
     
     func statusFriendButton() {
@@ -200,6 +218,7 @@ class FriendProfileViewModel: ObservableObject {
 
 extension FriendProfileViewModel {
     func catchAllDataProfileUser(uid: String) {
+
         firebaseService.getDataByID(
             from: .users,
             with: uid,
@@ -210,6 +229,7 @@ extension FriendProfileViewModel {
                 DispatchQueue.main.async {
                     self.userFriend = user
                     self.startListeningToTurn(user: user)
+                    self.startListeningToUsersFriends(friendsIds: user.friends)
                 }
                 case .failure(let error):
                     print("@@@ error")
@@ -219,9 +239,26 @@ extension FriendProfileViewModel {
             }
         )
     }
+   
+    private func startListeningToUsersFriends(friendsIds: [String]) {
+        firebaseService.getDataByIDs(
+            from: .users,
+            with: friendsIds
+        ){ (result: Result<[UserContact], Error>) in
+            switch result {
+                case .success(let userContact):
+                    DispatchQueue.main.async {
+                        self.coordinator.profileUserSelected.userFriendsContact = userContact
+                        self.userFriend.userFriendsContact = userContact
+                    }
+                case .failure(let error):
+                    print("👎 Erreur : \(error.localizedDescription)")
+
+                }
+            }
+    }
     
     func startListeningToTurn(user: User) {
-        print("@@@ user.postedTurns = \(user.postedTurns)")
         firebaseService.getDataByIDs(
             from: .turns,
             with: user.postedTurns ?? []
@@ -238,7 +275,6 @@ extension FriendProfileViewModel {
                         turn.adminContact = UserContact(
                             uid: user.uid,
                             name: user.uid,
-                            firstName: user.firstName,
                             pseudo: user.pseudo,
                             profilePictureUrl: user.profilePictureUrl,
                             isActive: user.isActive

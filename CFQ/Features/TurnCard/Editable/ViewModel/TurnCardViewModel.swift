@@ -7,9 +7,11 @@ import Firebase
 class TurnCardViewModel: ObservableObject {
 
     @Published var titleEvent = String()
-    @Published var dateEvent: Date?
+    @Published var dateEventStart: Date?
+    @Published var dateEventEnd: Date?
+    @Published var startHours: Date?
+    @Published var endHours: Date?
     @Published var moods = Set<MoodType>()
-    @Published var starthours: Date?
     @Published var imageSelected: UIImage?
     @Published var description = String()
     @Published var invited = [String]()
@@ -39,11 +41,11 @@ class TurnCardViewModel: ObservableObject {
     @Published var friendListToAdd = Set<UserContact>()
     
     var disableButtonSend: Bool {
-        return turn.titleEvent.isEmpty || turn.date == nil || moods.isEmpty || starthours == nil || imageSelected == nil || turn.description.isEmpty
+        return turn.titleEvent.isEmpty || turn.dateStartEvent == nil || moods.isEmpty || dateEventStart == nil || imageSelected == nil || turn.description.isEmpty
     }
 
-    var textFormattedLongFormat: String {
-        if let date = dateEvent {
+    var textFormattedLongFormatStartEvent: String {
+        if let date = dateEventStart {
             let formatter = DateFormatter()
             formatter.dateFormat = "EEEE  d  MMMM"
             formatter.locale = Locale(identifier: "fr_FR")
@@ -52,8 +54,25 @@ class TurnCardViewModel: ObservableObject {
         return ""
     }
 
-    var textFormattedHours: String {
-        if let time = starthours {
+    var textFormattedHoursStartEvent: String {
+        if let time = startHours {
+            return time.formatted(date: .omitted, time: .shortened)
+        }
+        return ""
+    }
+    
+    var textFormattedLongFormatEndEvent: String {
+        if let date = dateEventEnd {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "EEEE  d  MMMM"
+            formatter.locale = Locale(identifier: "fr_FR")
+            return formatter.string(from: date).capitalized
+        }
+        return ""
+    }
+
+    var textFormattedHoursEndEvent: String {
+        if let time = endHours {
             return time.formatted(date: .omitted, time: .shortened)
         }
         return ""
@@ -77,10 +96,11 @@ class TurnCardViewModel: ObservableObject {
         verificationIdentificationUserUID(coordinator: coordinator)
 
         titleEvent = turn.titleEvent
-        dateEvent = turn.date
+        dateEventStart = turn.dateStartEvent
         description = turn.description
         // turn.mood.forEach { moods.insert(MoodType.convertIntToMoodType(MoodType(rawValue: $0)?.rawValue ?? 0)) }
-        starthours = nil
+        startHours = nil
+        endHours = nil
         imageSelected = turn.imageEvent
         invited = turn.invited
         placeAdresse = turn.placeAdresse
@@ -96,7 +116,7 @@ class TurnCardViewModel: ObservableObject {
         var jour = ""
         var mois = ""
         
-        if let date = dateEvent {
+        if let date = dateEventStart {
             formatter.dateFormat = "d"
             formatter.locale = Locale(identifier: "fr_FR")
             jour = formatter.string(from: date).capitalized
@@ -178,7 +198,8 @@ extension TurnCardViewModel {
         let turn = Turn(
             uid: uid.description,
             titleEvent: titleEvent,
-            date: dateEvent ?? Date(),
+            dateStartEvent: dateEventStart ?? Date(),
+            dateEndEvent: dateEventEnd ?? Date(),
             pictureURLString: urlStringImage,
             admin: user.uid,
             description: description,

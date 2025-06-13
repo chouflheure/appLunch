@@ -90,7 +90,9 @@ struct SignScreen: View {
             } else {
                 SignUpPageView(
                     viewModel: SignUpPageViewModel(
-                        uidUser: viewModel.uidUser),
+                        uidUser: viewModel.uidUser,
+                        phoneNumber: viewModel.formattedNumber
+                    ),
                     coordinator: coordinator
                 )
             }

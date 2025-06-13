@@ -3,7 +3,6 @@ import Foundation
 class UserContact: Codable, Hashable {
     var uid: String
     var name: String
-    var firstName: String
     var pseudo: String
     var profilePictureUrl: String
     var isActive: Bool
@@ -11,14 +10,12 @@ class UserContact: Codable, Hashable {
     init(
         uid: String = "",
         name: String = "",
-        firstName: String = "",
         pseudo: String = "",
         profilePictureUrl: String = "",
         isActive: Bool = false
     ) {
         self.uid = uid
         self.name = name
-        self.firstName = firstName
         self.pseudo = pseudo
         self.profilePictureUrl = profilePictureUrl
         self.isActive = isActive
@@ -28,7 +25,6 @@ class UserContact: Codable, Hashable {
     static func == (lhs: UserContact, rhs: UserContact) -> Bool {
         return lhs.uid == rhs.uid &&
                lhs.name == rhs.name &&
-               lhs.firstName == rhs.firstName &&
                lhs.pseudo == rhs.pseudo &&
                lhs.profilePictureUrl == rhs.profilePictureUrl &&
                lhs.isActive == rhs.isActive
@@ -38,7 +34,6 @@ class UserContact: Codable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(uid)
         hasher.combine(name)
-        hasher.combine(firstName)
         hasher.combine(pseudo)
         hasher.combine(profilePictureUrl)
         hasher.combine(isActive)
@@ -49,11 +44,20 @@ class UserContact: Codable, Hashable {
             UserContact(
                 uid: "",
                 name: "",
-                firstName: "",
                 pseudo: "",
                 profilePictureUrl: "",
                 isActive: false
             )
         ]
+    }
+    
+    var printObject: String {
+        return "@@@ ---------USER CONTACT---------- \n"
+        + "@@@ uid : \(uid) \n"
+        + "@@@ name : \(name) \n"
+        + "@@@ pseudo : \(pseudo) \n"
+        + "@@@ profilePictureUrl : \(profilePictureUrl) \n"
+        + "@@@ isActive : \(isActive) \n"
+        + "@@@ ------------------"
     }
 }

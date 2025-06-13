@@ -19,8 +19,8 @@ struct HeaderCardNotEditableView: View {
                 
                 HStack(alignment: .center) {
                     DateLabel(
-                        dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).jour,
-                        monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.date).mois
+                        dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.dateStartEvent).jour,
+                        monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.dateStartEvent).mois
                     )
                     
                     Spacer()

@@ -124,10 +124,9 @@ struct MessagerieView: View {
                                             ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
                                                 LazyVStack(spacing: 10) {
                                                     if viewModel.messages[index].senderUID == coordinator.user?.uid {
-                                                        CellMessageSendByTheUserView(data: viewModel.messages[index]) {
-                                                        }
-                                                        .padding(.horizontal, 12)
-                                                        .rotationEffect(.degrees(180))
+                                                        CellMessageSendByTheUserView(data: viewModel.messages[index]) {}
+                                                            .padding(.horizontal, 12)
+                                                            .rotationEffect(.degrees(180))
                                                     } else {
                                                         CellMessageViewReceived(
                                                             data: viewModel.messages[index]
@@ -235,8 +234,10 @@ struct ConversationOptionView: View {
                 VStack {
                     HeaderBackLeftScreen(
                         onClickBack: { withAnimation { isPresented = false } },
-                        titleScreen: "Info du groupe "
+                        titleScreen: "Infos"
                     )
+
+                    /*
                     ScrollView {
                         VStack {
                             Image(.header)
@@ -269,6 +270,8 @@ struct ConversationOptionView: View {
                     }
                     .padding(.vertical, 20)
                     .padding(.horizontal, 12)
+                    */
+
                 }
             }
             .ignoresSafeArea(.keyboard)

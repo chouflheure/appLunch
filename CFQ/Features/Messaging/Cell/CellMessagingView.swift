@@ -11,14 +11,6 @@ struct CellMessagingView: View {
             HStack(spacing: hasUnReadMessage ? 0 : 12) {
                 
                 CachedAsyncImageView(urlString: data.pictureEventURL, designType: .scaleImageMessageProfile)
-                /*
-                Image(.header)
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(Circle())
-                    .frame(width: 45, height: 45)
-                    .padding(.trailing, 0)
-                */
                 if hasUnReadMessage {
                     Circle()
                         .fill(.purpleLight)

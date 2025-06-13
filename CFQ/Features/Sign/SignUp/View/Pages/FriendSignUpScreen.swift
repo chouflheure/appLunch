@@ -38,9 +38,9 @@ struct FriendSignUpScreen: View {
                                     .looping()
                                     .frame(width: 150, height: 150)
                                 } else {
-                                    FriendSignUpCell(
-                                        userPreview: contact
-                                    )
+                                    CellFriendSignUp(userPreview: contact) { askToBeFriend in
+                                        viewModel.askToBeFriend(isAskToBeFriend: askToBeFriend, userFriendId: contact.uid)
+                                    }
                                 }
                             }
                         }
@@ -112,12 +112,10 @@ struct FriendSignUpScreen: View {
             }
 
             .onChange(of: viewModel.isLoadingPictureUploadError) { isLoading in
-                // startAnimationTimer(totalFrames: ResponseUploadType.error.totalFrames)
                 isLoadingPictureUploadError = isLoading
             }
 
             .onChange(of: viewModel.isLoadingPictureUploadDone) { isLoading in
-                // startAnimationTimer(totalFrames: ResponseUploadType.done.totalFrames)
                 isLoadingPictureUploadDone = isLoading
             }
 
@@ -171,7 +169,7 @@ struct FriendSignUpScreen: View {
 
 #Preview {
     FriendSignUpScreen(
-        viewModel: SignUpPageViewModel(uidUser: ""), coordinator: Coordinator()
+        viewModel: SignUpPageViewModel(uidUser: "", phoneNumber: ""), coordinator: Coordinator()
     ) {}
 }
 
@@ -315,52 +313,5 @@ struct UploadPictureOnDataBase: View {
             .offset(y: -110)
             .zIndex(3)
         }
-    }
-}
-
-struct FriendSignUpCell: View {
-    let userPreview: UserContact
-    @State var isSelected: Bool = false
-
-    var body: some View {
-        HStack(spacing: 15) {
-            CirclePicture(urlStringImage: userPreview.profilePictureUrl)
-                .frame(width: 40, height: 40)
-            Text(userPreview.pseudo)
-                .tokenFont(.Body_Inter_Medium_16)
-            Text(
-                "~ " + userPreview.name + " "
-                    + userPreview.firstName.first!.uppercased() + "."
-            )
-            .tokenFont(.Placeholder_Inter_Regular_16)
-
-            Spacer()
-
-            Button(action: {
-                withAnimation {
-                    isSelected.toggle()
-                }
-                if isSelected {
-                    Logger.log(
-                        "Demande d'ajout d'ami lors de l'inscription",
-                        level: .info)
-                } else {
-                    Logger.log("Annulation de la demande d'ami", level: .info)
-                }
-            }) {
-                if isSelected {
-                    Text("Annuler")
-                        .foregroundColor(.red)
-                } else {
-                    Image(.iconAdduser)
-                        .foregroundColor(.white)
-                }
-            }
-        }
-        .frame(
-            maxWidth: .infinity,
-            alignment: .init(horizontal: .leading, vertical: .top)
-        )
-        .padding(.horizontal, 16)
     }
 }

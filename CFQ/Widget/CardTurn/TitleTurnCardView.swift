@@ -46,10 +46,14 @@ struct TitleTurnCardDetailView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            TextField("Le titre", text: $viewModel.titleEvent)
-                .tokenFont(.Title_Gigalypse_24)
-                .focused($isFocused)
-                .padding(.bottom, 16)
+            CustomTextField(
+                text: $viewModel.titleEvent,
+                keyBoardType: .default,
+                placeHolder: "LE TITRE",
+                textFieldType: .turn
+            )
+            .tokenFont(.Title_Gigalypse_24)
+            .padding(.bottom, 16)
 
             HStack {
                 CachedAsyncImageView(urlString: viewModel.user.profilePictureUrl, designType: .scaledToFill_Circle)

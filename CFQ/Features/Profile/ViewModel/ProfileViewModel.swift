@@ -37,7 +37,6 @@ class ProfileViewModel: ObservableObject {
                         turn.adminContact = UserContact(
                             uid: user.uid,
                             name: user.uid,
-                            firstName: user.firstName,
                             pseudo: user.pseudo,
                             profilePictureUrl: user.profilePictureUrl,
                             isActive: user.isActive

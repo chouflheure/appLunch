@@ -6,13 +6,13 @@ struct TeamDetailView: View {
     @State var isPresentedSeetings = false
     @EnvironmentObject var user: User
 
-    private var team: TeamGlobal
+    @ObservedObject var team: Team
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
         guard let teamDetail = coordinator.teamDetail else {
             coordinator.showTeamDetail = false
-            self.team = TeamGlobal(uid: "", title: "Error", pictureUrlString: "", friends: [], admins: [])
+            self.team = Team(uid: "", title: "", pictureUrlString: "", friends: [], admins: [])
             return
         }
 
@@ -97,24 +97,30 @@ struct TeamDetailView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 VStack(spacing: 0) {
                                     HStack(spacing: 0) {
-                                        ForEach(coordinator.teamDetail?.friends ?? UserContact().userContactDefault(), id: \.self) { user in
-                                            CellFriendAdmin (
+                                        ForEach(coordinator.teamDetail?.friendsContact ?? [], id: \.uid) { user in
+                                            CellFriendAdmin(
                                                 userPreview: user,
                                                 isEditingAdmin: .constant(false),
                                                 isAdmin: Binding(
                                                     get: {
-                                                        coordinator.teamDetail?.admins.contains(user) ?? false
+                                                        guard let admins = coordinator.teamDetail?.adminsContact else { return false }
+                                                        return admins.contains(where: { $0.uid == user.uid })
                                                     },
                                                     set: { newValue in
+                                                        guard coordinator.teamDetail != nil else { return }
+                                                        
                                                         if newValue {
-                                                            coordinator.teamDetail?.admins.append(user)
+                                                            let isAlreadyAdmin = coordinator.teamDetail?.adminsContact?.contains(where: { $0.uid == user.uid }) ?? false
+                                                            if !isAlreadyAdmin {
+                                                                coordinator.teamDetail?.adminsContact?.append(user)
+                                                            }
                                                         } else {
-                                                            coordinator.teamDetail?.admins.remove(at: 0)
-
+                                                            coordinator.teamDetail?.adminsContact?.removeAll { $0.uid == user.uid }
                                                         }
                                                     }
                                                 )
-                                            ).padding(.trailing, 12)
+                                            )
+                                            .padding(.trailing, 12)
                                         }
                                         .frame(height: 110)
                                     }
@@ -157,14 +163,59 @@ struct TeamDetailView: View {
                 }
             }
         }
+        .padding(.vertical, 30)
         .sheet(isPresented: $isPresentedSeetings) {
-            SettingsTeamDetailSheet(
-                coordinator: coordinator,
-                isAdmin: viewModel.isAdmin(userUUID: user.uid, admins: coordinator.teamDetail?.admins),
-                isPresented: $isPresentedSeetings
-            )
+            ZStack {
+                Color.black
+                    .ignoresSafeArea()
+                VStack(alignment: .trailing, spacing: 30) {
+                    if ((coordinator.teamDetail?.admins) != nil) {
+                        HStack {
+                            Image(.iconEdit)
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(.white)
+                                .frame(width: 20)
+                            Button(
+                                action: {
+                                    Logger.log("Modifier la team", level: .action)
+                                    isPresentedSeetings = false
+                                    // viewModel.showSheetSettingTeam = false
+                                    withAnimation {
+                                        coordinator.showTeamDetailEdit = true
+                                    }
+                                },
+                                label: {
+                                    Text("Modifier la team")
+                                        .tokenFont(.Body_Inter_Medium_16)
+                                })
+                            Spacer()
+                        }
+                    }
+                    HStack {
+                        Image(.iconTrash)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        Button(
+                            action: {
+                                Logger.log("Quitter la team", level: .action)
+                                isPresentedSeetings = false
+                                
+                            },
+                            label: {
+                                Text("Quitter la team")
+                                    .tokenFont(.Body_Inter_Medium_16)
+                            })
+                        Spacer()
+                    }
+                }
+                .padding(.leading, 12)
+            }
             .presentationDragIndicator(.visible)
             .presentationDetents([.height(120)])
+            
         }
         .padding(.vertical, 30)
     }

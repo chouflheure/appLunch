@@ -4,12 +4,13 @@ import Combine
 class User: ObservableObject, Encodable, Decodable {
     @Published var uid: String
     @Published var name: String
-    @Published var firstName: String
+    @Published var firstName: String?
     @Published var pseudo: String
     @Published var profilePictureUrl: String
     @Published var location: String
     @Published var birthDate: Date?
     @Published var isActive: Bool
+    @Published var phoneNumber: String?
     @Published var favorite: [String]?
     @Published var friends: [String]
     @Published var invitedCfqs: [String]?
@@ -30,12 +31,13 @@ class User: ObservableObject, Encodable, Decodable {
     init(
         uid: String = "",
         name: String = "",
-        firstName: String = "",
+        firstName: String? = nil,
         pseudo: String = "",
         profilePictureUrl: String = "",
         location: String = "",
         birthDate: Date = Date(),
         isActive: Bool = true,
+        phoneNumber: String = "",
         favorite: [String] = [] ,
         friends: [String] = [],
         invitedCfqs: [String] = [],
@@ -60,6 +62,7 @@ class User: ObservableObject, Encodable, Decodable {
         self.location = location
         self.birthDate = birthDate
         self.isActive = isActive
+        self.phoneNumber = phoneNumber
         self.favorite = favorite
         self.friends = friends
         self.invitedCfqs = invitedCfqs
@@ -86,6 +89,7 @@ class User: ObservableObject, Encodable, Decodable {
         case location
         case birthDate
         case isActive
+        case phoneNumber
         case favorite
         case friends
         case invitedCfqs
@@ -107,7 +111,7 @@ class User: ObservableObject, Encodable, Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         uid = try values.decode(String.self, forKey: .uid)
         name = try values.decode(String.self, forKey: .name)
-        firstName = try values.decode(String.self, forKey: .firstName)
+        firstName = try values.decodeIfPresent(String.self, forKey: .firstName)
         pseudo = try values.decode(String.self, forKey: .pseudo)
         profilePictureUrl = try values.decode(String.self, forKey: .profilePictureUrl)
         isActive = try values.decode(Bool.self, forKey: .isActive)
@@ -129,15 +133,16 @@ class User: ObservableObject, Encodable, Decodable {
         sentFriendRequests = try values.decode([String].self, forKey: .sentFriendRequests)
         userFriendsContact = try values.decodeIfPresent([UserContact].self, forKey: .userFriendsContact)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(uid, forKey: .uid)
         try container.encode(name, forKey: .name)
-        try container.encode(firstName, forKey: .firstName)
+        try container.encodeIfPresent(firstName, forKey: .firstName)
         try container.encode(pseudo, forKey: .pseudo)
         try container.encode(profilePictureUrl, forKey: .profilePictureUrl)
         try container.encode(isActive, forKey: .isActive)
+        try container.encode(phoneNumber, forKey: .phoneNumber)
         try container.encode(location, forKey: .location)
         try container.encode(birthDate, forKey: .birthDate)
         try container.encode(favorite, forKey: .favorite)

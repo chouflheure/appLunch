@@ -130,5 +130,9 @@ enum StringsToken {
     enum Image {
         static let fullBackground = "backgroundNeon"
     }
+    
+    enum General {
+        static let cancel = "Annuler"
+    }
 }
 
