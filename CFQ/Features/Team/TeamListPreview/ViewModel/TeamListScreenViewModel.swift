@@ -5,19 +5,6 @@ import FirebaseFirestore
 class TeamListScreenViewModel: ObservableObject {
     var firebaseService = FirebaseService()
     @Published var teams = [Team]()
-
-    
-/*
-    var user = User(
-        uid: "1234567890",
-        name: "John",
-        firstName: "Doe",
-        pseudo: "johndoe",
-        location: "Ici",
-        friends: ["EMZGTTeqJ1dv9SX0YaNOExaLjjw1", "77MKZdb3FJX8EFvlRGotntxk6oi1", "ziOs7jn3d5hZ0tgkTQdCNGQqlB33"],
-        teams: ["1"]
-    )
-*/
     var user: User
     
     init(coordinator: Coordinator) {

@@ -7,6 +7,7 @@ struct FriendProfileView: View {
     @StateObject var viewModel: FriendProfileViewModel
     @ObservedObject var coordinator: Coordinator
     @State private var showDetail = false
+    @State private var showImages: Bool = false
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
@@ -119,6 +120,48 @@ struct FriendProfileView: View {
                     }
                     .padding(.bottom, 16)
 
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Group {
+                                if !showImages {
+                                    // Placeholder
+                                    HStack(spacing: -15) {
+                                        ForEach(0..<min(4, viewModel.userFriend.userFriendsContact?.count ?? 4), id: \.self) { index in
+                                            Circle()
+                                                .fill(.gray)
+                                                .frame(width: 24, height: 24)
+                                                .overlay(
+                                                    Circle()
+                                                        .stroke(Color.white, lineWidth: 1)
+                                                )
+                                        }
+                                    }
+                                } else {
+                                    // Images réelles
+                                    HStack(spacing: -15) {
+                                        ForEach(Array((viewModel.userFriend.userFriendsContact?.compactMap({ $0.profilePictureUrl }) ?? []).prefix(4).enumerated()), id: \.offset) { index, imageUrl in
+                                            CachedAsyncImageView(
+                                                urlString: imageUrl,
+                                                designType: .scaleImageMessageProfile
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            .animation(.easeInOut(duration: 0.3), value: showImages)
+                            
+                            Text("\(String(describing: viewModel.userFriend.userFriendsContact?.count))")
+                                .foregroundStyle(.white)
+                                .bold()
+                            Text("members")
+                                .foregroundStyle(.white)
+                            
+                            Spacer()
+                        }
+                        .frame(height: 24)
+                        
+                    }
+                    /*
                     HStack {
                         PreviewProfile(
                             pictures: [],
@@ -126,7 +169,8 @@ struct FriendProfileView: View {
                             numberUsers: 12)
                         Spacer()
                     }
-
+                     */
+                    
                     if viewModel.isPrivateAccount {
                         PrivateEventShow()
                     } else {
@@ -148,6 +192,12 @@ struct FriendProfileView: View {
             // TODO: - call to have full user
             viewModel.statusFriendButton()
             viewModel.catchAllDataProfileUser(uid: coordinator.profileUserSelected.uid)
+            showImages = viewModel.userFriend.userFriendsContact != nil && !(viewModel.userFriend.userFriendsContact?.isEmpty ?? true)
+        }
+        .onReceive(viewModel.userFriend.$userFriendsContact) { friendsContact in
+            DispatchQueue.main.async {
+               showImages = friendsContact != nil && !(friendsContact?.isEmpty ?? true)
+            }
         }
 
         if viewModel.isShowRemoveFriends {

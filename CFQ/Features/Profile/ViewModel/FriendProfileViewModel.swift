@@ -10,6 +10,7 @@ class FriendProfileViewModel: ObservableObject {
     @Published var user: User
     @Published var userFriend: User
     @Published var turns: [Turn] = []
+    var friendsInCommun: [UserContact] = []
 
     var firebaseService = FirebaseService()
     
@@ -210,6 +211,7 @@ class FriendProfileViewModel: ObservableObject {
 
 extension FriendProfileViewModel {
     func catchAllDataProfileUser(uid: String) {
+        
         firebaseService.getDataByID(
             from: .users,
             with: uid,
@@ -220,6 +222,7 @@ extension FriendProfileViewModel {
                 DispatchQueue.main.async {
                     self.userFriend = user
                     self.startListeningToTurn(user: user)
+                    self.startListeningToUsersFriends(friendsIds: user.friends)
                 }
                 case .failure(let error):
                     print("@@@ error")
@@ -228,6 +231,24 @@ extension FriendProfileViewModel {
                 }
             }
         )
+    }
+    
+   
+    private func startListeningToUsersFriends(friendsIds: [String]) {
+        firebaseService.getDataByIDs(
+            from: .users,
+            with: friendsIds
+        ){ (result: Result<[UserContact], Error>) in
+            switch result {
+                case .success(let userContact):
+                    DispatchQueue.main.async {
+                        self.userFriend.userFriendsContact = userContact
+                    }
+                case .failure(let error):
+                    print("👎 Erreur : \(error.localizedDescription)")
+
+                }
+            }
     }
     
     func startListeningToTurn(user: User) {
