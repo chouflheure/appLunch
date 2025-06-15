@@ -37,3 +37,12 @@ public extension View {
         )
     }
 }
+
+extension View {
+    func customNavigationBackButton<Content: View>(
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        self.modifier(
+            NavigationBarModifier(customBackButton: AnyView(content())))
+    }
+}

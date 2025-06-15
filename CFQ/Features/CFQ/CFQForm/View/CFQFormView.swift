@@ -14,115 +14,116 @@ struct CFQFormView: View {
     }
 
     var body: some View {
-        DraggableViewLeft(isPresented: $coordinator.showCFQForm) {
-            SafeAreaContainer {
-
-                ZStack {
-                    VStack(alignment: .leading) {
-                        HeaderBackLeftScreen(
-                            onClickBack: {
-                                withAnimation {
-                                    coordinator.showCFQForm = false
-                                }
-                            },
-                            titleScreen: "CFQ ?"
-                        )
-
+        ZStack {
+            VStack(alignment: .leading) {
+                VStack {
+                    ScrollView(.vertical, showsIndicators: false) {
                         VStack {
-                            ScrollView(.vertical, showsIndicators: false) {
-                                VStack {
-                                    HStack(alignment: .center, spacing: 12) {
-                                        CachedAsyncImageView(
-                                            urlString: coordinator.user?
-                                                .profilePictureUrl ?? "",
-                                            designType: .scaledToFill_Circle
-                                        )
-                                        .frame(width: 50, height: 50)
-                                        .cornerRadius(100)
+                            HStack(alignment: .center, spacing: 12) {
+                                CachedAsyncImageView(
+                                    urlString: coordinator.user?
+                                        .profilePictureUrl ?? "",
+                                    designType: .scaledToFill_Circle
+                                )
+                                .frame(width: 50, height: 50)
+                                .cornerRadius(100)
 
-                                        CustomTextField(
-                                            text: $viewModel.titleCFQ,
-                                            keyBoardType: .default,
-                                            placeHolder: "DEMAIN",
-                                            textFieldType: .cfq
-                                        )
-                                    }
-                                    .padding(.top, 16)
-                                    .padding(.horizontal, 16)
-
-                                    HStack {
-                                        Spacer()
-                                        PostEventButton(
-                                            action: {
-                                                viewModel.pushCFQ {
-                                                    success, message in
-                                                    if success {
-                                                        withAnimation {
-                                                            coordinator.showCFQForm = false
-                                                        }
-                                                    } else {
-                                                        toast = Toast(
-                                                            style: .error,
-                                                            message: message
-                                                        )
-                                                    }
-                                                }
-                                            },
-                                            isEnable: $viewModel.isEnableButton
-                                        )
-                                        .padding(.trailing, 16)
-                                    }
-                                    .padding(.top, 5)
-
-                                    SearchBarView(
-                                        text: $viewModel.researchText,
-                                        placeholder: StringsToken.SearchBar
-                                            .placeholderFriend,
-                                        onRemoveText: {
-                                            viewModel.removeText()
-                                        },
-                                        onTapResearch: {
-                                            viewModel.researche()
-                                        }
-                                    )
-                                    .padding(.top, 16)
-
-                                    AddFriendsAndListView(
-                                        arrayPicture: $viewModel
-                                            .friendsAddToCFQ,
-                                        arrayFriends: $viewModel.friendsList,
-                                        coordinator: coordinator,
-                                        onRemove: { userRemoved in
-                                            viewModel.removeFriendsFromList(
-                                                user: userRemoved)
-                                        },
-                                        onAdd: { userAdd in
-                                            viewModel.addFriendsToList(
-                                                user: userAdd)
-                                        }
-                                    )
-                                    .padding(.top, 15)
-                                }
+                                CustomTextField(
+                                    text: $viewModel.titleCFQ,
+                                    keyBoardType: .default,
+                                    placeHolder: "DEMAIN",
+                                    textFieldType: .cfq
+                                )
                             }
-                        }
-                    }
-                    .blur(radius: viewModel.isLoading ? 10 : 0)
-                    .allowsHitTesting(!viewModel.isLoading)
+                            .padding(.top, 16)
+                            .padding(.horizontal, 16)
 
-                    if viewModel.isLoading {
-                        ZStack {
-                            LottieView(animation: .named(StringsToken.Animation.loaderCircle))
-                                .playing()
-                                .looping()
-                                .frame(width: 150, height: 150)
+                            HStack {
+                                Spacer()
+                                PostEventButton(
+                                    action: {
+                                        viewModel.pushCFQ {
+                                            success, message in
+                                            if success {
+                                                withAnimation {
+                                                    coordinator
+                                                        .showCFQForm = false
+                                                }
+                                            } else {
+                                                toast = Toast(
+                                                    style: .error,
+                                                    message: message
+                                                )
+                                            }
+                                        }
+                                    },
+                                    isEnable: $viewModel.isEnableButton
+                                )
+                                .padding(.trailing, 16)
+                            }
+                            .padding(.top, 5)
+
+                            SearchBarView(
+                                text: $viewModel.researchText,
+                                placeholder: StringsToken.SearchBar
+                                    .placeholderFriend,
+                                onRemoveText: {
+                                    viewModel.removeText()
+                                },
+                                onTapResearch: {
+                                    viewModel.researche()
+                                }
+                            )
+                            .padding(.top, 16)
+
+                            AddFriendsAndListView(
+                                arrayPicture: $viewModel
+                                    .friendsAddToCFQ,
+                                arrayFriends: $viewModel.friendsList,
+                                coordinator: coordinator,
+                                onRemove: { userRemoved in
+                                    viewModel.removeFriendsFromList(
+                                        user: userRemoved)
+                                },
+                                onAdd: { userAdd in
+                                    viewModel.addFriendsToList(
+                                        user: userAdd)
+                                }
+                            )
+                            .padding(.top, 15)
                         }
-                        .zIndex(3)
                     }
                 }
-
             }
-            .toastView(toast: $toast)
+            .blur(radius: viewModel.isLoading ? 10 : 0)
+            .allowsHitTesting(!viewModel.isLoading)
+
+            if viewModel.isLoading {
+                ZStack {
+                    LottieView(
+                        animation: .named(
+                            StringsToken.Animation.loaderCircle)
+                    )
+                    .playing()
+                    .looping()
+                    .frame(width: 150, height: 150)
+                }
+                .zIndex(3)
+            }
         }
+        .customNavigationBackButton {
+            HeaderBackLeftScreen(
+                onClickBack: {
+                    withAnimation {
+                        coordinator.showFriendListScreen = false
+                    }
+                },
+                titleScreen: "AJoute tes amis",
+                isShowDivider: true
+            )
+        }
+        .toastView(toast: $toast)
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
     }
 }
 

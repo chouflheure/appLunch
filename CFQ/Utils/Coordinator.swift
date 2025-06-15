@@ -59,6 +59,8 @@ class Coordinator: ObservableObject {
                     
                     self.currentView = AnyView(
                         NavigationView {
+                            // NativeTabViewSolution(coordinator: self)
+                            // EDIT 
                             CustomTabView(coordinator: self)
                                 .environmentObject(user)
                         }
@@ -201,6 +203,8 @@ class Coordinator: ObservableObject {
     func gotoCustomTabView(user: User) {
         currentView = AnyView(
             NavigationView {
+                // EDIT
+                // NativeTabViewSolution(coordinator: self)
                 CustomTabView(coordinator: self)
                     .environmentObject(user)
             }

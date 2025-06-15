@@ -5,28 +5,14 @@ import Lottie
 struct TurnCardView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var coreDataViewModel = TurnCoreDataViewModel()
+    @ObservedObject var turn: Turn
+
     @State private var toast: Toast? = nil
     @StateObject var viewModel: TurnCardViewModel
 
-    init(coordinator: Coordinator, coreDataViewModel: TurnCoreDataViewModel) {
+    init(coordinator: Coordinator, coreDataViewModel: TurnCoreDataViewModel, turn: Turn) {
         self.coordinator = coordinator
-
-        let turn = coordinator.turnSelectedPreview ?? TurnPreview(
-                uid: "",
-                titleEvent: "",
-                dateStartEvent: nil,
-                admin: "",
-                description: "",
-                invited: [""],
-                mood: [],
-                messagerieUUID: "",
-                placeTitle: "",
-                placeAdresse: "",
-                placeLatitude: 0,
-                placeLongitude: 0,
-                imageEvent: nil
-            )
-
+        self.turn = turn
         _viewModel = StateObject(wrappedValue: TurnCardViewModel(turn: turn, coordinator: coordinator))
     }
     

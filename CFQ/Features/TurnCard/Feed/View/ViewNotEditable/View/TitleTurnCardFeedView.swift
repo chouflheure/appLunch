@@ -59,14 +59,14 @@ struct TitleTurnCardFeedView: View {
                         coordinator.turnSelected = turn
 
                         withAnimation {
-                            coordinator.showTurnFeedDetail = true
+                            // coordinator.showTurnFeedDetail = true
                             // showTurnDetailFeed = true
                         }
-                        /*
+                        
                         withAnimation {
                             coordinator.showSheetParticipateAnswers = coordinator.turnSelected?.adminContact?.uid != coordinator.user?.uid
                         }
-                         */
+                        
                     },
                     selectedOption: (turn.adminContact?.uid == coordinator.user?.uid) ? .constant(.yes) : $status
                 )

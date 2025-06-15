@@ -6,12 +6,13 @@ struct HeaderBackLeftScreen: View {
     var titleScreen: String
     var thirdElement: AnyView?
     var isShowDivider: Bool?
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        HStack(alignment: .center, spacing: 0) {
+        HStack(alignment: .center, spacing: 20) {
             Button(
                 action: {
-                    onClickBack()
+                    dismiss()
                 },
                 label: {
                     Image(.iconArrow)
@@ -21,7 +22,6 @@ struct HeaderBackLeftScreen: View {
                 }
             )
 
-            Spacer()
 
             Text(titleScreen)
                 .tokenFont(.Title_Gigalypse_24)
@@ -35,7 +35,7 @@ struct HeaderBackLeftScreen: View {
             }
             
         }
-        .padding(.horizontal, 12)
+        // .padding(.horizontal, 12)
         .padding(.vertical, 12)
         
         Divider()

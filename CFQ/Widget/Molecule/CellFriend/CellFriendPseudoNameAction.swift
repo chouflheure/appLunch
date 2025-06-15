@@ -48,18 +48,6 @@ struct CellFriendPseudoNameAction: View {
                 Spacer()
             }
             .contentShape(Rectangle())
-            .onTapGesture {
-                coordinator.profileUserSelected = User(
-                    uid: userFriend.uid,
-                    name: userFriend.name,
-                    pseudo: userFriend.pseudo,
-                    profilePictureUrl: userFriend.profilePictureUrl
-                )
-                withAnimation {
-                    coordinator.showProfileFriend = true
-                }
-            }
-            .simultaneousGesture(TapGesture())
 
             Button(action: {
                 isActionabled(currentType)

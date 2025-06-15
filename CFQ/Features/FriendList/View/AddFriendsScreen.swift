@@ -13,25 +13,26 @@ struct AddFriendsScreen: View {
     }
 
     var body: some View {
-        DraggableViewLeft(isPresented: $coordinator.showFriendListScreen) {
+        
             SafeAreaContainer {
                 VStack(spacing: 0) {
-                    HeaderBackLeftScreen(
-                        onClickBack: {
-                            withAnimation {
-                                coordinator.showFriendListScreen = false
-                            }
-                        },
-                        titleScreen: "AJoute tes amis",
-                        isShowDivider: true
-                    )
-
                     VStack(spacing: 0) {
                         CustomTabViewDouble(titles: ["Recherche", "Les demandes"], viewModel: viewModel, coordinator: coordinator, user: user)
                     }
                 }
             }
-        }
+            .customNavigationBackButton {
+                HeaderBackLeftScreen(
+                    onClickBack: {
+                        withAnimation {
+                            coordinator.showFriendListScreen = false
+                        }
+                    },
+                    titleScreen: "AJoute tes amis",
+                    isShowDivider: true
+                )
+            }
+        
     }
 }
 
@@ -78,7 +79,6 @@ struct CustomTabViewDouble: View {
                                 viewModel.removeText()
                             },
                             onTapResearch: {
-                                
                                 viewModel.researche()
                             }
                         )
@@ -86,15 +86,24 @@ struct CustomTabViewDouble: View {
 
                         VStack(alignment: .leading) {
                             ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
-                                CellFriendPseudoNameAction(
-                                    user: user,
-                                    userFriend: userFriend,
-                                    coordinator: coordinator,
-                                    isActionabled: { type in
-                                        viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
-                                    }
-                                )
-                                .padding(.top, 15)
+                                NavigationLink(
+                                    destination: FriendProfileView(
+                                        coordinator: coordinator,
+                                        user: user,
+                                        friend: userFriend
+                                    )
+                                ) {
+                                    CellFriendPseudoNameAction(
+                                        user: user,
+                                        userFriend: userFriend,
+                                        coordinator: coordinator,
+                                        isActionabled: { type in
+                                            viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
+                                        }
+                                    )
+                                    .padding(.top, 15)
+                                }
+                                
                             }
                         }
                         .padding(.horizontal, 12)

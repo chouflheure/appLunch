@@ -26,7 +26,6 @@ class Turn: ObservableObject, Encodable, Decodable {
     @Published var link: String?
     @Published var linkTitle: String?
     // @Published var adminRef: User
-    
 
     enum CodingKeys: String, CodingKey {
         case uid

@@ -33,7 +33,7 @@ class TurnCardViewModel: ObservableObject {
 
     @ObservedObject var coordinator: Coordinator
 
-    var turn: TurnPreview
+    var turn: Turn
     var user: User
     var firebaseService = FirebaseService()
     var allFriends: Set<UserContact> = []
@@ -86,7 +86,7 @@ class TurnCardViewModel: ObservableObject {
         }
     }
     
-    init(turn: TurnPreview, coordinator: Coordinator) {
+    init(turn: Turn, coordinator: Coordinator) {
 
         self.turn = turn
         self.user = coordinator.user ?? User(uid: "")

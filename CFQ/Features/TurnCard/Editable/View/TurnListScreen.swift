@@ -40,6 +40,16 @@ struct TurnListScreen: View {
                             Text(StringsToken.Turn.newTurn)
                                 .textCase(.uppercase)
                                 .padding(.bottom, 5)
+                            
+                            NavigationLink(
+                                destination: AddFriendsScreen(coordinator: coordinator)
+                            ) {
+                                Image(.iconPlus)
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .frame(width: 35, height: 35)
+                            }
+                            /*
                             Button(
                                 action: {
                                     withAnimation {
@@ -53,6 +63,7 @@ struct TurnListScreen: View {
                                         .foregroundColor(.white)
                                         .frame(width: 35, height: 35)
                                 })
+                             */
                         }
                         Spacer()
                     }
@@ -71,7 +82,7 @@ struct TurnListScreen: View {
                                     dateStartEvent: element.dateEvent,
                                     admin: coordinator.user?.uid ?? "",
                                     description: element.descriptionEvent ?? "",
-                                    invited: [""],
+                                    invited: [],
                                     mood: [],
                                     messagerieUUID: "",
                                     placeTitle: "",
@@ -92,7 +103,6 @@ struct TurnListScreen: View {
                 }
             }
         }
-        
         .onChange(of: coordinator.showTurnCardView) { _ in
             if !coordinator.showTurnCardView {
                 vm.fecthTurn()

@@ -20,7 +20,6 @@ struct CirclePictureStatusUserProfile: View {
 
 struct CirclePictureStatus: View {
     var userPreview: UserContact
-    var onClick: (() -> Void)
 
     var body: some View {
         ZStack {
@@ -33,10 +32,6 @@ struct CirclePictureStatus: View {
             Circle()
                 .stroke(userPreview.isActive ? .active : .inactive, lineWidth: 2)
                 .frame(width: 72, height: 72)
-        }
-        .onTapGesture {
-            Logger.log("click on picture", level: .action)
-            onClick()
         }
     }
 }

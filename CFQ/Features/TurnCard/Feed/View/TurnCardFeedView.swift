@@ -46,12 +46,6 @@ struct TurnCardFeedView: View {
             .cornerRadius(20)
             .zIndex(1)
         }
-        .onTapGesture {
-            coordinator.turnSelected = turn
-            withAnimation {
-                coordinator.showTurnFeedDetail = true
-            }
-        }
+        .customNavigationBackButton{}
     }
-    
 }

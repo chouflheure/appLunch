@@ -1,8 +1,122 @@
 
 import SwiftUI
 import MapKit
-import FirebaseFirestore
 
+
+struct CustomTabView: View {
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+
+    @State private var selectedEvent: MapLocationEventData? = nil
+    @State private var isShowPopUp: Bool = true
+
+    @EnvironmentObject var user: User
+    @ObservedObject var coordinator: Coordinator
+    @AppStorage("hasAlreadyOnboarded") var hasAlreadyOnboarded: Bool = false
+
+    @State var text = ""
+    @State private var zIndexOnboarding: Double = 100
+    
+    var body: some View {
+        NavigationStack {  // NavigationStack au niveau le plus haut
+            SafeAreaContainer {
+                ZStack {
+
+                    if !hasAlreadyOnboarded {
+                        OnboardingView() {
+                            withAnimation {
+                                zIndexOnboarding = 0
+                             }
+                        }
+                        .zIndex(zIndexOnboarding)
+                    }
+
+                    if coordinator.dataApp.version != appVersion && coordinator.dataApp.isNeedToUpdateApp {
+                        PopUpMAJView()
+                            .zIndex(99)
+                    }
+                    else {
+                        VStack(spacing: 0) {
+                            Group {
+                                if coordinator.selectedTab == 0 {
+                                    FeedView_Nav(coordinator: coordinator)
+                                } else if coordinator.selectedTab == 1 {
+                                    Text("Map")
+                                        .tokenFont(.Title_Gigalypse_24)
+                                } else if coordinator.selectedTab == 2 {
+                                    TurnListScreen(coordinator: coordinator)
+                                } else if coordinator.selectedTab == 3 {
+                                    TeamView(coordinator: coordinator)
+                                } else {
+                                    ProfileView(coordinator: coordinator)
+                                }
+                            }
+                            .frame(maxHeight: .infinity)
+                            
+                            CustomTabBarView(coordinator: coordinator)
+                        }
+                        .fullScreenCover(isPresented: $coordinator.showMapFullScreen) {
+                            TestMap(selectedEvent: $selectedEvent, coordinator: coordinator)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Extraction de la barre de navigation dans une vue séparée
+struct CustomTabBarView: View {
+    @ObservedObject var coordinator: Coordinator
+    
+    var body: some View {
+        HStack() {
+            Spacer()
+            
+            TabButton(iconUnselected: .iconNavHome,
+                      iconSelected: .iconNavHomeFilled,
+                      isSelected: coordinator.selectedTab == 0) {
+                coordinator.selectedTab = 0
+            }
+            
+            Spacer()
+            
+            TabButton(iconUnselected: .iconNavMap,
+                      iconSelected: .iconNavMapFilled,
+                      isSelected: coordinator.selectedTab == 1) {
+                coordinator.selectedTab = 1
+            }
+            
+            Spacer()
+            
+            CustomPlusButtonTabBar()
+                .onTapGesture {
+                    coordinator.selectedTab = 2
+                }
+            
+            Spacer()
+            
+            TabButton(iconUnselected: .iconNavTeam,
+                      iconSelected: .iconNavTeamFilled,
+                      isSelected: coordinator.selectedTab == 3) {
+                coordinator.selectedTab = 3
+            }
+            
+            Spacer()
+            
+            TabButton(iconUnselected: .iconNavProfile,
+                      iconSelected: .iconNavProfileFilled,
+                      isSelected: coordinator.selectedTab == 4) {
+                coordinator.selectedTab = 4
+            }
+            
+            Spacer()
+        }
+        .padding(.vertical)
+        .background(.black)
+    }
+}
+
+/*
 struct CustomTabView: View {
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 
@@ -40,7 +154,8 @@ struct CustomTabView: View {
                         Group {
                             if coordinator.selectedTab == 0 {
 
-                                FeedView(coordinator: coordinator)
+                                // FeedView(coordinator: coordinator)
+                                FeedView_Nav(coordinator: coordinator)
                                 
                                 // CellMessageView()
                                 // P158_SubscriptionView()
@@ -225,3 +340,4 @@ struct CustomTabView: View {
 #Preview {
     CustomTabView(coordinator: .init())
 }
+*/
