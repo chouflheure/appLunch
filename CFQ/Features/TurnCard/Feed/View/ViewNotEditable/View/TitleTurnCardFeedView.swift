@@ -67,9 +67,21 @@ struct TitleTurnCardFeedView: View {
                     selectedOption: (turn.adminContact?.uid == userUID) ? .constant(.yes) : $turn.userStatusParticipate
                 )
             }
-
-            PreviewProfile(pictures: [], previewProfileType: .userComming, numberUsers: 10)
-                .padding(.vertical, 8)
+        
+            /*
+            PreviewProfile(
+                friends: $team.friendsContact,
+                showImages: $showImages,
+                previewProfileType: .userMemberTeam
+            )
+            
+            PreviewProfile(
+                pictures: [],
+                previewProfileType: .userComming,
+                numberUsers: 10
+            )
+            .padding(.vertical, 8)
+             */
         }
         .sheet(isPresented: $showSheetParticipateAnswers) {
             AllOptionsAnswerParticpateButton(participateButtonSelected: $turn.userStatusParticipate)

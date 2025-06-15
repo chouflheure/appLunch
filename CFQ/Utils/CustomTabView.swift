@@ -17,7 +17,7 @@ struct CustomTabView: View {
     @State private var zIndexOnboarding: Double = 100
     
     var body: some View {
-        NavigationStack {  // NavigationStack au niveau le plus haut
+        NavigationStack {
             SafeAreaContainer {
                 ZStack {
 
@@ -38,7 +38,7 @@ struct CustomTabView: View {
                         VStack(spacing: 0) {
                             Group {
                                 if coordinator.selectedTab == 0 {
-                                    FeedView_Nav(coordinator: coordinator)
+                                    FeedView(coordinator: coordinator)
                                 } else if coordinator.selectedTab == 1 {
                                     Text("Map")
                                         .tokenFont(.Title_Gigalypse_24)

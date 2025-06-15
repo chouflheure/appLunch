@@ -43,6 +43,32 @@ extension View {
         @ViewBuilder content: () -> Content
     ) -> some View {
         self.modifier(
-            NavigationBarModifier(customBackButton: AnyView(content())))
+            NavigationBarModifier(customBackButton: AnyView(content()), customMoreButton: nil))
     }
+    
+    func customNavigationButtons<LeftContent: View, RightContent: View>(
+        @ViewBuilder leftButton: () -> LeftContent,
+        @ViewBuilder rightButton: () -> RightContent
+    ) -> some View {
+        self.modifier(
+            NavigationBarModifier(
+                customBackButton: AnyView(leftButton()),
+                customMoreButton: AnyView(rightButton())
+            )
+        )
+    }
+    
+    func customNavigationFlexible<LeftContent: View, CenterContent: View, RightContent: View>(
+            leftElement: (() -> LeftContent)? = nil,
+            centerElement: (() -> CenterContent)? = nil,
+            rightElement: (() -> RightContent)? = nil
+        ) -> some View {
+            self.modifier(
+                NavigationBarThreeElementsModifier(
+                    leftElement: leftElement != nil ? AnyView(leftElement!()) : AnyView(EmptyView()),
+                    centerElement: centerElement != nil ? AnyView(centerElement!()) : nil,
+                    rightElement: rightElement != nil ? AnyView(rightElement!()) : nil
+                )
+            )
+        }
 }

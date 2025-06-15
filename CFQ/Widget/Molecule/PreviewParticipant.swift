@@ -1,36 +1,54 @@
+
 import SwiftUI
 
 struct PreviewProfile: View {
-    var pictures: [String]
+    @Binding var friends: [UserContact]?
+    @Binding var showImages: Bool
     var previewProfileType: PreviewProfileType
-    var numberUsers: Int
-    var isLoading: Bool = false  // Nouveau paramètre
 
     var body: some View {
         HStack {
-            if isLoading {
-                // Placeholder avec cercles gris
-                HStack(spacing: -15) {
-                    ForEach(0..<min(3, numberUsers), id: \.self) { _ in
-                        Circle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(width: 24, height: 24)
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.white, lineWidth: 1)
+            Group {
+                if !showImages {
+                    // Placeholder
+                    HStack(spacing: -15) {
+                        ForEach(0..<min(4, friends?.count ?? 4), id: \.self) {
+                            index in
+                            Circle()
+                                .fill(Color.gray.opacity(0.4))
+                                .frame(width: 24, height: 24)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.white, lineWidth: 1)
+                                )
+                        }
+                    }
+                } else {
+                    // Images réelles
+                    HStack(spacing: -15) {
+                        ForEach(
+                            Array(
+                                (friends?.compactMap({ $0.profilePictureUrl })
+                                    ?? []).prefix(4).enumerated()), id: \.offset
+                        ) { index, imageUrl in
+                            CachedAsyncImageView(
+                                urlString: imageUrl,
+                                designType: .scaleImageMessageProfile
                             )
+                        }
                     }
                 }
-                .redacted(reason: .placeholder)  // Effet de shimmer
-            } else {
-                PreviewMultiplePicture(pictures: pictures)
             }
-            
-            Text("\(numberUsers)")
+            .animation(.easeInOut(duration: 0.3), value: showImages)
+
+            Text("\(friends?.count ?? 0)")
                 .foregroundStyle(.white)
                 .bold()
+            
             Text(previewProfileType.rawValue)
                 .foregroundStyle(.white)
         }
+        .frame(height: 24)
+
     }
 }

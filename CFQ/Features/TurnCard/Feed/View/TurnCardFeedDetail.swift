@@ -112,7 +112,6 @@ struct TitleTurnCardDetailFeedView: View {
     @ObservedObject var coordinator: Coordinator
     var user: User
     @State var showSheetParticipateAnswers: Bool = false
-    // @State private var userStatusParticipate: TypeParticipateButton
 
     init(turn: Turn, coordinator: Coordinator, user: User) {
         self.turn = turn
@@ -199,10 +198,12 @@ struct TitleTurnCardDetailFeedView: View {
     
             }
             // TODO: - Add participants
+            /*
             PreviewProfile(
                 pictures: [], previewProfileType: .userComming, numberUsers: 12
             )
             .padding(.vertical, 8)
+             */
         }
         .sheet(isPresented: $showSheetParticipateAnswers) {
             AllOptionsAnswerParticpateButton(participateButtonSelected: $turn.userStatusParticipate)
