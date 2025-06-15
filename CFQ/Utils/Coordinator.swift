@@ -33,6 +33,8 @@ class Coordinator: ObservableObject {
     @Published var selectedConversation: Conversation?
     @Published var selectedCFQ: CFQ?
 
+    @Environment(\.dismiss) var dismiss
+
     private var auth = Auth.auth()
     private var firebaseService = FirebaseService()
     private var listeners = [ListenerRegistration?]()

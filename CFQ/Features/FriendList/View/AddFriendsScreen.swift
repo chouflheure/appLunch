@@ -23,61 +23,13 @@ struct AddFriendsScreen: View {
             }
             .customNavigationFlexible(
                 leftElement: {
-                    // Élément gauche : Bouton retour
-                    Button(action: { }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 16, weight: .medium))
-                            Text("Retour")
-                                .font(.system(size: 17))
-                        }
-                        .foregroundColor(.white)
-                    }
+                    NavgitationBackIcon()
                 },
                 centerElement: {
-                    // Élément centre : Titre personnalisé
-                    VStack(spacing: 2) {
-                        Text("Mon Titre")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                        Text("Sous-titre")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
+                    NavgitationTitle(title: "AJoute tes amis")
                 },
                 rightElement: {
-                    // Élément droite : Menu avec notification
-                    HStack(spacing: 12) {
-                        Button(action: { print("Notifications") }) {
-                            ZStack {
-                                Image(systemName: "bell")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
-                                
-                                if 1 > 0 {
-                                    Circle()
-                                        .fill(Color.red)
-                                        .frame(width: 16, height: 16)
-                                        .overlay(
-                                            Text("\(1)")
-                                                .font(.system(size: 10, weight: .bold))
-                                                .foregroundColor(.white)
-                                        )
-                                        .offset(x: 10, y: -10)
-                                }
-                            }
-                        }
-                        
-                        Menu {
-                            Button("Option 1") { print("Option 1") }
-                            Button("Option 2") { print("Option 2") }
-                            Button("Paramètres") { print("Paramètres") }
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                                .font(.system(size: 20))
-                                .foregroundColor(.white)
-                        }
-                    }
+                    Text("")
                 }
             )
         /*
@@ -126,7 +78,6 @@ struct CustomTabViewDouble: View {
                     }
                 }
             }
-            .padding(.top, 20)
 
             if selectedIndex == 0 {
                 ScrollView(.vertical, showsIndicators: false) {
