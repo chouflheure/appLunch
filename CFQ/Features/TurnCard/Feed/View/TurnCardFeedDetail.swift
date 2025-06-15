@@ -112,6 +112,7 @@ struct TitleTurnCardDetailFeedView: View {
     @ObservedObject var coordinator: Coordinator
     var user: User
     @State var showSheetParticipateAnswers: Bool = false
+    // @State private var userStatusParticipate: TypeParticipateButton
 
     init(turn: Turn, coordinator: Coordinator, user: User) {
         self.turn = turn
@@ -132,13 +133,7 @@ struct TitleTurnCardDetailFeedView: View {
 
             HStack {
                 
-                NavigationLink(
-                    destination: FriendProfileView(
-                        coordinator: coordinator,
-                        user: user,
-                        friend: turn.adminContact ?? UserContact()
-                    )
-                ) {
+                if turn.admin == user.uid {
                     CachedAsyncImageView(
                         urlString: turn.adminContact?.profilePictureUrl ?? "",
                         designType: .scaledToFill_Circle
@@ -149,8 +144,26 @@ struct TitleTurnCardDetailFeedView: View {
                         .tokenFont(.Body_Inter_Medium_16)
                         .textCase(.lowercase)
                         .lineLimit(1)
+                } else {
+                    NavigationLink(
+                        destination: FriendProfileView(
+                            coordinator: coordinator,
+                            user: user,
+                            friend: turn.adminContact ?? UserContact()
+                        )
+                    ) {
+                        CachedAsyncImageView(
+                            urlString: turn.adminContact?.profilePictureUrl ?? "",
+                            designType: .scaledToFill_Circle
+                        )
+                        .frame(width: 50, height: 50)
+                        
+                        Text(turn.adminContact?.pseudo ?? "")
+                            .tokenFont(.Body_Inter_Medium_16)
+                            .textCase(.lowercase)
+                            .lineLimit(1)
+                    }
                 }
-
                 Spacer()
 
                 Button(action: {
@@ -182,44 +195,8 @@ struct TitleTurnCardDetailFeedView: View {
                         }
                     },
                     selectedOption: (turn.adminContact?.uid == user.uid) ? .constant(.yes) : $turn.userStatusParticipate
-                ).onAppear {
-                    /*
-                    print("@@@ turn.participants = \(turn.participants)")
-                    if turn.participants.contains(where: {
-                        $0.contains(coordinator.user?.uid ?? "")
-                    }) {
-                        $status.wrappedValue = .yes
-                        print("@@@ yes ")
-                    }
-                    print(
-                        "@@@ turn.mayBeParticipate = \(turn.mayBeParticipate)")
-                    if turn.mayBeParticipate.contains(where: {
-                        $0.contains(coordinator.user?.uid ?? "")
-                    }) {
-                        print("@@@ maybe ")
-                        $status.wrappedValue = .maybe
-                    }
-                    print("@@@ turn.denied = \(turn.denied)")
-                    if turn.denied.contains(where: {
-                        $0.contains(coordinator.user?.uid ?? "")
-                    }) {
-                        print("@@@ no")
-                        $status.wrappedValue = .no
-                    }
-                }.onChange(of: status) { newValue in
-                    switch status {
-                    case .yes:
-                        turn.participants.append(coordinator.user?.uid ?? "")
-                    case .maybe:
-                        turn.mayBeParticipate.append(
-                            coordinator.user?.uid ?? "")
-                    case .no:
-                        turn.denied.append(coordinator.user?.uid ?? "")
-                    case .none:
-                        break
-                    }
-                     */
-                }
+                )
+    
             }
             // TODO: - Add participants
             PreviewProfile(

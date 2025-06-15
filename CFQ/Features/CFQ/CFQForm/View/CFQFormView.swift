@@ -77,8 +77,7 @@ struct CFQFormView: View {
                             .padding(.top, 16)
 
                             AddFriendsAndListView(
-                                arrayPicture: $viewModel
-                                    .friendsAddToCFQ,
+                                arrayPicture: $viewModel.friendsAddToCFQ,
                                 arrayFriends: $viewModel.friendsList,
                                 coordinator: coordinator,
                                 onRemove: { userRemoved in
@@ -159,41 +158,4 @@ struct CellFriendsAdd: View {
             }
         }.padding(.horizontal, 16)
     }
-}
-
-/*
-struct CellTeamAdd: View {
-    var name: String
-    var teamNumber: Int
-
-    var body: some View {
-        HStack(spacing: 0){
-            CirclePicture()
-                .frame(width: 48, height: 48)
-            HStack {
-                Text(name)
-                    .foregroundColor(.white)
-                    .padding(.leading, 8)
-                    .lineLimit(1)
-                Text("-")
-                    .foregroundColor(.white)
-                Text("\(teamNumber) membres")
-                    .foregroundColor(.whiteSecondary)
-            }
-            Spacer()
-            Button(action: {}) {
-                Image(systemName: "plus")
-                    .foregroundColor(.purpleText)
-                    .frame(width: 24, height: 24)
-            }
-        }.padding(.horizontal, 16)
-    }
-}
-*/
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        // CellFriendsAdd()
-    }.ignoresSafeArea()
 }

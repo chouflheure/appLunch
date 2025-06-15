@@ -6,6 +6,7 @@ struct TitleTurnCardFeedView: View {
     @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
     @State var showSheetParticipateAnswers: Bool = false
+
     var userUID: String
     private var viewModel = TurnCardFeedViewModel()
 
@@ -13,6 +14,7 @@ struct TitleTurnCardFeedView: View {
         self.turn = turn
         self.coordinator = coordinator
         self.userUID = userUID
+        self.turn.userUID = userUID
     }
 
     var body: some View {
@@ -74,20 +76,22 @@ struct TitleTurnCardFeedView: View {
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(250)])
         }
-        .onChange(of: turn.userStatusParticipate) {newValue in
+        .onChange(of: turn.userStatusParticipate) { newValue in
             viewModel.addStatusUserOnTurn(userUID: userUID, turn: turn, status: newValue)
         }
+        /*
         .onAppear {
             if turn.participants.contains(where: { $0.contains(userUID) }) {
-                turn.userStatusParticipate = .yes
+                userStatusParticipate = .yes
             }
             if turn.mayBeParticipate.contains(where: { $0.contains(userUID) }) {
-                turn.userStatusParticipate = .maybe
+                userStatusParticipate = .maybe
             }
             if turn.denied.contains(where: { $0.contains(userUID) }) {
-                turn.userStatusParticipate = .no
+                userStatusParticipate = .no
             }
         }
+         */
         /*
         .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
             AllOptionsAnswerParticpateButton(participateButtonSelected: $status)

@@ -25,8 +25,52 @@ class Turn: ObservableObject, Encodable, Decodable {
     @Published var adminContact: UserContact?
     @Published var link: String?
     @Published var linkTitle: String?
-    @Published var userStatusParticipate: TypeParticipateButton = .none
+    var userUID: String?
+    // @Published var userStatusParticipate: TypeParticipateButton = .none
 
+    var userStatusParticipate: TypeParticipateButton {
+        get {
+            guard let currentUserId = userUID else {
+                return .none
+            }
+            
+            if participants.contains(currentUserId) {
+                return .yes
+            } else if mayBeParticipate.contains(currentUserId) {
+                return .maybe
+            } else if denied.contains(currentUserId) {
+                return .no
+            } else {
+                return .none
+            }
+        }
+        set {
+            guard let currentUserId = userUID else {
+                print("⚠️ Impossible de modifier le statut: userUID est nil")
+                return
+            }
+            
+            // Retirer l'utilisateur de tous les arrays d'abord
+            removeUserFromAllArrays(userId: currentUserId)
+            
+            // Ajouter dans le bon array selon la nouvelle valeur
+            switch newValue {
+            case .yes:
+                participants.append(currentUserId)
+            case .maybe:
+                mayBeParticipate.append(currentUserId)
+            case .no:
+                denied.append(currentUserId)
+            case .none:
+                // Ne rien faire, l'utilisateur est déjà retiré de tous les arrays
+                break
+            }
+            
+            // ✅ IMPORTANT: Déclencher une mise à jour UI
+            objectWillChange.send()
+        }
+    }
+    
     enum CodingKeys: String, CodingKey {
         case uid
         case titleEvent
@@ -48,7 +92,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         case timestamp
         case link
         case linkTitle
-        case userStatusParticipate
+        // case userStatusParticipate
     }
 
     init(
@@ -72,7 +116,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         timestamp: Date,
         link: String? = nil,
         lintiTitle: String? = nil,
-        userStatusParticipate: TypeParticipateButton = .none
+        userUID: String? = nil
+        // userStatusParticipate: TypeParticipateButton = .none
     ) {
         self.uid = uid
         self.titleEvent = titleEvent
@@ -94,7 +139,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         self.timestamp = timestamp
         self.link = link
         self.linkTitle = lintiTitle
-        self.userStatusParticipate = userStatusParticipate
+        self.userUID = userUID
+        // self.userStatusParticipate = userStatusParticipate
     }
 
     required init(from decoder: Decoder) throws {
@@ -167,6 +213,12 @@ class Turn: ObservableObject, Encodable, Decodable {
         // + "\n adminContact : \(adminRef.name)"
         // + "\n adminContact : \(adminRef.pseudo)"
         + "\n ------------------"
+    }
+    
+    private func removeUserFromAllArrays(userId: String) {
+        participants.removeAll { $0 == userId }
+        mayBeParticipate.removeAll { $0 == userId }
+        denied.removeAll { $0 == userId }
     }
 }
 
