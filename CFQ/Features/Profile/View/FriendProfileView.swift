@@ -189,7 +189,9 @@ struct FriendProfileView: View {
             } else {
                 CustomTabViewDoubleProfile(
                     coordinator: coordinator, titles: ["TURNs", "CALENDRIER"],
-                    turns: viewModel.turnsInCommun(coordinator: coordinator))
+                    turns: viewModel.turnsInCommun(coordinator: coordinator),
+                    user: user
+                )
             }
         }
         .padding(.horizontal, 16)
@@ -202,14 +204,11 @@ struct FriendProfileView: View {
 
         .blur(radius: viewModel.isShowRemoveFriends ? 10 : 0)
         .allowsHitTesting(!viewModel.isShowRemoveFriends)
-
         .onAppear {
             // TODO: - call to have full user
             viewModel.statusFriendButton()
             viewModel.catchAllDataProfileUser(uid: friend.uid)
-            showImages =
-                viewModel.userFriend.userFriendsContact != nil
-                && !(viewModel.userFriend.userFriendsContact?.isEmpty ?? true)
+            showImages = viewModel.userFriend.userFriendsContact != nil && !(viewModel.userFriend.userFriendsContact?.isEmpty ?? true)
         }
         .onReceive(viewModel.userFriend.$userFriendsContact) { friendsContact in
             DispatchQueue.main.async {

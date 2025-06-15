@@ -254,7 +254,10 @@ struct FeedView_Nav: View {
                         
                         NavigationLink(
                             destination: TurnCardDetailsFeedView(
-                                coordinator: coordinator, turn: turn)
+                                coordinator: coordinator,
+                                turn: turn,
+                                user: user
+                            )
                         ) {
                             TurnCardFeedView(
                                 turn: turn, coordinator: coordinator

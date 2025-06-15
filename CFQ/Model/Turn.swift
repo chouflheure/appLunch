@@ -25,7 +25,7 @@ class Turn: ObservableObject, Encodable, Decodable {
     @Published var adminContact: UserContact?
     @Published var link: String?
     @Published var linkTitle: String?
-    // @Published var adminRef: User
+    @Published var userStatusParticipate: TypeParticipateButton = .none
 
     enum CodingKeys: String, CodingKey {
         case uid
@@ -48,8 +48,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         case timestamp
         case link
         case linkTitle
-        // case adminRef
-        
+        case userStatusParticipate
     }
 
     init(
@@ -72,8 +71,8 @@ class Turn: ObservableObject, Encodable, Decodable {
         placeLongitude: Double,
         timestamp: Date,
         link: String? = nil,
-        lintiTitle: String? = nil
-        // adminRef: User
+        lintiTitle: String? = nil,
+        userStatusParticipate: TypeParticipateButton = .none
     ) {
         self.uid = uid
         self.titleEvent = titleEvent
@@ -95,7 +94,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         self.timestamp = timestamp
         self.link = link
         self.linkTitle = lintiTitle
-        // self.adminRef = adminRef
+        self.userStatusParticipate = userStatusParticipate
     }
 
     required init(from decoder: Decoder) throws {
@@ -120,8 +119,6 @@ class Turn: ObservableObject, Encodable, Decodable {
         timestamp = try values.decode(Date.self, forKey: .timestamp)
         linkTitle = try values.decodeIfPresent(String.self, forKey: .linkTitle)
         link = try values.decodeIfPresent(String.self, forKey: .link)
-        // adminRef = try values.decode(User.self, forKey: .adminRef)
-        
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -146,8 +143,6 @@ class Turn: ObservableObject, Encodable, Decodable {
         try container.encode(timestamp, forKey: .timestamp)
         try container.encodeIfPresent(linkTitle, forKey: .linkTitle)
         try container.encodeIfPresent(link, forKey: .link)
-        // try container.encode(adminRef, forKey: .adminRef)
-        
     }
     
     var printObject: String {

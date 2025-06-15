@@ -5,12 +5,14 @@ struct TitleTurnCardFeedView: View {
 
     @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
-    @State var status: TypeParticipateButton = .none
+    @State var showSheetParticipateAnswers: Bool = false
+    var userUID: String
     private var viewModel = TurnCardFeedViewModel()
 
-    init(turn: Turn, coordinator: Coordinator) {
+    init(turn: Turn, coordinator: Coordinator, userUID: String) {
         self.turn = turn
         self.coordinator = coordinator
+        self.userUID = userUID
     }
 
     var body: some View {
@@ -56,34 +58,34 @@ struct TitleTurnCardFeedView: View {
 
                 ButtonParticipate(
                     action: {
-                        coordinator.turnSelected = turn
-
                         withAnimation {
-                            // coordinator.showTurnFeedDetail = true
-                            // showTurnDetailFeed = true
+                            showSheetParticipateAnswers = turn.adminContact?.uid != userUID
                         }
-                        
-                        withAnimation {
-                            coordinator.showSheetParticipateAnswers = coordinator.turnSelected?.adminContact?.uid != coordinator.user?.uid
-                        }
-                        
                     },
-                    selectedOption: (turn.adminContact?.uid == coordinator.user?.uid) ? .constant(.yes) : $status
+                    selectedOption: (turn.adminContact?.uid == userUID) ? .constant(.yes) : $turn.userStatusParticipate
                 )
             }
 
             PreviewProfile(pictures: [], previewProfileType: .userComming, numberUsers: 10)
                 .padding(.vertical, 8)
         }
+        .sheet(isPresented: $showSheetParticipateAnswers) {
+            AllOptionsAnswerParticpateButton(participateButtonSelected: $turn.userStatusParticipate)
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(250)])
+        }
+        .onChange(of: turn.userStatusParticipate) {newValue in
+            viewModel.addStatusUserOnTurn(userUID: userUID, turn: turn, status: newValue)
+        }
         .onAppear {
-            if turn.participants.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
-                $status.wrappedValue = .yes
+            if turn.participants.contains(where: { $0.contains(userUID) }) {
+                turn.userStatusParticipate = .yes
             }
-            if turn.mayBeParticipate.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
-                $status.wrappedValue = .maybe
+            if turn.mayBeParticipate.contains(where: { $0.contains(userUID) }) {
+                turn.userStatusParticipate = .maybe
             }
-            if turn.denied.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
-                $status.wrappedValue = .no
+            if turn.denied.contains(where: { $0.contains(userUID) }) {
+                turn.userStatusParticipate = .no
             }
         }
         /*

@@ -4,30 +4,38 @@ import Firebase
 
 class TurnCardFeedViewModel: ObservableObject {
     private var firebaseService = FirebaseService()
+    private var data = [String : FieldValue]()
     
     func addStatusUserOnTurn(userUID: String, turn: Turn, status: TypeParticipateButton) {
         
         switch status {
         case .yes:
-            turn.participants.append(userUID)
+            data = [
+                "denied": FieldValue.arrayRemove([userUID]),
+                "mayBeParticipate" : FieldValue.arrayRemove([userUID]),
+                "participants": FieldValue.arrayUnion([userUID]),
+            ]
         case .maybe:
-            turn.mayBeParticipate.append(userUID)
+            data = [
+                "denied": FieldValue.arrayRemove([userUID]),
+                "mayBeParticipate" : FieldValue.arrayUnion([userUID]),
+                "participants": FieldValue.arrayRemove([userUID]),
+            ]
         case .no:
-            turn.denied.append(userUID)
+            data = [
+                "denied": FieldValue.arrayUnion([userUID]),
+                "mayBeParticipate" : FieldValue.arrayRemove([userUID]),
+                "participants": FieldValue.arrayRemove([userUID]),
+            ]
         case .none:
             break
         }
         
         print("@@@ here")
-/*
         firebaseService.updateDataByID (
-            data: [
-                "messagesChannelId": FieldValue.arrayUnion([turn.messagerieUUID]),
-                "postedTurns": FieldValue.arrayUnion([turn.uid])
-            ],
-            to: .users,
-            at: turn.admin
+            data: data,
+            to: .turns,
+            at: turn.uid
         )
- */
     }
 }

@@ -4,6 +4,7 @@ struct TurnCardDetailsFeedView: View {
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var turn: Turn
     @State var showDetailTurnCard = false
+    var user: User
 
     var body: some View {
         ZStack {
@@ -18,7 +19,8 @@ struct TurnCardDetailsFeedView: View {
                     // Title ( Title / Guest )
                     TitleTurnCardDetailFeedView(
                         turn: turn,
-                        coordinator: coordinator
+                        coordinator: coordinator,
+                        user: user
                     )
                     .padding(.horizontal, 16)
                     .zIndex(2)
@@ -32,9 +34,7 @@ struct TurnCardDetailsFeedView: View {
                         .padding(.horizontal, 16)
                         .padding(.bottom, 50)
                     
-                    if coordinator.user?.uid == coordinator.turnSelected?.admin
-                        ?? ""
-                    {
+                    if user.uid == turn.admin {
                         Button(action: {
                             showDetailTurnCard = true
                         }) {
@@ -46,7 +46,6 @@ struct TurnCardDetailsFeedView: View {
                     Spacer()
                 }
             }
-            
         }
         .ignoresSafeArea()
         .customNavigationBackButton{}
@@ -109,14 +108,15 @@ struct HeaderCardViewFeedDetailView: View {
 
 struct TitleTurnCardDetailFeedView: View {
 
-    var turn: Turn
+    @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
-    @State var status: TypeParticipateButton = .none
+    var user: User
     @State var showSheetParticipateAnswers: Bool = false
 
-    init(turn: Turn, coordinator: Coordinator) {
+    init(turn: Turn, coordinator: Coordinator, user: User) {
         self.turn = turn
         self.coordinator = coordinator
+        self.user = user
     }
 
     var body: some View {
@@ -131,20 +131,14 @@ struct TitleTurnCardDetailFeedView: View {
                 .padding(.bottom, 16)
 
             HStack {
-                Button(action: {
-
-                    coordinator.profileUserSelected = User(
-                        uid: turn.adminContact?.uid ?? "",
-                        name: turn.adminContact?.name ?? "",
-                        pseudo: turn.adminContact?.pseudo ?? "",
-                        profilePictureUrl: turn.adminContact?.profilePictureUrl
-                            ?? "",
-                        isActive: turn.adminContact?.isActive ?? true
+                
+                NavigationLink(
+                    destination: FriendProfileView(
+                        coordinator: coordinator,
+                        user: user,
+                        friend: turn.adminContact ?? UserContact()
                     )
-                    withAnimation {
-                        coordinator.showProfileFriend = true
-                    }
-                }) {
+                ) {
                     CachedAsyncImageView(
                         urlString: turn.adminContact?.profilePictureUrl ?? "",
                         designType: .scaledToFill_Circle
@@ -156,6 +150,7 @@ struct TitleTurnCardDetailFeedView: View {
                         .textCase(.lowercase)
                         .lineLimit(1)
                 }
+
                 Spacer()
 
                 Button(action: {
@@ -183,14 +178,12 @@ struct TitleTurnCardDetailFeedView: View {
                 ButtonParticipate(
                     action: {
                         withAnimation {
-                            showSheetParticipateAnswers =
-                                coordinator.turnSelected?.adminContact?.uid
-                                != coordinator.user?.uid
+                            showSheetParticipateAnswers = turn.adminContact?.uid != user.uid
                         }
                     },
-                    selectedOption: (turn.adminContact?.uid
-                        == coordinator.user?.uid) ? .constant(.yes) : $status
+                    selectedOption: (turn.adminContact?.uid == user.uid) ? .constant(.yes) : $turn.userStatusParticipate
                 ).onAppear {
+                    /*
                     print("@@@ turn.participants = \(turn.participants)")
                     if turn.participants.contains(where: {
                         $0.contains(coordinator.user?.uid ?? "")
@@ -225,6 +218,7 @@ struct TitleTurnCardDetailFeedView: View {
                     case .none:
                         break
                     }
+                     */
                 }
             }
             // TODO: - Add participants
@@ -234,7 +228,7 @@ struct TitleTurnCardDetailFeedView: View {
             .padding(.vertical, 8)
         }
         .sheet(isPresented: $showSheetParticipateAnswers) {
-            AllOptionsAnswerParticpateButton(participateButtonSelected: $status)
+            AllOptionsAnswerParticpateButton(participateButtonSelected: $turn.userStatusParticipate)
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(250)])
         }
