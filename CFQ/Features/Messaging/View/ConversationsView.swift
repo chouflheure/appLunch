@@ -64,7 +64,10 @@ struct ConversationsView: View {
             centerElement: {
                 NavgitationTitle(title: "Messagerie")
             },
-            rightElement: { EmptyView() }
+            rightElement: {
+                EmptyView()
+            },
+            hasADivider: true
         )
     }
 

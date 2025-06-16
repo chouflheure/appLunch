@@ -59,15 +59,17 @@ extension View {
     }
     
     func customNavigationFlexible<LeftContent: View, CenterContent: View, RightContent: View>(
-            leftElement: (() -> LeftContent)? = nil,
-            centerElement: (() -> CenterContent)? = nil,
-            rightElement: (() -> RightContent)? = nil
+        leftElement: (() -> LeftContent)? = nil,
+        centerElement: (() -> CenterContent)? = nil,
+        rightElement: (() -> RightContent)? = nil,
+        hasADivider: Bool
         ) -> some View {
             self.modifier(
                 NavigationBarThreeElementsModifier(
                     leftElement: leftElement != nil ? AnyView(leftElement!()) : AnyView(EmptyView()),
                     centerElement: centerElement != nil ? AnyView(centerElement!()) : nil,
-                    rightElement: rightElement != nil ? AnyView(rightElement!()) : nil
+                    rightElement: rightElement != nil ? AnyView(rightElement!()) : nil,
+                    hasADivider: hasADivider
                 )
             )
         }

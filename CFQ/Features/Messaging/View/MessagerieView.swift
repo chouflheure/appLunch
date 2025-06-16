@@ -156,7 +156,8 @@ struct MessagerieView: View {
             },
             rightElement: {
                 Text("")
-            }
+            },
+            hasADivider: true
         )
     }
 

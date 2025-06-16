@@ -136,7 +136,8 @@ struct TeamFormView: View {
             },
             rightElement: {
                 Text("")
-            }
+            },
+            hasADivider: true
         )
         .padding(.top, 30)
         .padding(.bottom, 30)

@@ -186,7 +186,8 @@ struct TurnCardView: View {
                             .foregroundColor(.white)
                             .frame(width: 24)
                 }
-            }
+            },
+            hasADivider: true
         )
     }
 }

@@ -30,7 +30,8 @@ struct AddFriendsScreen: View {
                 },
                 rightElement: {
                     Text("")
-                }
+                },
+                hasADivider: true
             )
         /*
             .customNavigationBackButton {
