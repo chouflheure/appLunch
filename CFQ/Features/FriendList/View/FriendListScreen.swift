@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct FriendListScreen: View {
@@ -8,54 +7,56 @@ struct FriendListScreen: View {
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
-        self._viewModel = StateObject(wrappedValue: FriendListViewModel(coordinator: coordinator))
+        self._viewModel = StateObject(
+            wrappedValue: FriendListViewModel(coordinator: coordinator))
         self.user = coordinator.user ?? User()
     }
 
     var body: some View {
-        DraggableViewLeft(isPresented: $coordinator.showFriendList) {
-            SafeAreaContainer {
-                VStack {
-                    HeaderBackLeftScreen(
-                        onClickBack: {
-                            withAnimation {
-                                coordinator.showFriendList = false
-                            }
-                        },
-                        titleScreen: StringsToken.Profile.Friends
-                    )
-
+        VStack {
+            VStack(alignment: .leading) {
+                ScrollView(.vertical, showsIndicators: false) {
                     VStack(alignment: .leading) {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            VStack(alignment: .leading) {
-                                SearchBarView(
-                                    text: $viewModel.researchText,
-                                    placeholder: StringsToken.SearchBar.placeholderFriend,
-                                    onRemoveText: {
-                                        viewModel.removeText()
-                                    },
-                                    onTapResearch: {
-                                        viewModel.researche()
-                                    }
-                                )
-                                .padding(.top, 15)
-                                ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
-                                    CellFriendPseudoNameAction(
-                                        user: user,
-                                        userFriend: userFriend,
-                                        coordinator: coordinator,
-                                        isActionabled: { type in
-                                            viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
-                                        }
-                                    )
-                                    .padding(.top, 15)
-                                }
+                        SearchBarView(
+                            text: $viewModel.researchText,
+                            placeholder: StringsToken.SearchBar
+                                .placeholderFriend,
+                            onRemoveText: {
+                                viewModel.removeText()
+                            },
+                            onTapResearch: {
+                                viewModel.researche()
                             }
+                        )
+                        .padding(.top, 15)
+                        ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
+                            CellFriendPseudoNameAction(
+                                user: user,
+                                userFriend: userFriend,
+                                coordinator: coordinator,
+                                isActionabled: { type in
+                                    viewModel.actionOnClickButtonAddFriend(
+                                        type: type, userFriend: userFriend)
+                                }
+                            )
+                            .padding(.top, 15)
                         }
+                        .padding(.horizontal, 12)
                     }
-                    .padding(.horizontal, 12)
                 }
             }
+            .customNavigationFlexible(
+                leftElement: {
+                    NavigationBackIcon()
+                },
+                centerElement: {
+                    NavigationTitle(title: StringsToken.Profile.Friends)
+                },
+                rightElement: {
+                    EmptyView()
+                },
+                hasADivider: true
+            )
         }
     }
 }

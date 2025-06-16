@@ -30,7 +30,7 @@ struct ProfileView: View {
             }
             .padding(.trailing, 12)
             .padding(.bottom, 32)
-            
+
             HStack {
                 SwitchStatusUserProfile(viewModel: SwitchStatusUserProfileViewModel(user: user))
                     .padding(.trailing, 12)
@@ -50,19 +50,17 @@ struct ProfileView: View {
                             .tokenFont(.Body_Inter_Medium_16)
                     }
                 }
+
                 Spacer()
-                Button(
-                    action: {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            coordinator.showFriendList = true
-                        }
-                    },
-                    label: {
-                        Image(.iconUser)
-                            .resizable()
-                            .frame(width: 44, height: 44)
-                            .foregroundColor(.white)
-                    })
+
+                NavigationLink(destination: {
+                    FriendListScreen(coordinator: coordinator)
+                }) {
+                    Image(.iconUser)
+                        .resizable()
+                        .frame(width: 44, height: 44)
+                        .foregroundColor(.white)
+                }
             }
             .padding(.bottom, 16)
 

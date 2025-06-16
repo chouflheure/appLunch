@@ -32,22 +32,26 @@ struct CellFriendPseudoNameAction: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            HStack {
-                CirclePicture(urlStringImage: userFriend.profilePictureUrl)
-                    .frame(width: 48, height: 48)
-                VStack(alignment: .leading) {
-                    Text(userFriend.pseudo)
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                    HStack {
-                        Text(userFriend.name)
-                            .tokenFont(.Body_Inter_Regular_12)
-                    }
-                }.padding(.leading, 8)
-                
-                Spacer()
+            NavigationLink(destination: {
+                FriendProfileView(coordinator: coordinator, user: user, friend: userFriend)
+            }) {
+                HStack {
+                    CirclePicture(urlStringImage: userFriend.profilePictureUrl)
+                        .frame(width: 48, height: 48)
+                    VStack(alignment: .leading) {
+                        Text(userFriend.pseudo)
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                        HStack {
+                            Text(userFriend.name)
+                                .tokenFont(.Body_Inter_Regular_12)
+                        }
+                    }.padding(.leading, 8)
+                    
+                    Spacer()
+                }
+                .contentShape(Rectangle())
             }
-            .contentShape(Rectangle())
 
             Button(action: {
                 isActionabled(currentType)
