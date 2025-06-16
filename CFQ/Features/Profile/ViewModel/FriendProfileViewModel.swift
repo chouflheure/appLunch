@@ -19,23 +19,18 @@ class FriendProfileViewModel: ObservableObject {
             handleStatusChange()
         }
     }
-    
+
     var friendsInCommun: [UserContact] {
         guard let contacts = userFriend.userFriendsContact else { return [] }
         let commonIds = Set(user.friends).intersection(Set(userFriend.friends))
         return contacts.filter { commonIds.contains($0.uid) }
     }
 
-    init(coordinator: Coordinator) {
+    init(coordinator: Coordinator, user: User, friend: User) {
         self.coordinator = coordinator
         self.userFriend = coordinator.profileUserSelected
-
-        guard let user = coordinator.user else {
-            self.user = User()
-            return
-        }
-
         self.user = user
+        self.userFriend = friend
         
         statusFriendButton()
     }

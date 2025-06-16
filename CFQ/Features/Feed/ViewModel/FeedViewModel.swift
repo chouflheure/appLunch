@@ -48,8 +48,8 @@ class FeedViewModel: ObservableObject {
     func startListeningToTurn(user: User) {
         firebaseService.getDataByIDs(
             from: .turns,
-            with: user.invitedTurns ?? [""],
-            listenerKeyPrefix: ListenerType.turn.rawValue
+            with: user.invitedTurns ?? [""]
+            // listenerKeyPrefix: ListenerType.turn.rawValue
         ) { [weak self] (result: Result<[Turn], Error>) in
             guard let self = self else { return }
             
@@ -62,6 +62,7 @@ class FeedViewModel: ObservableObject {
                     // Pour chaque turn, récupérez l'admin
                     for (index, turn) in fetchedTurns.enumerated() {
                         self.fetchAdminForTurn(at: index, adminID: turn.admin)
+                        self.turns[index]
                     }
                 }
             case .failure(let error):

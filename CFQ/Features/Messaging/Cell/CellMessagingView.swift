@@ -4,7 +4,6 @@ import SwiftUI
 struct CellMessagingView: View {
     var data: Conversation
     var hasUnReadMessage: Bool
-    var onTap: ((String) -> Void)
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -27,17 +26,17 @@ struct CellMessagingView: View {
 
                     HStack(spacing: 0) {
                         Text(data.lastMessageSender)
-                            .tokenFont(.Body_Inter_Medium_14)
+                            .tokenFont(hasUnReadMessage ? .Body_Inter_Medium_14 : .Placeholder_Inter_Regular_14)
                         
                         Text((data.lastMessageSender.isEmpty ? "Pas de message" : " : "))
-                            .tokenFont(data.lastMessageSender.isEmpty ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
+                            .tokenFont(.Placeholder_Inter_Regular_14)
                             .italic(data.lastMessageSender.isEmpty)
                             
                         Text(data.lastMessage)
-                            .tokenFont(.Body_Inter_Medium_14)
+                            .tokenFont(hasUnReadMessage ? .Body_Inter_Medium_14 : .Placeholder_Inter_Regular_14)
                             .lineLimit(1)
                     }
-                }.bold(hasUnReadMessage)
+                }
 
                 Spacer()
 
@@ -46,9 +45,6 @@ struct CellMessagingView: View {
             }
         }
         .padding(.horizontal, 12)
-        .onTapGesture {
-            onTap(data.uid)
-        }
     }
     
     func timeAgoSinceDate(_ date: Date, numericDates: Bool = false) -> String {

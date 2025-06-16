@@ -25,9 +25,52 @@ class Turn: ObservableObject, Encodable, Decodable {
     @Published var adminContact: UserContact?
     @Published var link: String?
     @Published var linkTitle: String?
-    // @Published var adminRef: User
-    
+    var userUID: String?
+    // @Published var userStatusParticipate: TypeParticipateButton = .none
 
+    var userStatusParticipate: TypeParticipateButton {
+        get {
+            guard let currentUserId = userUID else {
+                return .none
+            }
+            
+            if participants.contains(currentUserId) {
+                return .yes
+            } else if mayBeParticipate.contains(currentUserId) {
+                return .maybe
+            } else if denied.contains(currentUserId) {
+                return .no
+            } else {
+                return .none
+            }
+        }
+        set {
+            guard let currentUserId = userUID else {
+                print("⚠️ Impossible de modifier le statut: userUID est nil")
+                return
+            }
+            
+            // Retirer l'utilisateur de tous les arrays d'abord
+            removeUserFromAllArrays(userId: currentUserId)
+            
+            // Ajouter dans le bon array selon la nouvelle valeur
+            switch newValue {
+            case .yes:
+                participants.append(currentUserId)
+            case .maybe:
+                mayBeParticipate.append(currentUserId)
+            case .no:
+                denied.append(currentUserId)
+            case .none:
+                // Ne rien faire, l'utilisateur est déjà retiré de tous les arrays
+                break
+            }
+            
+            // ✅ IMPORTANT: Déclencher une mise à jour UI
+            objectWillChange.send()
+        }
+    }
+    
     enum CodingKeys: String, CodingKey {
         case uid
         case titleEvent
@@ -49,8 +92,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         case timestamp
         case link
         case linkTitle
-        // case adminRef
-        
+        // case userStatusParticipate
     }
 
     init(
@@ -73,8 +115,10 @@ class Turn: ObservableObject, Encodable, Decodable {
         placeLongitude: Double,
         timestamp: Date,
         link: String? = nil,
-        lintiTitle: String? = nil
-        // adminRef: User
+        lintiTitle: String? = nil,
+        imageEvent: UIImage? = nil,
+        userUID: String? = nil
+        // userStatusParticipate: TypeParticipateButton = .none
     ) {
         self.uid = uid
         self.titleEvent = titleEvent
@@ -96,7 +140,9 @@ class Turn: ObservableObject, Encodable, Decodable {
         self.timestamp = timestamp
         self.link = link
         self.linkTitle = lintiTitle
-        // self.adminRef = adminRef
+        self.imageEvent = imageEvent
+        self.userUID = userUID
+        // self.userStatusParticipate = userStatusParticipate
     }
 
     required init(from decoder: Decoder) throws {
@@ -121,8 +167,6 @@ class Turn: ObservableObject, Encodable, Decodable {
         timestamp = try values.decode(Date.self, forKey: .timestamp)
         linkTitle = try values.decodeIfPresent(String.self, forKey: .linkTitle)
         link = try values.decodeIfPresent(String.self, forKey: .link)
-        // adminRef = try values.decode(User.self, forKey: .adminRef)
-        
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -147,8 +191,6 @@ class Turn: ObservableObject, Encodable, Decodable {
         try container.encode(timestamp, forKey: .timestamp)
         try container.encodeIfPresent(linkTitle, forKey: .linkTitle)
         try container.encodeIfPresent(link, forKey: .link)
-        // try container.encode(adminRef, forKey: .adminRef)
-        
     }
     
     var printObject: String {
@@ -173,6 +215,34 @@ class Turn: ObservableObject, Encodable, Decodable {
         // + "\n adminContact : \(adminRef.name)"
         // + "\n adminContact : \(adminRef.pseudo)"
         + "\n ------------------"
+    }
+    
+    private func removeUserFromAllArrays(userId: String) {
+        participants.removeAll { $0 == userId }
+        mayBeParticipate.removeAll { $0 == userId }
+        denied.removeAll { $0 == userId }
+    }
+    
+    func emptyObjectTurn() -> Turn {
+        return Turn(
+            uid: "",
+            titleEvent: "",
+            dateStartEvent: nil,
+            pictureURLString: "",
+            admin: "",
+            description: "",
+            invited: [],
+            participants: [],
+            denied: [],
+            mayBeParticipate: [],
+            mood: [],
+            messagerieUUID: "",
+            placeTitle: "",
+            placeAdresse: "",
+            placeLatitude: 0,
+            placeLongitude: 0,
+            timestamp: Date()
+        )
     }
 }
 

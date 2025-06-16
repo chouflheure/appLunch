@@ -66,7 +66,7 @@ struct ProfileView: View {
             }
             .padding(.bottom, 16)
 
-            CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns)
+            CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns, user: user)
         }
         .padding(.horizontal, 16)
         .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
@@ -80,6 +80,7 @@ struct CustomTabViewDoubleProfile: View {
     @ObservedObject var coordinator: Coordinator
     let titles: [String]
     let turns: [Turn]
+    let user: User
 
     var body: some View {
         VStack {
@@ -113,7 +114,17 @@ struct CustomTabViewDoubleProfile: View {
                                 .padding(.top, 200)
                         } else {
                             ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
-                                TurnCardFeedView(turn: turn, coordinator: coordinator)
+                                NavigationLink(
+                                    destination: TurnCardDetailsFeedView(
+                                        coordinator: coordinator,
+                                        turn: turn,
+                                        user: user
+                                    )
+                                ) {
+                                    TurnCardFeedView(
+                                        turn: turn, coordinator: coordinator
+                                    )
+                                }
                             }
                         }
                     }

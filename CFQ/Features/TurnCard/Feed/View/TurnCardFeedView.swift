@@ -4,6 +4,7 @@ import SwiftUI
 struct TurnCardFeedView: View {
     @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
+    @EnvironmentObject var user: User
     @State var showDetail: Bool = false
 
     init(turn: Turn, coordinator: Coordinator) {
@@ -23,7 +24,11 @@ struct TurnCardFeedView: View {
                         .frame(height: 150)
                     
                     // Title ( Title / Guest )
-                    TitleTurnCardFeedView(turn: turn, coordinator: coordinator)
+                    TitleTurnCardFeedView(
+                        turn: turn,
+                        coordinator: coordinator,
+                        userUID: user.uid
+                    )
                         .padding(.horizontal, 16)
                         .padding(.top, 20)
 
@@ -46,12 +51,6 @@ struct TurnCardFeedView: View {
             .cornerRadius(20)
             .zIndex(1)
         }
-        .onTapGesture {
-            coordinator.turnSelected = turn
-            withAnimation {
-                coordinator.showTurnFeedDetail = true
-            }
-        }
+        .customNavigationBackButton{}
     }
-    
 }

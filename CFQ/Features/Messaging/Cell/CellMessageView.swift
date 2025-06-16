@@ -249,10 +249,10 @@ struct CellMessageSendByTheUserView: View {
                     HStack {
                         Spacer()
                         Text(data.message)
-                            .tokenFont(.Body_Inter_Medium_16)
+                            .tokenFont(.Body_Inter_Regular_15)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
-                            .background(.blackLight)
+                            .background(.purpleDark)
                             .cornerRadius(20)
                             .simultaneousGesture(
                                 LongPressGesture()
@@ -266,7 +266,6 @@ struct CellMessageSendByTheUserView: View {
                                     .onEnded {
                                         onDoubleTap()
                                         print("@@@ double Tap")
-                                        // showReaction = true
                                     }
                             )
                        
@@ -338,7 +337,7 @@ struct CellMessageViewReceived: View {
                     )
 
                     Text(data.message)
-                        .tokenFont(.Body_Inter_Medium_16)
+                        .tokenFont(.Body_Inter_Regular_15)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
                         .background(.blackLight)
@@ -403,8 +402,8 @@ struct CellMessageViewReceived: View {
 }
 
 #Preview {
-    CellMessageViewReceived(data: Message(uid: "", message: "Hello poulette", senderUID: "", timestamp: Date()))
-    CellMessageSendByTheUserView(data: Message(uid: "", message: "Hello poulette", senderUID: "", timestamp: Date()), onDoubleTap: {})
+    CellMessageViewReceived(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()))
+    CellMessageSendByTheUserView(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()), onDoubleTap: {})
 }
 
 

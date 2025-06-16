@@ -3,13 +3,11 @@ import SwiftUI
 
 struct CirclePictureStatusAndPseudo: View {
     var userPreview: UserContact
-    var onClick: () -> Void
 
     var body: some View {
         VStack {
             CirclePictureStatus(
-                userPreview: userPreview,
-                onClick: { onClick() }
+                userPreview: userPreview
             )
             .frame(width: 72, height: 72)
             .padding(.bottom, 4)
@@ -24,6 +22,6 @@ struct CirclePictureStatusAndPseudo: View {
 #Preview {
     ZStack {
         NeonBackgroundImage()
-        CirclePictureStatusAndPseudo(userPreview: UserContact(uid: "123", pseudo: "Test"), onClick: {})
+        CirclePictureStatusAndPseudo(userPreview: UserContact(uid: "123", pseudo: "Test"))
     }
 }

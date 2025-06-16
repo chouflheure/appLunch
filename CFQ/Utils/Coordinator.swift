@@ -26,12 +26,13 @@ class Coordinator: ObservableObject {
     @Published var dataApp = DataApp()
     @Published var teamDetail: Team?
     @Published var turnSelected: Turn?
-    @Published var turnSelectedPreview: TurnPreview?
     
     @Published var userCFQ: [CFQ] = []
     @Published var profileUserSelected: User = User()
     @Published var selectedConversation: Conversation?
     @Published var selectedCFQ: CFQ?
+
+    @Environment(\.dismiss) var dismiss
 
     private var auth = Auth.auth()
     private var firebaseService = FirebaseService()
@@ -59,6 +60,8 @@ class Coordinator: ObservableObject {
                     
                     self.currentView = AnyView(
                         NavigationView {
+                            // NativeTabViewSolution(coordinator: self)
+                            // EDIT 
                             CustomTabView(coordinator: self)
                                 .environmentObject(user)
                         }
@@ -201,6 +204,8 @@ class Coordinator: ObservableObject {
     func gotoCustomTabView(user: User) {
         currentView = AnyView(
             NavigationView {
+                // EDIT
+                // NativeTabViewSolution(coordinator: self)
                 CustomTabView(coordinator: self)
                     .environmentObject(user)
             }

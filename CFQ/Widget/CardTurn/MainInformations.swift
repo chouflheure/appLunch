@@ -32,32 +32,32 @@ struct MainInformationsPreviewView: View {
 
                 Text(
                     viewModel.textFormattedLongFormatStartEvent.isEmpty
-                    ? "Date de debut" : viewModel.textFormattedLongFormatStartEvent
+                    ? "Quand ?" : viewModel.textFormattedLongFormatStartEvent
                 )
                 .tokenFont(
                     viewModel.textFormattedLongFormatStartEvent.isEmpty
-                        ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
+                        ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
 
                 Text(" | ")
                     .foregroundColor(.white)
 
                 Text(
                     viewModel.textFormattedHoursStartEvent.isEmpty
-                    ? "Heure de début" : viewModel.textFormattedHoursStartEvent
+                    ? "Quelle heure ?" : viewModel.textFormattedHoursStartEvent
                 )
-                .tokenFont(.Placeholder_Inter_Regular_16)
+                .tokenFont(.Placeholder_Inter_Regular_14)
             }
             
             if !viewModel.textFormattedLongFormatEndEvent.isEmpty {
                 HStack {
                     Text(viewModel.textFormattedLongFormatEndEvent)
-                        .tokenFont(.Body_Inter_Medium_16)
+                        .tokenFont(.Body_Inter_Medium_14)
                     
                     Text(" | ")
                         .foregroundColor(.white)
                     
                     Text(viewModel.textFormattedHoursEndEvent)
-                        .tokenFont(.Placeholder_Inter_Regular_16)
+                        .tokenFont(.Placeholder_Inter_Regular_14)
                 }
                 .padding(.leading, 32)
             }
@@ -71,7 +71,7 @@ struct MainInformationsPreviewView: View {
                         viewModel.placeTitle.isEmpty ? .gray : .white)
 
                 Text(
-                    viewModel.placeTitle.isEmpty ? "Lieu" : viewModel.placeTitle
+                    viewModel.placeTitle.isEmpty ? "Où ?" : viewModel.placeTitle
                 )
                 .tokenFont(
                     viewModel.placeTitle.isEmpty
@@ -84,7 +84,7 @@ struct MainInformationsPreviewView: View {
 
                 Text(
                     viewModel.placeAdresse.isEmpty
-                        ? "Adress" : viewModel.placeAdresse
+                        ? "Adresse" : viewModel.placeAdresse
                 )
                 .tokenFont(.Placeholder_Inter_Regular_14)
                 .lineLimit(1)
@@ -161,7 +161,7 @@ struct MainInformationsDetailView: View {
                         )
                         .tokenFont(
                             viewModel.placeTitle.isEmpty
-                            ? .Placeholder_Inter_Regular_16
+                            ? .Placeholder_Inter_Regular_14
                             : .Body_Inter_Medium_16)
                         
                         Text("|")
@@ -171,7 +171,7 @@ struct MainInformationsDetailView: View {
                             viewModel.placeAdresse.isEmpty
                             ? "Adress" : viewModel.placeAdresse
                         )
-                        .tokenFont(.Placeholder_Inter_Regular_16)
+                        .tokenFont(.Placeholder_Inter_Regular_14)
                     }
                 }
                 .padding(.horizontal, 12)
@@ -211,13 +211,12 @@ struct MainInformationsDetailView: View {
                                 }
                                 .onTapGesture {
                                     showFriendProfile = true
-                                    
+
                                     coordinator.profileUserSelected = User(
                                         uid: user.uid,
                                         name: user.name,
                                         pseudo: user.pseudo,
-                                        profilePictureUrl: user
-                                            .profilePictureUrl,
+                                        profilePictureUrl: user.profilePictureUrl,
                                         isActive: user.isActive
                                     )
                                     

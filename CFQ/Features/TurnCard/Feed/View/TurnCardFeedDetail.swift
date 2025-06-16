@@ -1,112 +1,101 @@
-
 import SwiftUI
 
 struct TurnCardDetailsFeedView: View {
     @ObservedObject var coordinator: Coordinator
+    @ObservedObject var turn: Turn
     @State var showDetailTurnCard = false
+    var user: User
 
     var body: some View {
-        DraggableViewLeft(isPresented: $coordinator.showTurnFeedDetail) {
-            ZStack {
-                GradientCardDetailView()
-                ScrollView {
-                    VStack {
-                        // Header ( Date / Picture / TURN )
-                        HeaderCardViewFeedDetailView(
-                            turn: checkTurnSelectedNotNull(),
-                            onClickBackArrow: {
-                                withAnimation {
-                                    coordinator.showTurnFeedDetail = false
-                                }
-                            })
-                            .padding(.bottom, 15)
-                            .frame(height: 200)
-
-                        // Title ( Title / Guest )
-                        TitleTurnCardDetailFeedView(
-                            turn: checkTurnSelectedNotNull(),
-                            coordinator: coordinator
-                        )
+        ZStack {
+            GradientCardDetailView()
+            ScrollView {
+                VStack {
+                    // Header ( Date / Picture / TURN )
+                    HeaderCardViewFeedDetailView(turn: turn)
+                        .padding(.bottom, 15)
+                        .frame(height: 200)
+                    
+                    // Title ( Title / Guest )
+                    TitleTurnCardDetailFeedView(
+                        turn: turn,
+                        coordinator: coordinator,
+                        user: user
+                    )
+                    .padding(.horizontal, 16)
+                    .zIndex(2)
+                    
+                    // Informations ( Mood / Date / Loc )
+                    MainInformationsDetailFeedView(turn: turn)
                         .padding(.horizontal, 16)
-                        .zIndex(2)
-                        
-                        // Informations ( Mood / Date / Loc )
-                        MainInformationsDetailFeedView(turn: checkTurnSelectedNotNull())
-                            .padding(.horizontal, 16)
-                        
-                        // Description ( Bio event )
-                        DescriptionTurnCardDetailFeedView(turn: checkTurnSelectedNotNull())
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 50)
-                     
-                        if coordinator.user?.uid == coordinator.turnSelected?.admin ?? "" {
-                            Button(action: {
-                                showDetailTurnCard = true
-                            }) {
-                                Text("@@@ Admin ")
-                            }
-                            
+                    
+                    // Description ( Bio event )
+                    DescriptionTurnCardDetailFeedView(turn: turn)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 50)
+                    
+                    if user.uid == turn.admin {
+                        Button(action: {
+                            showDetailTurnCard = true
+                        }) {
+                            Text("@@@ Admin ")
                         }
                         
-                        Spacer()
                     }
+                    
+                    Spacer()
                 }
-                
-
-            }
-            .ignoresSafeArea()
-            .fullScreenCover(isPresented: $showDetailTurnCard) {
-                TurnCardDetailsView(viewModel: TurnCardViewModel(turn: TurnPreview(uid: "", titleEvent: "", dateStartEvent: nil, admin: "", description: "", invited: [""], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: nil), coordinator: coordinator), coordinator: coordinator)
             }
         }
-    }
-
-    private func checkTurnSelectedNotNull() -> Turn {
-        guard let turn = coordinator.turnSelected else {
-            coordinator.showTurnFeedDetail = false
-            return Turn(uid: "", titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [0], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date())
-        }
-        
-        return turn
+        .ignoresSafeArea()
+        .customNavigationBackButton{}
     }
 }
-
 
 struct HeaderCardViewFeedDetailView: View {
 
     var turn: Turn
-    var onClickBackArrow: () -> Void
+    @Environment(\.dismiss) var dismiss
 
     let formattedDateAndTime = FormattedDateAndTime()
-    
-    init(turn: Turn, onClickBackArrow: @escaping () -> Void) {
+
+    init(turn: Turn) {
         self.turn = turn
-        self.onClickBackArrow = onClickBackArrow
     }
 
     var body: some View {
         VStack {
             ZStack {
                 ZStack(alignment: .top) {
-                    CachedAsyncImageView(urlString: turn.pictureURLString, designType: .fullScreenImageTurnDetail)
-                    
+                    CachedAsyncImageView(
+                        urlString: turn.pictureURLString,
+                        designType: .fullScreenImageTurnDetail)
+
                     HStack(alignment: .center) {
-                        Button(action: {
-                            self.onClickBackArrow()
-                        }, label: {
-                            Image(.iconArrow)
-                                .foregroundColor(.white)
-                                .frame(width: 24, height: 24)
-                                .padding(.all, 5)
-                                .background(.gray)
-                                .clipShape(Circle())
-                        })
+                        Button(
+                            action: {
+                                dismiss()
+                            },
+                            label: {
+                                Image(.iconArrow)
+                                    .foregroundColor(.white)
+                                    .frame(width: 24, height: 24)
+                                    .padding(.all, 5)
+                                    .background(.gray)
+                                    .clipShape(Circle())
+                            })
 
                         Spacer()
 
                         DateLabel(
-                            dayEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.dateStartEvent).jour,
-                            monthEventString: formattedDateAndTime.textFormattedShortFormat(date: turn.dateStartEvent).mois
+                            dayEventString:
+                                formattedDateAndTime.textFormattedShortFormat(
+                                    date: turn.dateStartEvent
+                                ).jour,
+                            monthEventString:
+                                formattedDateAndTime.textFormattedShortFormat(
+                                    date: turn.dateStartEvent
+                                ).mois
                         )
                     }
                     .padding(.top, 100)
@@ -117,17 +106,17 @@ struct HeaderCardViewFeedDetailView: View {
     }
 }
 
-
 struct TitleTurnCardDetailFeedView: View {
 
-    var turn: Turn
+    @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
-    @State var status: TypeParticipateButton = .none
+    var user: User
     @State var showSheetParticipateAnswers: Bool = false
 
-    init(turn: Turn, coordinator: Coordinator) {
+    init(turn: Turn, coordinator: Coordinator, user: User) {
         self.turn = turn
         self.coordinator = coordinator
+        self.user = user
     }
 
     var body: some View {
@@ -137,37 +126,48 @@ struct TitleTurnCardDetailFeedView: View {
                 .background {
                     Color.gray.opacity(0.6)
                         .blur(radius: 10)
-                        .padding(-5) // Pour que le flou dépasse un peu du texte
+                        .padding(-5)  // Pour que le flou dépasse un peu du texte
                 }
                 .padding(.bottom, 16)
 
             HStack {
-                Button(action: {
-                    
-                    coordinator.profileUserSelected = User(
-                        uid: turn.adminContact?.uid ?? "",
-                        name: turn.adminContact?.name ?? "",
-                        pseudo: turn.adminContact?.pseudo ?? "",
-                        profilePictureUrl: turn.adminContact?.profilePictureUrl ?? "",
-                        isActive: turn.adminContact?.isActive ?? true
+                
+                if turn.admin == user.uid {
+                    CachedAsyncImageView(
+                        urlString: turn.adminContact?.profilePictureUrl ?? "",
+                        designType: .scaledToFill_Circle
                     )
-                    withAnimation {
-                        coordinator.showProfileFriend = true
-                    }
-                }) {
-                    CachedAsyncImageView(urlString: turn.adminContact?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
-                        .frame(width: 50, height: 50)
-                    
+                    .frame(width: 50, height: 50)
+
                     Text(turn.adminContact?.pseudo ?? "")
                         .tokenFont(.Body_Inter_Medium_16)
                         .textCase(.lowercase)
                         .lineLimit(1)
+                } else {
+                    NavigationLink(
+                        destination: FriendProfileView(
+                            coordinator: coordinator,
+                            user: user,
+                            friend: turn.adminContact ?? UserContact()
+                        )
+                    ) {
+                        CachedAsyncImageView(
+                            urlString: turn.adminContact?.profilePictureUrl ?? "",
+                            designType: .scaledToFill_Circle
+                        )
+                        .frame(width: 50, height: 50)
+                        
+                        Text(turn.adminContact?.pseudo ?? "")
+                            .tokenFont(.Body_Inter_Medium_16)
+                            .textCase(.lowercase)
+                            .lineLimit(1)
+                    }
                 }
                 Spacer()
 
                 Button(action: {
                     // coordinator.turnSelected = turn
-                    
+
                     coordinator.selectedConversation = Conversation(
                         uid: turn.messagerieUUID,
                         titleConv: turn.titleEvent,
@@ -190,52 +190,29 @@ struct TitleTurnCardDetailFeedView: View {
                 ButtonParticipate(
                     action: {
                         withAnimation {
-                            showSheetParticipateAnswers = coordinator.turnSelected?.adminContact?.uid != coordinator.user?.uid
+                            showSheetParticipateAnswers = turn.adminContact?.uid != user.uid
                         }
                     },
-                    selectedOption: (turn.adminContact?.uid == coordinator.user?.uid) ? .constant(.yes) : $status
-                ).onAppear {
-                    print("@@@ turn.participants = \(turn.participants)")
-                    if turn.participants.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
-                        $status.wrappedValue = .yes
-                        print("@@@ yes ")
-                    }
-                    print("@@@ turn.mayBeParticipate = \(turn.mayBeParticipate)")
-                    if turn.mayBeParticipate.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
-                        print("@@@ maybe ")
-                        $status.wrappedValue = .maybe
-                    }
-                    print("@@@ turn.denied = \(turn.denied)")
-                    if turn.denied.contains(where: { $0.contains(coordinator.user?.uid ?? "") }) {
-                        print("@@@ no")
-                        $status.wrappedValue = .no
-                    }
-                }.onChange(of: status) { newValue in
-                    switch status {
-                    case .yes:
-                        turn.participants.append(coordinator.user?.uid ?? "")
-                    case .maybe:
-                        turn.mayBeParticipate.append(coordinator.user?.uid ?? "")
-                    case .no:
-                        turn.denied.append(coordinator.user?.uid ?? "")
-                    case .none:
-                        break
-                    }
-                }
+                    selectedOption: (turn.adminContact?.uid == user.uid) ? .constant(.yes) : $turn.userStatusParticipate
+                )
+    
             }
             // TODO: - Add participants
-            PreviewProfile(pictures: [], previewProfileType: .userComming, numberUsers: 12)
-                .padding(.vertical, 8)
+            /*
+            PreviewProfile(
+                pictures: [], previewProfileType: .userComming, numberUsers: 12
+            )
+            .padding(.vertical, 8)
+             */
         }
         .sheet(isPresented: $showSheetParticipateAnswers) {
-            AllOptionsAnswerParticpateButton(participateButtonSelected: $status)
+            AllOptionsAnswerParticpateButton(participateButtonSelected: $turn.userStatusParticipate)
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(250)])
         }
-         
+
     }
 }
-
 
 struct MainInformationsDetailFeedView: View {
     var turn: Turn
@@ -251,47 +228,74 @@ struct MainInformationsDetailFeedView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(Array(turn.mood), id: \.self) { moodIndex in
-                        Mood().data(for: MoodType.convertIntToMoodType(MoodType(rawValue: moodIndex)?.rawValue ?? 0))
-                            .padding(.leading, 12)
-                            .padding(.trailing, moodIndex == Array(turn.mood).last ? 12 : 0)
+                        Mood().data(
+                            for: MoodType.convertIntToMoodType(
+                                MoodType(rawValue: moodIndex)?.rawValue ?? 0)
+                        )
+                        .padding(.leading, 12)
+                        .padding(
+                            .trailing,
+                            moodIndex == Array(turn.mood).last ? 12 : 0)
                     }
                 }
                 .padding(.bottom, 20)
             }
-            
+
             HStack {
                 Image(.iconDate)
                     .resizable()
                     .frame(width: 20, height: 20)
                     .foregroundColor(.white)
                     .padding(.leading, 12)
-                
-                Text(formattedDateAndTime.textFormattedLongFormat(date: turn.dateStartEvent))
-                    .tokenFont(.Body_Inter_Medium_16)
+
+                Text(
+                    formattedDateAndTime.textFormattedLongFormat(
+                        date: turn.dateStartEvent)
+                )
+                .tokenFont(.Body_Inter_Medium_16)
 
                 Text(" | ")
                     .foregroundColor(.white)
 
-                Text(formattedDateAndTime.textFormattedHours(hours: turn.dateStartEvent))
-                    .tokenFont(.Placeholder_Inter_Regular_16)
+                Text(
+                    formattedDateAndTime.textFormattedHours(
+                        hours: turn.dateStartEvent)
+                )
+                .tokenFont(.Placeholder_Inter_Regular_16)
             }
-            .padding(.bottom, !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty ? 0 : 20)
-            
-            if !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty {
+            .padding(
+                .bottom,
+                !formattedDateAndTime.textFormattedLongFormat(
+                    date: turn.dateEndEvent
+                ).isEmpty ? 0 : 20)
+
+            if !formattedDateAndTime.textFormattedLongFormat(
+                date: turn.dateEndEvent
+            ).isEmpty {
                 HStack {
                     Text(" ~ ")
                         .foregroundColor(.white)
-                    Text(formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent))
-                        .tokenFont(.Body_Inter_Medium_16)
-                    
+                    Text(
+                        formattedDateAndTime.textFormattedLongFormat(
+                            date: turn.dateEndEvent)
+                    )
+                    .tokenFont(.Body_Inter_Medium_16)
+
                     Text(" | ")
                         .foregroundColor(.white)
-                    
-                    Text(formattedDateAndTime.textFormattedHours(hours: turn.dateEndEvent))
-                        .tokenFont(.Placeholder_Inter_Regular_16)
+
+                    Text(
+                        formattedDateAndTime.textFormattedHours(
+                            hours: turn.dateEndEvent)
+                    )
+                    .tokenFont(.Placeholder_Inter_Regular_16)
                 }
                 .padding(.leading, 12)
-                .padding(.bottom, !formattedDateAndTime.textFormattedLongFormat(date: turn.dateEndEvent).isEmpty ? 20 : 0)
+                .padding(
+                    .bottom,
+                    !formattedDateAndTime.textFormattedLongFormat(
+                        date: turn.dateEndEvent
+                    ).isEmpty ? 20 : 0)
             }
 
             Button(action: {
@@ -299,16 +303,16 @@ struct MainInformationsDetailFeedView: View {
             }) {
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(alignment: .center) {
-                        
+
                         Image(.iconLocation)
                             .resizable()
                             .frame(width: 20, height: 20)
                             .foregroundColor(.white)
-                        
+
                         Text(turn.placeTitle)
                             .foregroundColor(.white)
                     }
-                    
+
                     Text(turn.placeAdresse)
                         .tokenFont(.Placeholder_Inter_Regular_16)
                         .foregroundColor(.white)
@@ -344,20 +348,25 @@ struct MainInformationsDetailFeedView: View {
                     Button(StringsToken.General.cancel, role: .cancel) {
                         isShowMaps = false
                     }
-                })
+                }
+            )
             .padding(.bottom, (turn.link?.isEmpty) != nil ? 20 : 5)
-            
-            if ((turn.link?.isEmpty) != nil) {
+
+            if (turn.link?.isEmpty) != nil {
                 HStack(alignment: .center) {
-                    
+
                     Image(.iconLink)
                         .resizable()
                         .frame(width: 20, height: 20)
                         .foregroundColor(.white)
-                    
-                    Link(turn.linkTitle ?? "", destination: URL(string: turn.link ?? "") ?? URL(string: "https://www.google.com")!)
-                        .tokenFont(.Body_Inter_Medium_14)
-                        .lineLimit(1)
+
+                    Link(
+                        turn.linkTitle ?? "",
+                        destination: URL(string: turn.link ?? "") ?? URL(
+                            string: "https://www.google.com")!
+                    )
+                    .tokenFont(.Body_Inter_Medium_14)
+                    .lineLimit(1)
                 }
                 .padding(.horizontal, 12)
             }
@@ -378,7 +387,7 @@ struct DescriptionTurnCardDetailFeedView: View {
     init(turn: Turn) {
         self.turn = turn
     }
-    
+
     var body: some View {
         HStack {
             Text(turn.description)

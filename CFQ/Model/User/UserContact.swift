@@ -1,11 +1,13 @@
 import Foundation
+import SwiftUI
+import Combine
 
-class UserContact: Codable, Hashable {
-    var uid: String
-    var name: String
-    var pseudo: String
-    var profilePictureUrl: String
-    var isActive: Bool
+class UserContact: ObservableObject, Encodable, Decodable, Hashable, Equatable {
+    @Published var uid: String
+    @Published var name: String
+    @Published var pseudo: String
+    @Published var profilePictureUrl: String
+    @Published var isActive: Bool
 
     init(
         uid: String = "",
@@ -21,22 +23,40 @@ class UserContact: Codable, Hashable {
         self.isActive = isActive
     }
 
-    // Conformité à Equatable
-    static func == (lhs: UserContact, rhs: UserContact) -> Bool {
-        return lhs.uid == rhs.uid &&
-               lhs.name == rhs.name &&
-               lhs.pseudo == rhs.pseudo &&
-               lhs.profilePictureUrl == rhs.profilePictureUrl &&
-               lhs.isActive == rhs.isActive
+    enum CodingKeys: String, CodingKey {
+        case uid
+        case name
+        case pseudo
+        case profilePictureUrl
+        case isActive
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        uid = try values.decode(String.self, forKey: .uid)
+        name = try values.decode(String.self, forKey: .name)
+        pseudo = try values.decode(String.self, forKey: .pseudo)
+        profilePictureUrl = try values.decode(String.self, forKey: .profilePictureUrl)
+        isActive = try values.decode(Bool.self, forKey: .isActive)
     }
 
-    // Conformité à Hashable
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uid, forKey: .uid)
+        try container.encode(name, forKey: .name)
+        try container.encode(pseudo, forKey: .pseudo)
+        try container.encode(profilePictureUrl, forKey: .profilePictureUrl)
+        try container.encode(isActive, forKey: .isActive)
+    }
+    
+    // ✅ IMPLÉMENTATION DE HASHABLE
     func hash(into hasher: inout Hasher) {
-        hasher.combine(uid)
-        hasher.combine(name)
-        hasher.combine(pseudo)
-        hasher.combine(profilePictureUrl)
-        hasher.combine(isActive)
+        hasher.combine(uid) // Utilise l'uid comme identificateur unique
+    }
+    
+    // ✅ IMPLÉMENTATION DE EQUATABLE
+    static func == (lhs: UserContact, rhs: UserContact) -> Bool {
+        return lhs.uid == rhs.uid // Deux UserContact sont égaux s'ils ont le même uid
     }
     
     func userContactDefault() -> [UserContact] {
