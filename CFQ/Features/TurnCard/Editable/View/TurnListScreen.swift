@@ -42,28 +42,35 @@ struct TurnListScreen: View {
                                 .padding(.bottom, 5)
                             
                             NavigationLink(
-                                destination: AddFriendsScreen(coordinator: coordinator)
+                                destination: TurnCardView(
+                                    coordinator: coordinator,
+                                    coreDataViewModel: TurnCoreDataViewModel(),
+                                    turn: Turn(
+                                        uid: "",
+                                        titleEvent: "",
+                                        dateStartEvent: nil,
+                                        pictureURLString: "",
+                                        admin: "",
+                                        description: "",
+                                        invited: [],
+                                        participants: [],
+                                        denied: [],
+                                        mayBeParticipate: [],
+                                        mood: [],
+                                        messagerieUUID: "",
+                                        placeTitle: "",
+                                        placeAdresse: "",
+                                        placeLatitude: 0,
+                                        placeLongitude: 0,
+                                        timestamp: Date()
+                                    )
+                                )
                             ) {
                                 Image(.iconPlus)
                                     .resizable()
                                     .foregroundColor(.white)
                                     .frame(width: 35, height: 35)
                             }
-                            /*
-                            Button(
-                                action: {
-                                    withAnimation {
-                                        coordinator.turnSelectedPreview = nil
-                                        coordinator.showTurnCardView = true
-                                    }
-                                },
-                                label: {
-                                    Image(.iconPlus)
-                                        .resizable()
-                                        .foregroundColor(.white)
-                                        .frame(width: 35, height: 35)
-                                })
-                             */
                         }
                         Spacer()
                     }
@@ -75,28 +82,56 @@ struct TurnListScreen: View {
                             .padding(.bottom, 20)
 
                         ForEach(Array(vm.savedTurns.enumerated()), id: \.element.id) { index, element in
-                            CellPreviewCardTurn(
-                                turn: TurnPreview(
-                                    uid: element.id.debugDescription,
-                                    titleEvent: element.titleEvent ?? "",
-                                    dateStartEvent: element.dateEvent,
-                                    admin: coordinator.user?.uid ?? "",
-                                    description: element.descriptionEvent ?? "",
-                                    invited: [],
-                                    mood: [],
-                                    messagerieUUID: "",
-                                    placeTitle: "",
-                                    placeAdresse: "",
-                                    placeLatitude: 0,
-                                    placeLongitude: 0,
-                                    imageEvent: UIImage(data: element.imageEvent ?? Data())
-                                ),
-                                coordinator: coordinator,
-                                onDelete: {
-                                    vm.deleteTurn(at: index)
-                                }
-                            )
-                            .padding(.bottom, 15)
+                            
+                            NavigationLink(
+                                destination: TurnCardView(
+                                    coordinator: coordinator,
+                                    coreDataViewModel: TurnCoreDataViewModel(),
+                                    turn: Turn(
+                                        uid: element.id.debugDescription,
+                                        titleEvent: element.titleEvent ?? "",
+                                        dateStartEvent: element.dateEvent,
+                                        pictureURLString: "",
+                                        admin: coordinator.user?.uid ?? "",
+                                        description: element.descriptionEvent ?? "",
+                                        invited: [],
+                                        participants: [],
+                                        denied: [],
+                                        mayBeParticipate: [],
+                                        mood: [],
+                                        messagerieUUID: "",
+                                        placeTitle: "",
+                                        placeAdresse: "",
+                                        placeLatitude: 0,
+                                        placeLongitude: 0,
+                                        timestamp: Date(),
+                                        imageEvent: UIImage(data: element.imageEvent ?? Data())
+                                    )
+                                )
+                            ) {
+                                CellPreviewCardTurn(
+                                    turn: TurnPreview(
+                                        uid: element.id.debugDescription,
+                                        titleEvent: element.titleEvent ?? "",
+                                        dateStartEvent: element.dateEvent,
+                                        admin: coordinator.user?.uid ?? "",
+                                        description: element.descriptionEvent ?? "",
+                                        invited: [""],
+                                        mood: [],
+                                        messagerieUUID: "",
+                                        placeTitle: "",
+                                        placeAdresse: "",
+                                        placeLatitude: 0,
+                                        placeLongitude: 0,
+                                        imageEvent: UIImage(data: element.imageEvent ?? Data())
+                                    ),
+                                    coordinator: coordinator,
+                                    onDelete: {
+                                        vm.deleteTurn(at: index)
+                                    }
+                                )
+                                .padding(.bottom, 15)
+                            }
                         }
                     }
                     .padding(.leading, 16)
@@ -223,12 +258,6 @@ struct CellPreviewCardTurn: View {
                         )
                         .frame(height: 150)
                        
-                }
-            }
-            .onTapGesture {
-                coordinator.turnSelectedPreview = turn
-                withAnimation {
-                    coordinator.showTurnCardView = true
                 }
             }
         }

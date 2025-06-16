@@ -10,7 +10,7 @@ public enum MessagerieHeaderTypeData {
 
 struct HeaderMessagerieView: View {
     var type: MessagerieHeaderTypeData
-    
+
     var body: some View {
         switch type {
         case .cfq(let name, let title, let image):
@@ -19,7 +19,7 @@ struct HeaderMessagerieView: View {
                 title: title,
                 image: image
             )
-            
+
         case .people(let participants):
             Text("people")
 
@@ -29,183 +29,196 @@ struct HeaderMessagerieView: View {
     }
 }
 
-
 // Garder le paramètre isPresented pour pouvoir y accéder depuis différent endroit
 struct MessagerieView: View {
-    @Binding var isPresented: Bool
+
     @StateObject var viewModel: MessagerieViewModel
     @ObservedObject var coordinator: Coordinator
-    
+
     @State private var text: String = ""
     @State private var lastText: String = ""
     @State private var showReaction: Bool = false
     @State private var isKeyboardVisible = false
     @State private var textViewHeight: CGFloat = 20
     @State private var keyboardHeight: CGFloat = 0
-    
+
     var conversation: Conversation
 
-    init(isPresented: Binding<Bool>, coordinator: Coordinator, conversation: Conversation) {
-        _isPresented = isPresented
+    init(coordinator: Coordinator, conversation: Conversation) {
         self.coordinator = coordinator
         self.conversation = conversation
-        _viewModel = StateObject(wrappedValue: MessagerieViewModel(coordinator: coordinator))
+        _viewModel = StateObject(
+            wrappedValue: MessagerieViewModel(coordinator: coordinator))
     }
 
     var body: some View {
-        DraggableViewLeft(isPresented: $isPresented) {
-            SafeAreaContainer {
-                ZStack {
-                    VStack {
-                        HStack {
-                            Button(action: {
-                                withAnimation {
-                                    isPresented = false
-                                }
-                            }) {
-                                Image(.iconArrow)
-                                    .foregroundStyle(.white)
-                                    .frame(width: 24, height: 24)
-                            }
 
-                            Spacer()
-
-                            HeaderMessagerieView(
-                                type: viewModel.convertMessageTypeToMessageTypeData(messagerieType: coordinator.selectedConversation?.typeEvent ?? "", conversation: conversation)
-                            )
-                            .onTapGesture {
-                                withAnimation {
-                                    viewModel.showConversationOptionView = true
-                                }
-                            }
-
-                            Spacer()
-
-                            Button(action: {
-                                // viewModel.showDetailGuest = true
-                            }) {
-                                Image(.iconGuests)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(.white)
-                                    .frame(width: 24)
-                            }.padding(.trailing, 16)
-
-                            Button(action: {
-                                viewModel.showSettingMessagerie = true
-                            }) {
-                                Image(.iconDots)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(.white)
-                                    .frame(width: 24)
-                            }
+        ZStack {
+            VStack {
+                /*
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            isPresented = false
                         }
-                        .padding(.horizontal, 12)
+                    }) {
+                        Image(.iconArrow)
+                            .foregroundStyle(.white)
+                            .frame(width: 24, height: 24)
+                    }
 
-                        Divider()
-                            .background(.white)
+                    Spacer()
 
-                        ZStack {
+                    HeaderMessagerieView(
+                        type: viewModel.convertMessageTypeToMessageTypeData(
+                            messagerieType: coordinator.selectedConversation?
+                                .typeEvent ?? "", conversation: conversation)
+                    )
+                    .onTapGesture {
+                        withAnimation {
+                            viewModel.showConversationOptionView = true
+                        }
+                    }
 
-                            /*
+                    Spacer()
+
+                    Button(action: {
+                        // viewModel.showDetailGuest = true
+                    }) {
+                        Image(.iconGuests)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 24)
+                    }.padding(.trailing, 16)
+
+                    Button(action: {
+                        viewModel.showSettingMessagerie = true
+                    }) {
+                        Image(.iconDots)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 24)
+                    }
+                }
+                .padding(.horizontal, 12)
+*/
+                Divider()
+                    .background(.white)
+
+                ZStack {
+
+                    /*
                             Image(.background3)
                                 .resizable()
                                 .opacity(0.8)
                                 .ignoresSafeArea()
                             */
 
-                            VStack(spacing: 0) {
-                                ScrollViewReader { proxy in
-                                    ScrollView(
-                                        .vertical, showsIndicators: false
-                                    ) {
-                                        VStack {
-                                            ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
-                                                LazyVStack(spacing: 10) {
-                                                    if viewModel.messages[index].senderUID == coordinator.user?.uid {
-                                                        CellMessageSendByTheUserView(data: viewModel.messages[index]) {}
-                                                            .padding(.horizontal, 12)
-                                                            .rotationEffect(.degrees(180))
-                                                    } else {
-                                                        CellMessageViewReceived(
-                                                            data: viewModel.messages[index]
-                                                        )
-                                                        .padding(.horizontal, 12)
-                                                        .rotationEffect(.degrees(180))
-                                                    }
-                                                }
+                    VStack(spacing: 0) {
+                        ScrollViewReader { proxy in
+                            ScrollView(
+                                .vertical, showsIndicators: false
+                            ) {
+                                VStack {
+                                    ForEach(
+                                        (0..<viewModel.messages.count)
+                                            .reversed(), id: \.self
+                                    ) { index in
+                                        LazyVStack(spacing: 4) {
+                                            if viewModel.messages[index]
+                                                .senderUID
+                                                == coordinator.user?.uid
+                                            {
+                                                CellMessageSendByTheUserView(
+                                                    data: viewModel.messages[
+                                                        index]
+                                                ) {}
+                                                .padding(.horizontal, 12)
+                                                .rotationEffect(.degrees(180))
+                                            } else {
+                                                CellMessageViewReceived(
+                                                    data: viewModel.messages[
+                                                        index]
+                                                )
+                                                .padding(.horizontal, 12)
+                                                .rotationEffect(.degrees(180))
                                             }
-                                            .padding(.bottom, 15)
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                    }
-                                    .rotationEffect(.degrees(180))
-                                    .onChange(of: viewModel.messages.count) {
-                                        _ in
-                                        withAnimation(.easeOut(duration: 0.3)) {
-                                            proxy.scrollTo(
-                                                viewModel.messages.count - 1,
-                                                anchor: .top)
                                         }
                                     }
-                                    
+                                    .padding(.bottom, 15)
                                 }
-                                Spacer()
-                                    .frame(height: textViewHeight + 40)
+                                .frame(maxWidth: .infinity)
+                            }
+                            .rotationEffect(.degrees(180))
+                            .onChange(of: viewModel.messages.count) {
+                                _ in
+                                withAnimation(.easeOut(duration: 0.3)) {
+                                    proxy.scrollTo(
+                                        viewModel.messages.count - 1,
+                                        anchor: .top)
+                                }
                             }
 
-                            VStack {
-                                Spacer()
-                                GeometryReader { geometry in
-                                    HStack(alignment: .bottom) {
-                                        GrowingTextView(
-                                            text: $viewModel.textMessage,
-                                            dynamicHeight: $textViewHeight,
-                                            availableWidth: geometry.size.width - 80,
-                                            placeholder: "Ecris ici..."
-                                        )
-                                        .frame(height: textViewHeight)
-                                        .padding(8)
-                                        .background(.black)
-                                        .cornerRadius(24)
-                                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray))
-
-                                        if !viewModel.textMessage.isEmpty {
-                                            Button(action: {
-                                                viewModel.pushMessage()
-                                            }) {
-                                                Image(.iconSend)
-                                                    .foregroundColor(.white)
-                                                    .padding(5)
-                                                    .background(.purpleDark)
-                                                    .clipShape(Circle())
-                                            }
-                                            .frame(width: 15, height: 15)
-                                            .padding(.horizontal, 10)
-                                            .padding(.bottom, 10)
-                                        }
-                                    }
-                                    .padding(.horizontal, 12)
-                                    .padding(.bottom, keyboardHeight == 0 ? 30 : keyboardHeight)
-                                }
-                                .frame(height: textViewHeight + 30)
-                            }
                         }
-                        .blur(radius: showReaction ? 10 : 0)
-                        .allowsHitTesting(!showReaction)
-                        // .ignoresSafeArea()
+                        Spacer()
+                            .frame(height: textViewHeight + 40)
                     }
-                    if showReaction {
-                        destinationView()
-                            // .transition(.move(edge: .trailing))
-                            .zIndex(2)
-                        // ReactionPreviewView(showReaction: $showReaction)
+
+                    VStack {
+                        Spacer()
+                        GeometryReader { geometry in
+                            HStack(alignment: .bottom) {
+                                GrowingTextView(
+                                    text: $viewModel.textMessage,
+                                    dynamicHeight: $textViewHeight,
+                                    availableWidth: geometry.size.width - 80,
+                                    placeholder: "Ecris ici..."
+                                )
+                                .frame(height: textViewHeight)
+                                .padding(8)
+                                .background(.black)
+                                .cornerRadius(24)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8).stroke(
+                                        Color.gray))
+
+                                if !viewModel.textMessage.isEmpty {
+                                    Button(action: {
+                                        viewModel.pushMessage()
+                                    }) {
+                                        Image(.iconSend)
+                                            .foregroundColor(.white)
+                                            .padding(5)
+                                            .background(.purpleDark)
+                                            .clipShape(Circle())
+                                    }
+                                    .frame(width: 15, height: 15)
+                                    .padding(.horizontal, 10)
+                                    .padding(.bottom, 10)
+                                }
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(
+                                .bottom,
+                                keyboardHeight == 0 ? 30 : keyboardHeight)
+                        }
+                        .frame(height: textViewHeight + 30)
                     }
                 }
-                .scrollDismissesKeyboard(.immediately)
+                .blur(radius: showReaction ? 10 : 0)
+                .allowsHitTesting(!showReaction)
+                // .ignoresSafeArea()
+            }
+            if showReaction {
+                destinationView()
+                    // .transition(.move(edge: .trailing))
+                    .zIndex(2)
+                // ReactionPreviewView(showReaction: $showReaction)
             }
         }
+        .scrollDismissesKeyboard(.immediately)
 
         if viewModel.showConversationOptionView {
             destinationView()
@@ -222,8 +235,6 @@ struct MessagerieView: View {
             isPresented: $viewModel.showConversationOptionView)
     }
 }
-
-
 
 struct ConversationOptionView: View {
     @Binding var isPresented: Bool

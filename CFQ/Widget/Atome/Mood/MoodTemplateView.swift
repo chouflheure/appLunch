@@ -3,7 +3,7 @@ import SwiftUI
 
 struct MoodTemplateView: View {
     let icon: UIImage = .iconMoodBefore
-    let title: String = "Mood"
+    let title: String = "Mood(s)"
 
     var body: some View {
         HStack {

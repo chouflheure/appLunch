@@ -64,7 +64,7 @@ struct FeedView: View {
 
                 // TODO: - Edit
                 NavigationLink(
-                    destination: MessageView(coordinator: coordinator)
+                    destination: ConversationsView(coordinator: coordinator)
                 ) {
                     NotificationButtonIcon_Nav(
                         numberNotificationUnRead: 10,

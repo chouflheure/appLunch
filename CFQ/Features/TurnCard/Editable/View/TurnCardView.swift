@@ -1,6 +1,5 @@
-
-import SwiftUI
 import Lottie
+import SwiftUI
 
 struct TurnCardView: View {
     @ObservedObject var coordinator: Coordinator
@@ -10,184 +9,191 @@ struct TurnCardView: View {
     @State private var toast: Toast? = nil
     @StateObject var viewModel: TurnCardViewModel
 
-    init(coordinator: Coordinator, coreDataViewModel: TurnCoreDataViewModel, turn: Turn) {
+    init(
+        coordinator: Coordinator,
+        coreDataViewModel: TurnCoreDataViewModel,
+        turn: Turn
+    ) {
         self.coordinator = coordinator
         self.turn = turn
-        _viewModel = StateObject(wrappedValue: TurnCardViewModel(turn: turn, coordinator: coordinator))
+        _viewModel = StateObject(wrappedValue: TurnCardViewModel(
+            turn: turn,
+            coordinator: coordinator
+        ))
     }
-    
+
     var body: some View {
-        DraggableViewLeft(isPresented: $coordinator.showTurnCardView) {
-            SafeAreaContainer {
+        ZStack {
+            VStack {
                 ZStack {
+                    GradientCardView()
+
                     VStack {
-                        HeaderBackLeftScreen(
-                            onClickBack: {
-                                withAnimation {
-                                    coordinator.showTurnCardView = false
-                                    coordinator.turnSelected = nil
-                                }
-                            },
-                            titleScreen: StringsToken.Turn.titleTurnPreview,
-                            thirdElement: AnyView(Button(action: {
-                                viewModel.showDetailTurnCard = true
-                            }) {
-                                Image(.iconEdit)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(.white)
-                                    .frame(width: 24)
-                            }),
-                            isShowDivider: false
-                        )
-                        .padding(.horizontal, 16)
-                        .zIndex(2)
-                        
-                        ZStack {
-                            GradientCardView()
-                            
-                            VStack {
-                                // Header ( Date / Picture / TURN )
-                                HeaderCardPreviewView(viewModel: viewModel)
-                                    .padding(.bottom, 15)
-                                    .frame(height: 150)
-                                
-                                // Title ( Title / Guest )
-                                TitleTurnCardPreviewView(viewModel: viewModel)
-                                    .padding(.horizontal, 16)
-                                    .padding(.top, 20)
-                                
-                                // Informations ( Mood / Date / Loc )
-                                MainInformationsPreviewView(viewModel: viewModel)
-                                    .padding(.horizontal, 16)
-                                
-                                // Description ( Bio event )
-                                DescriptionTurnCardPreviewView(viewModel: viewModel)
-                                    .padding(.horizontal, 16)
-                                
-                                Spacer()
-                            }
-                        }
-                        .cornerRadius(20)
-                        .padding(.horizontal, 12)
-                        .frame(height: 550)
-                        .padding(.bottom, 30)
-                        .zIndex(1)
-                        .onTapGesture {
-                            withAnimation {
-                                viewModel.showDetailTurnCard = true
-                            }
-                        }
+                        // Header ( Date / Picture / TURN )
+                        HeaderCardPreviewView(viewModel: viewModel)
+                            .padding(.bottom, 15)
+                            .frame(height: 150)
+
+                        // Title ( Title / Guest )
+                        TitleTurnCardPreviewView(viewModel: viewModel)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 20)
+
+                        // Informations ( Mood / Date / Loc )
+                        MainInformationsPreviewView(viewModel: viewModel)
+                            .padding(.horizontal, 16)
+
+                        // Description ( Bio event )
+                        DescriptionTurnCardPreviewView(viewModel: viewModel)
+                            .padding(.horizontal, 16)
+
                         Spacer()
-                        
-                        HStack(spacing: 30) {
-                            Button(action: {
-                                coreDataViewModel.addTurn(
-                                    turn: TurnPreview(
-                                        uid: UUID().description,
-                                        titleEvent: viewModel.titleEvent,
-                                        dateStartEvent: viewModel.dateEventStart,
-                                        admin: coordinator.user?.uid ?? "",
-                                        description: viewModel.description,
-                                        invited: [],
-                                        mood: [],
-                                        messagerieUUID: "",
-                                        placeTitle: "",
-                                        placeAdresse: "",
-                                        placeLatitude: 0,
-                                        placeLongitude: 0,
-                                        imageEvent: viewModel.imageSelected
-                                    )
-                                )
-                            }, label: {
-                                HStack {
-                                    Image(.iconSave)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 30)
-                                        .foregroundColor(.white)
-                                        .padding(.leading, 15)
-                                        .padding(.vertical, 10)
-                                        .font(.system(size: 10, weight: .bold))
-                                    
-                                    Text("Brouillon")
-                                        .tokenFont(.Body_Inter_Medium_14)
-                                        .padding(.trailing, 15)
-                                        .padding(.vertical, 10)
-                                        .font(.system(size: 15, weight: .bold))
-                                }
-                            })
-                            .frame(width: 150)
-                            .background(.clear)
-                            .cornerRadius(10)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(style: StrokeStyle(lineWidth: 1))
-                                    .foregroundColor(.white)
-                                    .background(.clear)
-                            }
-                            
-                            Button(action: {
-                                viewModel.pushDataTurn {
-                                    success, message in
-                                    if success {
-                                        withAnimation {
-                                            coordinator.showTurnCardView = false
-                                            coordinator.turnSelected = nil
-                                        }
-                                    } else {
-                                        toast = Toast(
-                                            style: .error,
-                                            message: message
-                                        )
-                                    }
-                                }
-                            }, label: {
-                                HStack {
-                                    Image(.iconSend)
-                                        .foregroundColor(.white)
-                                        .padding(.leading, 15)
-                                        .padding(.vertical, 10)
-                                    
-                                    Text("Publier")
-                                        .tokenFont(.Body_Inter_Medium_14)
-                                        .padding(.trailing, 15)
-                                        .padding(.vertical, 10)
-                                        .font(.system(size: 15, weight: .bold))
-                                }
-                            })
-                            .frame(width: 150)
-                            .background(Color(hex: "B098E6").opacity(1))
-                            .cornerRadius(10)
-                        }
-                    }
-                    .blur(radius: viewModel.isLoading ? 10 : 0)
-                    .allowsHitTesting(!viewModel.isLoading)
-                    
-                    if viewModel.isLoading {
-                        ZStack {
-                            LottieView(animation: .named(StringsToken.Animation.loaderCircle))
-                                .playing()
-                                .looping()
-                                .frame(width: 150, height: 150)
-                        }
-                        .zIndex(3)
                     }
                 }
+                .cornerRadius(20)
+                .padding(.horizontal, 12)
+                .frame(height: 550)
+                .padding(.bottom, 30)
+                .zIndex(1)
+                .onTapGesture {
+                    withAnimation {
+                        viewModel.showDetailTurnCard = true
+                    }
+                }
+                Spacer()
+
+                HStack(spacing: 30) {
+                    Button(
+                        action: {
+                            coreDataViewModel.addTurn(
+                                turn: TurnPreview(
+                                    uid: UUID().description,
+                                    titleEvent: viewModel.titleEvent,
+                                    dateStartEvent: viewModel.dateEventStart,
+                                    admin: coordinator.user?.uid ?? "",
+                                    description: viewModel.description,
+                                    invited: [],
+                                    mood: [],
+                                    messagerieUUID: "",
+                                    placeTitle: "",
+                                    placeAdresse: "",
+                                    placeLatitude: 0,
+                                    placeLongitude: 0,
+                                    imageEvent: viewModel.imageSelected
+                                )
+                            )
+                        },
+                        label: {
+                            HStack {
+                                Image(.iconSave)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
+                                    .foregroundColor(.white)
+                                    .padding(.leading, 15)
+                                    .padding(.vertical, 10)
+                                    .font(.system(size: 10, weight: .bold))
+
+                                Text("Brouillon")
+                                    .tokenFont(.Body_Inter_Medium_14)
+                                    .padding(.trailing, 15)
+                                    .padding(.vertical, 10)
+                                    .font(.system(size: 15, weight: .bold))
+                            }
+                        }
+                    )
+                    .frame(width: 150)
+                    .background(.clear)
+                    .cornerRadius(10)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(style: StrokeStyle(lineWidth: 1))
+                            .foregroundColor(.white)
+                            .background(.clear)
+                    }
+
+                    Button(
+                        action: {
+                            viewModel.pushDataTurn {
+                                success, message in
+                                if success {
+                                    withAnimation {
+                                        coordinator.showTurnCardView = false
+                                        coordinator.turnSelected = nil
+                                    }
+                                } else {
+                                    toast = Toast(
+                                        style: .error,
+                                        message: message
+                                    )
+                                }
+                            }
+                        },
+                        label: {
+                            HStack {
+                                Image(.iconSend)
+                                    .foregroundColor(.white)
+                                    .padding(.leading, 15)
+                                    .padding(.vertical, 10)
+
+                                Text("Publier")
+                                    .tokenFont(.Body_Inter_Medium_14)
+                                    .padding(.trailing, 15)
+                                    .padding(.vertical, 10)
+                                    .font(.system(size: 15, weight: .bold))
+                            }
+                        }
+                    )
+                    .frame(width: 150)
+                    .background(Color(hex: "B098E6").opacity(1))
+                    .cornerRadius(10)
+                }
+            }
+            .blur(radius: viewModel.isLoading ? 10 : 0)
+            .allowsHitTesting(!viewModel.isLoading)
+
+            if viewModel.isLoading {
+                ZStack {
+                    LottieView(
+                        animation: .named(StringsToken.Animation.loaderCircle)
+                    )
+                    .playing()
+                    .looping()
+                    .frame(width: 150, height: 150)
+                }
+                .zIndex(3)
             }
         }
         .toastView(toast: $toast)
         .fullScreenCover(isPresented: $viewModel.showDetailTurnCard) {
             TurnCardDetailsView(viewModel: viewModel, coordinator: coordinator)
         }
+        .customNavigationFlexible(
+            leftElement: {
+                NavgitationBackIcon()
+            },
+            centerElement: {
+                NavgitationTitle(title: StringsToken.Turn.titleTurn)
+            },
+            rightElement: {
+                Button(
+                    action: {
+                        viewModel.showDetailTurnCard = true
+                    }) {
+                        Image(.iconEdit)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 24)
+                }
+            }
+        )
     }
 }
 
 #Preview {
     // TurnCardView(isShow: .constant(true))
 }
-
-
 
 /*
 
@@ -207,7 +213,7 @@ struct TurnCardViewAnimation: View {
     )
 
     var body : some View {
-        
+
         ZStack {
             GradientCardView()
 

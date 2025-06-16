@@ -46,24 +46,21 @@ struct NavigationBarThreeElementsModifier: ViewModifier {
             )
             .navigationBarBackButtonHidden(true)
             .toolbar {
-                // Élément gauche
                 ToolbarItem(placement: .navigationBarLeading) {
                     leftElement
                 }
-                
-                // Élément centre (titre principal)
+            
                 if let centerElement = centerElement {
                     ToolbarItem(placement: .principal) {
                         centerElement
                     }
                 }
                 
-                // Élément droite
                 if let rightElement = rightElement {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         rightElement
                     }
                 }
             }
-    }
+        }
 }

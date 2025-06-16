@@ -20,18 +20,20 @@ struct TeamView: View {
             .padding(.top, 50)
 
             ScrollView(.vertical, showsIndicators: false) {
-                Button(action: {
-                    withAnimation {
-                        coordinator.showCreateTeam = true
+                NavigationLink(
+                    destination: {
+                        TeamFormView(coordinator: coordinator)
+                    },
+                    label: {
+                        Image(.iconPlus)
+                            .resizable()
+                            .scaledToFill()
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .frame(width: 40, height: 40)
+                            .padding(.vertical, 30)
                     }
-                }) {
-                    Image(.iconPlus)
-                        .resizable()
-                        .scaledToFill()
-                        .foregroundColor(.white)
-                        .padding(.vertical, 16)
-                        .frame(width: 40, height: 40)
-                }.padding(.vertical, 30)
+                )
 
                 ForEach(Array(viewModel.teams.indices), id: \.self) { index in
                     CellTeamView(

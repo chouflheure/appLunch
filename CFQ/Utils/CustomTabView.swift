@@ -40,7 +40,7 @@ struct CustomTabView: View {
                                 if coordinator.selectedTab == 0 {
                                     FeedView(coordinator: coordinator)
                                 } else if coordinator.selectedTab == 1 {
-                                    Text("Map")
+                                    Text("Coming soon")
                                         .tokenFont(.Title_Gigalypse_24)
                                 } else if coordinator.selectedTab == 2 {
                                     TurnListScreen(coordinator: coordinator)

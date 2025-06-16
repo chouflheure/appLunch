@@ -116,6 +116,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         timestamp: Date,
         link: String? = nil,
         lintiTitle: String? = nil,
+        imageEvent: UIImage? = nil,
         userUID: String? = nil
         // userStatusParticipate: TypeParticipateButton = .none
     ) {
@@ -139,6 +140,7 @@ class Turn: ObservableObject, Encodable, Decodable {
         self.timestamp = timestamp
         self.link = link
         self.linkTitle = lintiTitle
+        self.imageEvent = imageEvent
         self.userUID = userUID
         // self.userStatusParticipate = userStatusParticipate
     }
@@ -219,6 +221,28 @@ class Turn: ObservableObject, Encodable, Decodable {
         participants.removeAll { $0 == userId }
         mayBeParticipate.removeAll { $0 == userId }
         denied.removeAll { $0 == userId }
+    }
+    
+    func emptyObjectTurn() -> Turn {
+        return Turn(
+            uid: "",
+            titleEvent: "",
+            dateStartEvent: nil,
+            pictureURLString: "",
+            admin: "",
+            description: "",
+            invited: [],
+            participants: [],
+            denied: [],
+            mayBeParticipate: [],
+            mood: [],
+            messagerieUUID: "",
+            placeTitle: "",
+            placeAdresse: "",
+            placeLatitude: 0,
+            placeLongitude: 0,
+            timestamp: Date()
+        )
     }
 }
 
