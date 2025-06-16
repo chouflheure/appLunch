@@ -26,17 +26,17 @@ struct CellMessagingView: View {
 
                     HStack(spacing: 0) {
                         Text(data.lastMessageSender)
-                            .tokenFont(.Body_Inter_Medium_14)
+                            .tokenFont(hasUnReadMessage ? .Body_Inter_Medium_14 : .Placeholder_Inter_Regular_14)
                         
                         Text((data.lastMessageSender.isEmpty ? "Pas de message" : " : "))
                             .tokenFont(.Placeholder_Inter_Regular_14)
                             .italic(data.lastMessageSender.isEmpty)
                             
                         Text(data.lastMessage)
-                            .tokenFont(.Body_Inter_Medium_14)
+                            .tokenFont(hasUnReadMessage ? .Body_Inter_Medium_14 : .Placeholder_Inter_Regular_14)
                             .lineLimit(1)
                     }
-                }.bold(hasUnReadMessage)
+                }
 
                 Spacer()
 

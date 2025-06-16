@@ -11,9 +11,11 @@ class MessagerieViewModel: ObservableObject {
 
     private let firebaseService = FirebaseService()
     @ObservedObject var coordinator: Coordinator
+    @ObservedObject var conversation: Conversation
 
-    init(coordinator: Coordinator) {
+    init(coordinator: Coordinator, conversation: Conversation) {
         self.coordinator = coordinator
+        self.conversation = conversation
         fetchMessages()
     }
 
@@ -38,13 +40,8 @@ class MessagerieViewModel: ObservableObject {
 extension MessagerieViewModel {
     
     func fetchMessages() {
-
-        guard let conversationID = coordinator.selectedConversation?.uid else {
-            return
-        }
-        
         firebaseService.getMessagesByIds(
-            conversationID: conversationID,
+            conversationID: conversation.uid,
             limit: 15,
             listenerKeyPrefix: ListenerType.team_group_listener.rawValue
         ) { [weak self] (result: Result<[Message], Error>) in
@@ -67,7 +64,7 @@ extension MessagerieViewModel {
             }
         }
         
-        firebaseService.markMessageAsRead(conversationId: conversationID, userId: coordinator.user?.uid ?? "")
+        firebaseService.markMessageAsRead(conversationId: conversation.uid, userId: coordinator.user?.uid ?? "")
     }
     
     private func fetchUserContactMessages(at index: Int, adminID: String) {
@@ -116,7 +113,7 @@ extension MessagerieViewModel {
         
         firebaseService.addMessage(
             data: message,
-            at: coordinator.selectedConversation?.uid ?? "",
+            at: conversation.uid,
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
@@ -135,7 +132,7 @@ extension MessagerieViewModel {
                 "messageReader": [coordinator.user?.uid ?? ""]
             ],
             to: .conversations,
-            at: coordinator.selectedConversation?.uid ?? ""
+            at: conversation.uid
         )
         
         textMessage = ""

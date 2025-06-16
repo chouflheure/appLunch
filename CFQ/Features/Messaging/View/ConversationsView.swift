@@ -34,12 +34,11 @@ struct ConversationsView: View {
 
                     ForEach(viewModel.messageList.sorted {$0.lastMessageDate ?? Date() > $1.lastMessageDate ?? Date()}, id: \.uid ) { data in
                         NavigationLink(destination: {
-                            AddFriendsScreen(coordinator: coordinator)
+                            MessagerieView(coordinator: coordinator, conversation: data)
                         }) {
                             CellMessagingView(
                                 data: data,
-                                hasUnReadMessage: !data.messageReader.contains(
-                                    coordinator.user?.uid ?? "")
+                                hasUnReadMessage: !data.messageReader.contains(coordinator.user?.uid ?? "")
                             )
                             /*{ _ in
                                 coordinator.selectedConversation = data
@@ -67,20 +66,8 @@ struct ConversationsView: View {
             },
             rightElement: { EmptyView() }
         )
-
-        if showDetail {
-            destinationView()
-                .transition(.move(edge: .trailing))
-                .zIndex(1)
-        }
     }
 
-    @ViewBuilder
-    func destinationView() -> some View {
-        MessagerieView(
-            isPresented: $showDetail, coordinator: coordinator,
-            conversation: coordinator.selectedConversation!)
-    }
 }
 
 #Preview {
