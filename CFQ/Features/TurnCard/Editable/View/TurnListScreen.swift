@@ -43,8 +43,6 @@ struct TurnListScreen: View {
                             
                             NavigationLink(
                                 destination: TurnCardView(
-                                    coordinator: coordinator,
-                                    coreDataViewModel: TurnCoreDataViewModel(),
                                     turn: Turn(
                                         uid: "",
                                         titleEvent: "",
@@ -63,7 +61,8 @@ struct TurnListScreen: View {
                                         placeLatitude: 0,
                                         placeLongitude: 0,
                                         timestamp: Date()
-                                    )
+                                    ), coordinator: coordinator,
+                                    coreDataViewModel: TurnCoreDataViewModel()
                                 )
                             ) {
                                 Image(.iconPlus)
@@ -85,8 +84,6 @@ struct TurnListScreen: View {
                             
                             NavigationLink(
                                 destination: TurnCardView(
-                                    coordinator: coordinator,
-                                    coreDataViewModel: TurnCoreDataViewModel(),
                                     turn: Turn(
                                         uid: element.id.debugDescription,
                                         titleEvent: element.titleEvent ?? "",
@@ -106,7 +103,8 @@ struct TurnListScreen: View {
                                         placeLongitude: 0,
                                         timestamp: Date(),
                                         imageEvent: UIImage(data: element.imageEvent ?? Data())
-                                    )
+                                    ), coordinator: coordinator,
+                                    coreDataViewModel: TurnCoreDataViewModel()
                                 )
                             ) {
                                 CellPreviewCardTurn(

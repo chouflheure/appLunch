@@ -129,18 +129,16 @@ struct TeamFormView: View {
         }
         .customNavigationFlexible(
             leftElement: {
-                NavgitationBackIcon()
+                NavigationBackIcon()
             },
             centerElement: {
-                NavgitationTitle(title: "Nouvelle Team")
+                NavigationTitle(title: StringsToken.Team.newTeam)
             },
             rightElement: {
-                Text("")
+                EmptyView()
             },
-            hasADivider: true
+            hasADivider: false
         )
-        .padding(.top, 30)
-        .padding(.bottom, 30)
 
     }
 

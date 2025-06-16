@@ -217,18 +217,14 @@ struct FriendProfileView: View {
             }
         }
         .fullBackground(imageName: StringsToken.Image.fullBackground)
-        .customNavigationBackButton{
-            HStack(alignment: .center) {
-                Button(
-                    action: {
-                        dismiss()
-                    },
-                    label: {
-                        Image(.iconArrow)
-                            .foregroundColor(.white)
-                            .frame(width: 24, height: 24)
-                    })
-                Spacer()
+        .customNavigationFlexible(
+            leftElement: {
+                NavigationBackIcon()
+            },
+            centerElement: {
+                EmptyView()
+            },
+            rightElement: {
                 Button(
                     action: {
                         viewModel.isShowingSettingsView = true
@@ -238,10 +234,9 @@ struct FriendProfileView: View {
                             .foregroundColor(.white)
                             .frame(width: 24, height: 24)
                     })
-            }
-            .padding(.trailing, 12)
-            .padding(.bottom, 32)
-        }
+            },
+            hasADivider: false
+        )
         
         if viewModel.isShowRemoveFriends {
             PopUpRemoveFromFriends(

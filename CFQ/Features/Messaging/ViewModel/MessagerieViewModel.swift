@@ -96,6 +96,10 @@ extension MessagerieViewModel {
     
     func pushMessage() {
     
+        if textMessage.last == "\n" {
+            textMessage.removeLast()
+        }
+
         let message = Message (
             uid: UUID().description,
             message: textMessage,

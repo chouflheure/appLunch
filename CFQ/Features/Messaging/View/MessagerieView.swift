@@ -149,10 +149,10 @@ struct MessagerieView: View {
         .scrollDismissesKeyboard(.immediately)
         .customNavigationFlexible(
             leftElement: {
-                NavgitationBackIcon()
+                NavigationBackIcon()
             },
             centerElement: {
-                NavgitationTitle(title: "Message")
+                NavigationTitle(title: "Message")
             },
             rightElement: {
                 Text("")

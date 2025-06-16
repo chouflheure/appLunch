@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct NavgitationBackIcon: View {
+struct NavigationBackIcon: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {

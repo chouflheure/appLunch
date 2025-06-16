@@ -23,10 +23,10 @@ struct AddFriendsScreen: View {
             }
             .customNavigationFlexible(
                 leftElement: {
-                    NavgitationBackIcon()
+                    NavigationBackIcon()
                 },
                 centerElement: {
-                    NavgitationTitle(title: "AJoute tes amis")
+                    NavigationTitle(title: "AJoute tes amis")
                 },
                 rightElement: {
                     Text("")

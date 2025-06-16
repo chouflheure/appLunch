@@ -1,7 +1,5 @@
 import SwiftUI
 
-
-
 struct NotificationButtonIcon: View {
     var numberNotificationUnRead: Int
     var icon: ImageResource
@@ -78,7 +76,15 @@ struct FeedView: View {
             // Contenu principal du feed
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading) {
-                    // Status des amis (horizontal scroll)
+                    
+                    HStack(spacing: 0) {
+                        Text("Qui sort ce soir ?")
+                            .tokenFont(.Body_Inter_Regular_10)
+                            .padding(.leading, 15)
+                        Spacer()
+                    }
+                    .padding(.top, 15)
+                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             SwitchStatusUserProfile(
@@ -103,13 +109,24 @@ struct FeedView: View {
                                 }
                             }
                             .padding(.top, 15)
-                            .frame(height: 120)
                         }
                     }
                 }
+                .frame(height: 150)
 
-                Divider()
-                    .background(.white)
+                ZStack {
+                    Divider()
+                        .background(.white)
+                    
+                    HStack {
+                        Text("CFQ")
+                            .tokenFont(.Body_Inter_Regular_10)
+                            .background(.black)
+                            .padding(.leading, 15)
+                        Spacer()
+                    }
+                }
+                
 
                 // Navigation vers CFQ Collection
                 NavigationLink(
@@ -120,8 +137,18 @@ struct FeedView: View {
                         .padding(.vertical, 5)
                 }
 
-                Divider()
-                    .background(.white)
+                ZStack {
+                    Divider()
+                        .background(.white)
+                    
+                    HStack {
+                        Text("Turn - Event")
+                            .tokenFont(.Body_Inter_Regular_10)
+                            .background(.black)
+                            .padding(.leading, 15)
+                        Spacer()
+                    }
+                }
 
                 // Liste des turns avec navigation
                 LazyVStack(spacing: 20) {

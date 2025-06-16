@@ -1,13 +1,7 @@
-//
-//  NavgitationTitle.swift
-//  CFQ
-//
-//  Created by Calvignac Charles on 15/06/2025.
-//
 
 import SwiftUI
 
-struct NavgitationTitle: View {
+struct NavigationTitle: View {
     var title: String
 
     var body: some View {

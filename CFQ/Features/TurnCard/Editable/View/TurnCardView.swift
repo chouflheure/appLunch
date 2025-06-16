@@ -2,20 +2,21 @@ import Lottie
 import SwiftUI
 
 struct TurnCardView: View {
-    @ObservedObject var coordinator: Coordinator
-    @StateObject var coreDataViewModel = TurnCoreDataViewModel()
-    @ObservedObject var turn: Turn
-
+    
     @State private var toast: Toast? = nil
+    @ObservedObject var turn: Turn
+    @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: TurnCardViewModel
-
+    @StateObject var coreDataViewModel = TurnCoreDataViewModel()
+    @Environment(\.dismiss) var dismiss
+    
     init(
+        turn: Turn,
         coordinator: Coordinator,
-        coreDataViewModel: TurnCoreDataViewModel,
-        turn: Turn
+        coreDataViewModel: TurnCoreDataViewModel
     ) {
-        self.coordinator = coordinator
         self.turn = turn
+        self.coordinator = coordinator
         _viewModel = StateObject(wrappedValue: TurnCardViewModel(
             turn: turn,
             coordinator: coordinator
@@ -117,10 +118,7 @@ struct TurnCardView: View {
                             viewModel.pushDataTurn {
                                 success, message in
                                 if success {
-                                    withAnimation {
-                                        coordinator.showTurnCardView = false
-                                        coordinator.turnSelected = nil
-                                    }
+                                    dismiss()
                                 } else {
                                     toast = Toast(
                                         style: .error,
@@ -170,10 +168,10 @@ struct TurnCardView: View {
         }
         .customNavigationFlexible(
             leftElement: {
-                NavgitationBackIcon()
+                NavigationBackIcon()
             },
             centerElement: {
-                NavgitationTitle(title: StringsToken.Turn.titleTurn)
+                NavigationTitle(title: StringsToken.Turn.titleTurn)
             },
             rightElement: {
                 Button(
@@ -187,13 +185,9 @@ struct TurnCardView: View {
                             .frame(width: 24)
                 }
             },
-            hasADivider: true
+            hasADivider: false
         )
     }
-}
-
-#Preview {
-    // TurnCardView(isShow: .constant(true))
 }
 
 /*

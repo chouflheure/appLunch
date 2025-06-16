@@ -6,6 +6,7 @@ struct CFQFormView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: CFQFormViewModel
     @State private var toast: Toast? = nil
+    @Environment(\.dismiss) var dismiss
 
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
@@ -45,10 +46,7 @@ struct CFQFormView: View {
                                         viewModel.pushCFQ {
                                             success, message in
                                             if success {
-                                                withAnimation {
-                                                    coordinator
-                                                        .showCFQForm = false
-                                                }
+                                                dismiss()
                                             } else {
                                                 toast = Toast(
                                                     style: .error,

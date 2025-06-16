@@ -39,6 +39,7 @@ struct NavigationBarThreeElementsModifier: ViewModifier {
         VStack(spacing: 0) {
             if hasADivider {
                 Divider()
+                    .frame(height: 0.5)
                     .background(.white)
             }
 

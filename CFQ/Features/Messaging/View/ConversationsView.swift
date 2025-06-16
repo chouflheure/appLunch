@@ -50,6 +50,7 @@ struct ConversationsView: View {
                         }
                     }.padding(.horizontal, 16)
                 }
+                .padding(.top, 15)
             }
 
         }
@@ -59,10 +60,10 @@ struct ConversationsView: View {
         }
         .customNavigationFlexible(
             leftElement: {
-                NavgitationBackIcon()
+                NavigationBackIcon()
             },
             centerElement: {
-                NavgitationTitle(title: "Messagerie")
+                NavigationTitle(title: "Messagerie")
             },
             rightElement: {
                 EmptyView()
