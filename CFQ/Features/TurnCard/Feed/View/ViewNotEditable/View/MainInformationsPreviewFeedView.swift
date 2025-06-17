@@ -145,5 +145,12 @@ struct MainInformationsPreviewFeedView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.white, lineWidth: 0.8)
         )
+        
+        HStack {
+            Text("\(turn.participants.count) y vont")
+                .foregroundColor(.white)
+            Spacer()
+        }
+        .padding(.top, 5)
     }
 }

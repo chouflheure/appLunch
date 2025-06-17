@@ -30,10 +30,6 @@ struct TitleTurnCardPreviewView: View {
 
                 ButtonParticipate(action: {}, selectedOption: .constant(.yes))
             }
-            
-            Text(StringsToken.Turn.noParticipantsYet)
-                .tokenFont(.Body_Inter_Medium_14)
-                .padding(.vertical, 8)
         }
     }
 }
