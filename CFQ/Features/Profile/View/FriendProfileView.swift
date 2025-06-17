@@ -143,7 +143,11 @@ struct FriendProfileView: View {
                     .animation(.easeInOut(duration: 0.3), value: showImages)
 
                     NavigationLink(destination: {
-                        
+                        FriendCommumScreen(
+                            coordinator: coordinator,
+                            friendInCommun: Set(viewModel.friendsInCommun),
+                            userFriend: Set(viewModel.userFriend.userFriendsContact?.filter({$0.uid != user.uid}) ?? [])
+                        )
                     }) {
                         if viewModel.friendsInCommun.count > 0 {
                             Text("\(viewModel.friendsInCommun.count)")
@@ -163,20 +167,6 @@ struct FriendProfileView: View {
                 }
                 .frame(height: 24)
             }
-            .onTapGesture {
-                withAnimation {
-                    coordinator.showFriendInCommum = true
-                }
-            }
-            /*
-                    HStack {
-                        PreviewProfile(
-                            pictures: [],
-                            previewProfileType: .userFriendInCommun,
-                            numberUsers: 12)
-                        Spacer()
-                    }
-                     */
 
             if viewModel.isPrivateAccount {
                 PrivateEventShow()
@@ -201,7 +191,9 @@ struct FriendProfileView: View {
         .onAppear {
             viewModel.statusFriendButton()
             viewModel.catchAllDataProfileUser(uid: friend.uid)
-            showImages = viewModel.userFriend.userFriendsContact != nil && !(viewModel.userFriend.userFriendsContact?.isEmpty ?? true)
+            showImages =
+                viewModel.userFriend.userFriendsContact != nil
+                && !(viewModel.userFriend.userFriendsContact?.isEmpty ?? true)
         }
         .onReceive(viewModel.userFriend.$userFriendsContact) { friendsContact in
             DispatchQueue.main.async {
@@ -230,12 +222,12 @@ struct FriendProfileView: View {
             },
             hasADivider: false
         )
-        
+
         if viewModel.isShowRemoveFriends {
             PopUpRemoveFromFriends(
                 showPopup: $viewModel.isShowRemoveFriends, viewModel: viewModel)
         }
-            
+
     }
 }
 
