@@ -146,11 +146,15 @@ struct MainInformationsPreviewFeedView: View {
                 .stroke(.white, lineWidth: 0.8)
         )
         
-        HStack {
-            Text("\(turn.participants.count) y vont")
-                .foregroundColor(.white)
-            Spacer()
+        NavigationLink(destination: {
+            FriendListStatusTurnInvitation(turn: turn)
+        }) {
+            HStack {
+                Text("\(turn.participants.count) y vont")
+                    .foregroundColor(.white)
+                Spacer()
+            }
+            .padding(.top, 5)
         }
-        .padding(.top, 5)
     }
 }

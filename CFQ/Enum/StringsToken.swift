@@ -81,7 +81,9 @@ enum StringsToken {
         static let myFriends = "Mes amis"
     }
     
-    enum AttentingGuest {}
+    enum AttentingGuest {
+        static let titleAttendingGuest = "Invités"
+    }
     
     enum CFQ {
         static let titleCFQ = "CFQ"

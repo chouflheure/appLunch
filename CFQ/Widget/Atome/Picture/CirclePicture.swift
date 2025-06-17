@@ -8,7 +8,10 @@ struct CirclePicture: View {
 
     var body: some View {
         ZStack {
-            CachedAsyncImageView(urlString: urlStringImage, designType: .scaledToFill_Circle)
+            CachedAsyncImageView(
+                urlString: urlStringImage,
+                designType: .scaledToFill_Circle
+            )
         }
     }
 }
