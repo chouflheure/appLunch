@@ -100,18 +100,30 @@ struct CustomTabViewDoubleCommunFriends: View {
                         .padding(.top, 20)
                          */
                         VStack(alignment: .leading) {
-                            ForEach(Array(dataFirstPage), id: \.self) {
-                                userFriend in
-                                CellFriendPseudoNameAction(
-                                    user: user,
-                                    userFriend: userFriend,
-                                    coordinator: coordinator,
-                                    isActionabled: { type in
-                                        viewModel.actionOnClickButtonAddFriend(
-                                            type: type, userFriend: userFriend)
+                            if Array(dataFirstPage).isEmpty {
+                                VStack {
+                                    Spacer()
+                                    HStack {
+                                        Spacer()
+                                        Text("Pas d'ami en commun")
+                                            .tokenFont(.Body_Inter_Medium_16)
+                                        Spacer()
                                     }
-                                )
-                                .padding(.top, 15)
+                                    Spacer()
+                                }
+                            } else {
+                                ForEach(Array(dataFirstPage), id: \.self) { userFriend in
+                                    CellFriendPseudoNameAction(
+                                        user: user,
+                                        userFriend: userFriend,
+                                        coordinator: coordinator,
+                                        isActionabled: { type in
+                                            viewModel.actionOnClickButtonAddFriend(
+                                                type: type, userFriend: userFriend)
+                                        }
+                                    )
+                                    .padding(.top, 15)
+                                }
                             }
                         }
                         .padding(.horizontal, 12)
@@ -122,37 +134,49 @@ struct CustomTabViewDoubleCommunFriends: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack {
                         
-/*
-                        SearchBarView(
-                            text: $viewModel.researchText,
-                            placeholder: StringsToken.SearchBar
-                                .placeholderFriend,
-                            onRemoveText: {
-                                viewModel.removeText()
-                            },
-                            onTapResearch: {
-                                viewModel.researche()
+                        /*
+                         SearchBarView(
+                         text: $viewModel.researchText,
+                         placeholder: StringsToken.SearchBar
+                         .placeholderFriend,
+                         onRemoveText: {
+                         viewModel.removeText()
+                         },
+                         onTapResearch: {
+                         viewModel.researche()
+                         }
+                         )
+                         .padding(.top, 20)
+                         */
+                        if Array(dataSecondPage).isEmpty {
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Text("Pas d'ami")
+                                        .tokenFont(.Body_Inter_Medium_16)
+                                    Spacer()
+                                }
+                                Spacer()
                             }
-                        )
-                        .padding(.top, 20)
-*/
-                        
-                        VStack(alignment: .leading) {
-                            ForEach(Array(dataSecondPage), id: \.self) {
-                                userFriend in
-                                CellFriendPseudoNameAction(
-                                    user: user,
-                                    userFriend: userFriend,
-                                    coordinator: coordinator,
-                                    isActionabled: { type in
-                                        viewModel.actionOnClickButtonAddFriend(
-                                            type: type, userFriend: userFriend)
-                                    }
-                                )
-                                .padding(.top, 15)
+                        } else {
+                            VStack(alignment: .leading) {
+                                ForEach(Array(dataSecondPage), id: \.self) {
+                                    userFriend in
+                                    CellFriendPseudoNameAction(
+                                        user: user,
+                                        userFriend: userFriend,
+                                        coordinator: coordinator,
+                                        isActionabled: { type in
+                                            viewModel.actionOnClickButtonAddFriend(
+                                                type: type, userFriend: userFriend)
+                                        }
+                                    )
+                                    .padding(.top, 15)
+                                }
                             }
+                            .padding(.horizontal, 12)
                         }
-                        .padding(.horizontal, 12)
                     }
                 }
                 .transition(.move(edge: .trailing))

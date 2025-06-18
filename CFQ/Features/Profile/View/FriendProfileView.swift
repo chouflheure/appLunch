@@ -154,12 +154,11 @@ struct FriendProfileView: View {
                                 .foregroundStyle(.white)
                                 .bold()
 
-                            Text(
-                                "Ami\(viewModel.friendsInCommun.count > 1 ? "s" : "") en commun"
-                            )
-                            .foregroundStyle(.white)
+                            Text("Ami\(viewModel.friendsInCommun.count > 1 ? "s" : "") en commun")
+                                .tokenFont(.Body_Inter_Medium_16)
                         } else {
                             Text("Pas d'ami en commun")
+                                .tokenFont(.Body_Inter_Medium_16)
                         }
                     }
 
