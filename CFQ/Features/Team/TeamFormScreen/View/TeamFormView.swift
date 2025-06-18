@@ -67,22 +67,17 @@ struct TeamFormView: View {
                 VStack {
                     HStack {
                         ForEach(Array(viewModel.friendsAdd), id: \.self) {
-                            user in
-                            CellFriendCanRemove(userPreview: user) {
-                                viewModel.removeFriendsFromList(
-                                    user: user)
-                            }
-                            .onTapGesture {
-                                coordinator.profileUserSelected = User(
-                                    uid: user.uid,
-                                    name: user.name,
-                                    pseudo: user.pseudo,
-                                    profilePictureUrl: user
-                                        .profilePictureUrl,
-                                    isActive: user.isActive
+                            friend in
+                            NavigationLink(
+                                destination: FriendProfileView(
+                                    coordinator: coordinator,
+                                    user: coordinator.user ?? User(),
+                                    friend: friend
                                 )
-                                withAnimation {
-                                    coordinator.showProfileFriend = true
+                            ) {
+                                CellFriendCanRemove(userPreview: friend) {
+                                    viewModel.removeFriendsFromList(
+                                        user: friend)
                                 }
                             }
                         }.frame(height: 100)
@@ -183,7 +178,8 @@ class ListFriendToAddViewModel: ObservableObject {
         let searchWords = researchText.lowercased().split(separator: " ")
         return allFriendstemps.filter { name in
             searchWords.allSatisfy { word in
-                name.name.lowercased().hasPrefix(word)
+                name.pseudo.lowercased().hasPrefix(word)
+                    || name.name.lowercased().hasPrefix(word)
             }
         }
     }

@@ -81,9 +81,13 @@ enum StringsToken {
         static let myFriends = "Mes amis"
     }
     
-    enum AttentingGuest {}
+    enum AttentingGuest {
+        static let titleAttendingGuest = "Invités"
+    }
     
-    enum CFQ {}
+    enum CFQ {
+        static let titleCFQ = "CFQ"
+    }
     
     enum Feed {}
     
@@ -105,7 +109,7 @@ enum StringsToken {
         static let titleTurn = "TURN"
         static let titleTurnPreview = "TURN Preview"
         static let placeholderDescriptionEvent = "Décris l’event, raconte pas ta vie"
-        static let noParticipantsYet = "0 Personne y va pour l'instant"
+        static let noParticipantsYet = "Personne n'y va pour l'instant"
         static let placeholderTitleEvent = "Titre du TURN"
         static let addYourFriendToTheEvent = "A qui ?"
         static let newTurn = "NOUVEAU"

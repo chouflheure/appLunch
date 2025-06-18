@@ -112,6 +112,13 @@ struct MainInformationsPreviewView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.white, lineWidth: 0.8)
         )
+        
+        HStack {
+            Text(StringsToken.Turn.noParticipantsYet)
+                .tokenFont(.Body_Inter_Medium_14)
+                .padding(.vertical, 8)
+            Spacer()
+        }
     }
 }
 

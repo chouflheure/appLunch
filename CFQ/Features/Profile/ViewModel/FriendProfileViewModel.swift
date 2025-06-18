@@ -28,7 +28,6 @@ class FriendProfileViewModel: ObservableObject {
 
     init(coordinator: Coordinator, user: User, friend: User) {
         self.coordinator = coordinator
-        self.userFriend = coordinator.profileUserSelected
         self.user = user
         self.userFriend = friend
         

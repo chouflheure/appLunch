@@ -54,15 +54,14 @@ struct HeaderCardViewDetail: View {
                             viewModel.showDetailTurnCard = false
                         }
                     }) {
-                        Image(.iconArrow)
-                            .rotationEffect(Angle(degrees: -90))
-                            .foregroundColor(.white)
-                            .frame(width: 24, height: 24)
-                            .padding(.all, 5)
-                            .background(.gray)
-                            .clipShape(Circle())
+                        Text("DONE")
+                            .tokenFont(.Body_Inter_Medium_14)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .frame(width: 50, height: 50)
+                    .frame(width: 70)
+                    .background(Color(hex: "B098E6").opacity(1))
+                    .cornerRadius(10)
                 }
                 .padding(.horizontal, 16)
             }

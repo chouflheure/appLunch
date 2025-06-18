@@ -377,6 +377,13 @@ struct MainInformationsDetailFeedView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.white, lineWidth: 0.8)
         )
+        
+        HStack {
+            // PreviewProfile(friends: [], )
+            Text("\(turn.participants.count) y vont")
+            Spacer()
+        }
+        .padding(.top, 5)
     }
 }
 

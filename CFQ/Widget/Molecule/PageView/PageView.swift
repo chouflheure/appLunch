@@ -4,7 +4,8 @@ import SwiftUI
 struct PageView: View {
     @State private var selectedIndex = 0
     var pageViewType: PageViewType
-
+    
+    
     var body: some View {
         VStack {
             HStack {
@@ -29,6 +30,10 @@ struct PageView: View {
             }
             .padding(.top, 20)
 
+            ScrollView(.vertical, showsIndicators: false) {
+                
+            }
+            
             /*
             // PageView avec TabView
             TabView(selection: $selectedIndex) {

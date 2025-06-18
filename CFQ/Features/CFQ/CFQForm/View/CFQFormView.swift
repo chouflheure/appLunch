@@ -15,8 +15,29 @@ struct CFQFormView: View {
     }
 
     var body: some View {
-        ZStack {
+        
             VStack(alignment: .leading) {
+                HStack {
+                    Spacer()
+                    PostEventButton(
+                        action: {
+                            viewModel.pushCFQ {
+                                success, message in
+                                if success {
+                                    dismiss()
+                                } else {
+                                    toast = Toast(
+                                        style: .error,
+                                        message: message
+                                    )
+                                }
+                            }
+                        },
+                        isEnable: $viewModel.isEnableButton
+                    )
+                    .padding(.trailing, 16)
+                }
+                .padding(.top, 5)
                 VStack {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack {
@@ -38,28 +59,6 @@ struct CFQFormView: View {
                             }
                             .padding(.top, 16)
                             .padding(.horizontal, 16)
-
-                            HStack {
-                                Spacer()
-                                PostEventButton(
-                                    action: {
-                                        viewModel.pushCFQ {
-                                            success, message in
-                                            if success {
-                                                dismiss()
-                                            } else {
-                                                toast = Toast(
-                                                    style: .error,
-                                                    message: message
-                                                )
-                                            }
-                                        }
-                                    },
-                                    isEnable: $viewModel.isEnableButton
-                                )
-                                .padding(.trailing, 16)
-                            }
-                            .padding(.top, 5)
 
                             SearchBarView(
                                 text: $viewModel.researchText,
@@ -94,6 +93,20 @@ struct CFQFormView: View {
             }
             .blur(radius: viewModel.isLoading ? 10 : 0)
             .allowsHitTesting(!viewModel.isLoading)
+            .customNavigationFlexible(
+                leftElement: {
+                    NavigationBackIcon()
+                },
+                centerElement: {
+                    NavigationTitle(title: StringsToken.CFQ.titleCFQ)
+                },
+                rightElement: {
+                    EmptyView()
+                },
+                hasADivider: false
+            )   
+            .toastView(toast: $toast)
+            .fullBackground(imageName: StringsToken.Image.fullBackground)
 
             if viewModel.isLoading {
                 ZStack {
@@ -107,20 +120,6 @@ struct CFQFormView: View {
                 }
                 .zIndex(3)
             }
-        }
-        .customNavigationBackButton {
-            HeaderBackLeftScreen(
-                onClickBack: {
-                    withAnimation {
-                        coordinator.showFriendListScreen = false
-                    }
-                },
-                titleScreen: "AJoute tes amis",
-                isShowDivider: true
-            )
-        }
-        .toastView(toast: $toast)
-        .fullBackground(imageName: StringsToken.Image.fullBackground)
     }
 }
 

@@ -4,11 +4,11 @@ struct FriendProfileView: View {
 
     @StateObject var viewModel: FriendProfileViewModel
     @ObservedObject var coordinator: Coordinator
-    @State private var showDetail = false
-    @State private var showImages: Bool = false
     @ObservedObject var user: User
     @ObservedObject var friend: UserContact
     @Environment(\.dismiss) var dismiss
+    @State private var showDetail = false
+    @State private var showImages: Bool = false
 
     init(coordinator: Coordinator, user: User, friend: UserContact) {
         self.coordinator = coordinator
@@ -116,13 +116,7 @@ struct FriendProfileView: View {
                         if !showImages {
                             // Placeholder
                             HStack(spacing: -15) {
-                                ForEach(
-                                    0..<min(
-                                        4,
-                                        viewModel.userFriend.userFriendsContact?
-                                            .count ?? 4),
-                                    id: \.self
-                                ) { index in
+                                ForEach(0..<min(4,viewModel.userFriend.userFriendsContact?.count ?? 0),id: \.self) { index in
                                     Circle()
                                         .fill(.gray)
                                         .frame(width: 24, height: 24)
@@ -137,52 +131,41 @@ struct FriendProfileView: View {
                             // Images réelles
                             HStack(spacing: -15) {
                                 ForEach(
-                                    Array(
-                                        (viewModel.friendsInCommun.compactMap({
-                                            $0.profilePictureUrl
-                                        })).prefix(4).enumerated()),
-                                    id: \.offset
-                                ) { index, imageUrl in
-                                    CachedAsyncImageView(
-                                        urlString: imageUrl,
-                                        designType: .scaleImageMessageProfile
-                                    )
+                                    Array((viewModel.friendsInCommun.compactMap({$0.profilePictureUrl})).prefix(4).enumerated()), id: \.offset) { index, imageUrl in
+                                        CachedAsyncImageView(
+                                            urlString: imageUrl,
+                                            designType: .scaleImageMessageProfile
+                                        )
                                 }
                             }
                         }
                     }
                     .animation(.easeInOut(duration: 0.3), value: showImages)
 
-                    if viewModel.friendsInCommun.count > 0 {
-                        Text("\(viewModel.friendsInCommun.count)")
-                            .foregroundStyle(.white)
-                            .bold()
-
-                        Text(
-                            "Ami\(viewModel.friendsInCommun.count > 1 ? "s" : "") en commun"
+                    NavigationLink(destination: {
+                        FriendCommumScreen(
+                            coordinator: coordinator,
+                            friendInCommun: Set(viewModel.friendsInCommun),
+                            userFriend: Set(viewModel.userFriend.userFriendsContact?.filter({$0.uid != user.uid}) ?? [])
                         )
-                        .foregroundStyle(.white)
-                    } else {
-                        Text("Pas d'ami en commun")
+                    }) {
+                        if viewModel.friendsInCommun.count > 0 {
+                            Text("\(viewModel.friendsInCommun.count)")
+                                .foregroundStyle(.white)
+                                .bold()
+
+                            Text("Ami\(viewModel.friendsInCommun.count > 1 ? "s" : "") en commun")
+                                .tokenFont(.Body_Inter_Medium_16)
+                        } else {
+                            Text("Pas d'ami en commun")
+                                .tokenFont(.Body_Inter_Medium_16)
+                        }
                     }
+
                     Spacer()
                 }
                 .frame(height: 24)
             }
-            .onTapGesture {
-                withAnimation {
-                    coordinator.showFriendInCommum = true
-                }
-            }
-            /*
-                    HStack {
-                        PreviewProfile(
-                            pictures: [],
-                            previewProfileType: .userFriendInCommun,
-                            numberUsers: 12)
-                        Spacer()
-                    }
-                     */
 
             if viewModel.isPrivateAccount {
                 PrivateEventShow()
@@ -205,10 +188,11 @@ struct FriendProfileView: View {
         .blur(radius: viewModel.isShowRemoveFriends ? 10 : 0)
         .allowsHitTesting(!viewModel.isShowRemoveFriends)
         .onAppear {
-            // TODO: - call to have full user
             viewModel.statusFriendButton()
             viewModel.catchAllDataProfileUser(uid: friend.uid)
-            showImages = viewModel.userFriend.userFriendsContact != nil && !(viewModel.userFriend.userFriendsContact?.isEmpty ?? true)
+            showImages =
+                viewModel.userFriend.userFriendsContact != nil
+                && !(viewModel.userFriend.userFriendsContact?.isEmpty ?? true)
         }
         .onReceive(viewModel.userFriend.$userFriendsContact) { friendsContact in
             DispatchQueue.main.async {
@@ -237,12 +221,12 @@ struct FriendProfileView: View {
             },
             hasADivider: false
         )
-        
+
         if viewModel.isShowRemoveFriends {
             PopUpRemoveFromFriends(
                 showPopup: $viewModel.isShowRemoveFriends, viewModel: viewModel)
         }
-            
+
     }
 }
 
