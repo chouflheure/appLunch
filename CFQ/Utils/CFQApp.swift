@@ -4,6 +4,7 @@ import FirebaseCore
 import FirebaseMessaging
 import SwiftUI
 import UserNotifications
+import Shake
 
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate,
     UNUserNotificationCenterDelegate
@@ -21,6 +22,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate,
         Messaging.messaging().delegate = self
         requestNotificationPermission(application)
         registerNotificationCategories()
+        Shake.configuration.isInvokedByShakeDeviceEvent = true
+        Shake.configuration.isInvokedByScreenshot = true
+        Shake.configuration.isInvokedByRightEdgePan = true
+        Shake.start(apiKey: "pKtNgr9fw1vAutSIEuBQJlsGVLjDrX3XHvuu6Q11hhtotiZoeigtLEI")
+
         return true
     }
 

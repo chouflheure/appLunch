@@ -1,5 +1,5 @@
 {
-  "originHash" : "47f9177f63e0789cab06c1b7d9bc8a441b700066de149a6bb03f3232804c52e2",
+  "originHash" : "aa3fd5437457ce5733201b0a9c8f13cbc6190dd33ce5ab3942bd45f547ca4a06",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -116,6 +116,15 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "shake-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shakebugs/shake-ios.git",
+      "state" : {
+        "revision" : "0dde2b46e64665102a3743cc13b70c721fdaf040",
+        "version" : "17.1.2"
       }
     },
     {
