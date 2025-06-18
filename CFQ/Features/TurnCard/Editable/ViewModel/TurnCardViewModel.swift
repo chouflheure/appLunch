@@ -25,6 +25,9 @@ class TurnCardViewModel: ObservableObject {
     @Published var placeLongitude = Double()
     @Published var setFriendsOnTurn = Set<UserContact>()
     
+    @Published var friendsList = Set<UserContact>()
+    @Published var friendsAddToCFQ = Set<UserContact>()
+    
     // @Published var allFriends = Set<UserContact>()
     @Published var isLoading: Bool = false
     @Published var showFriendsList: Bool = false
@@ -76,6 +79,12 @@ class TurnCardViewModel: ObservableObject {
             return time.formatted(date: .omitted, time: .shortened)
         }
         return ""
+    }
+    
+    func addFriendsToList(user: UserContact) {
+        friendsAddToCFQ.insert(user)
+        friendsList.remove(user)
+        allFriends.remove(user)
     }
     
     private func verificationIdentificationUserUID(coordinator: Coordinator) {

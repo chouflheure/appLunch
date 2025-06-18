@@ -216,18 +216,6 @@ struct MainInformationsDetailView: View {
                                         user: user
                                     )
                                 }
-                                .onTapGesture {
-                                    showFriendProfile = true
-
-                                    coordinator.profileUserSelected = User(
-                                        uid: user.uid,
-                                        name: user.name,
-                                        pseudo: user.pseudo,
-                                        profilePictureUrl: user.profilePictureUrl,
-                                        isActive: user.isActive
-                                    )
-                                    
-                                }
                             }.frame(height: 100)
                         }
                     }
@@ -251,12 +239,14 @@ struct MainInformationsDetailView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .fullScreenCover(isPresented: $viewModel.showFriendsList) {
-            ListFriendToAdd(
-                isPresented: $viewModel.showFriendsList,
-                coordinator: viewModel.coordinator,
-                friendsOnTeam: $viewModel.setFriendsOnTurn,
-                allFriends: $viewModel.friendListToAdd
-            )
+            NavigationView {
+                ListFriendToAdd(
+                    isPresented: $viewModel.showFriendsList,
+                    coordinator: viewModel.coordinator,
+                    friendsOnTeam: $viewModel.setFriendsOnTurn,
+                    allFriends: $viewModel.friendListToAdd
+                )
+            }
         }
         .sheet(isPresented: $isPresentedLink) {
             SelectLinkView(
