@@ -62,7 +62,6 @@ class FeedViewModel: ObservableObject {
                     // Pour chaque turn, récupérez l'admin
                     for (index, turn) in fetchedTurns.enumerated() {
                         self.fetchAdminForTurn(at: index, adminID: turn.admin)
-                        self.turns[index]
                     }
                 }
             case .failure(let error):

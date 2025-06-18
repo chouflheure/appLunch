@@ -65,7 +65,7 @@ struct FeedView: View {
                     destination: ConversationsView(coordinator: coordinator)
                 ) {
                     NotificationButtonIcon_Nav(
-                        numberNotificationUnRead: 10,
+                        numberNotificationUnRead: 0,
                         icon: .iconMessagerie
                     )
                 }
@@ -337,7 +337,6 @@ struct CFQCollectionDetailView: View {
         }
         
         .customNavigationBackButton {
-            
             Button(action: { dismiss() }) {
                 HStack(spacing: 4) {
                     Image(systemName: "square.grid.3x3")

@@ -115,12 +115,14 @@ struct TeamFormView: View {
 
         }
         .fullScreenCover(isPresented: $viewModel.showFriendsList) {
-            ListFriendToAdd(
-                isPresented: $viewModel.showFriendsList,
-                coordinator: coordinator,
-                friendsOnTeam: $viewModel.friendsAdd,
-                allFriends: $viewModel.friendsList
-            )
+            NavigationView {
+                ListFriendToAdd(
+                    isPresented: $viewModel.showFriendsList,
+                    coordinator: coordinator,
+                    friendsOnTeam: $viewModel.friendsAdd,
+                    allFriends: $viewModel.friendsList
+                )
+            }
         }
         .customNavigationFlexible(
             leftElement: {
@@ -234,6 +236,7 @@ struct ListFriendToAdd: View {
         SafeAreaContainer {
             VStack {
                 HStack {
+                    /*
                     SearchBarView(
                         text: $viewModel.researchText,
                         placeholder: StringsToken.SearchBar.placeholderFriend,
@@ -244,7 +247,8 @@ struct ListFriendToAdd: View {
                             viewModel.researche()
                         }
                     )
-
+*/
+                    Spacer()
                     Button(action: {
                         isPresented = false
                     }) {
