@@ -8,10 +8,10 @@ class MessagerieViewModel: ObservableObject {
     @Published var showConversationOptionView: Bool = false
     @Published var messages: [Message] = []
     @Published var textMessage: String = ""
-
-    private let firebaseService = FirebaseService()
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var conversation: Conversation
+
+    private let firebaseService = FirebaseService()
 
     init(coordinator: Coordinator, conversation: Conversation) {
         self.coordinator = coordinator
@@ -21,19 +21,6 @@ class MessagerieViewModel: ObservableObject {
 
     deinit {
         firebaseService.removeListener(for: ListenerType.conversation.rawValue)
-    }
-    
-    func convertMessageTypeToMessageTypeData(messagerieType: String, conversation: Conversation) -> MessagerieHeaderTypeData {
-        switch messagerieType {
-        case "cfq":
-            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
-        case "people":
-            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
-        case "event":
-            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
-        default:
-            .cfq(name: conversation.titleConv, title: conversation.titleConv, image: conversation.pictureEventURL)
-        }
     }
 }
 
@@ -90,8 +77,6 @@ extension MessagerieViewModel {
                 Logger.log(error.localizedDescription, level: .error)
             }
         }
-        
-        
     }
     
     func pushMessage() {

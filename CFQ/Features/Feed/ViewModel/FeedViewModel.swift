@@ -88,6 +88,7 @@ class FeedViewModel: ObservableObject {
                     
                     // Remplacez tout le tableau pour que SwiftUI détecte le changement
                     self.turns = updatedTurns
+                    self.coordinator.userTurns = updatedTurns
                 }
                 
             case .failure(let error):

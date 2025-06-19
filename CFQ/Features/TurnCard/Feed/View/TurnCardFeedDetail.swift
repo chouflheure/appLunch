@@ -34,15 +34,6 @@ struct TurnCardDetailsFeedView: View {
                         .padding(.horizontal, 16)
                         .padding(.bottom, 50)
                     
-                    if user.uid == turn.admin {
-                        Button(action: {
-                            showDetailTurnCard = true
-                        }) {
-                            Text("@@@ Admin ")
-                        }
-                        
-                    }
-                    
                     Spacer()
                 }
             }
@@ -178,7 +169,8 @@ struct TitleTurnCardDetailFeedView: View {
                             lastMessageDate: Date(),
                             lastMessage: "",
                             messageReader: []
-                        )
+                        ),
+                        turn: turn
                     )
                 ) {
                     Image(.iconMessage)

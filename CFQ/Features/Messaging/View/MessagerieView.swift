@@ -2,33 +2,6 @@ import Combine
 import SwiftUI
 import UIKit
 
-public enum MessagerieHeaderTypeData {
-    case cfq(name: String, title: String, image: String)
-    case people(participants: [String])
-    case event(name: String, date: Date)
-}
-
-struct HeaderMessagerieView: View {
-    var type: MessagerieHeaderTypeData
-
-    var body: some View {
-        switch type {
-        case .cfq(let name, let title, let image):
-            CFQMolecule(
-                name: name,
-                title: title,
-                image: image
-            )
-
-        case .people(let participants):
-            Text("people")
-
-        case .event(let name, let date):
-            Text("event")
-        }
-    }
-}
-
 struct MessagerieView: View {
 
     @StateObject var viewModel: MessagerieViewModel
@@ -40,13 +13,21 @@ struct MessagerieView: View {
     @State private var isKeyboardVisible = false
     @State private var textViewHeight: CGFloat = 20
     @State private var keyboardHeight: CGFloat = 0
+    @EnvironmentObject var user: User
 
     @ObservedObject var conversation: Conversation
+    var turn: Turn?
+    var cfq: CFQ?
 
-    init(coordinator: Coordinator, conversation: Conversation) {
+    init(coordinator: Coordinator, conversation: Conversation, turn: Turn? = nil, cfq: CFQ? = nil) {
         self.coordinator = coordinator
         self.conversation = conversation
-        _viewModel = StateObject(wrappedValue: MessagerieViewModel(coordinator: coordinator, conversation: conversation))
+        self.turn = turn
+        self.cfq = cfq
+
+        _viewModel = StateObject(
+            wrappedValue: MessagerieViewModel(coordinator: coordinator, conversation: conversation)
+        )
     }
 
     var body: some View {
@@ -139,6 +120,7 @@ struct MessagerieView: View {
             .allowsHitTesting(!showReaction)
             // .ignoresSafeArea()
         }
+
         //if showReaction {
         //  destinationView()
         // .transition(.move(edge: .trailing))
@@ -152,9 +134,7 @@ struct MessagerieView: View {
                 NavigationBackIcon()
             },
             centerElement: {
-                NavigationLink(destination: Text("")) {
-                    NavigationTitle(title: "Message")
-                }
+                centerNavigationElement
             },
             rightElement: {
                 Text("")
@@ -163,15 +143,56 @@ struct MessagerieView: View {
         )
     }
 
-    /*
     @ViewBuilder
-    func destinationView() -> some View {
-        // ReactionPreviewView(showReaction: $showReaction)
-        // MessagerieScreenView(isPresented: $viewModel.showDetailGuest)
-        ConversationOptionView(
-            isPresented: $viewModel.showConversationOptionView)
+    private var centerNavigationElement: some View {
+        if conversation.typeEvent == "turn" {
+            if turn == nil,
+               let turnFromCache = coordinator.userTurns.first(where: { $0.uid == conversation.eventUID }) {
+                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turnFromCache, user: user)) {
+                    NavigationTitle(title: turnFromCache.titleEvent)
+                }
+            } else {
+                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turn ?? Turn(uid: "", titleEvent: "2", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user)) {
+                    NavigationTitle(title: turn?.titleEvent ?? "")
+                }
+            }
+        } else {
+            if cfq == nil {
+                if let cfqFromCache = coordinator.userCFQ.first(where: { $0.uid == conversation.eventUID }) {
+                    NavigationCFQHeader(cfq: editHeader(cfq: cfqFromCache))
+                }
+                
+                if let cfqFromCache = user.postedCfqs?.first(where: { $0 == conversation.eventUID }) {
+                    NavigationCFQHeader(cfq: CFQ(uid: cfqFromCache, title: "Error", admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, name: user.name, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl)))
+                }
+                else {
+                    NavigationCFQHeader(cfq: editHeader(cfq: cfq ?? CFQ(uid: conversation.eventUID, title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date())))
+                }
+            } else {
+                NavigationCFQHeader(cfq: cfq ?? CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: [], userContact: nil))
+            }
+        }
     }
-     */
+    
+    private func editHeader(cfq: CFQ) -> CFQ {
+        print("@@@ cfq.admin = \(cfq.admin)")
+        if cfq.admin == user.uid {
+            print("@@@ in 1er if")
+            cfq.userContact = UserContact(
+                uid: user.uid,
+                pseudo: user.pseudo,
+                profilePictureUrl: user.profilePictureUrl
+            )
+            return cfq
+        }
+
+        if let userContact = user.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
+            print("@@@ in 2eme if")
+            cfq.userContact = userContact
+            return cfq
+        }
+        return cfq
+    }
 }
 
 struct ConversationOptionView: View {

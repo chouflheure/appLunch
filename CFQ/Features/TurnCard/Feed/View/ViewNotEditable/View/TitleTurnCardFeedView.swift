@@ -49,7 +49,8 @@ struct TitleTurnCardFeedView: View {
                             lastMessageDate: Date(),
                             lastMessage: "",
                             messageReader: []
-                        )
+                        ),
+                        turn: turn
                     )
                 ) {
                     Image(.iconMessage)

@@ -37,10 +37,21 @@ struct CFQCollectionView: View {
                                         lastMessageDate: Date(),
                                         lastMessage: "",
                                         messageReader: []
+                                    ),
+                                    cfq: CFQ(
+                                        uid: cfq.uid,
+                                        title: cfq.title,
+                                        admin: cfq.admin,
+                                        messagerieUUID: cfq.messagerieUUID,
+                                        users: cfq.users,
+                                        timestamp: cfq.timestamp,
+                                        participants: cfq.participants,
+                                        userContact: userAdmin
                                     )
                                 )
                             ) {
                                 CFQMolecule(
+                                    uid: cfq.uid,
                                     name: userAdmin.pseudo,
                                     title: cfq.title,
                                     image: userAdmin.profilePictureUrl

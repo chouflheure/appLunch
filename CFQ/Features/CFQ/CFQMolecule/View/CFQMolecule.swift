@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct CFQMolecule: View {
+    @State var uid: String
     @State var name: String
     @State var title: String
     @State var image: String
