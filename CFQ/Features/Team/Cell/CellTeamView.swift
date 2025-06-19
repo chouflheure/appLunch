@@ -4,7 +4,6 @@ import SwiftUI
 struct CellTeamView: View {
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var team: Team
-    var onClick: (() -> Void)
     @State private var showImages = false
 
     var body: some View {
@@ -31,11 +30,6 @@ struct CellTeamView: View {
                 .stroke(Color.white, lineWidth: 1)
         )
         .contentShape(Rectangle())
-        .onTapGesture {
-            withAnimation {
-                onClick()
-            }
-        }
         .onReceive(team.$friendsContact) { friendsContact in
             DispatchQueue.main.async {
                 showImages = friendsContact != nil && !(friendsContact?.isEmpty ?? true)

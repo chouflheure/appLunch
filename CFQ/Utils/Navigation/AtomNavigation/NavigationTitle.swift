@@ -12,3 +12,19 @@ struct NavigationTitle: View {
         }
     }
 }
+
+
+struct NavigationCFQHeader: View {
+    var cfq: CFQ
+
+    var body: some View {
+        VStack(spacing: 2) {
+            CFQMolecule(
+                uid: cfq.uid,
+                name: cfq.userContact?.name ?? "",
+                title: cfq.title,
+                image: cfq.userContact?.profilePictureUrl ?? ""
+            ).frame(height: 30)
+        }
+    }
+}

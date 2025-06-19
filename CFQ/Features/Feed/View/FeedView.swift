@@ -128,14 +128,9 @@ struct FeedView: View {
                 }
                 
 
-                // Navigation vers CFQ Collection
-                NavigationLink(
-                    destination: CFQCollectionDetailView(
-                        coordinator: coordinator)
-                ) {
-                    CFQCollectionView(coordinator: coordinator)
-                        .padding(.vertical, 5)
-                }
+                CFQCollectionView(coordinator: coordinator)
+                    .padding(.vertical, 5)
+                
 
                 ZStack {
                     Divider()
@@ -152,9 +147,7 @@ struct FeedView: View {
 
                 // Liste des turns avec navigation
                 LazyVStack(spacing: 20) {
-                    ForEach(viewModel.turns.sorted(by: { $0.timestamp > $1.timestamp}),
-                            id: \.uid) { turn in
-                        
+                    ForEach(viewModel.turns.sorted(by: { $0.timestamp > $1.timestamp}), id: \.uid) { turn in
                         NavigationLink(
                             destination: TurnCardDetailsFeedView(
                                 coordinator: coordinator,

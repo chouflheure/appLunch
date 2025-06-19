@@ -36,18 +36,18 @@ struct TeamView: View {
                 )
 
                 ForEach(Array(viewModel.teams.indices), id: \.self) { index in
-                    CellTeamView(
-                        coordinator: coordinator,
-                        team: viewModel.teams[index],
-                        onClick: {
-                            selectedTeam = index
-                            coordinator.teamDetail = viewModel.teams[selectedTeam]
-                            withAnimation {
-                                coordinator.showTeamDetail = true
-                            }
-                        }
-                    )
-                    .padding(.bottom, 16)
+                    NavigationLink(destination: {
+                        TeamDetailView(
+                            coordinator: coordinator,
+                            team: viewModel.teams[index]
+                        )
+                    }) {
+                        CellTeamView(
+                            coordinator: coordinator,
+                            team: viewModel.teams[index]
+                        )
+                        .padding(.bottom, 16)
+                    }
                 }
             }
             .padding(.horizontal, 12)

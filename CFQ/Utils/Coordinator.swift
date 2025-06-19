@@ -28,6 +28,7 @@ class Coordinator: ObservableObject {
     @Published var turnSelected: Turn?
     
     @Published var userCFQ: [CFQ] = []
+    @Published var userTurns: [Turn] = []
     @Published var profileUserSelected: User = User()
     @Published var selectedConversation: Conversation?
     @Published var selectedCFQ: CFQ?

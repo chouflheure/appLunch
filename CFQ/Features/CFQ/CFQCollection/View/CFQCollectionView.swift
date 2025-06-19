@@ -5,6 +5,7 @@ import Lottie
 
 struct CFQCollectionView: View {
     @ObservedObject var coordinator: Coordinator
+    @EnvironmentObject var user: User
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -24,11 +25,33 @@ struct CFQCollectionView: View {
                         // ??
                         if let userAdmin = coordinator.user?.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
                             NavigationLink(
-                                destination: CFQCollectionDetailView(
-                                    coordinator: coordinator
+                                destination: MessagerieView(
+                                    coordinator: coordinator,
+                                    conversation: Conversation(
+                                        uid: cfq.messagerieUUID,
+                                        titleConv: cfq.title,
+                                        pictureEventURL: userAdmin.profilePictureUrl,
+                                        typeEvent: "cfq",
+                                        eventUID: cfq.uid,
+                                        lastMessageSender: "",
+                                        lastMessageDate: Date(),
+                                        lastMessage: "",
+                                        messageReader: []
+                                    ),
+                                    cfq: CFQ(
+                                        uid: cfq.uid,
+                                        title: cfq.title,
+                                        admin: cfq.admin,
+                                        messagerieUUID: cfq.messagerieUUID,
+                                        users: cfq.users,
+                                        timestamp: cfq.timestamp,
+                                        participants: cfq.participants,
+                                        userContact: userAdmin
+                                    )
                                 )
                             ) {
                                 CFQMolecule(
+                                    uid: cfq.uid,
                                     name: userAdmin.pseudo,
                                     title: cfq.title,
                                     image: userAdmin.profilePictureUrl

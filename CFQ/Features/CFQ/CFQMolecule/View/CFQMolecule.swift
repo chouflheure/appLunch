@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct CFQMolecule: View {
+    @State var uid: String
     @State var name: String
     @State var title: String
     @State var image: String
@@ -23,7 +24,6 @@ struct CFQMolecule: View {
                     .tokenFont(.Body_Inter_Regular_10_white_secondary)
                     .textCase(.lowercase)
                     .padding(.leading, 55)
-                    // .padding(.top, 5)
 
                 Text(title)
                     .tokenFont(.Body_Inter_Medium_14)

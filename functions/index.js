@@ -182,7 +182,7 @@ exports.sendScheduledDataMessageIsTurnTonight6PM = functions
                         category: "CUSTOM_CATEGORY",
                         alert: {
                             title: "Ça sort ce soir ?",
-                            body: "Reste appuyé sur la notif pour répondre",
+                            body: "Va activer le switch sur ton profil",
                         },
                         sound: "silverWind.caf",
                     },
@@ -207,7 +207,7 @@ exports.sendScheduledDataMessageIsTurnTonight6PM = functions
     return null;
 });
 
-/*
+
 exports.sendScheduledMessage4AMIfTurnAlready = functions
     .region("europe-west2")
     .pubsub
@@ -248,7 +248,7 @@ exports.sendScheduledMessage4AMIfTurnAlready = functions
         }
       }
     });
-*/
+
 
 exports.onCreateMessage = functions
   .region("europe-west2")
