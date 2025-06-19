@@ -152,7 +152,9 @@ struct MessagerieView: View {
                 NavigationBackIcon()
             },
             centerElement: {
-                NavigationTitle(title: "Message")
+                NavigationLink(destination: Text("")) {
+                    NavigationTitle(title: "Message")
+                }
             },
             rightElement: {
                 Text("")

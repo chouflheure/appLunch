@@ -165,24 +165,22 @@ struct TitleTurnCardDetailFeedView: View {
                 }
                 Spacer()
 
-                Button(action: {
-                    // coordinator.turnSelected = turn
-
-                    coordinator.selectedConversation = Conversation(
-                        uid: turn.messagerieUUID,
-                        titleConv: turn.titleEvent,
-                        pictureEventURL: "",
-                        typeEvent: "",
-                        eventUID: "",
-                        lastMessageSender: "",
-                        lastMessageDate: Date(),
-                        lastMessage: "",
-                        messageReader: [""]
+                NavigationLink(
+                    destination: MessagerieView(
+                        coordinator: coordinator,
+                        conversation: Conversation(
+                            uid: turn.messagerieUUID,
+                            titleConv: turn.titleEvent,
+                            pictureEventURL: turn.pictureURLString,
+                            typeEvent: "turn",
+                            eventUID: turn.uid,
+                            lastMessageSender: "",
+                            lastMessageDate: Date(),
+                            lastMessage: "",
+                            messageReader: []
+                        )
                     )
-                    withAnimation {
-                        coordinator.showMessagerieScreen = true
-                    }
-                }) {
+                ) {
                     Image(.iconMessage)
                         .foregroundColor(.white)
                 }

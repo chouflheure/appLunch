@@ -5,6 +5,7 @@ import Lottie
 
 struct CFQCollectionView: View {
     @ObservedObject var coordinator: Coordinator
+    @EnvironmentObject var user: User
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -24,8 +25,19 @@ struct CFQCollectionView: View {
                         // ??
                         if let userAdmin = coordinator.user?.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
                             NavigationLink(
-                                destination: CFQCollectionDetailView(
-                                    coordinator: coordinator
+                                destination: MessagerieView(
+                                    coordinator: coordinator,
+                                    conversation: Conversation(
+                                        uid: cfq.messagerieUUID,
+                                        titleConv: cfq.title,
+                                        pictureEventURL: userAdmin.profilePictureUrl,
+                                        typeEvent: "cfq",
+                                        eventUID: cfq.uid,
+                                        lastMessageSender: "",
+                                        lastMessageDate: Date(),
+                                        lastMessage: "",
+                                        messageReader: []
+                                    )
                                 )
                             ) {
                                 CFQMolecule(

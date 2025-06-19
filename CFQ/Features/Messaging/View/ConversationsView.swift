@@ -40,13 +40,7 @@ struct ConversationsView: View {
                                 data: data,
                                 hasUnReadMessage: !data.messageReader.contains(coordinator.user?.uid ?? "")
                             )
-                            /*{ _ in
-                                coordinator.selectedConversation = data
-                                withAnimation {
-                                    messagerieType = data.typeEvent
-                                    showDetail = true
-                                }
-                             }*/ .padding(.bottom, 16)
+                            .padding(.bottom, 16)
                         }
                     }.padding(.horizontal, 16)
                 }
