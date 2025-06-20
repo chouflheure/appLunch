@@ -24,7 +24,7 @@ struct NavigationCFQHeader: View {
                 name: cfq.userContact?.name ?? "",
                 title: cfq.title,
                 image: cfq.userContact?.profilePictureUrl ?? ""
-            ).frame(height: 30)
+            )
         }
     }
 }

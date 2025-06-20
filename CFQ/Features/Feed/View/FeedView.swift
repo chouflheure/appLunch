@@ -51,6 +51,7 @@ struct FeedView: View {
 
                 Spacer()
 
+                /*
                 NavigationLink(
                     destination: NotificationScreenView(coordinator: coordinator)
                 ) {
@@ -59,6 +60,7 @@ struct FeedView: View {
                         icon: .iconNotifs
                     )
                 }
+                */
 
                 // TODO: - Edit
                 NavigationLink(
@@ -93,6 +95,7 @@ struct FeedView: View {
                             )
                             .padding(.bottom, 8)
                             .padding(.leading, 16)
+                            .frame(height: 120)
 
                             ForEach(coordinator.user?.userFriendsContact?.sorted(by: { $0.isActive && !$1.isActive }) ?? [], id: \.uid) { friend in
                                 NavigationLink(

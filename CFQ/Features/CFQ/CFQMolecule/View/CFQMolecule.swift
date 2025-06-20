@@ -40,7 +40,7 @@ struct CFQMolecule: View {
 
             CachedAsyncImageView(
                 urlString: image,
-                designType: .scaledToFill_Circle_CFQ
+                designType: .scaledToFill_Circle_CFQFeed
             ).frame(width: 60, height: 60)
         }
     }

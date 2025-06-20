@@ -22,7 +22,7 @@ class Coordinator: ObservableObject {
     @Published var showSheetParticipateAnswers = false
     @Published var showMessagerieScreen = false
     @Published var showFriendInCommum = false
-
+    
     @Published var dataApp = DataApp()
     @Published var teamDetail: Team?
     @Published var turnSelected: Turn?
@@ -140,10 +140,8 @@ class Coordinator: ObservableObject {
                 self.dataApp = data
 
             case .failure( let e):
-                print("@@@ e = \(e)")
-                
+                print("@@@ error load catchDataAppToStart = \(e)")
             }
-            
         }
     }
     

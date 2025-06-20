@@ -184,7 +184,7 @@ exports.sendScheduledDataMessageIsTurnTonight6PM = functions
                             title: "Ça sort ce soir ?",
                             body: "Va activer le switch sur ton profil",
                         },
-                        sound: "silverWind.caf",
+                        sound: 'default',
                     },
                 },
             },
@@ -308,19 +308,30 @@ exports.onCreateMessage = functions
       const messagePreview = words.length > 12 ? words.slice(0, 12).join(" ") + "..." : (conversationData.lastMessage || "");
       const body = `${conversationData?.lastMessageSender ? conversationData.lastMessageSender + ": " : ""}${messagePreview}`;
 
-      const message = {
-        notification: {
-          title: title,
-          body: body,
-        },
-        topic: "new_message",
-        data: {
-          conversationId: conversationId,
-          conversationName: conversationData.titleConv || conversationData.title || "",
-          type: "new_message"
-        },
-        tokens: tokens,
-      };
+        const message = {
+          notification: {
+            title: title,
+            body: body,
+          },
+          topic: "new_message",
+          data: {
+            conversationId: conversationId,
+            conversationName: conversationData.titleConv || conversationData.title || "",
+            type: "new_message"
+          },
+          apns: {
+            payload: {
+              aps: {
+                alert: {
+                  title: title,
+                  body: body
+                },
+                sound: 'default'
+              }
+            }
+          },
+          tokens: tokens,
+        };
         
       console.log("Message : ", message)
 
@@ -402,19 +413,37 @@ exports.onNotificationCreated = functions
 
             const doc = notificationIdUsersSnapshot.docs[0];
 
-            const tokenFCM = doc.data().tokenFCM;
-
             console.log(`@@@ Utilisateur trouvé : ${doc.id}`);
+            console.log("@@@ doc :", doc);
             console.log("@@@ pseudo :", doc.data().pseudo);
             console.log("@@@ tokenFCM :", doc.data().tokenFCM);
+            
+            console.log(`@@@`);
+            console.log("@@@ title :",title);
+            console.log("@@@ body :", body);
+            
+            const tokenFCM = doc.data().tokenFCM;
 
-        const message = {
-          notification: {
-            title: title,
-            body: body,
-          },
-          token: tokenFCM,
-        };
+            
+
+            const message = {
+              notification: {
+                title: title,
+                body: body,
+              },
+              apns: {
+                payload: {
+                  aps: {
+                    alert: {
+                      title: title,
+                      body: body
+                    },
+                    sound: 'default'
+                  }
+                }
+              },
+              token: tokenFCM,
+            };
         
         const response = await admin.messaging().send(message);
 

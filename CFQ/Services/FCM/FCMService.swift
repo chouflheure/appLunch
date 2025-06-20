@@ -57,6 +57,11 @@ class FCMService {
         }
     }
 
+    func subscribeToAllTopics() {
+        let topics = NotificationType.allCases
+        topics.forEach { subscribeToTopic($0.title) { _ in } }
+    }
+
     // Get the list of subscribed topics
     func getSubscribedTopics() -> [String] {
         return UserDefaults.standard.stringArray(forKey: subscribedTopicsKey) ?? []
