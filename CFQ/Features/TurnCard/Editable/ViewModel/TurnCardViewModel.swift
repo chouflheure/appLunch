@@ -261,7 +261,7 @@ extension TurnCardViewModel {
             data: Conversation(
                 uid: turn.messagerieUUID,
                 titleConv: turn.titleEvent,
-                pictureEventURL: user.profilePictureUrl,
+                pictureEventURL: turn.pictureURLString,
                 typeEvent: "turn",
                 eventUID: turn.uid,
                 lastMessageSender: "",
