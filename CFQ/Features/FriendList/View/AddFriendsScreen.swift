@@ -9,43 +9,32 @@ struct AddFriendsScreen: View {
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
         self.user = coordinator.user ?? User()
-        self._viewModel = StateObject(wrappedValue: AddFriendsViewModel(coordinator: coordinator))
+        self._viewModel = StateObject(
+            wrappedValue: AddFriendsViewModel(coordinator: coordinator))
     }
 
     var body: some View {
-        
-            SafeAreaContainer {
-                VStack(spacing: 0) {
-                    VStack(spacing: 0) {
-                        CustomTabViewDouble(titles: ["Recherche", "Les demandes"], viewModel: viewModel, coordinator: coordinator, user: user)
-                    }
-                }
+
+        VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                CustomTabViewDouble(
+                    titles: ["Recherche", "Les demandes"], viewModel: viewModel,
+                    coordinator: coordinator, user: user)
             }
-            .customNavigationFlexible(
-                leftElement: {
-                    NavigationBackIcon()
-                },
-                centerElement: {
-                    NavigationTitle(title: "AJoute tes amis")
-                },
-                rightElement: {
-                    Text("")
-                },
-                hasADivider: true
-            )
-        /*
-            .customNavigationBackButton {
-                HeaderBackLeftScreen(
-                    onClickBack: {
-                        withAnimation {
-                            coordinator.showFriendListScreen = false
-                        }
-                    },
-                    titleScreen: "AJoute tes amis",
-                    isShowDivider: true
-                )
-            }
-         */
+        }
+        .fullBackground(imageName: StringsToken.Image.fullBackground)
+        .customNavigationFlexible(
+            leftElement: {
+                NavigationBackIcon()
+            },
+            centerElement: {
+                NavigationTitle(title: "AJoute tes amis")
+            },
+            rightElement: {
+                EmptyView()
+            },
+            hasADivider: true
+        )
     }
 }
 
@@ -64,11 +53,14 @@ struct CustomTabViewDouble: View {
                     VStack {
                         Text(titles[index])
                             .tokenFont(.Body_Inter_Medium_12)
-                            .foregroundColor(selectedIndex == index ? .white : .gray)
+                            .foregroundColor(
+                                selectedIndex == index ? .white : .gray)
 
                         Rectangle()
                             .frame(height: 2)
-                            .foregroundColor(selectedIndex == index ? .white : .clear)
+                            .foregroundColor(
+                                selectedIndex == index ? .white : .clear
+                            )
                             .padding(.horizontal, 30)
                     }
                     .frame(maxWidth: .infinity)
@@ -97,7 +89,8 @@ struct CustomTabViewDouble: View {
                         .padding(.top, 20)
 
                         VStack(alignment: .leading) {
-                            ForEach(Array(viewModel.friendsList), id: \.self) { userFriend in
+                            ForEach(Array(viewModel.friendsList), id: \.self) {
+                                userFriend in
                                 NavigationLink(
                                     destination: FriendProfileView(
                                         coordinator: coordinator,
@@ -110,12 +103,15 @@ struct CustomTabViewDouble: View {
                                         userFriend: userFriend,
                                         coordinator: coordinator,
                                         isActionabled: { type in
-                                            viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
+                                            viewModel
+                                                .actionOnClickButtonAddFriend(
+                                                    type: type,
+                                                    userFriend: userFriend)
                                         }
                                     )
                                     .padding(.top, 15)
                                 }
-                                
+
                             }
                         }
                         .padding(.horizontal, 12)
@@ -139,13 +135,16 @@ struct CustomTabViewDouble: View {
                         .padding(.top, 20)
 
                         VStack(alignment: .leading) {
-                            ForEach(Array(viewModel.requestsFriends), id: \.self) { userFriend in
+                            ForEach(
+                                Array(viewModel.requestsFriends), id: \.self
+                            ) { userFriend in
                                 CellFriendPseudoNameAction(
                                     user: user,
                                     userFriend: userFriend,
                                     coordinator: coordinator,
                                     isActionabled: { type in
-                                        viewModel.actionOnClickButtonAddFriend(type: type, userFriend: userFriend)
+                                        viewModel.actionOnClickButtonAddFriend(
+                                            type: type, userFriend: userFriend)
                                     }
                                 )
                                 .padding(.top, 15)

@@ -10,7 +10,12 @@ class ScreenSettingsData {
     var screen: ScreensSettingsType
     var color: Color?
     
-    init(icon: ImageResource, label: String, screen: ScreensSettingsType, color: Color = .white) {
+    init(
+        icon: ImageResource,
+        label: String,
+        screen: ScreensSettingsType,
+        color: Color = .white
+    ) {
         self.icon = icon
         self.label = label
         self.screen = screen
@@ -36,7 +41,6 @@ struct SettingsView: View {
     
     var body: some View {
         ZStack {
-            Color.black
             VStack {
                 HStack(alignment: .center) {
 

@@ -50,7 +50,7 @@ extension MessagerieViewModel {
                 print("@@@ error = \(error)")
             }
         }
-        
+
         firebaseService.markMessageAsRead(conversationId: conversation.uid, userId: coordinator.user?.uid ?? "")
     }
     

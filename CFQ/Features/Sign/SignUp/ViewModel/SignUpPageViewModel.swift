@@ -215,6 +215,7 @@ class SignUpPageViewModel: ObservableObject {
         user.profilePictureUrl = urlProfilePicture
         user.sentFriendRequests = Array(sentFriendRequests)
         user.phoneNumber = phoneNumber
+        user.notificationsChannelId = uidUser
         
         // TODO: - gérer erreur et isLoadingCreateUser
 

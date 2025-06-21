@@ -71,7 +71,8 @@ internal enum PictureCacheDesignType {
     case scaledToFill_Clipped
     case fullScreenImageTurn
     case fullScreenImageTurnDetail
-    case scaledToFill_Circle_CFQ
+    case scaledToFill_Circle_CFQFeed
+    case scaledToFill_Circle_CFQMessage
     case scaleImageMessageProfile
     case scaleImageTeam
     
@@ -89,7 +90,7 @@ struct CachedAsyncImageView: View {
             case .empty:
                 switch designType {
                     
-                case .scaledToFill_Circle_CFQ:
+                case .scaledToFill_Circle_CFQFeed:
                     ZStack {
                         animation
                             .playing()
@@ -98,6 +99,17 @@ struct CachedAsyncImageView: View {
                         Circle()
                             .foregroundColor(.gray)
                             .frame(width: 60, height: 60)
+                    }
+                    
+                case .scaledToFill_Circle_CFQMessage:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 30, height: 30)
                     }
 
                 case .scaledToFill_Circle:
@@ -140,12 +152,19 @@ struct CachedAsyncImageView: View {
             case .success(let image):
                 switch designType {
                     
-                case .scaledToFill_Circle_CFQ:
+                case .scaledToFill_Circle_CFQFeed:
                     image
                         .resizable()
                         .scaledToFill()
                         .clipShape(Circle())
                         .frame(width: 60, height: 60)
+                    
+                case .scaledToFill_Circle_CFQMessage:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+                        .frame(width: 40, height: 40)
 
                 case .scaledToFill_Circle:
                     image
@@ -201,7 +220,7 @@ struct CachedAsyncImageView: View {
             case .failure(_):
                 switch designType {
                     
-                case .scaledToFill_Circle_CFQ:
+                case .scaledToFill_Circle_CFQFeed:
                     ZStack {
                         Circle()
                             .foregroundColor(.gray)
@@ -212,6 +231,17 @@ struct CachedAsyncImageView: View {
                             .looping()
                     }
 
+                case .scaledToFill_Circle_CFQMessage:
+                    ZStack {
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 40, height: 40)
+                        
+                        animation
+                            .playing()
+                            .looping()
+                    }
+                    
                 case .scaledToFill_Circle:
                     ZStack {
                         animation
@@ -252,7 +282,7 @@ struct CachedAsyncImageView: View {
             @unknown default:
                 switch designType {
                     
-                case .scaledToFill_Circle_CFQ:
+                case .scaledToFill_Circle_CFQFeed:
                     ZStack {
                         animation
                             .playing()
@@ -261,6 +291,17 @@ struct CachedAsyncImageView: View {
                         Circle()
                             .foregroundColor(.gray)
                             .frame(width: 60, height: 60)
+                    }
+
+                case .scaledToFill_Circle_CFQMessage:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 40, height: 40)
                     }
 
                 case .scaledToFill_Circle:

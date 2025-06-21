@@ -14,7 +14,7 @@ class NotificationsListViewModel: ObservableObject {
     }
 
     func toggleSubscription(to topic: String) {
-        if isActiveStates[topic] ?? false {
+        if isActiveStates[topic] ?? true {
             unsubscribeTo(topic: topic)
         } else {
             subscribeTo(topic: topic)

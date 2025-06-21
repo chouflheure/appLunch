@@ -67,7 +67,7 @@ class CFQ: Codable, Hashable {
 */
 
 class CFQ: ObservableObject, Encodable, Decodable {
-    let uid: String
+    var uid: String
     let title: String
     let admin: String
     let messagerieUUID: String

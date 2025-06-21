@@ -19,12 +19,12 @@ struct NavigationCFQHeader: View {
 
     var body: some View {
         VStack(spacing: 2) {
-            CFQMolecule(
+            CFQMoleculeMessage(
                 uid: cfq.uid,
-                name: cfq.userContact?.name ?? "",
+                name: cfq.userContact?.pseudo ?? "",
                 title: cfq.title,
                 image: cfq.userContact?.profilePictureUrl ?? ""
-            ).frame(height: 30)
+            )
         }
     }
 }

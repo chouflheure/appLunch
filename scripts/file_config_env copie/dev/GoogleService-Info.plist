@@ -3,32 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>594002211682-ihntr58nhkefd9odvgcv3gadq2tq4d2t.apps.googleusercontent.com</string>
+	<string>502812345014-l7jrkeq7q3ufjr3os4ni5rfc9u9muu9j.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.594002211682-ihntr58nhkefd9odvgcv3gadq2tq4d2t</string>
+	<string>com.googleusercontent.apps.502812345014-l7jrkeq7q3ufjr3os4ni5rfc9u9muu9j</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCXANoHqxef4f_HI8Qp9mJmjgpQvoY9uN4</string>
+	<string>AIzaSyABriw7_UjzuB8mWSeSbT2Zldm_4Iyb5KY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>594002211682</string>
+	<string>502812345014</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.CFQ.CFQ-PROD</string>
+	<string>com.CFQ.CFQ-DEV</string>
 	<key>PROJECT_ID</key>
-	<string>cfq-prod-51399</string>
+	<string>cfq-dev-7c39a</string>
 	<key>STORAGE_BUCKET</key>
-	<string>cfq-prod-51399.firebasestorage.app</string>
+	<string>cfq-dev-7c39a.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:594002211682:ios:e7847370e89a5d1bfa723b</string>
+	<string>1:502812345014:ios:06c153041e491d977edc17</string>
 </dict>
 </plist>

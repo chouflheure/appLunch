@@ -6,28 +6,40 @@ import SwiftUI
 import UserNotifications
 import Shake
 
-class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate,
-    UNUserNotificationCenterDelegate
-{
+class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
     private var firebaseService: FirebaseService?
 
     func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication
-            .LaunchOptionsKey: Any]? = nil
-    ) -> Bool {
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil ) -> Bool
+    {
         FirebaseApp.configure()
         firebaseService = FirebaseService()
         Messaging.messaging().delegate = self
         requestNotificationPermission(application)
         registerNotificationCategories()
+
         Shake.configuration.isInvokedByShakeDeviceEvent = true
         Shake.configuration.isInvokedByScreenshot = true
         Shake.configuration.isInvokedByRightEdgePan = true
         Shake.start(apiKey: "pKtNgr9fw1vAutSIEuBQJlsGVLjDrX3XHvuu6Q11hhtotiZoeigtLEI")
 
         return true
+    }
+
+    private func setUpNotificationHandling() {
+        let subscribedTopicsKey = "subscribedTopics"
+        NotificationType.allCases.forEach { topic in
+            UserDefaults.standard.set(topic.topic, forKey: subscribedTopicsKey)
+            Messaging.messaging().subscribe(toTopic: topic.topic) { error in
+                if let error = error {
+                    print("@@@ error subscribe topic: \(error)")
+                } else {
+                    print("@@@ good subscribe topic: \(topic)")
+                }
+            }
+        }
     }
 
     func registerNotificationCategories() {
@@ -44,7 +56,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate,
         )
 
         let inviteCategory = UNNotificationCategory(
-            identifier: "INVITE_CATEGORY",
+            identifier: "daily_ask_turn",
             actions: [declineAction, acceptAction],
             intentIdentifiers: [],
             options: []
@@ -92,19 +104,18 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate,
 
     func application(
         _ application: UIApplication,
-        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+        didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
-        Auth.auth().setAPNSToken(deviceToken, type: .sandbox)
-        Messaging.messaging().apnsToken = deviceToken
+        print("@@@ FAILED to register for remote notifications: \(error.localizedDescription)")
+        print("@@@ Error details: \(error)")
     }
 
     func application(
         _ application: UIApplication,
-        didFailToRegisterForRemoteNotificationsWithError error: Error
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        print(
-            "@@@ Failed to register for remote notifications: \(error.localizedDescription)"
-        )
+        Auth.auth().setAPNSToken(deviceToken, type: .sandbox)
+        Messaging.messaging().apnsToken = deviceToken
     }
 
     func application(

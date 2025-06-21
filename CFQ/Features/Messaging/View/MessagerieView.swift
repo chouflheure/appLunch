@@ -137,7 +137,7 @@ struct MessagerieView: View {
                 centerNavigationElement
             },
             rightElement: {
-                Text("")
+                EmptyView()
             },
             hasADivider: true
         )
@@ -146,27 +146,29 @@ struct MessagerieView: View {
     @ViewBuilder
     private var centerNavigationElement: some View {
         if conversation.typeEvent == "turn" {
-            if turn == nil,
-               let turnFromCache = coordinator.userTurns.first(where: { $0.uid == conversation.eventUID }) {
-                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turnFromCache, user: user)) {
-                    NavigationTitle(title: turnFromCache.titleEvent)
+            if turn == nil {
+               let turnFromCache = coordinator.userTurns.first(where: { $0.uid == conversation.eventUID })
+                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turnFromCache ?? Turn(uid: conversation.eventUID, titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user))
+                {
+                    NavigationTitle(title: conversation.titleConv)
                 }
             } else {
-                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turn ?? Turn(uid: "", titleEvent: "2", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user)) {
-                    NavigationTitle(title: turn?.titleEvent ?? "")
+                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turn ?? Turn(uid: conversation.eventUID, titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user))
+                {
+                    NavigationTitle(title: conversation.titleConv)
                 }
             }
         } else {
             if cfq == nil {
                 if let cfqFromCache = coordinator.userCFQ.first(where: { $0.uid == conversation.eventUID }) {
-                    NavigationCFQHeader(cfq: editHeader(cfq: cfqFromCache))
+                    NavigationCFQHeader(cfq: editHeader(cfq: cfqFromCache))        
                 }
                 
                 if let cfqFromCache = user.postedCfqs?.first(where: { $0 == conversation.eventUID }) {
-                    NavigationCFQHeader(cfq: CFQ(uid: cfqFromCache, title: "Error", admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, name: user.name, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl)))
+                    NavigationCFQHeader(cfq: CFQ(uid: cfqFromCache, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl)))
                 }
                 else {
-                    NavigationCFQHeader(cfq: editHeader(cfq: cfq ?? CFQ(uid: conversation.eventUID, title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date())))
+                    NavigationCFQHeader(cfq: editHeader(cfq: cfq ?? CFQ(uid: conversation.eventUID, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl))))
                 }
             } else {
                 NavigationCFQHeader(cfq: cfq ?? CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: [], userContact: nil))
@@ -178,6 +180,9 @@ struct MessagerieView: View {
         print("@@@ cfq.admin = \(cfq.admin)")
         if cfq.admin == user.uid {
             print("@@@ in 1er if")
+            print("@@@ user.uid = \(user.uid)")
+            print("@@@ user.pseudo = \(user.pseudo)")
+
             cfq.userContact = UserContact(
                 uid: user.uid,
                 pseudo: user.pseudo,

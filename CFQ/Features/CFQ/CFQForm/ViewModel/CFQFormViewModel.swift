@@ -92,7 +92,7 @@ extension CFQFormViewModel {
                         completion(success, message)
                     }
                 case .failure(let error):
-                    print("@@@ error = \(error)")
+                    print("@@@ error to add CFQ = \(error)")
                     completion(false, error.localizedDescription)
                 }
 
@@ -149,9 +149,9 @@ extension CFQFormViewModel {
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
-                    print("@@@ result yes conv ")
+                    print("@@@ addDataNotif good ")
                 case .failure(let error):
-                    print("@@@ error = \(error)")
+                    print("@@@ error addDataNotif = \(error)")
                 }
 
                 self.isLoading = false
