@@ -2,6 +2,9 @@
 import SwiftUI
 import Firebase
 
+
+
+
 class TurnCardFeedViewModel: ObservableObject {
     private var firebaseService = FirebaseService()
     private var data = [String : FieldValue]()
