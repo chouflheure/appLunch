@@ -148,12 +148,14 @@ struct MessagerieView: View {
         if conversation.typeEvent == "turn" {
             if turn == nil {
                let turnFromCache = coordinator.userTurns.first(where: { $0.uid == conversation.eventUID })
-                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turnFromCache ?? Turn(uid: "", titleEvent: "2", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user)) {
-                    NavigationTitle(title: turnFromCache?.titleEvent ?? conversation.titleConv)
+                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turnFromCache ?? Turn(uid: conversation.eventUID, titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user))
+                {
+                    NavigationTitle(title: conversation.titleConv)
                 }
             } else {
-                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turn ?? Turn(uid: "", titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user)) {
-                    NavigationTitle(title: turn?.titleEvent ?? "")
+                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turn ?? Turn(uid: conversation.eventUID, titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user))
+                {
+                    NavigationTitle(title: conversation.titleConv)
                 }
             }
         } else {
