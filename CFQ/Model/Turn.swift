@@ -61,12 +61,10 @@ class Turn: ObservableObject, Encodable, Decodable {
                 mayBeParticipate.append(currentUserId)
             case .no:
                 denied.append(currentUserId)
-            case .none:
-                // Ne rien faire, l'utilisateur est déjà retiré de tous les arrays
+            case .none, .yourEvent:
                 break
             }
-            
-            // ✅ IMPORTANT: Déclencher une mise à jour UI
+
             objectWillChange.send()
         }
     }

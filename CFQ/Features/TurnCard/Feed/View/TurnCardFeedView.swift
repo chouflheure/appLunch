@@ -27,7 +27,7 @@ struct TurnCardFeedView: View {
                     TitleTurnCardFeedView(
                         turn: turn,
                         coordinator: coordinator,
-                        userUID: user.uid
+                        user: user
                     )
                         .padding(.horizontal, 16)
                         .padding(.top, 20)

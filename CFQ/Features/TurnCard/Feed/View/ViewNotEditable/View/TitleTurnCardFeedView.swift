@@ -1,20 +1,18 @@
-
 import SwiftUI
 
 struct TitleTurnCardFeedView: View {
 
     @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
+    var user: User
     @State var showSheetParticipateAnswers: Bool = false
-
-    var userUID: String
     private var viewModel = TurnCardFeedViewModel()
 
-    init(turn: Turn, coordinator: Coordinator, userUID: String) {
+    init(turn: Turn, coordinator: Coordinator, user: User) {
         self.turn = turn
         self.coordinator = coordinator
-        self.userUID = userUID
-        self.turn.userUID = userUID
+        self.user = user
+        self.turn.userUID = user.uid
     }
 
     var body: some View {
@@ -26,13 +24,38 @@ struct TitleTurnCardFeedView: View {
                 .textCase(.uppercase)
 
             HStack {
-                CachedAsyncImageView(urlString: turn.adminContact?.profilePictureUrl ?? "", designType: .scaledToFill_Circle)
-                    .frame(width: 40, height: 40)
+                if turn.admin == user.uid {
+                    CachedAsyncImageView(
+                        urlString: turn.adminContact?.profilePictureUrl ?? "",
+                        designType: .scaledToFill_Circle
+                    )
+                    .frame(width: 50, height: 50)
 
-                Text(turn.adminContact?.pseudo ?? "")
-                    .tokenFont(.Body_Inter_Medium_16)
-                    .textCase(.lowercase)
-                    .lineLimit(1)
+                    Text(turn.adminContact?.pseudo ?? "")
+                        .tokenFont(.Body_Inter_Medium_16)
+                        .textCase(.lowercase)
+                        .lineLimit(1)
+                } else {
+                    NavigationLink(
+                        destination: FriendProfileView(
+                            coordinator: coordinator,
+                            user: user,
+                            friend: turn.adminContact ?? UserContact()
+                        )
+                    ) {
+                        CachedAsyncImageView(
+                            urlString: turn.adminContact?.profilePictureUrl
+                                ?? "",
+                            designType: .scaledToFill_Circle
+                        )
+                        .frame(width: 50, height: 50)
+
+                        Text(turn.adminContact?.pseudo ?? "")
+                            .tokenFont(.Body_Inter_Medium_16)
+                            .textCase(.lowercase)
+                            .lineLimit(1)
+                    }
+                }
 
                 Spacer()
 
@@ -60,55 +83,25 @@ struct TitleTurnCardFeedView: View {
                 ButtonParticipate(
                     action: {
                         withAnimation {
-                            showSheetParticipateAnswers = turn.adminContact?.uid != userUID
+                            showSheetParticipateAnswers =
+                                turn.adminContact?.uid != user.uid
                         }
                     },
-                    selectedOption: (turn.adminContact?.uid == userUID) ? .constant(.yes) : $turn.userStatusParticipate
+                    selectedOption: (turn.adminContact?.uid == user.uid)
+                    ? .constant(.yourEvent) : $turn.userStatusParticipate
                 )
             }
-        
-            /*
-            PreviewProfile(
-                friends: $team.friendsContact,
-                showImages: $showImages,
-                previewProfileType: .userMemberTeam
-            )
-            
-            PreviewProfile(
-                pictures: [],
-                previewProfileType: .userComming,
-                numberUsers: 10
-            )
-            .padding(.vertical, 8)
-             */
         }
         .sheet(isPresented: $showSheetParticipateAnswers) {
-            AllOptionsAnswerParticpateButton(participateButtonSelected: $turn.userStatusParticipate)
-                .presentationDragIndicator(.visible)
-                .presentationDetents([.height(250)])
+            AllOptionsAnswerParticpateButton(
+                participateButtonSelected: $turn.userStatusParticipate
+            )
+            .presentationDragIndicator(.visible)
+            .presentationDetents([.height(250)])
         }
         .onChange(of: turn.userStatusParticipate) { newValue in
-            viewModel.addStatusUserOnTurn(userUID: userUID, turn: turn, status: newValue)
+            viewModel.addStatusUserOnTurn(
+                userUID: user.uid, turn: turn, status: newValue)
         }
-        /*
-        .onAppear {
-            if turn.participants.contains(where: { $0.contains(userUID) }) {
-                userStatusParticipate = .yes
-            }
-            if turn.mayBeParticipate.contains(where: { $0.contains(userUID) }) {
-                userStatusParticipate = .maybe
-            }
-            if turn.denied.contains(where: { $0.contains(userUID) }) {
-                userStatusParticipate = .no
-            }
-        }
-         */
-        /*
-        .sheet(isPresented: $coordinator.showSheetParticipateAnswers) {
-            AllOptionsAnswerParticpateButton(participateButtonSelected: $status)
-                .presentationDragIndicator(.visible)
-                .presentationDetents([.height(250)])
-        }
-         */
     }
 }

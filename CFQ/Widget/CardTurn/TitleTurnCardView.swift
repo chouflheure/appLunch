@@ -28,7 +28,7 @@ struct TitleTurnCardPreviewView: View {
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {}, selectedOption: .constant(.yes))
+                ButtonParticipate(action: {}, selectedOption: .constant(.yourEvent))
             }
         }
     }
@@ -66,7 +66,7 @@ struct TitleTurnCardDetailView: View {
                         .foregroundColor(.white)
                 }
 
-                ButtonParticipate(action: {}, selectedOption: .constant(.yes))
+                ButtonParticipate(action: {}, selectedOption: .constant(.yourEvent))
 
             }
         }

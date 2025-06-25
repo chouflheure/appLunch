@@ -55,23 +55,20 @@ struct CustomTabViewDoubleCommunFriends: View {
 
     var body: some View {
         VStack {
-            // Votre header avec les titres
             HStack {
                 ForEach(0..<titles.count, id: \.self) { index in
                     VStack {
                         Text(titles[index])
-                            .tokenFont(.Body_Inter_Medium_12)
-                            .foregroundColor(
-                                selectedIndex == index ? .white : .gray)
+                            .tokenFont(selectedIndex == index ? .Body_Inter_Medium_14 : .Placeholder_Inter_Regular_14)
 
                         Rectangle()
                             .frame(height: 2)
-                            .foregroundColor(
-                                selectedIndex == index ? .white : .clear
-                            )
+                            .foregroundColor(selectedIndex == index ? .white : .clear)
                             .padding(.horizontal, 30)
                     }
                     .frame(maxWidth: .infinity)
+                    .background(.black)
+                    .frame(height: 50)
                     .onTapGesture {
                         withAnimation {
                             selectedIndex = index
@@ -79,7 +76,6 @@ struct CustomTabViewDoubleCommunFriends: View {
                     }
                 }
             }
-            .padding(.top, 20)
 
             if selectedIndex == 0 {
                 ScrollView(.vertical, showsIndicators: false) {
@@ -148,6 +144,7 @@ struct CustomTabViewDoubleCommunFriends: View {
                          )
                          .padding(.top, 20)
                          */
+
                         if Array(dataSecondPage).isEmpty {
                             VStack {
                                 Spacer()

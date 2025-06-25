@@ -17,7 +17,9 @@ class FeedViewModel: ObservableObject {
             print("@@@ else")
             return
         }
-        startListeningToTurn(user: user)
+
+        let turnToCatch = (user.invitedTurns ?? [""]) + (user.postedTurns ?? [""])
+        startListeningToTurn(data: turnToCatch)
         catchAllUserCFQ(user: user)
     }
     
@@ -39,16 +41,15 @@ class FeedViewModel: ObservableObject {
                     }
                 case .failure(let error):
                     print("👎 Erreur : \(error.localizedDescription)")
-                    
                 }
             }
         }
     }
     
-    func startListeningToTurn(user: User) {
+    func startListeningToTurn(data: [String]) {
         firebaseService.getDataByIDs(
             from: .turns,
-            with: user.invitedTurns ?? [""]
+            with: data
             // listenerKeyPrefix: ListenerType.turn.rawValue
         ) { [weak self] (result: Result<[Turn], Error>) in
             guard let self = self else { return }

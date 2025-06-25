@@ -18,8 +18,10 @@ struct AddFriendsScreen: View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
                 CustomTabViewDouble(
-                    titles: ["Recherche", "Les demandes"], viewModel: viewModel,
-                    coordinator: coordinator, user: user)
+                    titles: ["Recherche", "Les demandes"],
+                    viewModel: viewModel,
+                    coordinator: coordinator, user: user
+                )
             }
         }
         .fullBackground(imageName: StringsToken.Image.fullBackground)

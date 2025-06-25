@@ -1,10 +1,95 @@
 const functions = require("firebase-functions/v1");
 const admin = require("firebase-admin");
 
-// Initialisation de Firebase Admin SDK
 admin.initializeApp();
 
-// Fonction planifiée pour s'exécuter toutes les 10 minutes
+exports.sendScheduledDataMessageIsTurnTonight6PM = functions
+    .region("europe-west2")
+    .pubsub
+    .schedule("00 18 * * *")
+    .timeZone("Europe/Paris")
+    .onRun(async (context) => {
+        const message = {
+            notification: {
+                title: "Ça sort ce soir ?",
+                body: "Reste appuyé sur la notif pour répondre",
+            },
+            topic: "daily_ask_turn",
+            data: {
+                notificationType: "daily_reminder",
+            },
+            apns: {
+                payload: {
+                    aps: {
+                        category: "CUSTOM_CATEGORY",
+                        alert: {
+                            title: "Ça sort ce soir ?",
+                            body: "Va activer le switch sur ton profil",
+                        },
+                        sound: 'default',
+                    },
+                },
+            },
+        };
+
+        const usersRef = admin.firestore().collection("users");
+        const snapshot = await usersRef.get();
+        const batch = admin.firestore().batch();
+        snapshot.forEach((doc) => {
+        batch.update(doc.ref, {isActive: false});
+    });
+
+    try {
+        await admin.messaging().send(message);
+        console.log("Message de données envoyé avec succès.");
+    } catch (error) {
+        console.error("Erreur lors de l’envoi du message de données :", error);
+    }
+
+    return null;
+});
+
+
+exports.sendScheduledMessage4AMIfTurnAlready = functions
+    .region("europe-west2")
+    .pubsub
+    .schedule("00 4 * * *")
+    .timeZone("Europe/Paris")
+    .onRun(async (context) => {
+      const activeUsersSnapshot = await admin
+          .firestore()
+          .collection("users")
+          .where("isActive", "==", true)
+          .get();
+
+      for (const doc of activeUsersSnapshot.docs) {
+        const userData = doc.data();
+        const userRef = doc.ref;
+
+        if (userData.tokenFCM) {
+          const message = {
+            notification: {
+              title: "Toujours chaud ou tu rentres ?",
+              body: "Va activer le switch sur ton profil " +
+                    "si tu es toujours en Turn",
+            },
+            token: userData.tokenFCM,
+          };
+
+          try {
+            const response = await admin.messaging().send(message);
+            console.log(`Message envoyé à ${userData.username} avec succès :`,
+                response);
+
+            // Met à jour isActive à false après l'envoi du message
+            await userRef.update({isActive: false});
+            console.log(`isActive mis à false pour ${userData.username}`);
+          } catch (error) {
+            console.error(`Erreur pour ${userData.username} :`, error);
+          }
+        }
+      }
+});
 
 /*
 exports.updateUserIsActive2PM = functions
@@ -101,153 +186,179 @@ exports.cleanupTurnCollection = functions.pubsub
 
 // Remove expired Turns
 
-// Remove expired Messagerie
-
-// Remove expired CFQs
-exports.cleanupCfqCollection = functions.pubsub
-  .schedule('00 12 * * *') // Cron: tous les jours à 12:00 UTC
-  .timeZone('Europe/Paris') // Changer selon votre timezone
+exports.cleanupTURNCollection = functions
+  .region("europe-west2")
+  .pubsub
+  .schedule("00 14 * * *")
+  .timeZone("Europe/Paris")
   .onRun(async (context) => {
-    console.log('Starting CFQ collection cleanup...');
+    console.log('Starting TURN collection cleanup...');
     
     try {
       const db = admin.firestore();
-      const cfqCollection = db.collection('cfqs');
+      const turnsCollection = db.collection('turns');
       
-      // Calculer la date limite (24h avant maintenant)
       const now = admin.firestore.Timestamp.now();
       const twentyFourHoursAgo = new Date(now.toDate().getTime() - (24 * 60 * 60 * 1000));
       const cutoffTimestamp = admin.firestore.Timestamp.fromDate(twentyFourHoursAgo);
       
-      console.log(`Deleting documents older than: ${twentyFourHoursAgo.toISOString()}`);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayTimestamp = admin.firestore.Timestamp.fromDate(today);
+        
+      console.log(`Processing cleanup...`);
+
+      const batch = db.batch();
+      let deleteCount = 0;
+      let conversationDeleteCount = 0;
       
-      // Query pour trouver les documents plus anciens que 24h
-      // Remplacez 'createdAt' par le nom de votre champ timestamp
+      // Approche 1: Query simple pour dateEndEvent
+      const queryWithEndDate = turnsCollection.where('dateEndEvent', '<', todayTimestamp);
+      const snapshotWithEndDate = await queryWithEndDate.get();
+      
+      for (const doc of snapshotWithEndDate.docs) {
+        const data = doc.data();
+        console.log(`Marking TURN for deletion (expired dateEndEvent): ${doc.id}`);
+        batch.delete(doc.ref);
+        deleteCount++;
+        
+        if (data.messagerieUUID) {
+          const conversationsQuery = db.collection('conversations')
+            .where('uid', '==', data.messagerieUUID);
+          const conversationsSnapshot = await conversationsQuery.get();
+          
+          conversationsSnapshot.forEach((conversationDoc) => {
+            console.log(`Marking conversation for deletion: ${conversationDoc.id}`);
+            batch.delete(conversationDoc.ref);
+            conversationDeleteCount++;
+          });
+        }
+      }
+
+      // Approche 2: Query pour documents sans dateEndEvent, puis filtrer par timestamp
+      const queryWithoutEndDate = turnsCollection.where('dateEndEvent', '==', "");
+      const snapshotWithoutEndDate = await queryWithoutEndDate.get();
+      
+      for (const doc of snapshotWithoutEndDate.docs) {
+        const data = doc.data();
+        
+        // Filtrer côté client pour le timestamp
+        if (data.timestamp && data.timestamp < cutoffTimestamp) {
+          console.log(`Marking TURN for deletion (no dateEndEvent, old creation): ${doc.id}`);
+          batch.delete(doc.ref);
+          deleteCount++;
+          
+          if (data.messagerieUUID) {
+            const conversationsQuery = db.collection('conversations')
+              .where('uid', '==', data.messagerieUUID);
+            const conversationsSnapshot = await conversationsQuery.get();
+            
+            conversationsSnapshot.forEach((conversationDoc) => {
+              console.log(`Marking conversation for deletion: ${conversationDoc.id}`);
+              batch.delete(conversationDoc.ref);
+              conversationDeleteCount++;
+            });
+          }
+        }
+      }
+
+      if (deleteCount === 0) {
+        console.log('No documents to delete');
+        return null;
+      }
+
+      await batch.commit();
+      
+      console.log(`Successfully deleted ${deleteCount} TURNs and ${conversationDeleteCount} conversations`);
+      
+      return {
+        success: true,
+        deletedTurnCount: deleteCount,
+        deletedConversationCount: conversationDeleteCount,
+        timestamp: now.toDate().toISOString()
+      };
+      
+    } catch (error) {
+      console.error('Error during TURN cleanup:', error);
+      throw new functions.https.HttpsError('internal', 'Cleanup failed', error);
+    }
+  });
+
+
+// Remove expired Messagerie
+
+// Remove expired CFQs
+exports.cleanupCfqCollection = functions
+  .region("europe-west2")
+  .pubsub
+  .schedule("00 12 * * *")
+  .timeZone("Europe/Paris")
+  .onRun(async (context) => {
+    console.log('Starting CFQ collection cleanup...');
+
+    try {
+      const db = admin.firestore();
+      const cfqCollection = db.collection('cfqs');
+
+      // Calculer la date limite (24h avant maintenant)
+      const now = admin.firestore.Timestamp.now();
+      const twentyFourHoursAgo = new Date(now.toDate().getTime() - (24 * 60 * 60 * 1000));
+      const cutoffTimestamp = admin.firestore.Timestamp.fromDate(twentyFourHoursAgo);
+
+      console.log(`Deleting documents older than: ${twentyFourHoursAgo.toISOString()}`);
+
+      // Query pour trouver les CFQs plus anciens que 24h
       const query = cfqCollection.where('timestamp', '<', cutoffTimestamp);
       const snapshot = await query.get();
-      
+
       if (snapshot.empty) {
         console.log('No documents to delete');
         return null;
       }
-      
-      // Créer un batch pour supprimer plusieurs documents en une fois
+
+      // Créer un batch pour supprimer CFQs et conversations
       const batch = db.batch();
       let deleteCount = 0;
-      
-      snapshot.forEach((doc) => {
-        console.log(`Marking document for deletion: ${doc.id}`);
+      let conversationDeleteCount = 0;
+
+      // Pour chaque CFQ à supprimer
+      for (const doc of snapshot.docs) {
+        console.log(`Marking CFQ for deletion: ${doc.id}`);
         batch.delete(doc.ref);
         deleteCount++;
-      });
         
-      
-      
-      // Exécuter la suppression en batch
+        // Trouver et marquer les conversations associées pour suppression
+        // Supposons que les conversations ont un champ 'cfqId' qui référence le CFQ
+        const conversationsQuery = db.collection('conversations')
+          .where('eventUID', '==', doc.messagerieUUID);
+        
+        const conversationsSnapshot = await conversationsQuery.get();
+        
+        conversationsSnapshot.forEach((conversationDoc) => {
+          console.log(`Marking conversation for deletion: ${conversationDoc.id}`);
+          batch.delete(conversationDoc.ref);
+          conversationDeleteCount++;
+        });
+      }
+
+      // Exécuter toutes les suppressions en une fois
       await batch.commit();
-      
-      console.log(`Successfully deleted ${deleteCount} documents from CFQ collection`);
-      
+
+      console.log(`Successfully deleted ${deleteCount} CFQs and ${conversationDeleteCount} conversations`);
+
       return {
         success: true,
-        deletedCount: deleteCount,
+        deletedCfqCount: deleteCount,
+        deletedConversationCount: conversationDeleteCount,
         timestamp: now.toDate().toISOString()
       };
-      
+
     } catch (error) {
       console.error('Error during CFQ cleanup:', error);
       throw new functions.https.HttpsError('internal', 'Cleanup failed', error);
     }
   });
 
-
-exports.sendScheduledDataMessageIsTurnTonight6PM = functions
-    .region("europe-west2")
-    .pubsub
-    .schedule("00 18 * * *")
-    .timeZone("Europe/Paris")
-    .onRun(async (context) => {
-        const message = {
-            notification: {
-                title: "Ça sort ce soir ?",
-                body: "Reste appuyé sur la notif pour répondre",
-            },
-            topic: "daily_ask_turn",
-            data: {
-                notificationType: "daily_reminder",
-            },
-            apns: {
-                payload: {
-                    aps: {
-                        category: "CUSTOM_CATEGORY",
-                        alert: {
-                            title: "Ça sort ce soir ?",
-                            body: "Va activer le switch sur ton profil",
-                        },
-                        sound: 'default',
-                    },
-                },
-            },
-        };
-
-        const usersRef = admin.firestore().collection("users");
-        const snapshot = await usersRef.get();
-        const batch = admin.firestore().batch();
-        snapshot.forEach((doc) => {
-        batch.update(doc.ref, {isActive: false});
-    });
-
-    try {
-        await admin.messaging().send(message);
-        console.log("Message de données envoyé avec succès.");
-    } catch (error) {
-        console.error("Erreur lors de l’envoi du message de données :", error);
-    }
-
-    return null;
-});
-
-
-exports.sendScheduledMessage4AMIfTurnAlready = functions
-    .region("europe-west2")
-    .pubsub
-    .schedule("00 4 * * *")
-    .timeZone("Europe/Paris")
-    .onRun(async (context) => {
-      const activeUsersSnapshot = await admin
-          .firestore()
-          .collection("users")
-          .where("isActive", "==", true)
-          .get();
-
-      for (const doc of activeUsersSnapshot.docs) {
-        const userData = doc.data();
-        const userRef = doc.ref;
-
-        if (userData.tokenFCM) {
-          const message = {
-            notification: {
-              title: "Toujours chaud ou tu rentres ?",
-              body: "Va activer le switch sur ton profil " +
-                    "si tu es toujours en Turn",
-            },
-            token: userData.tokenFCM,
-          };
-
-          try {
-            const response = await admin.messaging().send(message);
-            console.log(`Message envoyé à ${userData.username} avec succès :`,
-                response);
-
-            // Met à jour isActive à false après l'envoi du message
-            await userRef.update({isActive: false});
-            console.log(`isActive mis à false pour ${userData.username}`);
-          } catch (error) {
-            console.error(`Erreur pour ${userData.username} :`, error);
-          }
-        }
-      }
-    });
 
 
 exports.onCreateMessage = functions

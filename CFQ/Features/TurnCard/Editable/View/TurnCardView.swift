@@ -130,20 +130,21 @@ struct TurnCardView: View {
                         label: {
                             HStack {
                                 Image(.iconSend)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.white).opacity(!viewModel.isEnableButton ? 0.5 : 1)
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
 
                                 Text("Publier")
-                                    .tokenFont(.Body_Inter_Medium_14)
+                                    .tokenFont(!viewModel.isEnableButton ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
-                                    .font(.system(size: 15, weight: .bold))
+                                    .bold()
                             }
                         }
                     )
                     .frame(width: 150)
-                    .background(Color(hex: "B098E6").opacity(1))
+                    .background(Color(hex: "B098E6").opacity(!viewModel.isEnableButton ? 0.5 : 1))
+                    .disabled(!viewModel.isEnableButton)
                     .cornerRadius(10)
                 }
             }

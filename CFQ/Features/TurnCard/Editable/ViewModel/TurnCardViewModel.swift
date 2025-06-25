@@ -43,8 +43,13 @@ class TurnCardViewModel: ObservableObject {
     
     @Published var friendListToAdd = Set<UserContact>()
     
-    var disableButtonSend: Bool {
-        return turn.titleEvent.isEmpty || turn.dateStartEvent == nil || moods.isEmpty || dateEventStart == nil || imageSelected == nil || turn.description.isEmpty
+    var isEnableButton: Bool {
+        get {
+            !titleEvent.isEmpty && startHours != nil && !moods.isEmpty && dateEventStart != nil && imageSelected != nil && !description.isEmpty && !setFriendsOnTurn.isEmpty && description == " "
+        }
+        set {
+            print("@@@ error")
+        }
     }
 
     var textFormattedLongFormatStartEvent: String {
@@ -79,12 +84,6 @@ class TurnCardViewModel: ObservableObject {
             return time.formatted(date: .omitted, time: .shortened)
         }
         return ""
-    }
-    
-    func addFriendsToList(user: UserContact) {
-        friendsAddToCFQ.insert(user)
-        friendsList.remove(user)
-        allFriends.remove(user)
     }
     
     private func verificationIdentificationUserUID(coordinator: Coordinator) {
@@ -208,7 +207,7 @@ extension TurnCardViewModel {
             uid: uid.description,
             titleEvent: titleEvent,
             dateStartEvent: dateEventStart ?? Date(),
-            dateEndEvent: dateEventEnd ?? Date(),
+            dateEndEvent: dateEventEnd,
             pictureURLString: urlStringImage,
             admin: user.uid,
             description: description,

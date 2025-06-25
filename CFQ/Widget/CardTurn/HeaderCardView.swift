@@ -5,7 +5,8 @@ struct HeaderCardViewDetail: View {
     @ObservedObject var viewModel: TurnCardViewModel
     @State private var selectedImage: UIImage?
     @State private var avatarPhotoItem: PhotosPickerItem?
-
+    @State private var showPickerStartEvent = false
+    
     var body: some View {
         VStack {
             ZStack {
@@ -29,22 +30,36 @@ struct HeaderCardViewDetail: View {
                 }
 
                 HStack(alignment: .center) {
-                    if viewModel.textFormattedShortFormat().jour.isEmpty || viewModel.textFormattedShortFormat().mois.isEmpty {
-                        VStack {
-                            Image(.iconDate)
-                                .resizable()
-                                .foregroundColor(.white)
-                                .frame(width: 25, height: 25)
+                    VStack {
+                        if viewModel.textFormattedShortFormat().jour.isEmpty || viewModel.textFormattedShortFormat().mois.isEmpty {
+                            VStack {
+                                Image(.iconDate)
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .frame(width: 25, height: 25)
+                            }
+                            .frame(width: 50, height: 55)
+                            .background(.black.opacity(0.5))
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .padding(.top, 20)
+                        } else {
+                            DateLabel(
+                                dayEventString: viewModel.textFormattedShortFormat().jour.isEmpty ? "XX" : viewModel.textFormattedShortFormat().jour,
+                                monthEventString: viewModel.textFormattedShortFormat().mois.isEmpty ? "XX" : viewModel.textFormattedShortFormat().mois
+                            ).padding(.top, 20)
                         }
-                        .frame(width: 50, height: 55)
-                        .background(.black.opacity(0.5))
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                        .padding(.top, 20)
-                    } else {
-                        DateLabel(
-                            dayEventString: viewModel.textFormattedShortFormat().jour.isEmpty ? "XX" : viewModel.textFormattedShortFormat().jour,
-                            monthEventString: viewModel.textFormattedShortFormat().mois.isEmpty ? "XX" : viewModel.textFormattedShortFormat().mois
-                        ).padding(.top, 20)
+                    }.onTapGesture {
+                        showPickerStartEvent = true
+                    }
+                    .sheet(isPresented: $showPickerStartEvent) {
+                        ZStack {
+                            NeonBackgroundImage()
+                            SheetDatePicker(dateEvent: $viewModel.dateEventStart, hoursEvent: $viewModel.startHours, onClose: {
+                                showPickerStartEvent = false
+                            })
+                        }
+                        .presentationDragIndicator(.visible)
+                        .presentationDetents([.height(500)])
                     }
                     
                     Spacer()

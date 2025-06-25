@@ -6,6 +6,7 @@ enum TypeParticipateButton: String {
     case no
     case maybe
     case none
+    case yourEvent
 
     var iconTypeParticipate: String {
         switch self {
@@ -15,7 +16,7 @@ enum TypeParticipateButton: String {
             return "👎"
         case .maybe:
             return "🤔"
-        case .none:
+        case .none, .yourEvent:
             return ""
         }
     }
@@ -30,6 +31,8 @@ enum TypeParticipateButton: String {
             return "Jsais pas"
         case .none:
             return ""
+        case .yourEvent:
+            return "Ton event"
         }
     }
 }

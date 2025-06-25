@@ -109,7 +109,7 @@ struct SelectLocalisationView: View {
                         .multilineTextAlignment(.center)
                 })
                 .frame(width: 150)
-                .background(Color(hex: "B098E6").opacity(viewModel.disableButtonSend ? 0.5 : 1))
+                .background(Color(hex: "B098E6").opacity(1))
                 .cornerRadius(10)
             }
         }

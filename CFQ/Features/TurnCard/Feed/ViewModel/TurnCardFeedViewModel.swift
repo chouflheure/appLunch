@@ -2,9 +2,6 @@
 import SwiftUI
 import Firebase
 
-
-
-
 class TurnCardFeedViewModel: ObservableObject {
     private var firebaseService = FirebaseService()
     private var data = [String : FieldValue]()
@@ -30,7 +27,7 @@ class TurnCardFeedViewModel: ObservableObject {
                 "mayBeParticipate" : FieldValue.arrayRemove([userUID]),
                 "participants": FieldValue.arrayRemove([userUID]),
             ]
-        case .none:
+        case .none, .yourEvent:
             break
         }
         
