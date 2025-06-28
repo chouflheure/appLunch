@@ -32,6 +32,7 @@ struct ConversationsView: View {
                     ).padding(.top, 16)
                     */
 
+                    
                     ForEach(viewModel.messageList.sorted {$0.lastMessageDate ?? Date() > $1.lastMessageDate ?? Date()}, id: \.uid ) { data in
                         NavigationLink(destination: {
                             MessagerieView(coordinator: coordinator, conversation: data)
