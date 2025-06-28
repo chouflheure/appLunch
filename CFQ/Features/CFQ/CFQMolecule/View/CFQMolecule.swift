@@ -95,7 +95,7 @@ struct CFQMoleculeMessage: View {
             }
             .padding(.leading, 10)
             
-            ModernCachedAsyncImage(url: "https://firebasestorage.googleapis.com/v0/b/cfq-prod-51399.firebasestorage.app/o/profile%2F0idNvmRG7zdeNC8b8GTb6cVZJ6k1_thumb.jpg?alt=media&token=db460d5a-8d81-49d0-bdb2-74300e1ed087", placeholder: Image(systemName: "photo.fill"))
+            ModernCachedAsyncImage(url: image, placeholder: Image(systemName: "photo.fill"))
                 .scaledToFill()
                 .clipShape(Circle())
                 .frame(width: 40, height: 40)

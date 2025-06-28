@@ -171,7 +171,7 @@ struct MessagerieView: View {
                     NavigationCFQHeader(cfq: editHeader(cfq: cfq ?? CFQ(uid: conversation.eventUID, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl))))
                 }
             } else {
-                NavigationCFQHeader(cfq: cfq ?? CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: [], userContact: nil))
+                NavigationCFQHeader(cfq: editHeader(cfq: cfq ?? CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: [], userContact: nil)))
             }
         }
     }
@@ -189,13 +189,17 @@ struct MessagerieView: View {
                 profilePictureUrl: user.profilePictureUrl
             )
             return cfq
-        }
-
-        if let userContact = user.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
+        } else if let userContact = user.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
             print("@@@ in 2eme if")
             cfq.userContact = userContact
+            print("@@@ cfq = \(cfq.printObject)")
+            print("\n @@@ userContact uid: \(userContact.uid)")
+            print("\n @@@ userContact pseudo: \(userContact.pseudo)")
+            print("\n @@@ userContact profilePictureUrl: \(userContact.profilePictureUrl)")
             return cfq
         }
+
+        
         return cfq
     }
 }

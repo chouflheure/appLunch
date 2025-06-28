@@ -13,7 +13,6 @@
 		A38F7E702D4BCBD700EE9536 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A38F7E6F2D4BCBD700EE9536 /* FirebaseFirestore */; };
 		A38F7E722D4BCBD700EE9536 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A38F7E712D4BCBD700EE9536 /* FirebaseStorage */; };
 		A39B98A22D760826005E983B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A39B98A12D760826005E983B /* FirebaseMessaging */; };
-		A3DE3B732E02BCAB0088F713 /* Shake in Frameworks */ = {isa = PBXBuildFile; productRef = A3DE3B722E02BCAB0088F713 /* Shake */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,7 +45,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3DE3B732E02BCAB0088F713 /* Shake in Frameworks */,
 				A38F7E6E2D4BCBD700EE9536 /* FirebaseDatabase in Frameworks */,
 				A38F7E722D4BCBD700EE9536 /* FirebaseStorage in Frameworks */,
 				A39B98A22D760826005E983B /* FirebaseMessaging in Frameworks */,
@@ -109,7 +107,6 @@
 				A38F7E712D4BCBD700EE9536 /* FirebaseStorage */,
 				A39B98A12D760826005E983B /* FirebaseMessaging */,
 				A33B0AA12DC11F270065DF7E /* Lottie */,
-				A3DE3B722E02BCAB0088F713 /* Shake */,
 			);
 			productName = CFQ;
 			productReference = A3DDB2242D3524FA00060C79 /* CFQ.app */;
@@ -142,7 +139,6 @@
 			packageReferences = (
 				A38F7E6A2D4BCBD700EE9536 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				A33B0AA02DC11F270065DF7E /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				A3DE3B712E02BCAB0088F713 /* XCRemoteSwiftPackageReference "shake-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A3DDB2252D3524FA00060C79 /* Products */;
@@ -419,14 +415,6 @@
 				minimumVersion = 11.7.0;
 			};
 		};
-		A3DE3B712E02BCAB0088F713 /* XCRemoteSwiftPackageReference "shake-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/shakebugs/shake-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 17.1.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -459,11 +447,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A38F7E6A2D4BCBD700EE9536 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
-		};
-		A3DE3B722E02BCAB0088F713 /* Shake */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A3DE3B712E02BCAB0088F713 /* XCRemoteSwiftPackageReference "shake-ios" */;
-			productName = Shake;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

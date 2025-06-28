@@ -21,7 +21,7 @@ struct TurnCardFeedView: View {
                     // Header ( Date / Picture / TURN )
                     HeaderCardNotEditableView(turn: turn)
                         .padding(.bottom, 15)
-                        .frame(height: 150)
+                        .frame(height: !turn.pictureURLString.isEmpty ? 150 : 50)
                     
                     // Title ( Title / Guest )
                     TitleTurnCardFeedView(
@@ -30,7 +30,7 @@ struct TurnCardFeedView: View {
                         user: user
                     )
                         .padding(.horizontal, 16)
-                        .padding(.top, 20)
+                        .padding(.top, !turn.pictureURLString.isEmpty ? 20 : 70)
 
                     // Informations ( Mood / Date / Loc )
                     MainInformationsPreviewFeedView(turn: turn)
@@ -47,7 +47,7 @@ struct TurnCardFeedView: View {
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(Color.gray, lineWidth: 0.2)
             }
-            .frame(height: 550)
+            .frame(height: !turn.pictureURLString.isEmpty ? 550 : 480)
             .cornerRadius(20)
             .zIndex(1)
         }

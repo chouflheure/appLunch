@@ -130,13 +130,13 @@ class CFQ: ObservableObject, Encodable, Decodable {
     
     var printObject: String {
         return "@@@ ---------Conv---------- "
-        + "@@@ \nuid : \(uid)"
-        + "@@@ \n title : \(title)"
-        + "@@@ \n admin : \(admin)"
-        + "@@@ \n messagerieUUID : \(messagerieUUID)"
-        + "@@@ \n users : \(users)"
-        + "@@@ \n timestamp : \(timestamp)"
-        + "@@@ \n participants : \(String(describing: participants))"
-        + "@@@ \n ------------------"
+        + "\n @@@ uid : \(uid)"
+        + "\n @@@ title : \(title)"
+        + "\n @@@ admin : \(admin)"
+        + "\n @@@ messagerieUUID : \(messagerieUUID)"
+        + "\n @@@ users : \(users)"
+        + "\n @@@ timestamp : \(timestamp)"
+        + "\n @@@ participants : \(String(describing: participants))"
+        + "\n @@@ ------------------"
     }
 }

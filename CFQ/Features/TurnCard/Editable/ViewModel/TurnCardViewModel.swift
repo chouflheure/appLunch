@@ -45,11 +45,9 @@ class TurnCardViewModel: ObservableObject {
     
     var isEnableButton: Bool {
         get {
-            !titleEvent.isEmpty && startHours != nil && !moods.isEmpty && dateEventStart != nil && imageSelected != nil && !description.isEmpty && !setFriendsOnTurn.isEmpty && description == " "
+            !titleEvent.isEmpty && startHours != nil && !moods.isEmpty && dateEventStart != nil && !setFriendsOnTurn.isEmpty
         }
-        set {
-            print("@@@ error")
-        }
+        set {}
     }
 
     var textFormattedLongFormatStartEvent: String {
@@ -168,27 +166,35 @@ extension TurnCardViewModel {
     
     private func uploadImageToDataBase(completion: @escaping (Bool, String) -> Void) {
         let uid = UUID()
-        guard let imageSelected = imageSelected else {
-            self.isLoading = false
-            completion(false, "Selectionnez une image")
-            return
-        }
-        firebaseService.uploadImageStandard(picture: imageSelected, uidUser: uid.description, localisationImage: .turn) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let urlString):
-                    self.uploadTurnOnDataBase(urlStringImage: urlString) { success, message in
-                        if success {
-                            completion(success, "")
-                        } else {
-                            completion(false, message)
+        if let imageSelected = imageSelected {
+            firebaseService.uploadImageStandard(picture: imageSelected, uidUser: uid.description, localisationImage: .turn) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let urlString):
+                        self.uploadTurnOnDataBase(urlStringImage: urlString) { success, message in
+                            if success {
+                                completion(success, "")
+                            } else {
+                                completion(false, message)
+                            }
                         }
-                    }
 
-                case .failure(let error):
-                    Logger.log(error.localizedDescription, level: .error)
-                    self.isLoading = false
-                    completion(false, error.localizedDescription)
+                    case .failure(let error):
+                        Logger.log(error.localizedDescription, level: .error)
+                        self.isLoading = false
+                        completion(false, error.localizedDescription)
+                    }
+                }
+            }
+        } else {
+            print("@@@ else ")
+            uploadTurnOnDataBase(urlStringImage: "") { success, message in
+                if success {
+                    print("@@@ if 1")
+                    completion(success, "")
+                } else {
+                    print("@@@ else 2")
+                    completion(false, message)
                 }
             }
         }
@@ -234,8 +240,10 @@ extension TurnCardViewModel {
             case .success():
                 self.addEventTurnOnFriendProfile(turn: turn) { success, message in
                     if success {
+                        print("@@@ if 3")
                         completion(success, "")
                     } else {
+                        print("@@@ else 3")
                         completion(false, message)
                     }
                 }
