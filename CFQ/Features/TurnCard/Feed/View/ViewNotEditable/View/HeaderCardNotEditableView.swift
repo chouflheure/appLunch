@@ -13,8 +13,10 @@ struct HeaderCardNotEditableView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
-                GeometryReader { geometry in
-                    CachedAsyncImageView(urlString: turn.pictureURLString, designType: .scaledToFill_Clipped)
+                if !turn.pictureURLString.isEmpty {
+                    GeometryReader { geometry in
+                        CachedAsyncImageView(urlString: turn.pictureURLString, designType: .scaledToFill_Clipped)
+                    }
                 }
                 
                 HStack(alignment: .center) {
@@ -31,7 +33,7 @@ struct HeaderCardNotEditableView: View {
                         .textCase(.uppercase)
                     
                 }
-                .padding(.top, 20)
+                .padding(.top, !turn.pictureURLString.isEmpty ? 20 : 100)
                 .padding(.horizontal, 16)
             }
             .frame(height: 150)

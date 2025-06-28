@@ -33,7 +33,7 @@ struct FriendCommumScreen: View {
                 NavigationBackIcon()
             },
             centerElement: {
-                NavigationTitle(title: "AJoute tes amis")
+                NavigationTitle(title: "Amis")
             },
             rightElement: {
                 EmptyView()

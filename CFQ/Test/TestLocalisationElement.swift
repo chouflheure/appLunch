@@ -91,7 +91,8 @@ struct SelectLocalisationView: View {
                         .padding(.horizontal, 12)
                 }
             }
-
+            
+            /*
             if let selectedLocation = selectedLocation {
                 ZStack {
                     Map(coordinateRegion: $mapRegion, annotationItems: [selectedLocation]) { location in
@@ -112,6 +113,7 @@ struct SelectLocalisationView: View {
                 .background(Color(hex: "B098E6").opacity(1))
                 .cornerRadius(10)
             }
+            */
         }
     }
 

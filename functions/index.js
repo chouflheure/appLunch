@@ -211,8 +211,7 @@ exports.cleanupTURNCollection = functions
       const batch = db.batch();
       let deleteCount = 0;
       let conversationDeleteCount = 0;
-      
-      // Approche 1: Query simple pour dateEndEvent
+
       const queryWithEndDate = turnsCollection.where('dateEndEvent', '<', todayTimestamp);
       const snapshotWithEndDate = await queryWithEndDate.get();
       
@@ -235,7 +234,6 @@ exports.cleanupTURNCollection = functions
         }
       }
 
-      // Approche 2: Query pour documents sans dateEndEvent, puis filtrer par timestamp
       const queryWithoutEndDate = turnsCollection.where('dateEndEvent', '==', "");
       const snapshotWithoutEndDate = await queryWithoutEndDate.get();
       
@@ -243,7 +241,7 @@ exports.cleanupTURNCollection = functions
         const data = doc.data();
         
         // Filtrer côté client pour le timestamp
-        if (data.timestamp && data.timestamp < cutoffTimestamp) {
+        if (data.dateStartEvent && data.dateStartEvent < cutoffTimestamp) {
           console.log(`Marking TURN for deletion (no dateEndEvent, old creation): ${doc.id}`);
           batch.delete(doc.ref);
           deleteCount++;
@@ -323,22 +321,25 @@ exports.cleanupCfqCollection = functions
 
       // Pour chaque CFQ à supprimer
       for (const doc of snapshot.docs) {
+        const data = doc.data(); // ← Récupérer les données du document
         console.log(`Marking CFQ for deletion: ${doc.id}`);
         batch.delete(doc.ref);
         deleteCount++;
         
-        // Trouver et marquer les conversations associées pour suppression
-        // Supposons que les conversations ont un champ 'cfqId' qui référence le CFQ
-        const conversationsQuery = db.collection('conversations')
-          .where('eventUID', '==', doc.messagerieUUID);
-        
-        const conversationsSnapshot = await conversationsQuery.get();
-        
-        conversationsSnapshot.forEach((conversationDoc) => {
-          console.log(`Marking conversation for deletion: ${conversationDoc.id}`);
-          batch.delete(conversationDoc.ref);
-          conversationDeleteCount++;
-        });
+        // Vérifier si messagerieUUID existe avant de chercher les conversations
+        if (data.messagerieUUID) {
+          // Trouver et marquer les conversations associées pour suppression
+          const conversationsQuery = db.collection('conversations')
+            .where('eventUID', '==', data.messagerieUUID); // ← Utiliser data.messagerieUUID
+          
+          const conversationsSnapshot = await conversationsQuery.get();
+          
+          conversationsSnapshot.forEach((conversationDoc) => {
+            console.log(`Marking conversation for deletion: ${conversationDoc.id}`);
+            batch.delete(conversationDoc.ref);
+            conversationDeleteCount++;
+          });
+        }
       }
 
       // Exécuter toutes les suppressions en une fois
@@ -358,8 +359,6 @@ exports.cleanupCfqCollection = functions
       throw new functions.https.HttpsError('internal', 'Cleanup failed', error);
     }
   });
-
-
 
 exports.onCreateMessage = functions
   .region("europe-west2")

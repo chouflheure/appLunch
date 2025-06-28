@@ -29,7 +29,8 @@ struct CFQCollectionView: View {
                                     coordinator: coordinator,
                                     conversation: Conversation(
                                         uid: cfq.messagerieUUID,
-                                        titleConv: cfq.title,
+                                        //titleConv: cfq.title,
+                                        titleConv: userAdmin.pseudo,
                                         pictureEventURL: userAdmin.profilePictureUrl,
                                         typeEvent: "cfq",
                                         eventUID: cfq.uid,
