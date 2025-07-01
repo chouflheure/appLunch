@@ -31,7 +31,7 @@ struct TurnCardDetailsView: View {
                         .padding(.bottom, 50)
                     
                     Spacer()
-                    
+                    /*
                     HStack(spacing: 30) {
                         Button(
                             action: {
@@ -66,6 +66,7 @@ struct TurnCardDetailsView: View {
                                 .background(.clear)
                         }
 
+                        
                         Button(
                             action: {
                                 viewModel.pushDataTurn {
@@ -100,6 +101,7 @@ struct TurnCardDetailsView: View {
                         // .disabled(!viewModel.isEnableButton)
                         .cornerRadius(10)
                     }
+                    */
                 }
             }
         }
