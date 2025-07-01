@@ -128,7 +128,6 @@ struct MainInformationsDetailView: View {
     @State var isPresentedLocalisation = false
     @State var isPresentedLink = false
     @State var showFriendProfile: Bool = false
-    @ObservedObject var coordinator: Coordinator
 
     var body: some View {
         VStack {

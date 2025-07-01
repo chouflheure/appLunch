@@ -47,7 +47,8 @@ struct TurnCardFeedView: View {
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(Color.gray, lineWidth: 0.2)
             }
-            .frame(height: !turn.pictureURLString.isEmpty ? 550 : 480)
+            .frame(maxHeight: 550)
+            // .frame(height: 550)
             .cornerRadius(20)
             .zIndex(1)
         }

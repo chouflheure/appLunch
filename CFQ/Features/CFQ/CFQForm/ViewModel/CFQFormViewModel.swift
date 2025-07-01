@@ -103,7 +103,10 @@ extension CFQFormViewModel {
     
     func addEventCFQOnFriendProfile(cfq: CFQ, completion: @escaping (Bool, String) -> Void) {
         firebaseService.updateDataByID(
-            data: ["messagesChannelId": FieldValue.arrayUnion([cfq.messagerieUUID])],
+            data: [
+                "postedCfqs": FieldValue.arrayUnion([cfq.uid]),
+                "messagesChannelId": FieldValue.arrayUnion([cfq.messagerieUUID])
+            ],
             to: .users,
             at: cfq.admin
         )

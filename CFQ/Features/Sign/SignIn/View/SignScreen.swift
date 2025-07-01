@@ -17,7 +17,7 @@ struct SignScreen: View {
                 .scaledToFit()
 
             VStack {
-                Text(StringsToken.Sign.Connexion)
+                Text(viewModel.hasAlreadyAccount ? StringsToken.Sign.Connexion : StringsToken.Sign.Inscritpion)
                     .tokenFont(.Title_Gigalypse_24)
                     .textCase(.uppercase)
                     .padding(.bottom, 20)
@@ -59,11 +59,20 @@ struct SignScreen: View {
                                 }
                             }
                         },
-                        title: StringsToken.Sign.Connexion,
+                        title: viewModel.hasAlreadyAccount ? StringsToken.Sign.Connexion : StringsToken.Sign.Inscritpion,
                         largeButtonType: .signNext,
                         isDisabled: viewModel.phoneNumber.isEmpty
                     )
 
+                    LargeButtonView(
+                        action: {
+                            viewModel.hasAlreadyAccount.toggle()
+                        },
+                        title: viewModel.hasAlreadyAccount ? "Pas encore de compte" : "J'ai un compte",
+                        largeButtonType: .signBack
+                    )
+                    
+                    /*
                     LargeButtonView(
                         action: {
                             viewModel.signInGuestMode()
@@ -71,6 +80,7 @@ struct SignScreen: View {
                         title: StringsToken.Sign.GuestMode,
                         largeButtonType: .signBack
                     )
+                     */
                 }
             }
         }

@@ -165,7 +165,7 @@ struct TurnCardView: View {
         }
         .toastView(toast: $toast)
         .fullScreenCover(isPresented: $viewModel.showDetailTurnCard) {
-            TurnCardDetailsView(viewModel: viewModel, coordinator: coordinator)
+            TurnCardDetailsView(viewModel: viewModel)
         }
         .customNavigationFlexible(
             leftElement: {

@@ -15,10 +15,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     {
         FirebaseApp.configure()
         firebaseService = FirebaseService()
+        setupNotificationActions()
+        UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().delegate = self
         requestNotificationPermission(application)
-        registerNotificationCategories()
-
+        
         return true
     }
 
@@ -36,6 +37,99 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         }
     }
 
+    
+    func setupNotificationActions() {
+        // Action "Oui, je sors"
+        let yesAction = UNNotificationAction(
+            identifier: "YES_ACTION",
+            title: "🎉 Oui, je sors !",
+            options: [] // Ouvre l'app
+        )
+        
+        // Action "Non, je reste"
+        let noAction = UNNotificationAction(
+            identifier: "NO_ACTION",
+            title: "🏠 Non, je reste",
+            options: [] // Reste en arrière-plan
+        )
+        
+        // Créer la catégorie avec les actions
+        let category = UNNotificationCategory(
+            identifier: "DAILY_ASK_CATEGORY",
+            actions: [yesAction, noAction],
+            intentIdentifiers: [],
+            options: [.customDismissAction]
+        )
+        
+        // Enregistrer la catégorie
+        UNUserNotificationCenter.current().setNotificationCategories([category])
+    }
+    
+    // Gérer les actions de notification
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let actionIdentifier = response.actionIdentifier
+        let userInfo = response.notification.request.content.userInfo
+        
+        switch actionIdentifier {
+        case "YES_ACTION":
+            handleYesResponse(userInfo: userInfo)
+            
+        case "NO_ACTION":
+            handleNoResponse(userInfo: userInfo)
+            
+        default:
+            // Action par défaut (tap sur la notification)
+            handleDefaultTap(userInfo: userInfo)
+        }
+        
+        completionHandler()
+    }
+    
+    func handleYesResponse(userInfo: [AnyHashable: Any]) {
+            print("Utilisateur a répondu: OUI")
+            // Mettre à jour Firestore
+            updateUserStatus(isActive: true, response: "yes")
+        }
+        
+        func handleNoResponse(userInfo: [AnyHashable: Any]) {
+            print("Utilisateur a répondu: NON")
+            // Mettre à jour Firestore
+            updateUserStatus(isActive: false, response: "no")
+        }
+        
+        func handleDefaultTap(userInfo: [AnyHashable: Any]) {
+            print("@@@ Tap normal sur la notification")
+            // Ouvrir l'app normalement
+        }
+    
+    func updateUserStatus(isActive: Bool, response: String) {
+        guard let userUID = UserDefaults.standard.string(forKey: "userUID"),
+            let firebaseService = firebaseService
+        else {
+            return
+        }
+        
+            // guard let userId = Auth.auth().currentUser?.uid else { return }
+            
+        firebaseService.updateDataByID(data: ["isActive": isActive], to: .users, at: userUID)
+        
+        /*
+            let db = Firestore.firestore()
+            db.collection("users").document(userId).updateData([
+                "isActive": isActive,
+                "lastResponse": response,
+                "responseTimestamp": FieldValue.serverTimestamp()
+            ]) { error in
+                if let error = error {
+                    print("Erreur mise à jour: \(error)")
+                } else {
+                    print("Statut mis à jour avec succès")
+                }
+            }
+         */
+        }
+    
     func registerNotificationCategories() {
         let acceptAction = UNNotificationAction(
             identifier: "ACCEPT_ACTION",
@@ -190,6 +284,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         completionHandler(options)
     }
 
+    /*
     // Handle user interaction with the notification
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
@@ -238,7 +333,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             completionHandler()
         }
     }
-
+*/
+    
     func applicationDidBecomeActive(_ application: UIApplication) {
         refreshFCMToken()
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()

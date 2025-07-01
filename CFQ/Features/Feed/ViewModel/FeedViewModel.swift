@@ -20,7 +20,7 @@ class FeedViewModel: ObservableObject {
 
         let turnToCatch = (user.invitedTurns ?? [""]) + (user.postedTurns ?? [""])
         startListeningToTurn(data: turnToCatch)
-        catchAllUserCFQ(user: user)
+        // catchAllUserCFQ(user: user)
     }
     
     func catchAllUserCFQ(user: User) {

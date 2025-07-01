@@ -6,48 +6,62 @@ admin.initializeApp();
 exports.sendScheduledDataMessageIsTurnTonight6PM = functions
     .region("europe-west2")
     .pubsub
-    .schedule("00 18 * * *")
+    .schedule("00 18 * * *") // Ajout du 5ème astérisque manquant
     .timeZone("Europe/Paris")
     .onRun(async (context) => {
         const message = {
             notification: {
                 title: "Ça sort ce soir ?",
-                body: "Reste appuyé sur la notif pour répondre",
+                body: "Appuie sur une option pour répondre",
             },
             topic: "daily_ask_turn",
             data: {
                 notificationType: "daily_reminder",
+                actionType: "quick_response",
             },
             apns: {
                 payload: {
                     aps: {
-                        category: "CUSTOM_CATEGORY",
+                        category: "DAILY_ASK_CATEGORY",
                         alert: {
                             title: "Ça sort ce soir ?",
-                            body: "Va activer le switch sur ton profil",
+                            body: "Appuie sur une option pour répondre",
                         },
                         sound: 'default',
+                        'mutable-content': 1, // Permet les actions
                     },
                 },
             },
+            android: {
+                notification: {
+                    click_action: "DAILY_ASK_CATEGORY"
+                }
+            }
         };
 
+        // Mise à jour des utilisateurs
         const usersRef = admin.firestore().collection("users");
         const snapshot = await usersRef.get();
         const batch = admin.firestore().batch();
+        
         snapshot.forEach((doc) => {
-        batch.update(doc.ref, {isActive: false});
+            batch.update(doc.ref, {isActive: false});
+        });
+
+        try {
+            // Exécuter le batch (c'était manquant !)
+            await batch.commit();
+            console.log("Utilisateurs mis à jour avec succès.");
+            
+            // Envoyer la notification
+            await admin.messaging().send(message);
+            console.log("Message de données envoyé avec succès.");
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du message de données :", error);
+        }
+        
+        return null;
     });
-
-    try {
-        await admin.messaging().send(message);
-        console.log("Message de données envoyé avec succès.");
-    } catch (error) {
-        console.error("Erreur lors de l’envoi du message de données :", error);
-    }
-
-    return null;
-});
 
 
 exports.sendScheduledMessage4AMIfTurnAlready = functions

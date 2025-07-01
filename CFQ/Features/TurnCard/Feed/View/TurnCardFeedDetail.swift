@@ -22,7 +22,7 @@ struct TurnCardDetailsFeedView: View {
                     // Header ( Date / Picture / TURN )
                     HeaderCardViewFeedDetailView(turn: viewModel.turn)
                         .padding(.bottom, 15)
-                        .frame(height: 200)
+                        .frame(height: !turn.pictureURLString.isEmpty ? 200 : 100)
                     
                     // Title ( Title / Guest )
                     TitleTurnCardDetailFeedView(
@@ -31,7 +31,7 @@ struct TurnCardDetailsFeedView: View {
                         user: user
                     )
                     .padding(.horizontal, 16)
-                    .zIndex(2)
+                    .padding(.top, !turn.pictureURLString.isEmpty ? 20 : 70)
                     
                     // Informations ( Mood / Date / Loc )
                     MainInformationsDetailFeedView(turn: viewModel.turn)
@@ -66,10 +66,11 @@ struct HeaderCardViewFeedDetailView: View {
         VStack {
             ZStack {
                 ZStack(alignment: .top) {
-                    CachedAsyncImageView(
-                        urlString: turn.pictureURLString,
-                        designType: .fullScreenImageTurnDetail)
-
+                    if !turn.pictureURLString.isEmpty {
+                        CachedAsyncImageView(
+                            urlString: turn.pictureURLString,
+                            designType: .fullScreenImageTurnDetail)
+                    }
                     HStack(alignment: .center) {
                         Button(
                             action: {
@@ -123,9 +124,11 @@ struct TitleTurnCardDetailFeedView: View {
             Text(turn.titleEvent)
                 .tokenFont(.Title_Gigalypse_24)
                 .background {
-                    Color.gray.opacity(0.6)
-                        .blur(radius: 10)
-                        .padding(-5)  // Pour que le flou dépasse un peu du texte
+                    if !turn.pictureURLString.isEmpty {
+                        Color.gray.opacity(0.6)
+                            .blur(radius: 10)
+                            .padding(0)  // Pour que le flou dépasse un peu du texte
+                    }
                 }
                 .padding(.bottom, 16)
 
@@ -193,7 +196,6 @@ struct TitleTurnCardDetailFeedView: View {
                     },
                     selectedOption: (turn.adminContact?.uid == user.uid) ? .constant(.yes) : $turn.userStatusParticipate
                 )
-    
             }
             // TODO: - Add participants
             /*

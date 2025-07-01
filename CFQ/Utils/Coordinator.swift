@@ -147,17 +147,20 @@ class Coordinator: ObservableObject {
     
     func catchAllUserCFQ(user: User) {
         user.invitedCfqs = removeEmptyIdInArray(data: user.invitedCfqs ?? [""])
+        user.postedCfqs = removeEmptyIdInArray(data: user.postedCfqs ?? [""])
 
-        if let invitedCfqs = user.invitedCfqs, !invitedCfqs.isEmpty {
+        let cfqs = (user.invitedCfqs ?? []) + (user.postedCfqs ?? [])
+
+        if !cfqs.isEmpty {
             firebaseService.getDataByIDs(
                 from: .cfqs,
-                with: invitedCfqs,
+                with: cfqs,
                 listenerKeyPrefix: ListenerType.cfq.rawValue,
                 onUpdate: { (result: Result<[CFQ], Error>) in
                     switch result {
-                    case .success(let cfq):
+                    case .success(let cfqs):
                         DispatchQueue.main.async {
-                            self.userCFQ = cfq
+                            self.userCFQ = cfqs
                         }
                     case .failure(let error):
                         print("👎 Erreur : \(error.localizedDescription)")
@@ -175,7 +178,7 @@ class Coordinator: ObservableObject {
             )
         }
     }
-    
+
     func catchAllUsersFriend(user: User) {
         user.friends = removeEmptyIdInArray(data: user.friends)
 

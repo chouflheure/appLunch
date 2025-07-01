@@ -201,8 +201,6 @@ extension TurnCardViewModel {
     }
     
     private func uploadTurnOnDataBase(urlStringImage: String, completion: @escaping (Bool, String) -> Void) {
-        let uid = UUID()
-        let messagerieUIID = UUID()
 
         var moodsInt: [Int] = []
         var friends: [String] = []
@@ -210,7 +208,7 @@ extension TurnCardViewModel {
         setFriendsOnTurn.forEach { friends.append($0.uid) }
 
         let turn = Turn(
-            uid: uid.description,
+            uid: turn.uid.isEmpty ? UUID().description : turn.uid,
             titleEvent: titleEvent,
             dateStartEvent: dateEventStart ?? Date(),
             dateEndEvent: dateEventEnd,
@@ -222,7 +220,7 @@ extension TurnCardViewModel {
             denied: [],
             mayBeParticipate: [],
             mood: moodsInt,
-            messagerieUUID: messagerieUIID.description,
+            messagerieUUID: turn.messagerieUUID.isEmpty ? UUID().description : turn.messagerieUUID,
             placeTitle: placeTitle,
             placeAdresse: placeAdresse,
             placeLatitude: placeLatitude,
