@@ -44,22 +44,27 @@ struct MessagerieView: View {
                 VStack(spacing: 0) {
                     ScrollViewReader { proxy in
                         ScrollView(.vertical, showsIndicators: false) {
-                            VStack {
+                            VStack(spacing: 0) {
                                 ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
-                                    LazyVStack(spacing: 4) {
-                                        
+                                    LazyVStack(spacing: 0) {
                                         if viewModel.messages[index].senderUID == coordinator.user?.uid {
-                                            CellMessageSendByTheUserView(data: viewModel.messages[index]) {}
+                                            CellMessageSendByTheUserView(
+                                                data: viewModel.messages[index],
+                                                isSameLastSender: index > 0 && viewModel.messages[index].senderUID == viewModel.messages[index-1].senderUID
+                                            ) {}
                                             .padding(.horizontal, 12)
                                             .rotationEffect(.degrees(180))
                                         } else {
-                                            CellMessageViewReceived(data: viewModel.messages[index])
+                                            CellMessageViewReceived(
+                                                data: viewModel.messages[index],
+                                                isSameLastSender: index > 0 && viewModel.messages[index].senderUID == viewModel.messages[index-1].senderUID
+                                            )
                                             .padding(.horizontal, 12)
                                             .rotationEffect(.degrees(180))
                                         }
                                     }
                                 }
-                                .padding(.bottom, 15)
+                                .padding(.bottom, 5)
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -120,14 +125,6 @@ struct MessagerieView: View {
             .allowsHitTesting(!showReaction)
             // .ignoresSafeArea()
         }
-
-        //if showReaction {
-        //  destinationView()
-        // .transition(.move(edge: .trailing))
-        //    .zIndex(2)
-        // ReactionPreviewView(showReaction: $showReaction)
-        //}
-
         .scrollDismissesKeyboard(.immediately)
         .customNavigationFlexible(
             leftElement: {
@@ -177,12 +174,7 @@ struct MessagerieView: View {
     }
     
     private func editHeader(cfq: CFQ) -> CFQ {
-        print("@@@ cfq.admin = \(cfq.admin)")
         if cfq.admin == user.uid {
-            print("@@@ in 1er if")
-            print("@@@ user.uid = \(user.uid)")
-            print("@@@ user.pseudo = \(user.pseudo)")
-
             cfq.userContact = UserContact(
                 uid: user.uid,
                 pseudo: user.pseudo,
@@ -190,12 +182,7 @@ struct MessagerieView: View {
             )
             return cfq
         } else if let userContact = user.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
-            print("@@@ in 2eme if")
             cfq.userContact = userContact
-            print("@@@ cfq = \(cfq.printObject)")
-            print("\n @@@ userContact uid: \(userContact.uid)")
-            print("\n @@@ userContact pseudo: \(userContact.pseudo)")
-            print("\n @@@ userContact profilePictureUrl: \(userContact.profilePictureUrl)")
             return cfq
         }
 

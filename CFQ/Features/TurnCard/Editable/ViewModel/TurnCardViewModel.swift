@@ -187,12 +187,6 @@ extension TurnCardViewModel {
                 }
             }
         } else {
-            print("@@@ else ")
-            
-            self.isLoading = false
-            completion(false, "photo manquante")
-            
-            /*
             uploadTurnOnDataBase(urlStringImage: "") { success, message in
                 if success {
                     print("@@@ if 1")
@@ -202,7 +196,6 @@ extension TurnCardViewModel {
                     completion(false, message)
                 }
             }
-             */
         }
     }
     

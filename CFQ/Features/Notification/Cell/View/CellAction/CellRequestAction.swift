@@ -17,7 +17,7 @@ struct CellRequestAction: View {
                     onClick: onClick
                 )
             } else {
-                CellResponseFriend(isAcceptedFriend: isAcceptedFriend)
+                // CellResponseFriend(userContact: userContact, isAcceptedFriend: isAcceptedFriend)
             }
         }
         .frame(height: 50)

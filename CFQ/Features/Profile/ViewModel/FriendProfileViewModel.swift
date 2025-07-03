@@ -116,7 +116,7 @@ class FriendProfileViewModel: ObservableObject {
                 uid: uidNotification.description,
                 typeNotif: .friendRequest,
                 timestamp: Date(),
-                uidUserNotif: userFriend.uid,
+                uidUserNotif: user.uid,
                 uidEvent: "",
                 titleEvent: "Become friends",
                 userInitNotifPseudo: user.pseudo
@@ -160,7 +160,7 @@ class FriendProfileViewModel: ObservableObject {
                 uid: uidNotification.description,
                 typeNotif: .acceptedFriendRequest,
                 timestamp: Date(),
-                uidUserNotif: userFriend.uid,
+                uidUserNotif: user.uid,
                 uidEvent: "",
                 titleEvent: "Accept friends",
                 userInitNotifPseudo: user.pseudo

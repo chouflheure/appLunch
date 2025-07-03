@@ -238,15 +238,17 @@ struct CellMessageSendByTheUserView: View {
     @State private var showReaction: Bool = false
     @State private var isShowPopover = false
     var data: Message
+    var isSameLastSender: Bool
+
     var onDoubleTap: () -> Void
 
     var body: some View {
-        VStack {
-            VStack(alignment: .trailing) {
+        VStack(spacing: 0) {
+            VStack(alignment: .trailing, spacing: 0) {
 
-                ReponseMessage {
+                // ReponseMessage {
                     
-                    HStack {
+                    HStack(spacing: 0) {
                         Spacer()
                         Text(data.message)
                             .tokenFont(.Body_Inter_Regular_15)
@@ -310,7 +312,7 @@ struct CellMessageSendByTheUserView: View {
             }
             .padding(.trailing, 15)
             .padding(.leading, 30)
-        }
+        // }
     }
 }
 
@@ -320,21 +322,30 @@ struct CellMessageViewReceived: View {
     @State private var isShowPopover = false
     
     var data: Message
+    var isSameLastSender: Bool
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
 
-            ReponseMessage {
+//            ReponseMessage {
+                
+                if !isSameLastSender {
+                    Text(data.userContact?.pseudo ?? "User")
+                        .tokenFont(.Placeholder_Inter_Regular_14)
+                        .padding(.leading, 50)
+                }
 
-                Text(data.userContact?.pseudo ?? "User")
-                    .tokenFont(.Placeholder_Inter_Regular_14)
-                    .padding(.leading, 50)
-
-                HStack(alignment: .top) {
-                    CachedAsyncImageView(
-                        urlString: data.userContact?.profilePictureUrl ?? "",
-                        designType: .scaleImageMessageProfile
-                    )
+                HStack(alignment: .bottom) {
+                    if !isSameLastSender {
+                        CachedAsyncImageView(
+                            urlString: data.userContact?.profilePictureUrl ?? "",
+                            designType: .scaleImageMessageProfile
+                        )
+                    } else {
+                        Spacer()
+                            .frame(width: 50)
+                    }
+                    
 
                     Text(data.message)
                         .tokenFont(.Body_Inter_Regular_15)
@@ -397,127 +408,13 @@ struct CellMessageViewReceived: View {
                 
             }
             .padding(.trailing, 30)
-        }
+        // }
     }
 }
 
 #Preview {
-    CellMessageViewReceived(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()))
-    CellMessageSendByTheUserView(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()), onDoubleTap: {})
-}
-
-
-
-
-struct CellMessageView2: View {
-    @State private var dragOffset: CGFloat = 0
-    @State private var showReaction: Bool = false
-    @State private var isShowPopover = false
-    @Binding var textMessage: String
-
-    var body: some View {
-        VStack {
-            VStack(alignment: .leading) {
-
-                ReponseMessage {
-
-                    Text("Charles")
-                        .tokenFont(.Placeholder_Inter_Regular_14)
-                        .padding(.leading, 50)
-
-                    HStack(alignment: .top) {
-                        Image(.header)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 32, height: 32)
-                            .clipShape(Circle())
-                            .overlay {
-                                Circle()
-                                    .stroke(Color.black, lineWidth: 1)
-                                    .frame(width: 34, height: 34)
-                            }
-
-                        Text(textMessage)
-                            .tokenFont(.Body_Inter_Medium_12)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(.blackLight)
-                            .cornerRadius(20)
-                            .simultaneousGesture(
-                                LongPressGesture()
-                                    .onEnded { _ in
-                                        print("@@@ long Tap")
-                                        showReaction = true
-                                    }
-                            )
-                            .simultaneousGesture(
-                                TapGesture(count: 2)
-                                    .onEnded {
-                                        print("@@@ double Tap")
-                                        showReaction = true
-                                    }
-                            )
-                    }
-                    .padding(.trailing, 30)
-
-                    HStack {
-                        Button(action: {
-                            isShowPopover = true
-                        }) {
-                            Text("❤️ 😘 2")
-                                .foregroundColor(.white)
-                                .font(.system(size: 10))
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 12)
-                                .background(.blackLight)
-                                .cornerRadius(20)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(lineWidth: 0.3)
-                                        .foregroundColor(.black)
-                                }
-                                .popover(
-                                    isPresented: $isShowPopover,
-                                    arrowEdge: .bottom,
-                                    content: {
-                                        Text("Hello, World!")
-                                            .padding()
-                                            .presentationCompactAdaptation(
-                                                .none)
-                                    }
-                                )
-                                .zIndex(999)
-                        }
-                        Spacer()
-                    }
-                    .padding(.leading, 40)
-                    .offset(y: -12)
-
-                }
-
-            }
-        }
-    }
-}
-
-private
-    struct PopoverDetailView: View
-{
-    var body: some View {
-        Text("Popover Content")
-            .padding()
-    }
-}
-
-struct ReactionMessageView {
-    var body: some View {
-        Text("")
-    }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        // CellMessageView()
-    }
+    CellMessageViewReceived(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()), isSameLastSender: false)
+    CellMessageViewReceived(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()), isSameLastSender: true)
+    CellMessageSendByTheUserView(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()), isSameLastSender: false, onDoubleTap: {})
+    CellMessageSendByTheUserView(data: Message(uid: "", message: "Coucou les filles ! Je vous confirme que Joséphine sera au bureau vendredi pour aller la chercher !", senderUID: "", timestamp: Date()), isSameLastSender: true, onDoubleTap: {})
 }

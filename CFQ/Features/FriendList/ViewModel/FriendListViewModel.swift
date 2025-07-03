@@ -93,16 +93,16 @@ extension FriendListViewModel {
                 uid: uidNotification.description,
                 typeNotif: .friendRequest,
                 timestamp: Date(),
-                uidUserNotif: userFriend.uid,
+                uidUserNotif: user.uid,
                 uidEvent: "",
                 titleEvent: "Become friends",
-                userInitNotifPseudo: user.pseudo
+                userInitNotifPseudo: userFriend.pseudo
             ),
             userNotifications: [userFriend.uid],
             completion: { (result: Result<Void, Error>) in
                 switch result {
                 case .success():
-                    print("@@@ result yes conv ")
+                    print("@@@ push notif ")
                 case .failure(let error):
                     print("@@@ error = \(error)")
                 }
