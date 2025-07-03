@@ -14,6 +14,8 @@ struct FriendProfileView: View {
         self.coordinator = coordinator
         self.user = user
         self.friend = friend
+        
+        print("@@@ friend = \(friend.printObject)")
 
         self._viewModel = StateObject(
             wrappedValue: FriendProfileViewModel(

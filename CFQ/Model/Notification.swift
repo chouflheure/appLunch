@@ -9,6 +9,23 @@ enum NotificationsType: String {
     case cfqCreated = "cfqCreated"
     case turnCreated = "turnCreated"
     case attending = "attending"
+    
+    func bodyNotif() -> String {
+        switch self {
+        case .turnCreated:
+            "t'invite à son turn "
+        case .teamCreated:
+            "t'a ajouté la team "
+        case .friendRequest:
+            "te demande en ami "
+        case .acceptedFriendRequest:
+            ""
+        case .cfqCreated:
+            "ce demande "
+        case .attending:
+            "participe à ton event "
+        }
+    }
 }
 
 class Notification: ObservableObject, Encodable, Decodable {
@@ -78,10 +95,10 @@ class Notification: ObservableObject, Encodable, Decodable {
     
     var printObject: String {
         return "@@@ ---------Notif---------- "
-        + "@@@ \nuid : \(uid)"
-        + "@@@ \n typeNotif : \(typeNotif)"
-        + "@@@ \n timestamp : \(timestamp)"
-        + "@@@ \n userContact : \(String(describing: userContact))"
-        + "@@@ \n ------------------"
+        + "\n @@@ uid : \(uid)"
+        + "\n @@@ typeNotif : \(typeNotif)"
+        + "\n @@@ timestamp : \(timestamp)"
+        + "\n @@@ userContact : \(String(describing: userContact))"
+        + "\n @@@ ------------------"
     }
 }

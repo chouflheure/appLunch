@@ -2,76 +2,72 @@ import SwiftUI
 
 struct NotificationScreenView: View {
     @ObservedObject var coordinator: Coordinator
-    @StateObject var vm = NotificationViewModel()
+    @StateObject var viewModel: NotificationViewModel
+    @ObservedObject var user: User
 
+    init(coordinator: Coordinator, user: User) {
+        self.coordinator = coordinator
+        self.user = user
+        self._viewModel = StateObject(
+            wrappedValue: NotificationViewModel(user: user))
+    }
+
+    @ViewBuilder
+    func cellConstruction(notification: Notification) -> some View {
+        switch notification.typeNotif {
+            case "teamCreated":
+            Text(notification.typeNotif).foregroundColor(.white)
+            case "friendRequest":
+                EmptyView()
+            case "acceptedFriendRequest":
+            NavigationLink(destination: {
+                FriendProfileView(
+                    coordinator: coordinator,
+                    user: user,
+                    friend: notification.userContact ?? UserContact()
+                )
+            }) {
+                VStack {
+                    CellResponseFriend(
+                        userContact: notification.userContact ?? UserContact(),
+                        timeStamp: notification.timestamp,
+                        isAcceptedFriend: true
+                    )
+                }
+            }
+
+            // Text(notification.typeNotif).foregroundColor(.white)
+            case "cfqCreated":
+                CellInformationEvent(
+                    userContact: notification.userContact ?? UserContact(),
+                    bodyNotif: .cfqCreated,
+                    notification: notification
+                )
+            case "turnCreated":
+                CellInformationEvent(
+                    userContact: notification.userContact ?? UserContact(),
+                    bodyNotif: .turnCreated,
+                    notification: notification
+                )
+            
+            case "attending":
+            Text(notification.typeNotif)
+                .foregroundColor(.white)
+        default:
+            Text(notification.typeNotif)
+                .foregroundColor(.white)
+        }
+    }
+    
     var body: some View {
-        VStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 24) {
-                    Text("Aujourd'hui")
-                        .tokenFont(.Body_Inter_Medium_16)
-                        .padding(.horizontal, 12)
-                    CellRequestAction(
-                        userContact: UserContact(
-                            uid: "",
-                            name: "",
-                            pseudo: "Lisa",
-                            profilePictureUrl:
-                                "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
-                            isActive: false
-                        ),
-                        onClick: {
-                            showProfileFriend(
-                                profileFriend:
-                                    UserContact(
-                                        uid: "",
-                                        name: "",
-                                        pseudo: "Lisa",
-                                        profilePictureUrl:
-                                            "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
-                                        isActive: false
-                                    )
-                            )
-                        }
-                    )
-
-                    Text("Hier")
-                        .tokenFont(.Body_Inter_Medium_16)
-                        .padding(.horizontal, 12)
-
-                    CellRequestAction(
-                        userContact: UserContact(
-                            uid: "",
-                            name: "",
-                            pseudo: "Lisa",
-                            profilePictureUrl:
-                                "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
-                            isActive: false
-                        ),
-                        onClick: {}
-                    )
-                    CellRequestAction(
-                        userContact: UserContact(
-                            uid: "",
-                            name: "",
-                            pseudo: "Lisa",
-                            profilePictureUrl:
-                                "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
-                            isActive: false
-                        ),
-                        onClick: {}
-                    )
-                    CellRequestAction(
-                        userContact: UserContact(
-                            uid: "",
-                            name: "",
-                            pseudo: "Lisa",
-                            profilePictureUrl:
-                                "https://firebasestorage.googleapis.com:443/v0/b/cfq-dev-7c39a.firebasestorage.app/o/images%2FJtISdWec8JV4Od1WszEGXkqEVAI2.jpg?alt=media&token=465277cd-251a-4810-87cb-2ca6834a7c6a",
-                            isActive: false
-                        ),
-                        onClick: {}
-                    )
+        
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 24) {
+                    
+                LazyVStack(spacing: 20) {
+                    ForEach(viewModel.notifications.sorted(by: { $0.timestamp > $1.timestamp}), id: \.uid) { notification in
+                        cellConstruction(notification: notification)
+                    }
                 }
             }
         }
@@ -87,24 +83,5 @@ struct NotificationScreenView: View {
             },
             hasADivider: true
         )
-    }
-
-    func showProfileFriend(profileFriend: UserContact) {
-        coordinator.profileUserSelected = User(
-            uid: profileFriend.uid,
-            name: profileFriend.name,
-            pseudo: profileFriend.pseudo,
-            profilePictureUrl: profileFriend.profilePictureUrl,
-            isActive: profileFriend.isActive
-        )
-        withAnimation {
-            coordinator.showProfileFriend = true
-        }
-    }
-}
-
-#Preview {
-    SafeAreaContainer {
-        NotificationScreenView(coordinator: Coordinator())
     }
 }

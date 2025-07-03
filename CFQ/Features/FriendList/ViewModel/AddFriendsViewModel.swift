@@ -134,7 +134,7 @@ extension AddFriendsViewModel {
                 uid: uidNotification.description,
                 typeNotif: .friendRequest,
                 timestamp: Date(),
-                uidUserNotif: userFriend.uid,
+                uidUserNotif: user.uid,
                 uidEvent: "",
                 titleEvent: "Become friends",
                 userInitNotifPseudo: user.pseudo
@@ -153,11 +153,10 @@ extension AddFriendsViewModel {
     
     private func acceptFriendsToList(userFriend: UserContact) {
         firebaseService.updateDataByID(
-            data:
-                [
-                    "sentFriendRequests": FieldValue.arrayRemove([user.uid]),
-                    "friends": FieldValue.arrayUnion([user.uid])
-                ],
+            data: [
+                "sentFriendRequests": FieldValue.arrayRemove([user.uid]),
+                "friends": FieldValue.arrayUnion([user.uid])
+            ],
             to: .users,
             at: userFriend.uid
         )
@@ -178,7 +177,7 @@ extension AddFriendsViewModel {
                 uid: uidNotification.description,
                 typeNotif: .acceptedFriendRequest,
                 timestamp: Date(),
-                uidUserNotif: userFriend.uid,
+                uidUserNotif: user.uid,
                 uidEvent: "",
                 titleEvent: "Accept friends",
                 userInitNotifPseudo: user.pseudo

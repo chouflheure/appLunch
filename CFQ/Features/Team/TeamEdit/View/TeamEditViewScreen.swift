@@ -16,10 +16,6 @@ struct TeamEditViewScreen: View {
             viewModel.pictureUrlString = coordinator.teamDetail?.pictureUrlString ?? ""
             viewModel.setFriends = Set(coordinator.teamDetail?.friendsContact ?? [UserContact()])
             viewModel.setAdmins = Set(coordinator.teamDetail?.adminsContact ?? [UserContact()])
-        } else {
-            withAnimation {
-                coordinator.showTeamDetailEdit = false
-            }
         }
     }
 

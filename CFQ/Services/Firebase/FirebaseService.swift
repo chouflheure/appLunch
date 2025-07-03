@@ -439,11 +439,11 @@ class FirebaseService: FirebaseServiceProtocol {
     func getNotificationsByIds(
         notificationUID: String,
         limit: Int = 15,
-        listenerKeyPrefix: String,
+        // listenerKeyPrefix: String,
         completion: @escaping (Result<[Notification], Error>) -> Void
     ) {
         let db = Firestore.firestore()
-        let messagesRef = db.collection("notifications").document(notificationUID).collection("messages")
+        let messagesRef = db.collection("notifications").document(notificationUID).collection("userNotifications")
 
         // Query pour récupérer les 15 derniers messages triés par timestamp
         let query =
@@ -481,7 +481,7 @@ class FirebaseService: FirebaseServiceProtocol {
         }
 
         // Stocker le listener pour pouvoir le supprimer plus tard
-        activeListeners[listenerKeyPrefix] = listener
+        // activeListeners[listenerKeyPrefix] = listener
     }
     
     func addDataNotif(
@@ -585,6 +585,8 @@ class FirebaseService: FirebaseServiceProtocol {
         activeListeners[listenerKeyPrefix] = listener
     }
 
+    
+    
     func markMessageAsRead(conversationId: String, userId: String) {
         let conversationRef = db.collection("conversations").document(conversationId)
 

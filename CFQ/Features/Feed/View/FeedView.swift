@@ -51,16 +51,16 @@ struct FeedView: View {
 
                 Spacer()
 
-                /*
+                
                 NavigationLink(
-                    destination: NotificationScreenView(coordinator: coordinator)
+                    destination: NotificationScreenView(coordinator: coordinator, user: user)
                 ) {
                     NotificationButtonIcon_Nav(
                         numberNotificationUnRead: 0,
                         icon: .iconNotifs
                     )
                 }
-                */
+                
 
                 // TODO: - Edit
                 NavigationLink(
@@ -75,7 +75,6 @@ struct FeedView: View {
             .padding(.bottom, 10)
             .padding(.horizontal, 20)
 
-            // Contenu principal du feed
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading) {
                     

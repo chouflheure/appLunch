@@ -1,10 +1,10 @@
 
 import SwiftUI
 
-struct CellResponseFriend: View {
+struct CellInformationEvent: View {
     var userContact: UserContact
-    var timeStamp: Date
-    var isAcceptedFriend: Bool
+    var bodyNotif: NotificationsType
+    var notification: Notification
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -14,14 +14,16 @@ struct CellResponseFriend: View {
                     .clipShape(Circle())
                     .frame(width: 35, height: 35)
                     .padding(.trailing, 5)
-                
+
                 HStack {
-                    (Text("Avec ")
+                    (Text(userContact.pseudo)
                         .tokenFont(.Body_Inter_Medium_14)
-                     + Text(userContact.pseudo)
+                     + Text(" ")
+                     + Text(bodyNotif.bodyNotif())
                         .tokenFont(.Body_Inter_Medium_14)
                         .bold()
-                     + Text(" vous êtes maintenant ami ")
+                     + Text(" ")
+                     + Text(notification.titleEvent)
                         .tokenFont(.Body_Inter_Medium_14)
                     )
                     .multilineTextAlignment(.leading)
@@ -31,7 +33,7 @@ struct CellResponseFriend: View {
 
                 Spacer()
                 
-                Text(timeAgoSinceDate(timeStamp))
+                Text(timeAgoSinceDate(notification.timestamp))
                     .tokenFont(.Placeholder_Inter_Regular_14)
             }
         }
@@ -65,5 +67,3 @@ struct CellResponseFriend: View {
         return "maintenant"
     }
 }
-
-

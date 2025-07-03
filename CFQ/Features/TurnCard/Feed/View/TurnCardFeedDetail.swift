@@ -12,6 +12,7 @@ struct TurnCardDetailsFeedView: View {
         self.turn = turn
         self.user = user
         self._viewModel = StateObject(wrappedValue: TurnCardDetailsFeedViewModel(turn: turn))
+        print("@@@ turn = •\(turn.printObject)")
     }
     
     var body: some View {
@@ -31,7 +32,7 @@ struct TurnCardDetailsFeedView: View {
                         user: user
                     )
                     .padding(.horizontal, 16)
-                    .padding(.top, !turn.pictureURLString.isEmpty ? 20 : 70)
+                    .padding(.top, !turn.pictureURLString.isEmpty ? 0 : 70)
                     
                     // Informations ( Mood / Date / Loc )
                     MainInformationsDetailFeedView(turn: viewModel.turn)
@@ -69,7 +70,8 @@ struct HeaderCardViewFeedDetailView: View {
                     if !turn.pictureURLString.isEmpty {
                         CachedAsyncImageView(
                             urlString: turn.pictureURLString,
-                            designType: .fullScreenImageTurnDetail)
+                            designType: .fullScreenImageTurnDetail
+                        )
                     }
                     HStack(alignment: .center) {
                         Button(
