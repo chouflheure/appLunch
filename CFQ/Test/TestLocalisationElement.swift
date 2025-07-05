@@ -136,6 +136,12 @@ struct SelectLocalisationView: View {
                             viewModel.placeAdresse = result.subtitle
                             searchForLocation(completion: result)
                             selectedResult = result
+
+                            if !searchTextPlace.isEmpty {
+                                viewModel.placeAdresse = viewModel.placeTitle + viewModel.placeAdresse
+                                viewModel.placeTitle = searchTextPlace
+                            }
+
                             isPresented = false
                         }
                     }
@@ -147,6 +153,10 @@ struct SelectLocalisationView: View {
             }
             
             Button(action: {
+                if !searchTextPlace.isEmpty {
+                    viewModel.placeAdresse = viewModel.placeTitle + viewModel.placeAdresse
+                    viewModel.placeTitle = searchTextPlace
+                }
                 isPresented = false
             }, label: {
                 Text("Done")
