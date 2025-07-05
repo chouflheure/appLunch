@@ -32,8 +32,23 @@ class SearchCompleter: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 }
 
+
 struct SelectLocalisationView: View {
-    @State private var searchText = ""
+    @State private var searchTextPlace = ""
+    @State private var searchTextLocation = ""
+
+    // @Binding var selectedItem: String = ""
+
+    @State var searchText: String = ""
+    @State private var items: [PlaceItem] = []
+    @FocusState private var isSearchFocused: Bool
+    
+    private let columns = [
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
+    ]
+    
+    
     @StateObject private var searchCompleter = SearchCompleter()
     @ObservedObject var viewModel: TurnCardViewModel
     @Binding var isPresented: Bool
@@ -50,11 +65,49 @@ struct SelectLocalisationView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            TextField("Où faire l'event ?", text: $searchText, onEditingChanged: { _ in }, onCommit: {})
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            .padding()
-            .padding(.top, 20)
-            .onChange(of: searchText) { newValue in
+            VStack(spacing: 16) {
+                
+                SearchBarView(
+                    text: $searchText,
+                    placeholder: "Où faire l'event ( optionnel )",
+                    onRemoveText: {searchText = ""},
+                    onTapResearch: {}
+                )
+                .onSubmit {
+                    addCustomLocation()
+                }
+                
+                ScrollView(showsIndicators: false) {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(filteredItems) { item in
+                            ItemViewLocalisation(
+                                city: item.value,
+                                isSelected: searchTextPlace == item.value
+                            )
+                            .onTapGesture {
+                                toggleSelection(of: item)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+            }
+            .frame(height: 200)
+            .padding(.top, 15)
+            .onAppear {
+                initializeItems()
+            }
+
+            SearchBarView(
+                text: $searchTextLocation,
+                placeholder: "Où faire l'event",
+                onRemoveText: {searchText = ""},
+                onTapResearch: {}
+            ).onSubmit {
+                addCustomLocation()
+            }
+            .padding(.top, 15)
+            .onChange(of: searchTextLocation) { newValue in
                 searchCompleter.updateQueryFragment(newValue)
             }
 
@@ -83,6 +136,7 @@ struct SelectLocalisationView: View {
                             viewModel.placeAdresse = result.subtitle
                             searchForLocation(completion: result)
                             selectedResult = result
+                            isPresented = false
                         }
                     }
                     
@@ -91,6 +145,21 @@ struct SelectLocalisationView: View {
                         .padding(.horizontal, 12)
                 }
             }
+            
+            Button(action: {
+                isPresented = false
+            }, label: {
+                Text("Done")
+                    .foregroundColor(.white)
+                    .padding(.vertical, 10)
+                    .font(.system(size: 15, weight: .bold))
+                    .multilineTextAlignment(.center)
+            })
+            .frame(width: 150)
+            .background(Color(hex: "B098E6").opacity(1))
+            .cornerRadius(10)
+        //}
+        
             
             /*
             if let selectedLocation = selectedLocation {
@@ -117,6 +186,48 @@ struct SelectLocalisationView: View {
         }
     }
 
+    // Filtrer les items en fonction de la recherche
+    private var filteredItems: [PlaceItem] {
+        if searchText.isEmpty {
+            return items
+        } else {
+            return items.filter { item in
+                item.value.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+    
+    private func initializeItems() {
+        if items.isEmpty {
+            items = PlaceType.allCases.map { PlaceItem(locationType: $0) }
+        }
+    }
+    
+    private func addCustomLocation() {
+        guard !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        
+        let trimmedText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Vérifier si l'élément existe déjà (case insensitive)
+        if !items.contains(where: { $0.value.lowercased() == trimmedText.lowercased() }) {
+            let customItem = PlaceItem(customValue: trimmedText)
+            items.insert(customItem, at: 0)
+        }
+        
+        // Sélectionner automatiquement le nouvel élément
+        searchTextPlace = trimmedText
+        searchText = ""
+        isSearchFocused = false
+    }
+    
+    private func toggleSelection(of item: PlaceItem) {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            if searchTextPlace != item.value {
+                searchTextPlace = item.value
+            }
+        }
+    }
+    
     func searchForLocation(completion: MKLocalSearchCompletion) {
         let searchRequest = MKLocalSearch.Request(completion: completion)
         let search = MKLocalSearch(request: searchRequest)

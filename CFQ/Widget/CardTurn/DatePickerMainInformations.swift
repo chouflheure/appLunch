@@ -20,7 +20,7 @@ struct DatePickerMainInformations: View {
                 Image(.iconDate)
                     .foregroundColor(viewModel.textFormattedLongFormatStartEvent.isEmpty ? .gray : .white)
                 
-                Text(viewModel.textFormattedLongFormatStartEvent.isEmpty ? "Date de début" : viewModel.textFormattedLongFormatStartEvent)
+                Text(viewModel.textFormattedLongFormatStartEvent.isEmpty ? "Quand ?" : viewModel.textFormattedLongFormatStartEvent)
                     .tokenFont(viewModel.textFormattedLongFormatStartEvent.isEmpty ? .Placeholder_Inter_Regular_16 : .Body_Inter_Medium_16)
                     .onTapGesture {
                         showPickerStartEvent = true
@@ -29,7 +29,7 @@ struct DatePickerMainInformations: View {
                 Text(" | ")
                     .foregroundColor(.white)
                 
-                Text(viewModel.textFormattedHoursStartEvent.isEmpty ? "Heure de début" : viewModel.textFormattedHoursStartEvent)
+                Text(viewModel.textFormattedHoursStartEvent.isEmpty ? "Quelle heure ?" : viewModel.textFormattedHoursStartEvent)
                     .tokenFont(.Placeholder_Inter_Regular_16)
                     .onTapGesture {
                         showPickerStartEvent = true

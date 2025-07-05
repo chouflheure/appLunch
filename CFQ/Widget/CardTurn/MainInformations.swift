@@ -163,7 +163,7 @@ struct MainInformationsDetailView: View {
                         
                         Text(
                             viewModel.placeTitle.isEmpty
-                            ? "Lieu" : viewModel.placeTitle
+                            ? "Où ?" : viewModel.placeTitle
                         )
                         .tokenFont(
                             viewModel.placeTitle.isEmpty
@@ -175,7 +175,7 @@ struct MainInformationsDetailView: View {
                         
                         Text(
                             viewModel.placeAdresse.isEmpty
-                            ? "Adress" : viewModel.placeAdresse
+                            ? "Adresse ?" : viewModel.placeAdresse
                         )
                         .tokenFont(.Placeholder_Inter_Regular_14)
                     }
@@ -249,13 +249,15 @@ struct MainInformationsDetailView: View {
         }
         .sheet(isPresented: $isPresentedLink) {
             SelectLinkView(
-                isPresented: $isPresentedLink, viewModel: viewModel
+                isPresented: $isPresentedLink,
+                viewModel: viewModel
             )
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $isPresentedLocalisation) {
             SelectLocalisationView(
-                viewModel: viewModel, isPresented: $isPresentedLocalisation
+                viewModel: viewModel,
+                isPresented: $isPresentedLocalisation
             )
             .presentationDragIndicator(.visible)
         }
