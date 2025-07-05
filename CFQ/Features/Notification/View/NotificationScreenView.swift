@@ -36,7 +36,6 @@ struct NotificationScreenView: View {
                 }
             }
 
-            // Text(notification.typeNotif).foregroundColor(.white)
             case "cfqCreated":
                 CellInformationEvent(
                     userContact: notification.userContact ?? UserContact(),

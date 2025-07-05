@@ -69,14 +69,12 @@ struct HeaderCardViewDetail: View {
                             viewModel.showDetailTurnCard = false
                         }
                     }) {
-                        Text("Enregistrer")
-                            .tokenFont(.Body_Inter_Medium_14)
-                            .padding(.vertical, 10)
-                            .frame(maxWidth: .infinity, alignment: .center)
+                        Image(.iconOutExpend)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 24)
                     }
-                    .frame(width: 80)
-                    .background(Color(hex: "B098E6").opacity(1))
-                    .cornerRadius(10)
                 }
                 .padding(.horizontal, 16)
             }

@@ -1,6 +1,19 @@
 
 import SwiftUI
 
+struct PlaceItem: Hashable, Identifiable {
+    let id = UUID()
+    let value: String
+    
+    init(locationType: PlaceType) {
+        self.value = locationType.rawValue
+    }
+    
+    init(customValue: String) {
+        self.value = customValue
+    }
+}
+
 struct LocationItem: Hashable, Identifiable {
     let id = UUID()
     let value: String

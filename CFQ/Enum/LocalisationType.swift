@@ -15,3 +15,12 @@ enum LocalisationType: String, CaseIterable {
     case Toulouse = "Toulouse"
     case Tours = "Tours"
 }
+
+enum PlaceType: String, CaseIterable {
+    case ChezMoi = "Chez moi"
+    case ChezMesParents = "Chez mes parents"
+    case EnBoite = "En boite"
+    case DansLeParc = "Dans le parc"
+    case AuBar = "Au bar"
+    case DansLaRue = "Dans la rue"
+}

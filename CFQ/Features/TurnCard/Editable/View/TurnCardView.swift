@@ -179,7 +179,7 @@ struct TurnCardView: View {
                     action: {
                         viewModel.showDetailTurnCard = true
                     }) {
-                        Image(.iconEdit)
+                        Image(.iconInExpend)
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.white)
