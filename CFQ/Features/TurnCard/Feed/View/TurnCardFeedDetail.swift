@@ -5,6 +5,8 @@ struct TurnCardDetailsFeedView: View {
     @ObservedObject var turn: Turn
     @StateObject var viewModel: TurnCardDetailsFeedViewModel
     @StateObject var turnCardViewModel: TurnCardViewModel
+    @State private var toast: Toast? = nil
+    @Environment(\.dismiss) var dismiss
 
     @State var showEditTurnCard = false
 
@@ -58,7 +60,20 @@ struct TurnCardDetailsFeedView: View {
                         HStack(spacing: 30) {
                             Button(
                                 action: {
-                                    
+                                    turnCardViewModel
+                                        .removeturn(
+                                            uid: viewModel.turn.uid,
+                                        ) {
+                                            success, message in
+                                            if success {
+                                                dismiss()
+                                            } else {
+                                                toast = Toast(
+                                                    style: .error,
+                                                    message: message
+                                                )
+                                            }
+                                        }
                                 },
                                 label: {
                                     HStack {
@@ -93,19 +108,6 @@ struct TurnCardDetailsFeedView: View {
                             Button(
                                 action: {
                                     turnCardViewModel.showDetailTurnCard = true
-                                    /*
-                                    viewModel.pushDataTurn {
-                                        success, message in
-                                        if success {
-                                            dismiss()
-                                        } else {
-                                            toast = Toast(
-                                                style: .error,
-                                                message: message
-                                            )
-                                        }
-                                    }
-                                     */
                                 },
                                 label: {
                                     HStack {

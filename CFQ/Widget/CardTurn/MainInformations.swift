@@ -295,17 +295,27 @@ struct SelectLinkView: View {
 
     var body: some View {
         VStack {
-            TextField("Titre du lien", text: $viewModel.linkTitle)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            TextField("lien url", text: $viewModel.link)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            TextField(
+                viewModel.linkTitle.isEmpty ? "Titre du lien" : viewModel.linkTitle,
+                text: $viewModel.linkTitle
+            )
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+
+            TextField(
+                viewModel.link.isEmpty ? "lien url" : viewModel.link,
+                text: $viewModel.link
+            )
+            .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Button(action: {
                 isPresented = false
             }) {
                 Text("Done")
+                    .background(Color(hex: "B098E6"))
             }
-        }.padding(.top, 40)
+        }
+        .padding(.top, 40)
+        .padding(.horizontal, 20)
         Spacer()
     }
 }
