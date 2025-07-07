@@ -4,7 +4,10 @@ struct TurnCardDetailsFeedView: View {
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var turn: Turn
     @StateObject var viewModel: TurnCardDetailsFeedViewModel
-    @State var showDetailTurnCard = false
+    @StateObject var turnCardViewModel: TurnCardViewModel
+
+    @State var showEditTurnCard = false
+
     var user: User
 
     init(coordinator: Coordinator, turn: Turn, user: User) {
@@ -12,6 +15,13 @@ struct TurnCardDetailsFeedView: View {
         self.turn = turn
         self.user = user
         self._viewModel = StateObject(wrappedValue: TurnCardDetailsFeedViewModel(turn: turn))
+        self._turnCardViewModel = StateObject(
+            wrappedValue: TurnCardViewModel(
+                turn: turn,
+                coordinator: coordinator,
+                isEditing: turn.admin == user.uid
+            )
+        )
         print("@@@ turn = •\(turn.printObject)")
     }
     
@@ -43,12 +53,96 @@ struct TurnCardDetailsFeedView: View {
                         .padding(.horizontal, 16)
                         .padding(.bottom, 50)
                     
+                    if turn.admin == user.uid {
+                        
+                        HStack(spacing: 30) {
+                            Button(
+                                action: {
+                                    
+                                },
+                                label: {
+                                    HStack {
+                                        Image(.iconTrash)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 30)
+                                            .foregroundColor(.white)
+                                            .padding(.leading, 15)
+                                            .padding(.vertical, 10)
+                                            .font(.system(size: 10, weight: .bold))
+                                        
+                                        Text("Supprimer")
+                                            .tokenFont(.Body_Inter_Medium_14)
+                                            .padding(.trailing, 15)
+                                            .padding(.vertical, 10)
+                                            .font(.system(size: 15, weight: .bold))
+                                    }
+                                }
+                            )
+                            .frame(width: 150)
+                            .background(.clear)
+                            .cornerRadius(10)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(style: StrokeStyle(lineWidth: 1))
+                                    .foregroundColor(.white)
+                                    .background(.clear)
+                            }
+                            
+                            
+                            Button(
+                                action: {
+                                    turnCardViewModel.showDetailTurnCard = true
+                                    /*
+                                    viewModel.pushDataTurn {
+                                        success, message in
+                                        if success {
+                                            dismiss()
+                                        } else {
+                                            toast = Toast(
+                                                style: .error,
+                                                message: message
+                                            )
+                                        }
+                                    }
+                                     */
+                                },
+                                label: {
+                                    HStack {
+                                        Image(.iconEdit)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 30)
+                                            .foregroundColor(.white)
+                                            .padding(.leading, 15)
+                                            .padding(.vertical, 10)
+                                            .font(.system(size: 10, weight: .bold))
+                                        
+                                        Text("Modifier")
+                                            .tokenFont(.Body_Inter_Medium_14)
+                                            .padding(.trailing, 15)
+                                            .padding(.vertical, 10)
+                                            .bold()
+                                    }
+                                }
+                            )
+                            .frame(width: 150)
+                            .background(Color(hex: "B098E6").opacity(1))
+                            .cornerRadius(10)
+                        }
+                    }
+                    
                     Spacer()
                 }
             }
         }
         .ignoresSafeArea()
         .customNavigationBackButton{}
+        .fullScreenCover(isPresented: $turnCardViewModel.showDetailTurnCard) {
+            TurnCardDetailsView(
+                viewModel: turnCardViewModel
+            )
+        }
     }
 }
 
@@ -73,6 +167,7 @@ struct HeaderCardViewFeedDetailView: View {
                             designType: .fullScreenImageTurnDetail
                         )
                     }
+
                     HStack(alignment: .center) {
                         Button(
                             action: {
@@ -196,7 +291,8 @@ struct TitleTurnCardDetailFeedView: View {
                             showSheetParticipateAnswers = turn.adminContact?.uid != user.uid
                         }
                     },
-                    selectedOption: (turn.adminContact?.uid == user.uid) ? .constant(.yes) : $turn.userStatusParticipate
+                    selectedOption: (turn.adminContact?.uid == user.uid) ?
+                        .constant(.yourEvent) : $turn.userStatusParticipate
                 )
             }
             // TODO: - Add participants

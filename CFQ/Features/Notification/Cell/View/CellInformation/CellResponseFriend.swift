@@ -21,7 +21,7 @@ struct CellResponseFriend: View {
                      + Text(userContact.pseudo)
                         .tokenFont(.Body_Inter_Medium_14)
                         .bold()
-                     + Text(" vous êtes maintenant ami ")
+                     + Text(" vous êtes maintenant amis ")
                         .tokenFont(.Body_Inter_Medium_14)
                     )
                     .multilineTextAlignment(.leading)

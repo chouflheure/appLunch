@@ -69,14 +69,14 @@ struct SelectLocalisationView: View {
                 
                 SearchBarView(
                     text: $searchText,
-                    placeholder: "Où faire l'event ( optionnel )",
+                    placeholder: "Le nom du lieu",
                     onRemoveText: {searchText = ""},
                     onTapResearch: {}
                 )
                 .onSubmit {
                     addCustomLocation()
                 }
-                
+
                 ScrollView(showsIndicators: false) {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(filteredItems) { item in
@@ -100,7 +100,7 @@ struct SelectLocalisationView: View {
 
             SearchBarView(
                 text: $searchTextLocation,
-                placeholder: "Où faire l'event",
+                placeholder: "L'adresse exacte",
                 onRemoveText: {searchText = ""},
                 onTapResearch: {}
             ).onSubmit {
@@ -138,7 +138,7 @@ struct SelectLocalisationView: View {
                             selectedResult = result
 
                             if !searchTextPlace.isEmpty {
-                                viewModel.placeAdresse = viewModel.placeTitle + viewModel.placeAdresse
+                                viewModel.placeAdresse = viewModel.placeTitle + " • " + viewModel.placeAdresse
                                 viewModel.placeTitle = searchTextPlace
                             }
 
@@ -154,7 +154,7 @@ struct SelectLocalisationView: View {
             
             Button(action: {
                 if !searchTextPlace.isEmpty {
-                    viewModel.placeAdresse = viewModel.placeTitle + viewModel.placeAdresse
+                    viewModel.placeAdresse = viewModel.placeTitle + " • " + viewModel.placeAdresse
                     viewModel.placeTitle = searchTextPlace
                 }
                 isPresented = false

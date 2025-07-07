@@ -9,7 +9,16 @@ struct CellMessagingView: View {
         VStack(alignment: .leading) {
             HStack(spacing: hasUnReadMessage ? 0 : 12) {
                 
-                CachedAsyncImageView(urlString: data.pictureEventURL, designType: .scaleImageMessageProfile)
+                if data.pictureEventURL.isEmpty && data.typeEvent == "turn" {
+                    Text("TURN")
+                        .tokenFont(.Body_Inter_Medium_12)
+                    .frame(width: 42, height: 42)
+                    .background(.purpleDark)
+                    .clipShape(Circle())
+                } else {
+                    CachedAsyncImageView(urlString: data.pictureEventURL, designType: .scaleImageMessageProfile)
+                }
+                
                 if hasUnReadMessage {
                     Circle()
                         .fill(.purpleLight)

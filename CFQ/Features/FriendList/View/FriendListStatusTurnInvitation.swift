@@ -87,7 +87,6 @@ struct FriendListStatusTurnInvitation: View {
                 }
                 .padding(.top, 20)
 
-                
                 ScrollView(.vertical, showsIndicators: false) {
                     if selectedIndex == 0 {
                         LazyVStack(spacing: 20) {

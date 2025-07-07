@@ -32,7 +32,7 @@ enum TypeParticipateButton: String {
         case .none:
             return ""
         case .yourEvent:
-            return "Ton event"
+            return "Ton Turn"
         }
     }
 }

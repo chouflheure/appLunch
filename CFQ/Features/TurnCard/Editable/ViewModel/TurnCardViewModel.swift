@@ -36,11 +36,13 @@ class TurnCardViewModel: ObservableObject {
 
     @ObservedObject var coordinator: Coordinator
 
-    var turn: Turn
+    @Published var turn: Turn
     var user: User
     var firebaseService = FirebaseService()
     var allFriends: Set<UserContact> = []
-    
+
+    @State var isEditing: Bool = false
+
     @Published var friendListToAdd = Set<UserContact>()
     
     var isEnableButton: Bool {
@@ -84,6 +86,24 @@ class TurnCardViewModel: ObservableObject {
         return ""
     }
     
+    private func combineDateAndTime(date: Date?, time: Date?) -> Date? {
+        guard let date = date else { return nil }
+        guard let time = time else { return date }
+        
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
+        
+        var combined = DateComponents()
+        combined.year = dateComponents.year
+        combined.month = dateComponents.month
+        combined.day = dateComponents.day
+        combined.hour = timeComponents.hour
+        combined.minute = timeComponents.minute
+        
+        return calendar.date(from: combined)
+    }
+
     private func verificationIdentificationUserUID(coordinator: Coordinator) {
         if let user = coordinator.user {
             self.user = user
@@ -92,10 +112,12 @@ class TurnCardViewModel: ObservableObject {
         }
     }
     
-    init(turn: Turn, coordinator: Coordinator) {
+    init(turn: Turn, coordinator: Coordinator, isEditing: Bool) {
 
         self.turn = turn
         self.user = coordinator.user ?? User(uid: "")
+        self.isEditing = isEditing
+
         self.coordinator = coordinator
         self.allFriends = friendListToAdd
 
@@ -103,10 +125,13 @@ class TurnCardViewModel: ObservableObject {
 
         titleEvent = turn.titleEvent
         dateEventStart = turn.dateStartEvent
+        dateEventEnd = turn.dateEndEvent
+        startHours = turn.dateStartEvent
+        endHours = turn.dateEndEvent
         description = turn.description
-        // turn.mood.forEach { moods.insert(MoodType.convertIntToMoodType(MoodType(rawValue: $0)?.rawValue ?? 0)) }
-        startHours = nil
-        endHours = nil
+        linkTitle = turn.linkTitle ?? ""
+        link = turn.link ?? ""
+        turn.mood.forEach { moods.insert(MoodType.convertIntToMoodType(MoodType(rawValue: $0)?.rawValue ?? 0)) }
         imageSelected = turn.imageEvent
         invited = turn.invited
         placeAdresse = turn.placeAdresse
@@ -114,7 +139,17 @@ class TurnCardViewModel: ObservableObject {
         placeLongitude = turn.placeLongitude
         placeTitle = turn.placeTitle
         
+        turn.invited.forEach { invited in
+            if let friendContactOnTurn = coordinator.user?.userFriendsContact?.first(where: { $0.uid == invited}) {
+                setFriendsOnTurn.insert(friendContactOnTurn)
+            }
+        }
+        
         friendListToAdd = Set(coordinator.user?.userFriendsContact ?? [])
+
+        setFriendsOnTurn.forEach { invited in
+            friendListToAdd.remove(invited)
+        }
     }
     
     func textFormattedShortFormat() -> (jour: String, mois: String) {
@@ -209,8 +244,8 @@ extension TurnCardViewModel {
         let turn = Turn(
             uid: turn.uid.isEmpty ? UUID().description : turn.uid,
             titleEvent: titleEvent,
-            dateStartEvent: dateEventStart ?? Date(),
-            dateEndEvent: dateEventEnd,
+            dateStartEvent: combineDateAndTime(date: dateEventStart, time: startHours) ?? Date(),
+            dateEndEvent: combineDateAndTime(date: dateEventEnd, time: endHours) ?? Date(),
             pictureURLString: urlStringImage,
             admin: user.uid,
             description: description,
@@ -285,7 +320,7 @@ extension TurnCardViewModel {
         )
         
         let uidNotification = UUID()
-        
+
         firebaseService.addDataNotif(
             data: Notification(
                 uid: uidNotification.description,
