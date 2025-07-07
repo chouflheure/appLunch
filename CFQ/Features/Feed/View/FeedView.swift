@@ -60,7 +60,6 @@ struct FeedView: View {
                         icon: .iconNotifs
                     )
                 }
-                
 
                 // TODO: - Edit
                 NavigationLink(

@@ -21,7 +21,7 @@ enum NotificationsType: String {
         case .acceptedFriendRequest:
             ""
         case .cfqCreated:
-            "ce demande "
+            " demande "
         case .attending:
             "participe à ton event "
         }

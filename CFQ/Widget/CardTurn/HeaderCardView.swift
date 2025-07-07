@@ -10,12 +10,18 @@ struct HeaderCardViewDetail: View {
     var body: some View {
         VStack {
             ZStack {
-                ZStack(alignment: .bottom) {
+                ZStack(alignment: viewModel.isEditing ? .center : .bottom) {
+                    if viewModel.isEditing && !viewModel.turn.pictureURLString.isEmpty {
+                        CachedAsyncImageView(
+                            urlString: viewModel.turn.pictureURLString,
+                            designType: .fullScreenImageTurnDetail
+                        )
+                    }
                     if let selectedImage = viewModel.imageSelected {
                         Image(uiImage: selectedImage)
                             .resizable()
                             .scaledToFill()
-                            .frame(height: 200)
+                            .frame(height: 300)
                             .frame(width: UIScreen.main.bounds.width)
                             .contentShape(Rectangle())
                             .clipped()

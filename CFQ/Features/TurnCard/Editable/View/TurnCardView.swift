@@ -19,7 +19,8 @@ struct TurnCardView: View {
         self.coordinator = coordinator
         _viewModel = StateObject(wrappedValue: TurnCardViewModel(
             turn: turn,
-            coordinator: coordinator
+            coordinator: coordinator,
+            isEditing: false
         ))
     }
 
