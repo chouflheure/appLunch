@@ -8,7 +8,7 @@ struct TurnCardView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: TurnCardViewModel
     @StateObject var coreDataViewModel = TurnCoreDataViewModel()
-    @Environment(\.dismiss) var dismissï
+    @Environment(\.dismiss) var dismiss
 
     init(
         turn: Turn,
@@ -160,7 +160,7 @@ struct TurnCardView: View {
                     .cornerRadius(10)
                 }
                 .blur(radius: viewModel.isLoading ? 10 : 0)
-                .allowsHitTesting(!viewModel.isLoading || !isSaving)
+                .allowsHitTesting(!viewModel.isLoading)
             }
 
             if viewModel.isLoading {
