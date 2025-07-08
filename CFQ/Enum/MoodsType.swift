@@ -37,7 +37,7 @@ struct Mood {
     func data(for mood: MoodType) -> MoodView {
         switch mood {
         case .party:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodParty), title: "Party"))
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodParty), title: "Appart"))
         case .concert:
             return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodConcert), title: "Concert"))
         case .nightclub:
@@ -53,7 +53,7 @@ struct Mood {
         case .street:
             return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodStreet), title: "Street"))
         case .other:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodOther), title: "Other"))
+            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodOther), title: "Autre"))
         }
     }
 }

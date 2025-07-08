@@ -47,7 +47,7 @@ class TurnCardViewModel: ObservableObject {
     
     var isEnableButton: Bool {
         get {
-            !titleEvent.isEmpty && startHours != nil && !moods.isEmpty && dateEventStart != nil && !setFriendsOnTurn.isEmpty
+            !titleEvent.isEmpty && startHours != nil && !moods.isEmpty && dateEventStart != nil && !setFriendsOnTurn.isEmpty && !placeAdresse.isEmpty
         }
         set {}
     }
@@ -184,6 +184,22 @@ class TurnCardViewModel: ObservableObject {
 }
 
 extension TurnCardViewModel {
+    
+    func removeturn(uid: String, completion: @escaping (Bool, String) -> Void) {
+        isLoading = true
+        firebaseService.deleteDataByID(
+            from: .turns,
+            at: uid) { (result: Result<Void, Error>) in
+                switch result {
+                case .success():
+                    completion(true, "")
+                case .failure(let error):
+                    completion(false, error.localizedDescription)
+                    self.isLoading = false
+                }
+            }
+    }
+    
     func pushDataTurn(completion: @escaping (Bool, String) -> Void) {
 
         // TODO => Remove brouillon

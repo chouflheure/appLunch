@@ -30,12 +30,13 @@ class TurnCoreDataViewModel: ObservableObject {
         }
     }
     
-    func addTurn(turn: TurnPreview) {
+    func addTurn(turn: TurnPreview, completion: @escaping (Bool, String) -> Void) {
         let context = container.viewContext
         
         // Créez l'entité en utilisant son nom exact dans le modèle
         guard NSEntityDescription.entity(forEntityName: "TurnData", in: context) != nil else {
             print("❌ introuvable dans le modèle")
+            completion(false, "error lors de l'enregistrement")
             return
         }
         
@@ -60,7 +61,9 @@ class TurnCoreDataViewModel: ObservableObject {
 
         do {
             try context.save()
+            completion(true, "")
         } catch {
+            completion(false, "error lors de l'enregistrement")
             print("Failed to save context: \(error)")
         }
     }
@@ -87,35 +90,5 @@ class TurnCoreDataViewModel: ObservableObject {
             context.delete(savedTurns[index])
             saveData()
         }
-    }
-}
-
-
-struct TurnCoreDataView: View {
-    @StateObject var vm = TurnCoreDataViewModel()
-    
-    var body: some View {
-        VStack {
-            Text("Hello, World!")
-            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title2", dateStartEvent: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background2)) }, label: {
-                Text("click")
-            })
-            
-            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title3", dateStartEvent: Date(), admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: nil)) }, label: {
-                Text("click")
-            })
-            
-            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title4", dateStartEvent: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background3)) }, label: {
-                Text("click")
-            })
-            
-            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title5", dateStartEvent: Date(), admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .header)) }, label: {
-                Text("click")
-            })
-            
-            Button(action: { vm.addTurn(turn: TurnPreview(uid: "", titleEvent: "title6", dateStartEvent: nil, admin: "", description: "description", invited: [""], mood: [1], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, imageEvent: .background2)) }, label: {
-                Text("click")
-            })
-        }.fullBackground(imageName: StringsToken.Image.fullBackground)
     }
 }

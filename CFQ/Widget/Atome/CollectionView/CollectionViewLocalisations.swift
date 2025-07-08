@@ -30,7 +30,7 @@ struct LocationItem: Hashable, Identifiable {
 struct CollectionViewLocalisations: View {
     @Binding var selectedItem: String
     @State var searchText: String = ""
-    @State private var items: [LocationItem] = []
+    @State private var items: Set<LocationItem> = []
     @FocusState private var isSearchFocused: Bool
 
     private let columns = [
@@ -52,7 +52,7 @@ struct CollectionViewLocalisations: View {
 
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(filteredItems) { item in
+                    ForEach(Array(filteredItems)) { item in
                         ItemViewLocalisation(
                             city: item.value,
                             isSelected: selectedItem == item.value
@@ -71,19 +71,19 @@ struct CollectionViewLocalisations: View {
     }
     
     // Filtrer les items en fonction de la recherche
-    private var filteredItems: [LocationItem] {
-        if searchText.isEmpty {
-            return items
-        } else {
-            return items.filter { item in
-                item.value.localizedCaseInsensitiveContains(searchText)
-            }
+    private var filteredItems: Set<LocationItem> {
+        guard !searchText.isEmpty else { return items }
+        
+        let filtered = items.filter { item in
+            item.value.localizedCaseInsensitiveContains(searchText)
         }
+        
+        return filtered.isEmpty ? Set([LocationItem(customValue: searchText)]) : filtered
     }
     
     private func initializeItems() {
         if items.isEmpty {
-            items = LocalisationType.allCases.map { LocationItem(locationType: $0) }
+            items = Set(LocalisationType.allCases.map { LocationItem(locationType: $0) })
         }
     }
     
@@ -95,7 +95,7 @@ struct CollectionViewLocalisations: View {
         // Vérifier si l'élément existe déjà (case insensitive)
         if !items.contains(where: { $0.value.lowercased() == trimmedText.lowercased() }) {
             let customItem = LocationItem(customValue: trimmedText)
-            items.insert(customItem, at: 0)
+            items.insert(customItem)
         }
         
         // Sélectionner automatiquement le nouvel élément
@@ -110,9 +110,12 @@ struct CollectionViewLocalisations: View {
     }
     
     private func toggleSelection(of item: LocationItem) {
+        items.insert(item)
         withAnimation(.easeInOut(duration: 0.2)) {
             if selectedItem != item.value {
                 selectedItem = item.value
+            } else {
+                selectedItem = ""
             }
         }
     }
