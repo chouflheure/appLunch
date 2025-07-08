@@ -30,7 +30,7 @@ struct DescriptionTurnCardDetailView: View {
                 lastText = newValue
                 viewModel.description = newValue
             }
-             
+            .padding(.bottom, viewModel.isEditing ? 100 : 0)
         }
     }
 }

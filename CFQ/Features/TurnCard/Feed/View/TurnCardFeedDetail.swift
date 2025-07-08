@@ -137,9 +137,9 @@ struct TurnCardDetailsFeedView: View {
                         .background(Color(hex: "B098E6").opacity(1))
                         .cornerRadius(10)
                     }
+                    Spacer()
+                        .frame(height: 30)
                 }
-                Spacer()
-                    .frame(height: 30)
             }
         }
         .ignoresSafeArea()

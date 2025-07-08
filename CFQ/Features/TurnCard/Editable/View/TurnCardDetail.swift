@@ -109,9 +109,9 @@ struct TurnCardDetailsView: View {
                         .disabled(!viewModel.isEnableButton)
                         .cornerRadius(10)
                     }
+                    Spacer()
+                        .frame(height: 30)
                 }
-                Spacer()
-                    .frame(height: 30)
             }
         }
         .ignoresSafeArea(edges: .top)
