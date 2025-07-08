@@ -40,7 +40,7 @@ struct SelectLocalisationView: View {
     // @Binding var selectedItem: String = ""
 
     @State var searchText: String = ""
-    @State private var items: [PlaceItem] = []
+    @State private var items: Set<PlaceItem> = []
     @FocusState private var isSearchFocused: Bool
     
     private let columns = [
@@ -79,7 +79,7 @@ struct SelectLocalisationView: View {
 
                 ScrollView(showsIndicators: false) {
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(filteredItems) { item in
+                        ForEach(Array(filteredItems)) { item in
                             ItemViewLocalisation(
                                 city: item.value,
                                 isSelected: searchTextPlace == item.value
@@ -104,7 +104,7 @@ struct SelectLocalisationView: View {
                 onRemoveText: {searchText = ""},
                 onTapResearch: {}
             ).onSubmit {
-                addCustomLocation()
+                // addCustomLocation()
             }
             .padding(.top, 15)
             .onChange(of: searchTextLocation) { newValue in
@@ -197,19 +197,22 @@ struct SelectLocalisationView: View {
     }
 
     // Filtrer les items en fonction de la recherche
-    private var filteredItems: [PlaceItem] {
+    private var filteredItems: Set<PlaceItem> {
         if searchText.isEmpty {
             return items
         } else {
+            return [PlaceItem(customValue: searchText)]
+            /*
             return items.filter { item in
                 item.value.localizedCaseInsensitiveContains(searchText)
             }
+             */
         }
     }
     
     private func initializeItems() {
         if items.isEmpty {
-            items = PlaceType.allCases.map { PlaceItem(locationType: $0) }
+            // items = PlaceType.allCases.map { PlaceItem(locationType: $0) }
         }
     }
     
@@ -221,7 +224,7 @@ struct SelectLocalisationView: View {
         // Vérifier si l'élément existe déjà (case insensitive)
         if !items.contains(where: { $0.value.lowercased() == trimmedText.lowercased() }) {
             let customItem = PlaceItem(customValue: trimmedText)
-            items.insert(customItem, at: 0)
+            items.insert(customItem)
         }
         
         // Sélectionner automatiquement le nouvel élément
@@ -232,8 +235,12 @@ struct SelectLocalisationView: View {
     
     private func toggleSelection(of item: PlaceItem) {
         withAnimation(.easeInOut(duration: 0.2)) {
+            items.insert(item)
+
             if searchTextPlace != item.value {
                 searchTextPlace = item.value
+            } else {
+                searchTextPlace = ""
             }
         }
     }

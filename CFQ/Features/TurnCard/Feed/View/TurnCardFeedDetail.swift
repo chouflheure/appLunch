@@ -55,87 +55,91 @@ struct TurnCardDetailsFeedView: View {
                         .padding(.horizontal, 16)
                         .padding(.bottom, 50)
                     
-                    if turn.admin == user.uid {
-                        
-                        HStack(spacing: 30) {
-                            Button(
-                                action: {
-                                    turnCardViewModel
-                                        .removeturn(
-                                            uid: viewModel.turn.uid,
-                                        ) {
-                                            success, message in
-                                            if success {
-                                                dismiss()
-                                            } else {
-                                                toast = Toast(
-                                                    style: .error,
-                                                    message: message
-                                                )
-                                            }
-                                        }
-                                },
-                                label: {
-                                    HStack {
-                                        Image(.iconTrash)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(height: 30)
-                                            .foregroundColor(.white)
-                                            .padding(.leading, 15)
-                                            .padding(.vertical, 10)
-                                            .font(.system(size: 10, weight: .bold))
-                                        
-                                        Text("Supprimer")
-                                            .tokenFont(.Body_Inter_Medium_14)
-                                            .padding(.trailing, 15)
-                                            .padding(.vertical, 10)
-                                            .font(.system(size: 15, weight: .bold))
-                                    }
-                                }
-                            )
-                            .frame(width: 150)
-                            .background(.clear)
-                            .cornerRadius(10)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(style: StrokeStyle(lineWidth: 1))
-                                    .foregroundColor(.white)
-                                    .background(.clear)
-                            }
-                            
-                            
-                            Button(
-                                action: {
-                                    turnCardViewModel.showDetailTurnCard = true
-                                },
-                                label: {
-                                    HStack {
-                                        Image(.iconEdit)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(height: 30)
-                                            .foregroundColor(.white)
-                                            .padding(.leading, 15)
-                                            .padding(.vertical, 10)
-                                            .font(.system(size: 10, weight: .bold))
-                                        
-                                        Text("Modifier")
-                                            .tokenFont(.Body_Inter_Medium_14)
-                                            .padding(.trailing, 15)
-                                            .padding(.vertical, 10)
-                                            .bold()
-                                    }
-                                }
-                            )
-                            .frame(width: 150)
-                            .background(Color(hex: "B098E6").opacity(1))
-                            .cornerRadius(10)
-                        }
-                    }
-                    
                     Spacer()
                 }
+            }
+            
+            if turn.admin == user.uid {
+                VStack {
+                    Spacer()
+                    HStack(spacing: 30) {
+                        Button(
+                            action: {
+                                turnCardViewModel
+                                    .removeturn(
+                                        uid: viewModel.turn.uid,
+                                    ) {
+                                        success, message in
+                                        if success {
+                                            dismiss()
+                                        } else {
+                                            toast = Toast(
+                                                style: .error,
+                                                message: message
+                                            )
+                                        }
+                                    }
+                            },
+                            label: {
+                                HStack {
+                                    Image(.iconTrash)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 30)
+                                        .foregroundColor(.white)
+                                        .padding(.leading, 15)
+                                        .padding(.vertical, 10)
+                                        .font(.system(size: 10, weight: .bold))
+                                    
+                                    Text("Supprimer")
+                                        .tokenFont(.Body_Inter_Medium_14)
+                                        .padding(.trailing, 15)
+                                        .padding(.vertical, 10)
+                                        .font(.system(size: 15, weight: .bold))
+                                }
+                            }
+                        )
+                        .frame(width: 150)
+                        .background(.clear)
+                        .cornerRadius(10)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(style: StrokeStyle(lineWidth: 1))
+                                .foregroundColor(.white)
+                                .background(.clear)
+                        }
+                        
+                        
+                        Button(
+                            action: {
+                                turnCardViewModel.showDetailTurnCard = true
+                            },
+                            label: {
+                                HStack {
+                                    Image(.iconEdit)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 30)
+                                        .foregroundColor(.white)
+                                        .padding(.leading, 15)
+                                        .padding(.vertical, 10)
+                                        .font(.system(size: 10, weight: .bold))
+                                    
+                                    Text("Modifier")
+                                        .tokenFont(.Body_Inter_Medium_14)
+                                        .padding(.trailing, 15)
+                                        .padding(.vertical, 10)
+                                        .bold()
+                                }
+                            }
+                        )
+                        .frame(width: 150)
+                        .background(Color(hex: "B098E6").opacity(1))
+                        .cornerRadius(10)
+                    }
+                }
+                Spacer()
+                    .frame(height: 30)
             }
         }
         .ignoresSafeArea()

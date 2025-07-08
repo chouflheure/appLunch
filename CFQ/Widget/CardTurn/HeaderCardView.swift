@@ -81,6 +81,8 @@ struct HeaderCardViewDetail: View {
                             .foregroundColor(.white)
                             .frame(width: 24)
                     }
+                    .frame(width: 40, height: 40)
+                    .background(Color.gray, in: Circle())
                 }
                 .padding(.horizontal, 16)
             }

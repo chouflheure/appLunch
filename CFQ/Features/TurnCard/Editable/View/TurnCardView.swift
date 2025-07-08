@@ -67,6 +67,8 @@ struct TurnCardView: View {
                 HStack(spacing: 30) {
                     Button(
                         action: {
+                            viewModel.isLoading = true
+                            
                             coreDataViewModel.addTurn(
                                 turn: TurnPreview(
                                     uid: UUID().description,
@@ -83,7 +85,19 @@ struct TurnCardView: View {
                                     placeLongitude: 0,
                                     imageEvent: viewModel.imageSelected
                                 )
-                            )
+                            ) {
+                                success, message in
+                                if success {
+                                    viewModel.isLoading = false
+                                    dismiss()
+                                } else {
+                                    viewModel.isLoading = false
+                                    toast = Toast(
+                                        style: .error,
+                                        message: message
+                                    )
+                                }
+                            }
                         },
                         label: {
                             HStack {

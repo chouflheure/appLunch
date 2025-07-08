@@ -47,7 +47,7 @@ class TurnCardViewModel: ObservableObject {
     
     var isEnableButton: Bool {
         get {
-            !titleEvent.isEmpty && startHours != nil && !moods.isEmpty && dateEventStart != nil && !setFriendsOnTurn.isEmpty
+            !titleEvent.isEmpty && startHours != nil && !moods.isEmpty && dateEventStart != nil && !setFriendsOnTurn.isEmpty && !placeAdresse.isEmpty
         }
         set {}
     }
