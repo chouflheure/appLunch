@@ -86,7 +86,8 @@ class FirebaseService: FirebaseServiceProtocol {
     func updateDataByID(
         data: [String: Any],
         to collection: CollectionFirebaseType,
-        at id: String
+        at id: String,
+        completion: ((Result<Void, Error>) -> Void)? = nil
     ) {
         let collectionName = collection.rawValue
         db.collection(collectionName).document(id).updateData(data) { error in
@@ -94,10 +95,12 @@ class FirebaseService: FirebaseServiceProtocol {
                 Logger.log(
                     "Erreur lors de la modification de \(collection.rawValue) : \(error.localizedDescription)",
                     level: .error)
+                completion?(.failure(error))
             } else {
                 Logger.log(
                     "\(collection.rawValue) a été modifié avec succès",
                     level: .success)
+                completion?(.success(()))
             }
         }
     }

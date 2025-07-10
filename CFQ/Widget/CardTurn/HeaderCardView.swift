@@ -70,19 +70,21 @@ struct HeaderCardViewDetail: View {
                     
                     Spacer()
                     
-                    Button(action: {
-                        withAnimation {
-                            viewModel.showDetailTurnCard = false
-                        }
-                    }) {
+                    if !viewModel.isEditing {
+                        Button(action: {
+                            withAnimation {
+                                viewModel.showDetailTurnCard = false
+                            }
+                        }) {
                         Image(.iconOutExpend)
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.white)
                             .frame(width: 24)
+                        }
+                        .frame(width: 40, height: 40)
+                        .background(Color.gray, in: Circle())
                     }
-                    .frame(width: 40, height: 40)
-                    .background(Color.gray, in: Circle())
                 }
                 .padding(.horizontal, 16)
             }

@@ -37,6 +37,7 @@ class TurnCardViewModel: ObservableObject {
     @ObservedObject var coordinator: Coordinator
 
     @Published var turn: Turn
+
     var user: User
     var firebaseService = FirebaseService()
     var allFriends: Set<UserContact> = []
@@ -204,13 +205,105 @@ extension TurnCardViewModel {
 
         // TODO => Remove brouillon
         isLoading = true
-        uploadImageToDataBase {
-            success, message in
+        uploadImageToDataBase { success, message in
             if success {
                 completion(success, "")
             } else {
                 self.isLoading = false
                 completion(false, message)
+            }
+        }
+    }
+    
+    func updateTurn(completion: @escaping (Bool, String) -> Void) {
+        isLoading = true
+        
+        let uid = UUID()
+        if let imageSelected = imageSelected {
+            firebaseService.uploadImageStandard(picture: imageSelected, uidUser: uid.description, localisationImage: .turn) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let urlString):
+                        self.updateData(urlImage: urlString) { success, message in
+                            if success {
+                                completion(true, "")
+                            } else {
+                                completion(false, message)
+                            }
+                        }
+                    case .failure(let error):
+                        Logger.log(error.localizedDescription, level: .error)
+                        self.isLoading = false
+                        completion(false, error.localizedDescription)
+                    }
+                    self.isLoading = false
+                }
+            }
+        } else {
+            self.updateData(urlImage: turn.pictureURLString) { success, message in
+                if success {
+                    completion(true, "")
+                } else {
+                    completion(false, message)
+                }
+                self.isLoading = false
+            }
+        }
+
+    }
+    
+    private func updateData(urlImage: String, completion: @escaping (Bool, String) -> Void ) {
+        var data = [String: Any]()
+        var moodsInt: [Int] = []
+        moods.forEach { moodsInt.append($0.convertMoodTypeToInt()) }
+        
+        data["pictureURLString"] = urlImage
+        data["titleEvent"] = titleEvent
+        data["dateStartEvent"] = combineDateAndTime(date: dateEventStart, time: startHours)
+
+        if (combineDateAndTime(date: dateEventEnd, time: endHours) != nil) {
+            data["dateEndEvent"] = combineDateAndTime(date: dateEventEnd, time: endHours)
+        }
+
+        data["description"] = description
+        data["invited"] = invited
+        if !turn.participants.isEmpty {
+            data["participants"] = turn.participants
+        }
+        
+        if !turn.mayBeParticipate.isEmpty {
+            data["mayBeParticipate"] = turn.mayBeParticipate
+        }
+        
+        if !turn.denied.isEmpty {
+            data["denied"] = turn.denied
+        }
+
+        data["mood"] = moodsInt
+        data["placeTitle"] = placeTitle
+        data["placeAdresse"] = placeAdresse
+        data["placeLatitude"] = placeLatitude
+        data["placeLongitude"] = placeLongitude
+        
+        if !link.isEmpty {
+            data["link"] = link
+        }
+        
+        if !linkTitle.isEmpty {
+            data["linkTitle"] = linkTitle
+        }
+        
+
+        firebaseService.updateDataByID(
+            data: data,
+            to: .turns,
+            at: turn.uid
+        ) { result in
+            switch result {
+            case .success():
+                completion(true, "")
+            case .failure(let error):
+                completion(false, error.localizedDescription)
             }
         }
     }

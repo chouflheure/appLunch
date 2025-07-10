@@ -2,7 +2,7 @@ import Lottie
 import SwiftUI
 
 struct TurnCardView: View {
-    
+
     @State private var toast: Toast? = nil
     @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
@@ -17,11 +17,13 @@ struct TurnCardView: View {
     ) {
         self.turn = turn
         self.coordinator = coordinator
-        _viewModel = StateObject(wrappedValue: TurnCardViewModel(
-            turn: turn,
-            coordinator: coordinator,
-            isEditing: false
-        ))
+        _viewModel = StateObject(
+            wrappedValue: TurnCardViewModel(
+                turn: turn,
+                coordinator: coordinator,
+                isEditing: false
+            )
+        )
     }
 
     var body: some View {
@@ -29,26 +31,26 @@ struct TurnCardView: View {
             VStack {
                 ZStack {
                     GradientCardView()
-                    
+
                     VStack {
                         // Header ( Date / Picture / TURN )
                         HeaderCardPreviewView(viewModel: viewModel)
                             .padding(.bottom, 15)
                             .frame(height: 150)
-                        
+
                         // Title ( Title / Guest )
                         TitleTurnCardPreviewView(viewModel: viewModel)
                             .padding(.horizontal, 16)
                             .padding(.top, 20)
-                        
+
                         // Informations ( Mood / Date / Loc )
                         MainInformationsPreviewView(viewModel: viewModel)
                             .padding(.horizontal, 16)
-                        
+
                         // Description ( Bio event )
                         DescriptionTurnCardPreviewView(viewModel: viewModel)
                             .padding(.horizontal, 16)
-                        
+
                         Spacer()
                     }
                 }
@@ -62,10 +64,11 @@ struct TurnCardView: View {
                         viewModel.showDetailTurnCard = true
                     }
                 }
+                
+
                 Spacer()
-                
-                
-                    HStack(spacing: 30) {
+
+                HStack(spacing: 30) {
                     Button(
                         action: {
                             coreDataViewModel.addTurn(
@@ -85,7 +88,8 @@ struct TurnCardView: View {
                                     imageEvent: viewModel.imageSelected
                                 )
                             ) {
-                                success, message in
+                                success,
+                                message in
                                 if success {
                                     dismiss()
                                 } else {
@@ -106,7 +110,7 @@ struct TurnCardView: View {
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
                                     .font(.system(size: 10, weight: .bold))
-                                
+
                                 Text("Brouillon")
                                     .tokenFont(.Body_Inter_Medium_14)
                                     .padding(.trailing, 15)
@@ -124,13 +128,15 @@ struct TurnCardView: View {
                             .foregroundColor(.white)
                             .background(.clear)
                     }
-                    
+
                     Button(
                         action: {
                             viewModel.pushDataTurn {
-                                success, message in
+                                success,
+                                message in
                                 if success {
                                     dismiss()
+                                    coordinator.selectedTab = 0
                                 } else {
                                     toast = Toast(
                                         style: .error,
@@ -142,12 +148,18 @@ struct TurnCardView: View {
                         label: {
                             HStack {
                                 Image(.iconSend)
-                                    .foregroundColor(.white).opacity(!viewModel.isEnableButton ? 0.5 : 1)
+                                    .foregroundColor(.white).opacity(
+                                        !viewModel.isEnableButton ? 0.5 : 1
+                                    )
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
-                                
+
                                 Text("Publier")
-                                    .tokenFont(!viewModel.isEnableButton ? .Placeholder_Inter_Regular_14 : .Body_Inter_Medium_14)
+                                    .tokenFont(
+                                        !viewModel.isEnableButton
+                                            ? .Placeholder_Inter_Regular_14
+                                            : .Body_Inter_Medium_14
+                                    )
                                     .padding(.trailing, 15)
                                     .padding(.vertical, 10)
                                     .bold()
@@ -155,12 +167,15 @@ struct TurnCardView: View {
                         }
                     )
                     .frame(width: 150)
-                    .background(Color(hex: "B098E6").opacity(!viewModel.isEnableButton ? 0.5 : 1))
+                    .background(
+                        Color(hex: "B098E6").opacity(
+                            !viewModel.isEnableButton ? 0.5 : 1
+                        )
+                    )
                     .disabled(!viewModel.isEnableButton)
                     .cornerRadius(10)
                 }
-                .blur(radius: viewModel.isLoading ? 10 : 0)
-                .allowsHitTesting(!viewModel.isLoading)
+
             }
 
             if viewModel.isLoading {
@@ -175,9 +190,14 @@ struct TurnCardView: View {
                 .zIndex(3)
             }
         }
+        .blur(radius: viewModel.isLoading ? 10 : 0)
+        .allowsHitTesting(!viewModel.isLoading)
         .toastView(toast: $toast)
         .fullScreenCover(isPresented: $viewModel.showDetailTurnCard) {
-            TurnCardDetailsView(viewModel: viewModel)
+            TurnCardDetailsView(
+                viewModel: viewModel,
+                parentDismiss: dismiss
+            )
         }
         .customNavigationFlexible(
             leftElement: {
@@ -196,7 +216,7 @@ struct TurnCardView: View {
                             .scaledToFit()
                             .foregroundColor(.white)
                             .frame(width: 24)
-                }
+                    }
             },
             hasADivider: false
         )

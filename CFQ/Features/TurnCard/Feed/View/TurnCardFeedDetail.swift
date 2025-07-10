@@ -146,7 +146,8 @@ struct TurnCardDetailsFeedView: View {
         .customNavigationBackButton{}
         .fullScreenCover(isPresented: $turnCardViewModel.showDetailTurnCard) {
             TurnCardDetailsView(
-                viewModel: turnCardViewModel
+                viewModel: turnCardViewModel,
+                parentDismiss: dismiss
             )
         }
     }

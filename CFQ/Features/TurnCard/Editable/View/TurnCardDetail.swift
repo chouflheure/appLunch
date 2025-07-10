@@ -1,9 +1,11 @@
 
 import SwiftUI
+import Lottie
 
 struct TurnCardDetailsView: View {
-    @StateObject var viewModel: TurnCardViewModel
+    @ObservedObject var viewModel: TurnCardViewModel
     @State private var toast: Toast? = nil
+    var parentDismiss: DismissAction
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -77,10 +79,12 @@ struct TurnCardDetailsView: View {
                         
                         Button(
                             action: {
-                                viewModel.pushDataTurn {
-                                    success, message in
+                                
+                                viewModel.updateTurn { success, message in
+                                    print("@@@ success = \(success)")
                                     if success {
                                         dismiss()
+                                        parentDismiss()
                                     } else {
                                         toast = Toast(
                                             style: .error,
@@ -113,11 +117,25 @@ struct TurnCardDetailsView: View {
                         .frame(height: 30)
                 }
             }
+            
+            if viewModel.isLoading {
+                ZStack {
+                    LottieView(
+                        animation: .named(StringsToken.Animation.loaderCircle)
+                    )
+                    .playing()
+                    .looping()
+                    .frame(width: 150, height: 150)
+                }
+                .zIndex(3)
+            }
         }
         .ignoresSafeArea(edges: .top)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
         .scrollDismissesKeyboard(.interactively)
+        .blur(radius: viewModel.isLoading ? 10 : 0)
+        .allowsHitTesting(!viewModel.isLoading)
     }
 }
