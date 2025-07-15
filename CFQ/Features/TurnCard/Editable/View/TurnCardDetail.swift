@@ -138,7 +138,5 @@ struct TurnCardDetailsView: View {
             UIApplication.shared.endEditing()
         }
         .scrollDismissesKeyboard(.interactively)
-        .blur(radius: viewModel.isLoading ? 10 : 0)
-        .allowsHitTesting(!viewModel.isLoading)
     }
 }

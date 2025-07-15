@@ -62,7 +62,7 @@ struct TurnListScreen: View {
                                         placeLongitude: 0,
                                         timestamp: Date()
                                     ), coordinator: coordinator,
-                                    coreDataViewModel: TurnCoreDataViewModel()
+                                    coreDataViewModel: vm
                                 )
                             ) {
                                 Image(.iconPlus)

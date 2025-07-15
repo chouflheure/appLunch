@@ -6,6 +6,7 @@ struct MessagerieView: View {
 
     @StateObject var viewModel: MessagerieViewModel
     @ObservedObject var coordinator: Coordinator
+    @EnvironmentObject var user: User
 
     @State private var text: String = ""
     @State private var lastText: String = ""
@@ -13,7 +14,6 @@ struct MessagerieView: View {
     @State private var isKeyboardVisible = false
     @State private var textViewHeight: CGFloat = 20
     @State private var keyboardHeight: CGFloat = 0
-    @EnvironmentObject var user: User
 
     @ObservedObject var conversation: Conversation
     var turn: Turn?
@@ -158,17 +158,28 @@ struct MessagerieView: View {
         } else {
             if cfq == nil {
                 if let cfqFromCache = coordinator.userCFQ.first(where: { $0.uid == conversation.eventUID }) {
-                    NavigationCFQHeader(cfq: editHeader(cfq: cfqFromCache))        
+                    NavigationLink(destination: ConversationOptionCFQView(cfq: cfqFromCache, coordinator: coordinator)) {
+                        NavigationCFQHeader(cfq: editHeader(cfq: cfqFromCache))
+                    }
                 }
                 
                 if let cfqFromCache = user.postedCfqs?.first(where: { $0 == conversation.eventUID }) {
-                    NavigationCFQHeader(cfq: CFQ(uid: cfqFromCache, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl)))
+                    let cfq = CFQ(uid: cfqFromCache, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl))
+                    NavigationLink(destination: ConversationOptionCFQView(cfq: cfq, coordinator: coordinator)) {
+                        NavigationCFQHeader(cfq: cfq)
+                    }
                 }
                 else {
-                    NavigationCFQHeader(cfq: editHeader(cfq: cfq ?? CFQ(uid: conversation.eventUID, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl))))
+                    let cfq = editHeader(cfq: cfq ?? CFQ(uid: conversation.eventUID, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl)))
+                    NavigationLink(destination: ConversationOptionCFQView(cfq: cfq, coordinator: coordinator)) {
+                        NavigationCFQHeader(cfq: cfq)
+                    }
                 }
             } else {
-                NavigationCFQHeader(cfq: editHeader(cfq: cfq ?? CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: [], userContact: nil)))
+                let cfq = editHeader(cfq: cfq ?? CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: [], userContact: nil))
+                NavigationLink(destination: ConversationOptionCFQView(cfq: cfq, coordinator: coordinator)) {
+                    NavigationCFQHeader(cfq: cfq)
+                }
             }
         }
     }
@@ -191,105 +202,3 @@ struct MessagerieView: View {
     }
 }
 
-struct ConversationOptionView: View {
-    @Binding var isPresented: Bool
-
-    var body: some View {
-        DraggableViewLeft(isPresented: $isPresented) {
-            SafeAreaContainer {
-                VStack {
-                    HeaderBackLeftScreen(
-                        onClickBack: { withAnimation { isPresented = false } },
-                        titleScreen: "Infos"
-                    )
-
-                    /*
-                    ScrollView {
-                        VStack {
-                            Image(.header)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-
-                            Text("Titre du groupe")
-                                .tokenFont(.Title_Inter_semibold_24)
-
-                            // MEDIA PART
-                            ConversationOptionPart(
-                                icon: .iconAdduser, title: "Ajouter quelqu'un",
-                                onTap: {})
-                            ConversationOptionPart(
-                                icon: .iconSearch,
-                                title: "Rechercher dans la conv", onTap: {})
-                            ConversationOptionPart(
-                                icon: .icon, title: "Medias", nbElement: 8,
-                                onTap: {})
-
-                            PageView(pageViewType: .invited)
-                                .frame(height: 300)
-
-                            Spacer()
-
-                            Button("coucou", action: {})
-                        }
-                    }
-                    .padding(.vertical, 20)
-                    .padding(.horizontal, 12)
-                    */
-
-                }
-            }
-            .ignoresSafeArea(.keyboard)
-            .onTapGesture {
-                UIApplication.shared.endEditing()
-            }
-        }
-    }
-}
-
-private struct ConversationOptionPart: View {
-    var icon: ImageResource
-    var title: String
-    var nbElement: Int?
-    var onTap: () -> Void
-
-    var body: some View {
-        HStack {
-            Image(icon)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 20, height: 20)
-                .foregroundColor(.white)
-            Text(title)
-                .tokenFont(.Body_Inter_Medium_16)
-            Spacer()
-            Text(nbElement != nil ? "\(nbElement!)" : "")
-                .tokenFont(.Placeholder_Inter_Regular_16)
-            Image(.iconArrow)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 20, height: 20)
-                .foregroundColor(.gray)
-                .rotationEffect(.init(degrees: 180))
-
-        }
-        .padding()
-        .background(.black)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .overlay {
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(.whiteTertiary, lineWidth: 1)
-        }
-        .onTapGesture {
-            onTap()
-        }
-    }
-}
-
-#Preview {
-    ZStack {
-        NeonBackgroundImage()
-        ConversationOptionView(isPresented: .constant(false))
-    }
-}

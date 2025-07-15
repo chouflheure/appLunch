@@ -219,6 +219,7 @@ struct ListFriendToAdd: View {
     @Binding var friendsOnTeam: Set<UserContact>
     @Binding var allFriends: Set<UserContact>
     var showArrowDown: Bool
+
     init(
         isPresented: Binding<Bool>,
         coordinator: Coordinator,

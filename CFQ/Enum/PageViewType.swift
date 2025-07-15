@@ -15,7 +15,7 @@ enum PageViewType {
             case .attendingGuestsView:
                 return["✨ Tous", "👍", "🤔", "👎"]
             case .invited:
-                return ["✨ Actifs", "👀 En attente"]
+                return ["✨ Chaud", "👀 En attente"]
             case .profileView:
                 return ["TURN", "CALENDRIER"]
             case .friendList:

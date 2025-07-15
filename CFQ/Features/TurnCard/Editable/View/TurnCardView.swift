@@ -7,16 +7,17 @@ struct TurnCardView: View {
     @ObservedObject var turn: Turn
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: TurnCardViewModel
-    @StateObject var coreDataViewModel = TurnCoreDataViewModel()
+    @ObservedObject var coreDataViewModel: TurnCoreDataViewModel
     @Environment(\.dismiss) var dismiss
 
     init(
         turn: Turn,
         coordinator: Coordinator,
-        coreDataViewModel: TurnCoreDataViewModel
+        coreDataViewModel: TurnCoreDataViewModel = TurnCoreDataViewModel()
     ) {
         self.turn = turn
         self.coordinator = coordinator
+        self.coreDataViewModel = coreDataViewModel
         _viewModel = StateObject(
             wrappedValue: TurnCardViewModel(
                 turn: turn,
@@ -24,6 +25,8 @@ struct TurnCardView: View {
                 isEditing: false
             )
         )
+        
+        print("@@@ turn = \(turn.printObject)")
     }
 
     var body: some View {

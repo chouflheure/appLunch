@@ -109,7 +109,7 @@ class TurnCardViewModel: ObservableObject {
         if let user = coordinator.user {
             self.user = user
         } else {
-            coordinator.showTurnCardView = false
+            print("@@@ here else ")
         }
     }
     

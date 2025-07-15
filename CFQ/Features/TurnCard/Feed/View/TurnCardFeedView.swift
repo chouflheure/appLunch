@@ -29,8 +29,8 @@ struct TurnCardFeedView: View {
                         coordinator: coordinator,
                         user: user
                     )
-                        .padding(.horizontal, 16)
-                        .padding(.top, !turn.pictureURLString.isEmpty ? 20 : 70)
+                    .padding(.horizontal, 16)
+                    .padding(.top, !turn.pictureURLString.isEmpty ? 20 : 70)
 
                     // Informations ( Mood / Date / Loc )
                     MainInformationsPreviewFeedView(turn: turn)
@@ -48,7 +48,6 @@ struct TurnCardFeedView: View {
                     .stroke(Color.gray, lineWidth: 0.2)
             }
             .frame(maxHeight: 550)
-            // .frame(height: 550)
             .cornerRadius(20)
             .zIndex(1)
         }
