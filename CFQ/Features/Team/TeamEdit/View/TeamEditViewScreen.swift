@@ -130,14 +130,15 @@ struct TeamEditViewScreen: View {
                             isPresented: .constant(true),
                             coordinator: coordinator,
                             friendsOnTeam: $viewModel.setFriends,
-                            allFriends: $viewModel.allFriends
+                            allFriends: $viewModel.allFriends,
+                            showArrowDown: false
                         )
                         .customNavigationFlexible(
                             leftElement: {
                                 NavigationBackIcon()
                             },
                             centerElement: {
-                                Text("Ajoute des genns à ta team")
+                                Text("Qui dans la team ?")
                                     .tokenFont(.Title_Gigalypse_24)
                             },
                             rightElement: {

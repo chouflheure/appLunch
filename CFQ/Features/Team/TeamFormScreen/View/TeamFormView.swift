@@ -12,7 +12,8 @@ struct TeamFormView: View {
     init(coordinator: Coordinator) {
         self.coordinator = coordinator
         self._viewModel = StateObject(
-            wrappedValue: TeamFormViewModel(coordinator: coordinator))
+            wrappedValue: TeamFormViewModel(coordinator: coordinator)
+        )
     }
 
     var body: some View {
@@ -77,7 +78,8 @@ struct TeamFormView: View {
                             ) {
                                 CellFriendCanRemove(userPreview: friend) {
                                     viewModel.removeFriendsFromList(
-                                        user: friend)
+                                        user: friend
+                                    )
                                 }
                             }
                         }.frame(height: 100)
@@ -155,7 +157,8 @@ class ListFriendToAddViewModel: ObservableObject {
     private var allFriendstemps = Set<UserContact>()
 
     init(
-        coordinator: Coordinator, friendsOnTeam: Binding<Set<UserContact>>,
+        coordinator: Coordinator,
+        friendsOnTeam: Binding<Set<UserContact>>,
         allFriends: Binding<Set<UserContact>>
     ) {
         self.coordinator = coordinator
@@ -170,7 +173,7 @@ class ListFriendToAddViewModel: ObservableObject {
         if let friendsOnTeamFromCoordinator = coordinator.teamDetail?.friends {
             friendsOnTeam = Set(friendsOnTeamFromCoordinator)
         }
-
+        
          */
         // friendsOnTeam = friends
         allFriends = allFriends.filter { !friendsOnTeam.contains($0) }
@@ -215,40 +218,44 @@ struct ListFriendToAdd: View {
     @StateObject private var viewModel: ListFriendToAddViewModel
     @Binding var friendsOnTeam: Set<UserContact>
     @Binding var allFriends: Set<UserContact>
-
+    var showArrowDown: Bool
     init(
         isPresented: Binding<Bool>,
         coordinator: Coordinator,
         friendsOnTeam: Binding<Set<UserContact>>,
-        allFriends: Binding<Set<UserContact>>
+        allFriends: Binding<Set<UserContact>>,
+        showArrowDown: Bool = true
     ) {
         self._isPresented = isPresented
         self.coordinator = coordinator
         self._viewModel = StateObject(
             wrappedValue: ListFriendToAddViewModel(
-                coordinator: coordinator, friendsOnTeam: friendsOnTeam,
-                allFriends: allFriends))
+                coordinator: coordinator,
+                friendsOnTeam: friendsOnTeam,
+                allFriends: allFriends
+            )
+        )
         self._friendsOnTeam = friendsOnTeam
         self._allFriends = allFriends
+        self.showArrowDown = showArrowDown
     }
 
     var body: some View {
-        SafeAreaContainer {
-            VStack {
-                HStack {
-                    /*
-                    SearchBarView(
-                        text: $viewModel.researchText,
-                        placeholder: StringsToken.SearchBar.placeholderFriend,
-                        onRemoveText: {
-                            viewModel.removeText()
-                        },
-                        onTapResearch: {
-                            viewModel.researche()
-                        }
-                    )
-*/
-                    Spacer()
+        VStack {
+            HStack {
+                SearchBarView(
+                    text: $viewModel.researchText,
+                    placeholder: StringsToken.SearchBar.placeholderFriend,
+                    onRemoveText: {
+                        viewModel.removeText()
+                    },
+                    onTapResearch: {
+                        viewModel.researche()
+                    }
+                )
+
+                Spacer()
+                if showArrowDown {
                     Button(action: {
                         isPresented = false
                     }) {
@@ -259,23 +266,21 @@ struct ListFriendToAdd: View {
                             .rotationEffect(Angle(degrees: -90))
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 50)
-                .zIndex(100)
-
-                AddFriendsAndListView(
-                    arrayPicture: viewModel.$friendsOnTeam,
-                    arrayFriends: viewModel.$allFriends,
-                    coordinator: coordinator,
-                    onRemove: { userRemoved in
-                        viewModel.removeFriendsFromList(user: userRemoved)
-                    },
-                    onAdd: { userAdd in
-                        viewModel.addFriendsToList(user: userAdd)
-                    }
-                )
-                .padding(.top, 30)
             }
+            .padding(.horizontal, 16)
+
+            AddFriendsAndListView(
+                arrayPicture: viewModel.$friendsOnTeam,
+                arrayFriends: viewModel.$allFriends,
+                coordinator: coordinator,
+                onRemove: { userRemoved in
+                    viewModel.removeFriendsFromList(user: userRemoved)
+                },
+                onAdd: { userAdd in
+                    viewModel.addFriendsToList(user: userAdd)
+                }
+            )
+            .padding(.top, 30)
         }
     }
 }
