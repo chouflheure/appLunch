@@ -45,9 +45,9 @@ struct CustomTabView: View {
                                 } else if coordinator.selectedTab == 2 {
                                     TurnListScreen(coordinator: coordinator)
                                 } else if coordinator.selectedTab == 3 {
-                                    Text("Coming soon")
-                                        .tokenFont(.Title_Gigalypse_24)
-                                    // TeamView(coordinator: coordinator)
+                                    //Text("Coming soon")
+                                      //  .tokenFont(.Title_Gigalypse_24)
+                                    TeamView(coordinator: coordinator)
                                 } else {
                                     ProfileView(coordinator: coordinator)
                                 }

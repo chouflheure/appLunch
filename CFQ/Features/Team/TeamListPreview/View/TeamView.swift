@@ -3,7 +3,6 @@ import SwiftUI
 struct TeamView: View {
     @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel: TeamListScreenViewModel
-    @State var selectedTeam: Int = 0
     @EnvironmentObject var user: User
 
     init(coordinator: Coordinator) {
@@ -51,6 +50,9 @@ struct TeamView: View {
                 }
             }
             .padding(.horizontal, 12)
+        }
+        .onAppear {
+            viewModel.startListeningToTeams()
         }
     }
 }

@@ -346,10 +346,6 @@ struct CachedAsyncImageView: View {
     }
 }
 
-
-import SwiftUI
-import Foundation
-
 // MARK: - Gestionnaire de cache d'images
 class ImageCacheManager: ObservableObject {
     static let shared = ImageCacheManager()

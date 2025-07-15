@@ -9,31 +9,42 @@ class TeamListScreenViewModel: ObservableObject {
     
     init(coordinator: Coordinator) {
         self.user = coordinator.user ?? User(uid: "")
-        startListeningToTeams()
     }
 
+    func refreshTeams() {
+        // Arrêter les anciens listeners pour éviter les doublons
+        firebaseService.removeListener(for: ListenerType.team_group_listener.rawValue)
+        
+        // Vider la liste actuelle
+        teams.removeAll()
+        
+        // Relancer l'écoute
+        startListeningToTeams()
+    }
+    
     func startListeningToTeams() {
+        print("@@@ here")
         firebaseService.getDataByIDs(
             from: .teams,
             with: user.teams ?? [""],
-            listenerKeyPrefix: ListenerType.team_group_listener.rawValue
         ){ (result: Result<[Team], Error>) in
                 switch result {
                 case .success(let teams):
-                    self.teams = teams
-
-                    teams.indices.forEach { index in
-                        self.startListeningToUsersOnTeam(friendsIds: teams[index].friends, uidTeam: teams[index].uid) { data, error in
-                            if !data.isEmpty {
-                                self.teams[index].friendsContact = data
-                                
-                                let uuidSet = Set(teams[index].admins)
-                                // Filtrer les objets pour ne conserver que ceux dont l'UUID est dans l'ensemble
-                                let commonObjects = data.filter { uuidSet.contains($0.uid) }
-                                self.teams[index].adminsContact = commonObjects
-
-                            } else {
-                                print("@@@ data NOOOO")
+                    DispatchQueue.main.async {
+                        self.teams = teams
+                        teams.indices.forEach { index in
+                            self.startListeningToUsersOnTeam(friendsIds: teams[index].friends, uidTeam: teams[index].uid) { data, error in
+                                if !data.isEmpty {
+                                    self.teams[index].friendsContact = data
+                                    
+                                    let uuidSet = Set(teams[index].admins)
+                                    // Filtrer les objets pour ne conserver que ceux dont l'UUID est dans l'ensemble
+                                    let commonObjects = data.filter { uuidSet.contains($0.uid) }
+                                    self.teams[index].adminsContact = commonObjects
+                                    
+                                } else {
+                                    print("@@@ data NOOOO")
+                                }
                             }
                         }
                     }
@@ -43,12 +54,11 @@ class TeamListScreenViewModel: ObservableObject {
                 }
             }
     }
-    
+
     private func startListeningToUsersOnTeam(friendsIds: [String], uidTeam: String, completion: @escaping ([UserContact], Error?) -> Void) {
         firebaseService.getDataByIDs(
             from: .users,
             with: friendsIds,
-            listenerKeyPrefix: (ListenerType.team_user.rawValue + "\(uidTeam)")
         ){ (result: Result<[UserContact], Error>) in
             switch result {
                 case .success(let userContact):

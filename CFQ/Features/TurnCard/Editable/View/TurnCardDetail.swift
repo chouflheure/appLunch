@@ -130,6 +130,9 @@ struct TurnCardDetailsView: View {
                 .zIndex(3)
             }
         }
+        .toastView(toast: $toast)
+        .blur(radius: viewModel.isLoading ? 10 : 0)
+        .allowsHitTesting(!viewModel.isLoading)
         .ignoresSafeArea(edges: .top)
         .onTapGesture {
             UIApplication.shared.endEditing()
