@@ -54,6 +54,7 @@ struct MessagerieView: View {
                                             ) {}
                                             .padding(.horizontal, 12)
                                             .rotationEffect(.degrees(180))
+
                                         } else {
                                             CellMessageViewReceived(
                                                 data: viewModel.messages[index],
@@ -77,7 +78,7 @@ struct MessagerieView: View {
 
                     }
                     Spacer()
-                        .frame(height: textViewHeight + 40)
+                        .frame(height: textViewHeight + 50)
                 }
 
                 VStack {

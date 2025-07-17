@@ -272,6 +272,7 @@ struct CellMessageSendByTheUserView: View {
                             )
                        
                     }
+                /*
                     if data.reactions?.count ?? 0 > 0 {
                         HStack {
                             Spacer()
@@ -307,11 +308,13 @@ struct CellMessageSendByTheUserView: View {
                         .padding(.trailing, 20)
                         .offset(y: -12)
                     }
+                */
                 }
 
             }
             .padding(.trailing, 15)
             .padding(.leading, 30)
+            .padding(.top, isSameLastSender ? 0 : 15)
         // }
     }
 }
@@ -323,19 +326,12 @@ struct CellMessageViewReceived: View {
     
     var data: Message
     var isSameLastSender: Bool
-
+    
     var body: some View {
+        // ReponseMessage {
         VStack(alignment: .leading, spacing: 0) {
-
-//            ReponseMessage {
-                
-                if !isSameLastSender {
-                    Text(data.userContact?.pseudo ?? "User")
-                        .tokenFont(.Placeholder_Inter_Regular_14)
-                        .padding(.leading, 50)
-                }
-
-                HStack(alignment: .bottom) {
+            HStack(alignment: .bottom, spacing: 8) {
+                Group {
                     if !isSameLastSender {
                         CachedAsyncImageView(
                             urlString: data.userContact?.profilePictureUrl ?? "",
@@ -345,71 +341,34 @@ struct CellMessageViewReceived: View {
                         Spacer()
                             .frame(width: 50)
                     }
+                }
+                
+                // Container du nom + message
+                VStack(alignment: .leading, spacing: 4) {
+                    // Nom de l'utilisateur
+                    if !isSameLastSender {
+                        Text(data.userContact?.pseudo ?? "User")
+                            .tokenFont(.Placeholder_Inter_Regular_14)
+                            .padding(.leading, 5)
+                    }
                     
-
+                    // Bulle de message
                     Text(data.message)
                         .tokenFont(.Body_Inter_Regular_15)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
                         .background(.blackLight)
                         .cornerRadius(20)
-                        .simultaneousGesture(
-                            LongPressGesture()
-                                .onEnded { _ in
-                                    print("@@@ long Tap")
-                                    showReaction = true
-                                }
-                        )
-                        .simultaneousGesture(
-                            TapGesture(count: 2)
-                                .onEnded {
-                                    print("@@@ double Tap")
-                                    showReaction = true
-                                }
-                        )
-                    Spacer()
-                }
-                .padding(.trailing, 30)
-
-                if data.reactions?.count ?? 0 > 0 {
-                    HStack {
-                        Button(action: {
-                            isShowPopover = true
-                        }) {
-                            Text("❤️ 😘 2")
-                                .foregroundColor(.white)
-                                .font(.system(size: 10))
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 12)
-                                .background(.blackLight)
-                                .cornerRadius(20)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(lineWidth: 0.3)
-                                        .foregroundColor(.black)
-                                }
-                                .popover(
-                                    isPresented: $isShowPopover,
-                                    arrowEdge: .bottom,
-                                    content: {
-                                        Text("Hello, World!")
-                                            .padding()
-                                            .presentationCompactAdaptation(
-                                                .none)
-                                    }
-                                )
-                                .zIndex(999)
-                        }
-                        Spacer()
-                    }
-                    .padding(.leading, 40)
-                    .offset(y: -12)
                 }
                 
+                Spacer()
+                    
             }
-            .padding(.trailing, 30)
-        // }
+        }
+        .padding(.horizontal, 5)
+        .padding(.top, isSameLastSender ? 0 : 15)
     }
+// }
 }
 
 #Preview {
