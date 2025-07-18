@@ -272,7 +272,7 @@ struct CellMessageSendByTheUserView: View {
                             )
                        
                     }
-                /*
+
                     if data.reactions?.count ?? 0 > 0 {
                         HStack {
                             Spacer()
@@ -308,7 +308,6 @@ struct CellMessageSendByTheUserView: View {
                         .padding(.trailing, 20)
                         .offset(y: -12)
                     }
-                */
                 }
 
             }

@@ -2,33 +2,47 @@ import SwiftUI
 
 struct ConversationOptionCFQView: View {
     @ObservedObject var coordinator: Coordinator
-    @State var setFriendsState = Set<UserContact>()
+    @State var setInvitedState = Set<UserContact>()
+    @State var setParticipantsState = Set<UserContact>()
     @State var allFriendsState = Set<UserContact>()
     @State var navigateToTeamEdit = false
     @StateObject var viewModel = ConversationOptionCFQViewModel()
 
     var cfq: CFQ
-    
+
     init(cfq: CFQ, coordinator: Coordinator) {
         self.cfq = cfq
         self.coordinator = coordinator
 
-        let commonFriends = coordinator.user?.userFriendsContact?.filter { friend in
+        self._setInvitedState = State(wrappedValue: Set(initUsers().0))
+        self._setParticipantsState = State(wrappedValue: Set(initUsers().1))
+        self._allFriendsState = State(wrappedValue: Set(initUsers().2))
+    }
+
+    private func initUsers() -> ([UserContact],[UserContact],[UserContact]) {
+        let participantsFriends = coordinator.user?.userFriendsContact?.filter { friend in
             cfq.participants?.contains(friend.uid) ?? false
         } ?? []
-
-        let userFriends = coordinator.user?.userFriendsContact ?? []
-
-        self._setFriendsState = State(wrappedValue: Set(commonFriends))
-        self._allFriendsState = State(wrappedValue: Set(userFriends))
+        
+        let invitedFriends = coordinator.user?.userFriendsContact?.filter { friend in
+            cfq.users.contains(friend.uid)
+        } ?? []
+        
+        let userFriends = coordinator.user?.userFriendsContact?.filter { friend in
+            !invitedFriends.contains { invitedFriend in
+                invitedFriend.uid == friend.uid
+            }
+        } ?? []
+        
+        return (invitedFriends, participantsFriends, userFriends)
     }
 
-    private var setFriendsArray: [UserContact] {
-        Array(setFriendsState)
+    private var invitedArray: [UserContact] {
+        Array(setInvitedState)
     }
 
-    private var allFriendsArray: [UserContact] {
-        Array(allFriendsState)
+    private var participantsArray: [UserContact] {
+        Array(setParticipantsState)
     }
 
     var body: some View {
@@ -48,12 +62,15 @@ struct ConversationOptionCFQView: View {
                     // MEDIA PART
                     NavigationLink(destination: {
                         AddFriendScreenWithActionButtonView(
-                            setFriendsState: setFriendsState,
+                            setFriendsState: setInvitedState,
                             allFriendsState: allFriendsState,
-                            coordinator: coordinator
+                            coordinator: coordinator,
+                            viewModel: viewModel,
+                            uuidCFQ: cfq.uid,
+                            user: coordinator.user
                         )
                     })
-                        {
+                    {
                         ConversationOptionPart(
                             icon: .iconAdduser,
                             title: "Ajouter quelqu'un"
@@ -106,7 +123,7 @@ struct ConversationOptionCFQView: View {
                         )
                     }
                     
-                    UserInCFQ(invited: setFriendsArray, participants: allFriendsArray)
+                    UserInCFQ(invited: invitedArray, participants: participantsArray)
                     
                     Spacer()
                 }
@@ -133,14 +150,9 @@ struct ConversationOptionCFQView: View {
             UIApplication.shared.endEditing()
         }
         .onAppear {
-            let commonFriends = coordinator.user?.userFriendsContact?.filter { friend in
-                cfq.participants?.contains(friend.uid) ?? false
-            } ?? []
-            
-            let userFriends = coordinator.user?.userFriendsContact ?? []
-            
-            setFriendsState = Set(commonFriends)
-            allFriendsState = Set(userFriends)
+            setInvitedState = Set(initUsers().0)
+            setParticipantsState = Set(initUsers().1)
+            allFriendsState = Set(initUsers().2)
         }
     }
 }
@@ -149,6 +161,10 @@ private struct AddFriendScreenWithActionButtonView: View {
     @State var setFriendsState = Set<UserContact>()
     @State var allFriendsState = Set<UserContact>()
     @ObservedObject var coordinator: Coordinator
+    @ObservedObject var viewModel: ConversationOptionCFQViewModel
+    @Environment(\.dismiss) var dismiss
+    var user: User?
+    var uuidCFQ: String
     
     var body: some View {
         VStack {
@@ -176,10 +192,12 @@ private struct AddFriendScreenWithActionButtonView: View {
         
         HStack(spacing: 30) {
             Button(
-                action: {},
+                action: {
+                    dismiss()
+                },
                 label: {
                     HStack {
-                        Image(.iconSave)
+                        Image(.iconCross)
                             .resizable()
                             .scaledToFit()
                             .frame(height: 30)
@@ -188,7 +206,7 @@ private struct AddFriendScreenWithActionButtonView: View {
                             .padding(.vertical, 10)
                             .font(.system(size: 10, weight: .bold))
                         
-                        Text("Brouillon")
+                        Text("Annuler")
                             .tokenFont(.Body_Inter_Medium_14)
                             .padding(.trailing, 15)
                             .padding(.vertical, 10)
@@ -208,6 +226,12 @@ private struct AddFriendScreenWithActionButtonView: View {
             
             Button(
                 action: {
+                    viewModel.updateUserOnCFQ(
+                        cfqUUID: uuidCFQ,
+                        usersUUID: setFriendsState.map { $0.uid },
+                        admin: user,
+                        completion: {_,_ in }
+                    )
                     /*
                     viewModel.pushDataTurn {
                         success,
@@ -233,7 +257,7 @@ private struct AddFriendScreenWithActionButtonView: View {
                             .padding(.leading, 15)
                             .padding(.vertical, 10)
                         
-                        Text("Publier")
+                        Text("Les inviter")
                             .tokenFont(
                                 //!viewModel.isEnableButton
                                 //? .Placeholder_Inter_Regular_14
@@ -299,24 +323,24 @@ private struct UserInCFQ: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     if selectedIndex == 0 {
                         LazyVStack(spacing: 20) {
-                            if invited.isEmpty {
+                            if participants.isEmpty {
                                 Text("Personne ici")
                                     .tokenFont(.Label_Gigalypse_12)
                                     .padding(.top, 50)
                             } else {
-                                CollectionViewParticipant(participants: $invited)
+                                CollectionViewParticipant(participants: $participants)
                             }
                         }
                         .padding(.top, 24)
                     } else if selectedIndex == 1 {
                         LazyVStack(spacing: 20) {
-                            if participants.isEmpty {
+                            if invited.isEmpty {
                                 Text("Personne ici")
                                     .tokenFont(.Label_Gigalypse_12)
                                     .padding(.top, 50)
                             }
                             else {
-                                CollectionViewParticipant(participants: $participants)
+                                CollectionViewParticipant(participants: $invited)
                             }
                         }
                         .padding(.top, 24)
