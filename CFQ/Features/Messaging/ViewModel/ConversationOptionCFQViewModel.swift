@@ -1,9 +1,16 @@
 import SwiftUI
+import Firebase
 
 class ConversationOptionCFQViewModel: ObservableObject {
     private var firebaseService = FirebaseService()
     
-    func updateUserOnCFQ(cfq: CFQ, usersUUID: [String], admin: User?, completion: @escaping (Bool, String) -> Void?) {
+    func updateUserOnCFQ(
+        cfq: CFQ,
+        usersUUID: [String],
+        friendUUIDBeforeModification: [String],
+        admin: User?,
+        completion: @escaping (Bool, String) -> Void?)
+    {
         guard let admin = admin else {
             completion(true, "")
             return
@@ -17,17 +24,43 @@ class ConversationOptionCFQViewModel: ObservableObject {
             result in
             switch result {
             case .success():
-                self.addCFQToNewUser(usersUUID: usersUUID, cfq: cfq, admin: admin)
+                self.removeUsers(
+                    usersUUID: friendUUIDBeforeModification.filter { !usersUUID.contains($0) },
+                    cfq: cfq,
+                    admin: admin
+                )
+                
+                self.addCFQToNewUser(
+                    usersUUID: usersUUID.filter { !friendUUIDBeforeModification.contains($0) },
+                    cfq: cfq,
+                    admin: admin
+                )
+                
                 completion(true, "")
             case .failure(let error):
                 completion(false, error.localizedDescription)
             }
         }
+         
+    }
+    
+    private func removeUsers(usersUUID: [String], cfq: CFQ, admin: User) {
+        firebaseService.updateDataByIDs(
+            data: [
+                "invitedCfqs": FieldValue.arrayRemove([cfq.uid]),
+                "messagesChannelId": FieldValue.arrayRemove([cfq.messagerieUUID])
+            ],
+            to: .users,
+            at: usersUUID
+        )
     }
     
     private func addCFQToNewUser(usersUUID: [String], cfq: CFQ, admin: User) {
         firebaseService.updateDataByIDs(
-            data: ["invitedCfqs": cfq.uid],
+            data: [
+                "invitedCfqs": FieldValue.arrayUnion([cfq.uid]),
+                "messagesChannelId": FieldValue.arrayUnion([cfq.messagerieUUID])
+            ],
             to: .users,
             at: usersUUID
         )

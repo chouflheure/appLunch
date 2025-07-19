@@ -66,8 +66,10 @@ struct ConversationOptionCFQView: View {
                             allFriendsState: allFriendsState,
                             coordinator: coordinator,
                             viewModel: viewModel,
+                            user: coordinator.user,
                             uuidCFQ: cfq.uid,
-                            user: coordinator.user
+                            cfq: cfq,
+                            friendBeforeModification: setInvitedState.map { $0.uid }
                         )
                     })
                     {
@@ -160,12 +162,16 @@ struct ConversationOptionCFQView: View {
 private struct AddFriendScreenWithActionButtonView: View {
     @State var setFriendsState = Set<UserContact>()
     @State var allFriendsState = Set<UserContact>()
+    @State private var toast: Toast? = nil
+
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var viewModel: ConversationOptionCFQViewModel
     @Environment(\.dismiss) var dismiss
     var user: User?
     var uuidCFQ: String
-    
+    var cfq: CFQ
+    var friendBeforeModification: [String]
+
     var body: some View {
         VStack {
             ListFriendToAdd(
@@ -175,6 +181,7 @@ private struct AddFriendScreenWithActionButtonView: View {
                 allFriends: $allFriendsState,
                 showArrowDown: false
             )
+            .toastView(toast: $toast)
             .customNavigationFlexible(
                 leftElement: {
                     NavigationBackIcon()
@@ -227,26 +234,22 @@ private struct AddFriendScreenWithActionButtonView: View {
             Button(
                 action: {
                     viewModel.updateUserOnCFQ(
-                        cfqUUID: uuidCFQ,
+                        cfq: cfq,
                         usersUUID: setFriendsState.map { $0.uid },
+                        friendUUIDBeforeModification: friendBeforeModification,
                         admin: user,
-                        completion: {_,_ in }
-                    )
-                    /*
-                    viewModel.pushDataTurn {
-                        success,
-                        message in
-                        if success {
-                            dismiss()
-                            coordinator.selectedTab = 0
-                        } else {
-                            toast = Toast(
-                                style: .error,
-                                message: message
-                            )
+                        completion: {success, message in
+                            if success {
+                                dismiss()
+                                coordinator.selectedTab = 0
+                            } else {
+                                toast = Toast(
+                                    style: .error,
+                                    message: message
+                                )
+                            }
                         }
-                    }
-                     */
+                    )
                 },
                 label: {
                     HStack {
@@ -257,11 +260,8 @@ private struct AddFriendScreenWithActionButtonView: View {
                             .padding(.leading, 15)
                             .padding(.vertical, 10)
                         
-                        Text("Les inviter")
+                        Text("Valider les modifs")
                             .tokenFont(
-                                //!viewModel.isEnableButton
-                                //? .Placeholder_Inter_Regular_14
-                                //: .Body_Inter_Medium_14
                                 .Body_Inter_Medium_14
                             )
                             .padding(.trailing, 15)
@@ -271,14 +271,10 @@ private struct AddFriendScreenWithActionButtonView: View {
                 }
             )
             .frame(width: 150)
-            .background(
-                Color(hex: "B098E6").opacity(1
-                    // !viewModel.isEnableButton ? 0.5 : 1
-                )
-            )
-            // .disabled(!viewModel.isEnableButton)
+            .background(Color(hex: "B098E6"))
             .cornerRadius(10)
         }
+        .frame(width: 150)
     }
 }
 
