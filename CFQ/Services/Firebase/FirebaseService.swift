@@ -490,7 +490,7 @@ class FirebaseService: FirebaseServiceProtocol {
     func addDataNotif(
         data: Notification,
         userNotifications: [String],
-        completion: @escaping (Result<Void, Error>) -> Void
+        completion: @escaping (Result<Void, Error>) -> Void?
     ) {
         let db = Firestore.firestore()
         let dispatchGroup = DispatchGroup()

@@ -42,7 +42,7 @@ struct AddFriendsAndListView: View {
                 .background(.white)
 
             VStack {
-                ScrollView(.vertical) {
+                ScrollView(.vertical, showsIndicators: false) {
                     VStack(alignment: .leading) {
                         ForEach(Array(arrayFriends), id: \.self) { friend in
                             NavigationLink(
