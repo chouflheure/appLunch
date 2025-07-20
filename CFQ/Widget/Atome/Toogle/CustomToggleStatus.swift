@@ -7,7 +7,7 @@ struct CustomToggleStatus: View {
     var body: some View {
         ZStack {
             Capsule()
-                .frame(width: 50, height: 22)
+                .frame(width: 60, height: 28)
                 .foregroundColor(.black)
                 .overlay(
                     Capsule()
@@ -16,7 +16,7 @@ struct CustomToggleStatus: View {
                 )
             ZStack {
                 Circle()
-                    .frame(width: 22, height: 22)
+                    .frame(width: 26, height: 26)
                     .foregroundColor(.black)
                     .overlay(
                         Circle()
@@ -24,7 +24,7 @@ struct CustomToggleStatus: View {
                     )
                 Image(viewModel.user.isActive ? .disco : .moonStars)
             }
-            .offset(x: viewModel.user.isActive ? 14 : -14)
+            .offset(x: viewModel.user.isActive ? 16 : -16)
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     viewModel.user.isActive.toggle()
