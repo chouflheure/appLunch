@@ -70,10 +70,13 @@ struct MessagerieView: View {
                             .frame(maxWidth: .infinity)
                         }
                         .rotationEffect(.degrees(180))
-                        .onChange(of: viewModel.messages.count) {_ in
+                        .onChange(of: viewModel.messages.count) {
                             withAnimation(.easeOut(duration: 0.3)) {
                                 proxy.scrollTo(viewModel.messages.count - 1,anchor: .top)
                             }
+                        }
+                        .onChange(of: viewModel.messages.last?.uid) {
+                            viewModel.markMessageAsRead()
                         }
 
                     }

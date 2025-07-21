@@ -338,7 +338,7 @@ struct CellMessageViewReceived: View {
                         )
                     } else {
                         Spacer()
-                            .frame(width: 50)
+                            .frame(width: 42)
                     }
                 }
                 

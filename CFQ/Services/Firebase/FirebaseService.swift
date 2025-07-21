@@ -588,8 +588,6 @@ class FirebaseService: FirebaseServiceProtocol {
         activeListeners[listenerKeyPrefix] = listener
     }
 
-    
-    
     func markMessageAsRead(conversationId: String, userId: String) {
         let conversationRef = db.collection("conversations").document(conversationId)
 
@@ -603,6 +601,12 @@ class FirebaseService: FirebaseServiceProtocol {
                 print("Utilisateur ajouté aux lecteurs")
             }
         }
+        
+        updateDataByID(
+            data: ["arrayConversationUnread": FieldValue.arrayRemove([conversationId])],
+            to: .users,
+            at: userId
+        )
     }
 
     private var activeListeners: [String: ListenerRegistration] = [:]

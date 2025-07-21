@@ -7,6 +7,7 @@ class NotificationViewModel: ObservableObject {
 
     init(user: User) {
         getNotifications(notificationUID: user.notificationsChannelId ?? user.uid)
+        markNotificationAsRead(userUUID: user.uid)
     }
 }
 
@@ -38,6 +39,14 @@ extension NotificationViewModel {
         }
     }
     
+    func markNotificationAsRead(userUUID: String) {
+        firebaseService.updateDataByID(
+            data: ["someNotificationUnread": false],
+            to: .users,
+            at: userUUID
+        )
+    }
+
     private func fetchUserContactNotification(at index: Int, adminID: String) {
         firebaseService.getDataByID(from: .users, with: adminID) { [weak self] (result: Result<UserContact, Error>) in
             guard let self = self else { return }

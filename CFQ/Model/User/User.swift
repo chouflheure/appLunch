@@ -26,6 +26,8 @@ class User: ObservableObject, Encodable, Decodable {
     @Published var messagesChannelId: [String]
     @Published var sentFriendRequests: [String]
     @Published var userFriendsContact: [UserContact]?
+    @Published var someNotificationUnread: Bool?
+    @Published var arrayConversationUnread: [String]?
     // conversations
 
     init(
@@ -52,7 +54,9 @@ class User: ObservableObject, Encodable, Decodable {
         requestsFriends: [String] = [],
         messagesChannelId: [String] = [],
         sentFriendRequests: [String] = [],
-        userFriendsContact: [UserContact]? = nil
+        userFriendsContact: [UserContact]? = nil,
+        someNotificationUnread: Bool? = false,
+        arrayConversationUnread: [String]? = []
     ) {
         self.uid = uid
         self.name = name
@@ -78,6 +82,8 @@ class User: ObservableObject, Encodable, Decodable {
         self.messagesChannelId = messagesChannelId
         self.sentFriendRequests = sentFriendRequests
         self.userFriendsContact = userFriendsContact
+        self.someNotificationUnread = someNotificationUnread
+        self.arrayConversationUnread = arrayConversationUnread
     }
 
     enum CodingKeys: String, CodingKey {
@@ -105,6 +111,8 @@ class User: ObservableObject, Encodable, Decodable {
         case messagesChannelId
         case sentFriendRequests
         case userFriendsContact
+        case someNotificationUnread
+        case arrayConversationUnread
     }
     
     required init(from decoder:Decoder) throws {
@@ -132,6 +140,8 @@ class User: ObservableObject, Encodable, Decodable {
         messagesChannelId = try values.decode([String].self, forKey: .messagesChannelId)
         sentFriendRequests = try values.decode([String].self, forKey: .sentFriendRequests)
         userFriendsContact = try values.decodeIfPresent([UserContact].self, forKey: .userFriendsContact)
+        someNotificationUnread = try values.decodeIfPresent(Bool.self, forKey: .someNotificationUnread)
+        arrayConversationUnread = try values.decodeIfPresent([String].self, forKey: .arrayConversationUnread)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -160,6 +170,8 @@ class User: ObservableObject, Encodable, Decodable {
         try container.encode(messagesChannelId, forKey: .messagesChannelId)
         try container.encode(sentFriendRequests, forKey: .sentFriendRequests)
         try container.encodeIfPresent(userFriendsContact, forKey: .userFriendsContact)
+        try container.encodeIfPresent(someNotificationUnread, forKey: .someNotificationUnread)
+        try container.encodeIfPresent(arrayConversationUnread, forKey: .arrayConversationUnread)
     }
 
     var guestMode: User {

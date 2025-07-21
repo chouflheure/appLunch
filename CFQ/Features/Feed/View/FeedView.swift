@@ -44,19 +44,19 @@ struct FeedView: View {
                 NavigationLink(
                     destination: AddFriendsScreen(coordinator: coordinator)
                 ) {
-                    Image(.iconAddfriend)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.white)
+                    NotificationButtonIcon_Nav(
+                        hasNotificationUnRead: !user.requestsFriends.isEmpty,
+                        icon: .iconAddfriend
+                    )
                 }
 
                 Spacer()
 
-                
                 NavigationLink(
                     destination: NotificationScreenView(coordinator: coordinator, user: user)
                 ) {
                     NotificationButtonIcon_Nav(
-                        numberNotificationUnRead: 0,
+                        hasNotificationUnRead: user.someNotificationUnread ?? false,
                         icon: .iconNotifs
                     )
                 }
@@ -66,7 +66,7 @@ struct FeedView: View {
                     destination: ConversationsView(coordinator: coordinator)
                 ) {
                     NotificationButtonIcon_Nav(
-                        numberNotificationUnRead: 0,
+                        hasNotificationUnRead: !(user.arrayConversationUnread?.isEmpty ?? true),
                         icon: .iconMessagerie
                     )
                 }
@@ -171,7 +171,8 @@ struct FeedView: View {
 }
 
 struct NotificationButtonIcon_Nav: View {
-    var numberNotificationUnRead: Int
+    // var numberNotificationUnRead: Int
+    var hasNotificationUnRead: Bool
     var icon: ImageResource
 
     var body: some View {
@@ -180,17 +181,20 @@ struct NotificationButtonIcon_Nav: View {
                 .frame(width: 24, height: 24)
                 .foregroundColor(.white)
 
-            if numberNotificationUnRead > 0 {
+            //if numberNotificationUnRead > 0 {
+            if hasNotificationUnRead {
                 Circle()
-                    .fill(Color.red)
+                    .fill(.purpleText)
                     .frame(width: 12, height: 12)
                     .offset(x: 12, y: -12)
+                /*
                     .overlay(
                         Text("\(numberNotificationUnRead)")
                             .font(.system(size: 8, weight: .bold))
                             .foregroundColor(.white)
                             .offset(x: 12, y: -12)
                     )
+                 */
             }
         }
     }

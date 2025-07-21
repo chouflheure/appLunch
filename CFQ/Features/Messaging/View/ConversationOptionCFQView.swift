@@ -79,17 +79,6 @@ struct ConversationOptionCFQView: View {
                         )
                     }
                     
-                    ConversationOptionPart(
-                        icon: .iconSearch,
-                        title: "Rechercher dans la conv"
-                    )
-                    
-                    ConversationOptionPart(
-                        icon: .icon,
-                        title: "Medias",
-                        nbElement: 8
-                    )
-                    
                     NavigationLink(destination: {
                         TurnCardView(
                             turn: Turn(
