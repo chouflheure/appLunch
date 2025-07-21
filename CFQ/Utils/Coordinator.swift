@@ -178,7 +178,57 @@ class Coordinator: ObservableObject {
             )
         }
     }
+    
+    func catchAllTeam(user: User) {
 
+        firebaseService.getDataByIDs(
+            from: .teams,
+            with: user.teams ?? [""],
+        ){ (result: Result<[Team], Error>) in
+            switch result {
+            case .success(let teams):
+                DispatchQueue.main.async {
+                    self.user?.arrayTeamFromUser = teams
+                    teams.indices.forEach { index in
+                        self.startListeningToUsersOnTeam(friendsIds: teams[index].friends, uidTeam: teams[index].uid) { data, error in
+                            if !data.isEmpty {
+                                self.user?.arrayTeamFromUser?[index].friendsContact = data
+                                
+                                let uuidSet = Set(teams[index].admins)
+                                // Filtrer les objets pour ne conserver que ceux dont l'UUID est dans l'ensemble
+                                let commonObjects = data.filter { uuidSet.contains($0.uid) }
+                                self.user?.arrayTeamFromUser?[index].adminsContact = commonObjects
+                                
+                            } else {
+                                print("@@@ data NOOOO")
+                            }
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("@@@ here")
+                print("❌ Erreur : \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func startListeningToUsersOnTeam(friendsIds: [String], uidTeam: String, completion: @escaping ([UserContact], Error?) -> Void) {
+        firebaseService.getDataByIDs(
+            from: .users,
+            with: friendsIds,
+        ){ (result: Result<[UserContact], Error>) in
+            switch result {
+            case .success(let userContact):
+                DispatchQueue.main.async {
+                    completion(userContact, nil)
+                }
+            case .failure(let error):
+                print("👎 Erreur : \(error.localizedDescription)")
+                
+            }
+        }
+    }
+    
     func catchAllUsersFriend(user: User) {
         user.friends = removeEmptyIdInArray(data: user.friends)
 

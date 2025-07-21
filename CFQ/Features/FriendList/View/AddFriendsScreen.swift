@@ -139,13 +139,18 @@ struct CustomTabViewDouble: View {
                             ForEach(
                                 Array(viewModel.requestsFriends), id: \.self
                             ) { userFriend in
-                                CellFriendPseudoNameAction(
+                                CellFriendPseudoNameActionRequestFriendView(
                                     user: user,
                                     userFriend: userFriend,
                                     coordinator: coordinator,
                                     isActionabled: { type in
                                         viewModel.actionOnClickButtonAddFriend(
-                                            type: type, userFriend: userFriend)
+                                            type: type,
+                                            userFriend: userFriend
+                                        )
+                                    },
+                                    isRemoveFriendRequest: {
+                                        viewModel.removeRequestFriend(userFriend: userFriend)
                                     }
                                 )
                                 .padding(.top, 15)
