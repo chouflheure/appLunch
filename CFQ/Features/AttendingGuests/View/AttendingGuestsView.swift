@@ -18,15 +18,3 @@ struct AttendingGuestsView: View {
     }.ignoresSafeArea()
     
 }
-
-
-
-
-
-
-
-
-
-
-
-

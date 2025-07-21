@@ -14,8 +14,6 @@ struct FriendProfileView: View {
         self.coordinator = coordinator
         self.user = user
         self.friend = friend
-        
-        print("@@@ friend = \(friend.printObject)")
 
         self._viewModel = StateObject(
             wrappedValue: FriendProfileViewModel(
@@ -99,13 +97,11 @@ struct FriendProfileView: View {
                             } else {
                                 Text("Accepter")
                                     .tokenFont(.Body_Inter_Medium_14)
-                                    .padding(.all, 3)
-                                    .overlay {
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(
-                                                .white,
-                                                lineWidth: 0.5)
-                                    }
+                                    .padding(10)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color.white, lineWidth: 1)
+                                    )
                             }
                         }
                     })

@@ -6,7 +6,7 @@ admin.initializeApp();
 exports.sendScheduledDataMessageIsTurnTonight6PM = functions
     .region("europe-west2")
     .pubsub
-    .schedule("00 18 * * *") // Ajout du 5ème astérisque manquant
+    .schedule("00 18 * * *")
     .timeZone("Europe/Paris")
     .onRun(async (context) => {
         const message = {
@@ -415,6 +415,24 @@ exports.onCreateMessage = functions
         doc.id !== senderUID && doc.data().tokenFCM
       );
 
+      // NOUVEAU: Incrémenter messageUnreadNumber pour tous les destinataires
+      const batch = admin.firestore().batch();
+      
+      // Pour tous les utilisateurs de la conversation SAUF l'expéditeur
+      const allRecipientUsers = notificationIdUsersSnapshot.docs.filter(doc =>
+        doc.id !== senderUID
+      );
+      
+      allRecipientUsers.forEach(userDoc => {
+        const userRef = admin.firestore().collection("users").doc(userDoc.id);
+        batch.update(userRef, {
+          arrayConversationUnread: admin.firestore.FieldValue.arrayUnion(docId)
+        });
+      });
+
+      // Exécuter toutes les mises à jour en une seule transaction
+      await batch.commit();
+
       if (recipientUsers.length === 0) {
         console.log("Aucun destinataire valide (tous sont l'expéditeur ou n'ont pas de token FCM)");
         return { success: false, message: "Aucun destinataire valide" };
@@ -472,7 +490,9 @@ exports.onCreateMessage = functions
         success: true,
         successCount: response.successCount,
         failureCount: response.failureCount,
-        totalRecipients: tokens.length
+        totalRecipients: tokens.length,
+        arrayConversationUnreadUpdated: allRecipientUsers.length
+
       };
 
     } catch (error) {
@@ -548,7 +568,11 @@ exports.onNotificationCreated = functions
             
             const tokenFCM = doc.data().tokenFCM;
 
-            
+            const userRef = admin.firestore().collection("users").doc(doc.id);
+            await userRef.update({
+              someNotificationUnread: true
+            });
+            console.log(`someNotificationUnread mis à true pour l'utilisateur ${doc.id}`);
 
             const message = {
               notification: {

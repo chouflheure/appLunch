@@ -49,7 +49,6 @@ struct CustomTabViewDouble: View {
 
     var body: some View {
         VStack {
-            // Votre header avec les titres
             HStack {
                 ForEach(0..<titles.count, id: \.self) { index in
                     VStack {

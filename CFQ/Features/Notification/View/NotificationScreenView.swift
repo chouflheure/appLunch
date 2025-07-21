@@ -70,6 +70,9 @@ struct NotificationScreenView: View {
                 }
             }
         }
+        .onChange(of: viewModel.notifications.last?.uid) {
+            viewModel.markNotificationAsRead(userUUID: user.uid)
+        }
         .customNavigationFlexible(
             leftElement: {
                 NavigationBackIcon()
@@ -82,5 +85,8 @@ struct NotificationScreenView: View {
             },
             hasADivider: true
         )
+        .onAppear {
+            
+        }
     }
 }
