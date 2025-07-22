@@ -2,20 +2,22 @@
 import SwiftUI
 
 struct TeamDetailView: View {
-    @ObservedObject var coordinator: Coordinator
     @StateObject var viewModel = TeamDetailViewModel()
+
     @State var isPresentedSeetings = false
     @State var navigateToTeamEdit = false
+
+    @ObservedObject var coordinator: Coordinator
     @ObservedObject var team: Team
-    
+
     @EnvironmentObject var user: User
     @Environment(\.dismiss) var dismiss
-    
+
     init(coordinator: Coordinator, team: Team) {
         self.coordinator = coordinator
         self.team = team
     }
-    
+
     var body: some View {
         VStack {
             ScrollView(.vertical, showsIndicators: false) {
@@ -26,33 +28,47 @@ struct TeamDetailView: View {
                     )
                     .clipShape(Circle())
                     .frame(width: 90, height: 90)
-                    .padding(.vertical, 16)
                     .padding(.bottom, 16)
                     
-                    HStack {
-                        Button(action: {
-                            withAnimation {
-                                dismiss()
-                                coordinator.selectedTab = 2
-                            }
-                        }) {
-                            ZStack {
-                                Circle().fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color(hex: "8A5BD0"),
-                                            Color(hex: "5E44A7"),
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 53, height: 53)
-                                
-                                Text("TURN")
-                                    .tokenFont(.Label_Gigalypse_12)
-                            }
+                    NavigationLink(destination: {
+                        TurnCardView(
+                            turn: Turn(
+                                uid: "",
+                                titleEvent: "",
+                                dateStartEvent: nil,
+                                pictureURLString: "",
+                                admin: "",
+                                description: "",
+                                invited: team.friends,
+                                participants: [],
+                                denied: [],
+                                mayBeParticipate: [],
+                                mood: [],
+                                messagerieUUID: "",
+                                placeTitle: "",
+                                placeAdresse: "",
+                                placeLatitude: 0,
+                                placeLongitude: 0,
+                                timestamp: Date()
+                            ),
+                            coordinator: coordinator
+                        )
+                    }) {
+                        HStack {
+                            Image(.iconPlus)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.white)
+                            
+                            Text("Créer un TURN pour la team")
+                                .tokenFont(.Body_Inter_Semibold_16)
                         }
+                    }
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 10)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(.white, lineWidth: 1)
                     }
                     .padding(.bottom, 16)
                     
@@ -185,7 +201,6 @@ struct TeamDetailView: View {
         .navigationDestination(isPresented: $navigateToTeamEdit) {
             TeamEditViewScreen(coordinator: coordinator, team: team)
         }
-        .padding(.vertical, 30)
         .customNavigationFlexible(
             leftElement: {
                 NavigationBackIcon()

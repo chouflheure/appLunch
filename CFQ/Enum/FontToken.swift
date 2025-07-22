@@ -30,6 +30,7 @@ enum FontToken {
     case Body_Inter_Medium_14
     case Body_Inter_Regular_14
     case Body_Inter_Semibold_12
+    case Body_Inter_Semibold_16
     case Body_Inter_Medium_12
     case Body_Inter_Regular_12
     case Body_Inter_Regular_10
@@ -79,6 +80,8 @@ enum FontToken {
             return .custom(FontType.GigalypseTrial.rawValue, size: 14)
         case .Placeholder_Gigalypse_24:
             return .custom(FontType.GigalypseTrial.rawValue, size: 24)
+        case .Body_Inter_Semibold_16:
+            return .custom(FontType.InterSemiBold.rawValue, size: 16)
         }
     }
 
@@ -99,6 +102,7 @@ enum FontToken {
                 .Body_Inter_Regular_16,
                 .Body_Inter_Regular_14,
                 .Body_Inter_Semibold_12,
+                .Body_Inter_Semibold_16,
                 .Body_Inter_Regular_10:
             return .whitePrimary
             

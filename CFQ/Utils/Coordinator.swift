@@ -58,6 +58,7 @@ class Coordinator: ObservableObject {
                     self.catchDataAppToStart()
                     self.catchAllUsersFriend(user: user)
                     self.catchAllUserCFQ(user: user)
+                    self.catchAllTeam(user: user)
                     
                     self.currentView = AnyView(
                         NavigationView {
@@ -180,7 +181,6 @@ class Coordinator: ObservableObject {
     }
     
     func catchAllTeam(user: User) {
-
         firebaseService.getDataByIDs(
             from: .teams,
             with: user.teams ?? [""],

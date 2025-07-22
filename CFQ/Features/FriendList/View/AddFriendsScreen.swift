@@ -52,11 +52,18 @@ struct CustomTabViewDouble: View {
             HStack {
                 ForEach(0..<titles.count, id: \.self) { index in
                     VStack {
-                        Text(titles[index])
-                            .tokenFont(.Body_Inter_Medium_12)
-                            .foregroundColor(
-                                selectedIndex == index ? .white : .gray)
+                        HStack {
+                            Text(titles[index])
+                                .tokenFont(.Body_Inter_Medium_12)
+                                .foregroundColor(selectedIndex == index ? .white : .gray)
 
+                            if titles[index] == "Les demandes" && !user.requestsFriends.isEmpty {
+                                Circle()
+                                    .fill(.purpleText)
+                                    .frame(width: 12, height: 12)
+                                    .offset(x: 5, y: 0)
+                            }
+                        }
                         Rectangle()
                             .frame(height: 2)
                             .foregroundColor(
@@ -135,28 +142,38 @@ struct CustomTabViewDouble: View {
                         )
                         .padding(.top, 20)
 
-                        VStack(alignment: .leading) {
-                            ForEach(
-                                Array(viewModel.requestsFriends), id: \.self
-                            ) { userFriend in
-                                CellFriendPseudoNameActionRequestFriendView(
-                                    user: user,
-                                    userFriend: userFriend,
-                                    coordinator: coordinator,
-                                    isActionabled: { type in
-                                        viewModel.actionOnClickButtonAddFriend(
-                                            type: type,
-                                            userFriend: userFriend
-                                        )
-                                    },
-                                    isRemoveFriendRequest: {
-                                        viewModel.removeRequestFriend(userFriend: userFriend)
-                                    }
-                                )
-                                .padding(.top, 15)
+                        if viewModel.requestsFriends.isEmpty {
+                            HStack {
+                                Spacer()
+                                Text("pas de demande d'ami")
+                                Spacer()
                             }
+                            .padding(.top, 50)
+                        } else {
+                            VStack(alignment: .leading) {
+                                ForEach(
+                                    Array(viewModel.requestsFriends), id: \.self
+                                ) { userFriend in
+                                    CellFriendPseudoNameActionRequestFriendView(
+                                        user: user,
+                                        userFriend: userFriend,
+                                        coordinator: coordinator,
+                                        isActionabled: { type in
+                                            viewModel.actionOnClickButtonAddFriend(
+                                                type: type,
+                                                userFriend: userFriend
+                                            )
+                                        },
+                                        isRemoveFriendRequest: {
+                                            viewModel.removeRequestFriend(userFriend: userFriend)
+                                        }
+                                    )
+                                    .padding(.top, 15)
+                                }
+                            }
+                            .padding(.horizontal, 12)
                         }
-                        .padding(.horizontal, 12)
+                        
                     }
                 }
                 .transition(.move(edge: .trailing))

@@ -26,7 +26,7 @@ class CFQFormViewModel: ObservableObject {
         let searchWords = researchText.split(separator: " ").map { $0.lowercased() }
         return allFriends.filter { name in
             searchWords.allSatisfy { word in
-                name.name.lowercased().hasPrefix(word.lowercased())
+                name.pseudo.lowercased().hasPrefix(word.lowercased())
             }
         }
     }
@@ -57,8 +57,6 @@ class CFQFormViewModel: ObservableObject {
         friendsList = allFriends
         friendsList = filteredNames
     }
-    
-    
 }
 
 extension CFQFormViewModel {
