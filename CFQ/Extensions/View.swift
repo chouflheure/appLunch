@@ -80,3 +80,15 @@ extension View {
         self.font(token.font()).foregroundColor(color == nil ? token.color() : color)
     }
 }
+
+extension View {
+    @ViewBuilder
+    func alert<Content: View, Background: View>(
+        isPresented: Binding<Bool>,
+        @ViewBuilder content: @escaping () -> Content,
+        @ViewBuilder background: @escaping () -> Background
+    ) -> some View {
+        self
+            .modifier(CustomAlertModifier(isPresented: isPresented, alertContent: content, background: background))
+    }
+}

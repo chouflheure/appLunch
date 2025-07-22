@@ -10,7 +10,8 @@ enum MoodType: Int, CaseIterable {
     case dinner = 5
     case bar = 6
     case street = 7
-    case other = 8
+    case chepa = 8
+    case other = 9
     
     func convertMoodTypeToInt() -> Int {
         switch self {
@@ -22,7 +23,8 @@ enum MoodType: Int, CaseIterable {
         case .dinner: return 5
         case .bar: return 6
         case .street: return 7
-        case .other: return 8
+        case .chepa: return 8
+        case .other: return 9
         }
     }
     
@@ -37,23 +39,25 @@ struct Mood {
     func data(for mood: MoodType) -> MoodView {
         switch mood {
         case .party:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodParty), title: "Appart"))
+            return MoodView(moodData: MoodData(icon: .iconMoodParty, title: "Appart"))
         case .concert:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodConcert), title: "Concert"))
+            return MoodView(moodData: MoodData(icon: .iconMoodConcert, title: "Concert"))
         case .nightclub:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodNightClub), title: "Nightclub"))
+            return MoodView(moodData: MoodData(icon: .iconMoodNightClub, title: "Nightclub"))
         case .after:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodAfter), title: "After"))
+            return MoodView(moodData: MoodData(icon: .iconMoodAfter, title: "After"))
         case .before:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodBefore), title: "Before"))
+            return MoodView(moodData: MoodData(icon: .iconMoodBefore, title: "Before"))
         case .dinner:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodDinner), title: "Diner"))
+            return MoodView(moodData: MoodData(icon: .iconMoodDinner, title: "Diner"))
         case .bar:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodBar), title: "Bar"))
+            return MoodView(moodData: MoodData(icon: .iconMoodBar, title: "Bar"))
         case .street:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodStreet), title: "Street"))
+            return MoodView(moodData: MoodData(icon: .iconMoodStreet, title: "Street"))
+        case .chepa:
+            return MoodView(moodData: MoodData(icon: .iconChepa, title: "Chepa"))
         case .other:
-            return MoodView(moodData: MoodData(icon: UIImage(resource: .iconMoodOther), title: "Autre"))
+            return MoodView(moodData: MoodData(icon: .iconMoodOther, title: "Autre"))
         }
     }
 }

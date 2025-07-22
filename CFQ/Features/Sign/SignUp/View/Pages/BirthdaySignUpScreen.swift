@@ -44,7 +44,7 @@ struct BirthdaySignUpScreen: View {
             VStack {
                 LargeButtonView(
                     action: { viewModel.goNext() },
-                    title: StringsToken.Sign.Next,
+                    title: StringsToken.Sign.NextStep,
                     largeButtonType: .signNext
                 ).padding(.horizontal, 20)
 

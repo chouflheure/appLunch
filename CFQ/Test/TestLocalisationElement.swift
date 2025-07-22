@@ -32,15 +32,12 @@ class SearchCompleter: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 }
 
-
 struct SelectLocalisationView: View {
     @State private var searchTextPlace = ""
     @State private var searchTextLocation = ""
-
-    // @Binding var selectedItem: String = ""
-
     @State var searchText: String = ""
     @State private var items: Set<PlaceItem> = []
+
     @FocusState private var isSearchFocused: Bool
     
     private let columns = [
@@ -54,7 +51,7 @@ struct SelectLocalisationView: View {
     @Binding var isPresented: Bool
 
     @State private var mapRegion = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 48.8566, longitude: 2.3522), // Paris coordinates
+        center: CLLocationCoordinate2D(latitude: 48.8566, longitude: 2.3522),
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     )
 
@@ -65,11 +62,22 @@ struct SelectLocalisationView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 16) {
-                
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Image(.iconEdit)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .frame(width: 20)
+                    
+                    Text("Le nom du lieu :")
+                        .tokenFont(.Label_Inter_Semibold_16)
+                }
+                .padding(.horizontal, 16)
+
                 SearchBarView(
                     text: $searchText,
-                    placeholder: "Le nom du lieu",
+                    placeholder: "Chez moi",
                     onRemoveText: {searchText = ""},
                     onTapResearch: {}
                 )
@@ -93,65 +101,73 @@ struct SelectLocalisationView: View {
                 }
             }
             .frame(height: 200)
-            .padding(.top, 15)
-            .onAppear {
-                initializeItems()
-            }
+            .padding(.top, 30)
 
-            SearchBarView(
-                text: $searchTextLocation,
-                placeholder: "L'adresse exacte",
-                onRemoveText: {searchText = ""},
-                onTapResearch: {}
-            ).onSubmit {
-                // addCustomLocation()
-            }
-            .padding(.top, 15)
-            .onChange(of: searchTextLocation) { newValue in
-                searchCompleter.updateQueryFragment(newValue)
-            }
+            VStack(alignment: .leading) {
+                HStack {
+                    Image(.iconLocation)
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.white)
 
-            ScrollView(showsIndicators: false) {
-                ForEach(searchCompleter.results, id: \.self) { result in
-                    VStack(alignment: .leading, spacing: 0) {
-                        HStack(spacing: 0) {
-                            Text(result.title)
-                            Spacer()
-                        }.padding(.bottom, 5)
+                    Text("L'adresse exacte :")
+                        .tokenFont(.Label_Inter_Semibold_16)
+                }
+                .padding(.horizontal, 16)
 
-                        HStack(spacing: 0) {
-                            Text(result.subtitle)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                                .multilineTextAlignment(.leading)
-                            Spacer()
-                        }
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
-                    .background(selectedResult == result ? .grayCard : .clear)
-                    .onTapGesture {
-                        DispatchQueue.main.async {
-                            viewModel.placeTitle = result.title
-                            viewModel.placeAdresse = result.subtitle
-                            searchForLocation(completion: result)
-                            selectedResult = result
-
-                            if !searchTextPlace.isEmpty {
-                                viewModel.placeAdresse = viewModel.placeTitle + " • " + viewModel.placeAdresse
-                                viewModel.placeTitle = searchTextPlace
+                SearchBarView(
+                    text: $searchTextLocation,
+                    placeholder: "1 rue de Clichy",
+                    onRemoveText: {searchText = ""},
+                    onTapResearch: {}
+                )
+                .padding(.top, 15)
+                .onChange(of: searchTextLocation) { newValue in
+                    searchCompleter.updateQueryFragment(newValue)
+                }
+                
+                ScrollView(showsIndicators: false) {
+                    ForEach(searchCompleter.results, id: \.self) { result in
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 0) {
+                                Text(result.title)
+                                Spacer()
+                            }.padding(.bottom, 5)
+                            
+                            HStack(spacing: 0) {
+                                Text(result.subtitle)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .multilineTextAlignment(.leading)
+                                Spacer()
                             }
-
-                            isPresented = false
                         }
-                    }
-                    
-                    Divider()
-                        .background(.white)
                         .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        .background(selectedResult == result ? .grayCard : .clear)
+                        .onTapGesture {
+                            DispatchQueue.main.async {
+                                viewModel.placeTitle = result.title
+                                viewModel.placeAdresse = result.subtitle
+                                searchForLocation(completion: result)
+                                selectedResult = result
+                                
+                                if !searchTextPlace.isEmpty {
+                                    viewModel.placeAdresse = viewModel.placeTitle + " • " + viewModel.placeAdresse
+                                    viewModel.placeTitle = searchTextPlace
+                                }
+                                
+                                isPresented = false
+                            }
+                        }
+                        
+                        Divider()
+                            .background(.white)
+                            .padding(.horizontal, 12)
+                    }
                 }
             }
-            
+
             Button(action: {
                 if !searchTextPlace.isEmpty {
                     viewModel.placeAdresse = viewModel.placeTitle + " • " + viewModel.placeAdresse
@@ -159,7 +175,7 @@ struct SelectLocalisationView: View {
                 }
                 isPresented = false
             }, label: {
-                Text("Done")
+                Text("Ok")
                     .foregroundColor(.white)
                     .padding(.vertical, 10)
                     .font(.system(size: 15, weight: .bold))
@@ -168,31 +184,10 @@ struct SelectLocalisationView: View {
             .frame(width: 150)
             .background(Color(hex: "B098E6").opacity(1))
             .cornerRadius(10)
-        //}
-        
-            
-            /*
-            if let selectedLocation = selectedLocation {
-                ZStack {
-                    Map(coordinateRegion: $mapRegion, annotationItems: [selectedLocation]) { location in
-                        MapMarker(coordinate: location.mapItem.placemark.coordinate, tint: .red)
-                    }
-                    .frame(height: 300)
-                }
-                Button(action: {
-                    isPresented = false
-                }, label: {
-                    Text("Done")
-                        .foregroundColor(.white)
-                        .padding(.vertical, 10)
-                        .font(.system(size: 15, weight: .bold))
-                        .multilineTextAlignment(.center)
-                })
-                .frame(width: 150)
-                .background(Color(hex: "B098E6").opacity(1))
-                .cornerRadius(10)
-            }
-            */
+        }
+        .onAppear {
+            searchTextPlace = viewModel.placeTitle
+            searchTextLocation = viewModel.placeAdresse
         }
     }
 
@@ -202,17 +197,6 @@ struct SelectLocalisationView: View {
             return items
         } else {
             return [PlaceItem(customValue: searchText)]
-            /*
-            return items.filter { item in
-                item.value.localizedCaseInsensitiveContains(searchText)
-            }
-             */
-        }
-    }
-    
-    private func initializeItems() {
-        if items.isEmpty {
-            // items = PlaceType.allCases.map { PlaceItem(locationType: $0) }
         }
     }
     

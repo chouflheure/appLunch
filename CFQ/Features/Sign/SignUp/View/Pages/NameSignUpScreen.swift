@@ -79,7 +79,7 @@ struct NameSignUpScreen: View {
                     action: {
                         viewModel.goNext()
                     },
-                    title: StringsToken.Sign.Next,
+                    title: StringsToken.Sign.ItsGood,
                     largeButtonType: .signNext,
                     isDisabled: viewModel.user.name.isEmpty
                         || viewModel.user.pseudo.isEmpty

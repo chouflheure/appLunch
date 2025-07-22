@@ -59,62 +59,64 @@ struct ConversationOptionCFQView: View {
                     Text(cfq.title)
                         .tokenFont(.Title_Inter_semibold_24)
                     
-                    // MEDIA PART
-                    NavigationLink(destination: {
-                        AddFriendScreenWithActionButtonView(
-                            setFriendsState: setInvitedState,
-                            allFriendsState: allFriendsState,
-                            coordinator: coordinator,
-                            viewModel: viewModel,
-                            user: coordinator.user,
-                            uuidCFQ: cfq.uid,
-                            cfq: cfq,
-                            friendBeforeModification: setInvitedState.map { $0.uid }
-                        )
-                    })
-                    {
-                        ConversationOptionPart(
-                            icon: .iconAdduser,
-                            title: "Ajouter quelqu'un"
-                        )
+                    if cfq.admin == coordinator.user?.uid {
+                        // MEDIA PART
+                        NavigationLink(destination: {
+                            AddFriendScreenWithActionButtonView(
+                                setFriendsState: setInvitedState,
+                                allFriendsState: allFriendsState,
+                                coordinator: coordinator,
+                                viewModel: viewModel,
+                                user: coordinator.user,
+                                uuidCFQ: cfq.uid,
+                                cfq: cfq,
+                                friendBeforeModification: setInvitedState.map { $0.uid }
+                            )
+                        })
+                        {
+                            ConversationOptionPart(
+                                icon: .iconAdduser,
+                                title: "Ajouter quelqu'un"
+                            )
+                        }
+                        
+                        NavigationLink(destination: {
+                            TurnCardView(
+                                turn: Turn(
+                                    uid: "",
+                                    titleEvent: "",
+                                    dateStartEvent: nil,
+                                    dateEndEvent: nil,
+                                    pictureURLString: "",
+                                    admin: cfq.admin,
+                                    description: "",
+                                    invited: cfq.users,
+                                    participants: [],
+                                    denied: [],
+                                    mayBeParticipate: [],
+                                    mood: [],
+                                    messagerieUUID: "",
+                                    placeTitle: "",
+                                    placeAdresse: "",
+                                    placeLatitude: 0,
+                                    placeLongitude: 0,
+                                    timestamp: Date(),
+                                    link: "",
+                                    lintiTitle: "",
+                                    imageEvent: nil,
+                                    userUID: ""
+                                ),
+                                coordinator: coordinator
+                            )
+                        }) {
+                            ConversationOptionPart(
+                                icon: .iconPlus,
+                                title: "Créer un turn"
+                            )
+                        }
                     }
-                    
-                    NavigationLink(destination: {
-                        TurnCardView(
-                            turn: Turn(
-                                uid: "",
-                                titleEvent: "",
-                                dateStartEvent: nil,
-                                dateEndEvent: nil,
-                                pictureURLString: "",
-                                admin: cfq.admin,
-                                description: "",
-                                invited: cfq.users,
-                                participants: [],
-                                denied: [],
-                                mayBeParticipate: [],
-                                mood: [],
-                                messagerieUUID: "",
-                                placeTitle: "",
-                                placeAdresse: "",
-                                placeLatitude: 0,
-                                placeLongitude: 0,
-                                timestamp: Date(),
-                                link: "",
-                                lintiTitle: "",
-                                imageEvent: nil,
-                                userUID: ""
-                            ),
-                            coordinator: coordinator
-                        )
-                    }) {
-                        ConversationOptionPart(
-                            icon: .iconPlus,
-                            title: "Creéer un turn"
-                        )
-                    }
-                    
-                    UserInCFQ(invited: invitedArray, participants: participantsArray)
+
+                    // UserInCFQ(invited: invitedArray, participants: participantsArray)
                     
                     Spacer()
                 }
