@@ -6,6 +6,7 @@ class Team: ObservableObject, Encodable, Decodable{
     let pictureUrlString: String
     let friends: [String]
     let admins: [String]
+    let timestamp: Date
     @Published var friendsContact: [UserContact]?
     @Published var adminsContact: [UserContact]?
     
@@ -15,6 +16,7 @@ class Team: ObservableObject, Encodable, Decodable{
         pictureUrlString: String,
         friends: [String],
         admins: [String],
+        timestamp: Date,
         friendsContact: [UserContact]? = nil,
         adminsContact: [UserContact]? = nil
     ) {
@@ -23,6 +25,7 @@ class Team: ObservableObject, Encodable, Decodable{
         self.pictureUrlString = pictureUrlString
         self.friends = friends
         self.admins = admins
+        self.timestamp = timestamp
         self.friendsContact = friendsContact
         self.adminsContact = adminsContact
     }
@@ -33,6 +36,7 @@ class Team: ObservableObject, Encodable, Decodable{
         case pictureUrlString
         case friends
         case admins
+        case timestamp
         case friendsContact
         case adminsContact
     }
@@ -44,6 +48,7 @@ class Team: ObservableObject, Encodable, Decodable{
         pictureUrlString = try values.decode(String.self, forKey: .pictureUrlString)
         friends = try values.decode([String].self, forKey: .friends)
         admins = try values.decode([String].self, forKey: .admins)
+        timestamp = try values.decode(Date.self, forKey: .timestamp)
         friendsContact = try values.decodeIfPresent([UserContact].self, forKey: .friendsContact)
         adminsContact = try values.decodeIfPresent([UserContact].self, forKey: .adminsContact)
     }
@@ -55,6 +60,7 @@ class Team: ObservableObject, Encodable, Decodable{
         try container.encode(pictureUrlString, forKey: .pictureUrlString)
         try container.encode(friends, forKey: .friends)
         try container.encode(admins, forKey: .admins)
+        try container.encode(timestamp, forKey: .timestamp)
         try container.encodeIfPresent(friendsContact, forKey: .friendsContact)
         try container.encodeIfPresent(adminsContact, forKey: .adminsContact)
     }

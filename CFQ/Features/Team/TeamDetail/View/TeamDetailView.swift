@@ -2,20 +2,25 @@
 import SwiftUI
 
 struct TeamDetailView: View {
-    @StateObject var viewModel = TeamDetailViewModel()
+    @StateObject var viewModel: TeamDetailViewModel
 
     @State var isPresentedSeetings = false
     @State var navigateToTeamEdit = false
-
+    @State var showAlertRemoveTeam = false
+    
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var team: Team
 
     @EnvironmentObject var user: User
     @Environment(\.dismiss) var dismiss
+    @State private var toast: Toast? = nil
 
     init(coordinator: Coordinator, team: Team) {
         self.coordinator = coordinator
         self.team = team
+        self._viewModel = StateObject(
+            wrappedValue: TeamDetailViewModel(coordinator: coordinator)
+        )
     }
 
     var body: some View {
@@ -126,27 +131,6 @@ struct TeamDetailView: View {
                         }
                     }
                     .padding(.top, 10)
-                    
-                    if viewModel.isAdminEditing {
-                        Button(action: {
-                            withAnimation {
-                                viewModel.isAdminEditing = false
-                            }
-                        }) {
-                            Text("Done")
-                                .tokenFont(.Body_Inter_Regular_16)
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 30)
-                                .padding(.vertical, 10)
-                                .background(.black)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(lineWidth: 1)
-                                        .foregroundColor(.white)
-                                }
-                        }
-                    }
                 }
             }
         }
@@ -157,7 +141,6 @@ struct TeamDetailView: View {
                     .ignoresSafeArea()
                 VStack(alignment: .trailing, spacing: 30) {
                     if team.admins.contains(user.uid) {
-                        // Remplacer NavigationLink par Button
                         Button(action: {
                             isPresentedSeetings = false
                             navigateToTeamEdit = true
@@ -174,9 +157,27 @@ struct TeamDetailView: View {
                                 Spacer()
                             }
                         }
+                        
+                        Button(action: {
+                            isPresentedSeetings = false
+                            showAlertRemoveTeam = true
+                        }) {
+                            HStack {
+                                Image(.iconTrash)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 20)
+                                
+                                Text("Supprimer la team")
+                                    .foregroundColor(.white)
+
+                                Spacer()
+                            }
+                        }
                     }
                     HStack {
-                        Image(.iconTrash)
+                        Image(.iconDoor)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 20, height: 20)
@@ -185,6 +186,8 @@ struct TeamDetailView: View {
                             action: {
                                 Logger.log("Quitter la team", level: .action)
                                 isPresentedSeetings = false
+                                viewModel.leaveTeam(team: team, userUUID: user.uid)
+                                dismiss()
                             },
                             label: {
                                 Text("Quitter la team")
@@ -201,6 +204,50 @@ struct TeamDetailView: View {
         .navigationDestination(isPresented: $navigateToTeamEdit) {
             TeamEditViewScreen(coordinator: coordinator, team: team)
         }
+        .alert(isPresented: $showAlertRemoveTeam) {
+            CustomDialog(
+                title: "Tu surpprime cette Team, t'es sur ?",
+                content: "",
+                image: .init(
+                    content: "trash",
+                    tint: .black,
+                    foreground: .white
+                ),
+                button1: .init(
+                    content: "Garder",
+                    tint: .purpleText,
+                    foreground: .white,
+                    action: { _ in
+                        showAlertRemoveTeam = false
+                    }),
+                button2: .init(
+                    content: "Yes, No team",
+                    tint: .red,
+                    foreground: .white,
+                    action: { _ in
+                        showAlertRemoveTeam = false
+                        viewModel.removeTeam(team: team) { success, message in
+                            if success {
+                                dismiss()
+                            } else {
+                                toast = Toast(
+                                    style: .error,
+                                    message: message
+                                )
+                            }
+                        }
+                    }
+                )
+            )
+            .transition(.blurReplace)
+        } background: {
+            Rectangle()
+                .fill(.primary.opacity(0.35))
+                .onTapGesture {
+                    showAlertRemoveTeam = false
+                }
+        }
+        .toastView(toast: $toast)
         .customNavigationFlexible(
             leftElement: {
                 NavigationBackIcon()
@@ -210,9 +257,7 @@ struct TeamDetailView: View {
             },
             rightElement: {
                 Button(action: {
-                    withAnimation {
-                        isPresentedSeetings = true
-                    }
+                    isPresentedSeetings = true
                 }) {
                     Image(.iconDots)
                         .resizable()

@@ -14,19 +14,28 @@ struct MessagerieView: View {
     @State private var isKeyboardVisible = false
     @State private var textViewHeight: CGFloat = 20
     @State private var keyboardHeight: CGFloat = 0
+    // @State private var isParticipateToCFQ: Bool = true
 
     @ObservedObject var conversation: Conversation
     var turn: Turn?
     var cfq: CFQ?
 
-    init(coordinator: Coordinator, conversation: Conversation, turn: Turn? = nil, cfq: CFQ? = nil) {
+    init(
+        coordinator: Coordinator,
+        conversation: Conversation,
+        turn: Turn? = nil,
+        cfq: CFQ? = nil
+    ) {
         self.coordinator = coordinator
         self.conversation = conversation
         self.turn = turn
         self.cfq = cfq
 
         _viewModel = StateObject(
-            wrappedValue: MessagerieViewModel(coordinator: coordinator, conversation: conversation)
+            wrappedValue: MessagerieViewModel(
+                coordinator: coordinator,
+                conversation: conversation
+            )
         )
     }
 
@@ -40,17 +49,26 @@ struct MessagerieView: View {
                 .opacity(0.8)
                 .ignoresSafeArea()
             */
-
                 VStack(spacing: 0) {
                     ScrollViewReader { proxy in
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack(spacing: 0) {
-                                ForEach((0..<viewModel.messages.count).reversed(), id: \.self) { index in
+                                ForEach(
+                                    (0..<viewModel.messages.count).reversed(),
+                                    id: \.self
+                                ) { index in
                                     LazyVStack(spacing: 0) {
-                                        if viewModel.messages[index].senderUID == coordinator.user?.uid {
+                                        if viewModel.messages[index].senderUID
+                                            == coordinator.user?.uid
+                                        {
                                             CellMessageSendByTheUserView(
                                                 data: viewModel.messages[index],
-                                                isSameLastSender: index > 0 && viewModel.messages[index].senderUID == viewModel.messages[index-1].senderUID
+                                                isSameLastSender: index > 0
+                                                    && viewModel.messages[index]
+                                                        .senderUID
+                                                        == viewModel.messages[
+                                                            index - 1
+                                                        ].senderUID
                                             ) {}
                                             .padding(.horizontal, 12)
                                             .rotationEffect(.degrees(180))
@@ -58,7 +76,12 @@ struct MessagerieView: View {
                                         } else {
                                             CellMessageViewReceived(
                                                 data: viewModel.messages[index],
-                                                isSameLastSender: index > 0 && viewModel.messages[index].senderUID == viewModel.messages[index-1].senderUID
+                                                isSameLastSender: index > 0
+                                                    && viewModel.messages[index]
+                                                        .senderUID
+                                                        == viewModel.messages[
+                                                            index - 1
+                                                        ].senderUID
                                             )
                                             .padding(.horizontal, 12)
                                             .rotationEffect(.degrees(180))
@@ -72,62 +95,31 @@ struct MessagerieView: View {
                         .rotationEffect(.degrees(180))
                         .onChange(of: viewModel.messages.count) {
                             withAnimation(.easeOut(duration: 0.3)) {
-                                proxy.scrollTo(viewModel.messages.count - 1,anchor: .top)
+                                proxy.scrollTo(
+                                    viewModel.messages.count - 1,
+                                    anchor: .top
+                                )
                             }
                         }
                         .onChange(of: viewModel.messages.last?.uid) {
                             viewModel.markMessageAsRead()
                         }
-
                     }
+                    
                     Spacer()
                         .frame(height: textViewHeight + 50)
+                        // .frame(height: isParticipateToCFQ ? (textViewHeight + 50) : 140)
                 }
 
                 VStack {
                     Spacer()
-                    GeometryReader { geometry in
-                        HStack(alignment: .bottom) {
-                            GrowingTextView(
-                                text: $viewModel.textMessage,
-                                dynamicHeight: $textViewHeight,
-                                availableWidth: geometry.size.width - 80,
-                                placeholder: "Ecris ici..."
-                            )
-                            .frame(height: textViewHeight)
-                            .padding(8)
-                            .background(.black)
-                            .cornerRadius(24)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8).stroke(
-                                    Color.gray))
-
-                            if !viewModel.textMessage.isEmpty {
-                                Button(action: {
-                                    viewModel.pushMessage()
-                                }) {
-                                    Image(.iconSend)
-                                        .foregroundColor(.white)
-                                        .padding(5)
-                                        .background(.purpleDark)
-                                        .clipShape(Circle())
-                                }
-                                .frame(width: 15, height: 15)
-                                .padding(.horizontal, 10)
-                                .padding(.bottom, 10)
-                            }
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(
-                            .bottom,
-                            keyboardHeight == 0 ? 30 : keyboardHeight)
-                    }
-                    .frame(height: textViewHeight + 30)
+                    growingTextViewIsShow
+                        .frame(height: textViewHeight + 30)
+                        // .frame(height: isParticipateToCFQ ? (textViewHeight + 30) : 140)
                 }
             }
             .blur(radius: showReaction ? 10 : 0)
             .allowsHitTesting(!showReaction)
-            // .ignoresSafeArea()
         }
         .scrollDismissesKeyboard(.immediately)
         .customNavigationFlexible(
@@ -145,64 +137,254 @@ struct MessagerieView: View {
     }
 
     @ViewBuilder
+    private var growingTextViewIsShow: some View {
+        /*
+        if !isParticipateToCFQ {
+            VStack(alignment: .center) {
+                Text("Tu veux participer à ce CFQ et être notifié ? \nRentre dans la conv ! ")
+                    .tokenFont(.Placeholder_Inter_Regular_14)
+                    .padding(.bottom, 20)
+
+                Button(action: {
+                    if let cfq = cfq {
+                        viewModel.joinCFQ(userUUID: user.uid, cfq: cfq)
+                    }
+                }) {
+                    Text("Rentrer dans le CFQ")
+                        .tokenFont(.Body_Inter_Semibold_16)
+                        .padding()
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(.white, lineWidth: 1)
+                        }
+                }
+            }
+        } else {
+            */
+            GeometryReader { geometry in
+                HStack(alignment: .bottom) {
+                    GrowingTextView(
+                        text: $viewModel.textMessage,
+                        dynamicHeight: $textViewHeight,
+                        availableWidth: geometry.size.width - 80,
+                        placeholder: "Ecris ici..."
+                    )
+                    .frame(height: textViewHeight)
+                    .padding(8)
+                    .background(.black)
+                    .cornerRadius(24)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8).stroke(
+                            Color.gray
+                        )
+                    )
+
+                    if !viewModel.textMessage.isEmpty {
+                        Button(action: {
+                            viewModel.pushMessage()
+                        }) {
+                            Image(.iconSend)
+                                .foregroundColor(.white)
+                                .padding(5)
+                                .background(.purpleDark)
+                                .clipShape(Circle())
+                        }
+                        .frame(width: 15, height: 15)
+                        .padding(.horizontal, 10)
+                        .padding(.bottom, 10)
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(
+                    .bottom,
+                    keyboardHeight == 0 ? 30 : keyboardHeight
+                )
+            // }
+        }
+    }
+
+    @ViewBuilder
     private var centerNavigationElement: some View {
         if conversation.typeEvent == "turn" {
             if turn == nil {
-               let turnFromCache = coordinator.userTurns.first(where: { $0.uid == conversation.eventUID })
-                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turnFromCache ?? Turn(uid: conversation.eventUID, titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user))
-                {
+                let turnFromCache = coordinator.userTurns.first(where: {
+                    $0.uid == conversation.eventUID
+                })
+                NavigationLink(
+                    destination: TurnCardDetailsFeedView(
+                        coordinator: coordinator,
+                        turn: turnFromCache
+                            ?? Turn(
+                                uid: conversation.eventUID,
+                                titleEvent: "",
+                                dateStartEvent: nil,
+                                pictureURLString: "",
+                                admin: "",
+                                description: "",
+                                invited: [],
+                                participants: [],
+                                denied: [],
+                                mayBeParticipate: [],
+                                mood: [],
+                                messagerieUUID: "",
+                                placeTitle: "",
+                                placeAdresse: "",
+                                placeLatitude: 0,
+                                placeLongitude: 0,
+                                timestamp: Date()
+                            ),
+                        user: user
+                    )
+                ) {
                     NavigationTitle(title: conversation.titleConv)
                 }
             } else {
-                NavigationLink(destination: TurnCardDetailsFeedView(coordinator: coordinator, turn: turn ?? Turn(uid: conversation.eventUID, titleEvent: "", dateStartEvent: nil, pictureURLString: "", admin: "", description: "", invited: [], participants: [], denied: [], mayBeParticipate: [], mood: [], messagerieUUID: "", placeTitle: "", placeAdresse: "", placeLatitude: 0, placeLongitude: 0, timestamp: Date()), user: user))
-                {
+                NavigationLink(
+                    destination: TurnCardDetailsFeedView(
+                        coordinator: coordinator,
+                        turn: turn
+                            ?? Turn(
+                                uid: conversation.eventUID,
+                                titleEvent: "",
+                                dateStartEvent: nil,
+                                pictureURLString: "",
+                                admin: "",
+                                description: "",
+                                invited: [],
+                                participants: [],
+                                denied: [],
+                                mayBeParticipate: [],
+                                mood: [],
+                                messagerieUUID: "",
+                                placeTitle: "",
+                                placeAdresse: "",
+                                placeLatitude: 0,
+                                placeLongitude: 0,
+                                timestamp: Date()
+                            ),
+                        user: user
+                    )
+                ) {
                     NavigationTitle(title: conversation.titleConv)
                 }
             }
         } else {
             if cfq == nil {
-                if let cfqFromCache = coordinator.userCFQ.first(where: { $0.uid == conversation.eventUID }) {
-                    NavigationLink(destination: ConversationOptionCFQView(cfq: cfqFromCache, coordinator: coordinator)) {
+                if let cfqFromCache = coordinator.userCFQ.first(where: {$0.uid == conversation.eventUID}) {
+                    NavigationLink(
+                        destination: ConversationOptionCFQView(
+                            cfq: cfqFromCache,
+                            coordinator: coordinator
+                        )
+                    ) {
                         NavigationCFQHeader(cfq: editHeader(cfq: cfqFromCache))
                     }
                 }
-                
-                if let cfqFromCache = user.postedCfqs?.first(where: { $0 == conversation.eventUID }) {
-                    let cfq = CFQ(uid: cfqFromCache, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl))
-                    NavigationLink(destination: ConversationOptionCFQView(cfq: cfq, coordinator: coordinator)) {
+                /*
+                if let cfqFromCache = user.postedCfqs?.first(where: {
+                    $0 == conversation.eventUID
+                }) {
+                    let cfq = CFQ(
+                        uid: cfqFromCache,
+                        title: conversation.titleConv,
+                        admin: user.uid,
+                        messagerieUUID: conversation.uid,
+                        users: [],
+                        timestamp: Date(),
+                        userContact: UserContact(
+                            uid: user.uid,
+                            pseudo: user.pseudo,
+                            profilePictureUrl: user.profilePictureUrl
+                        )
+                    )
+                    NavigationLink(
+                        destination: ConversationOptionCFQView(
+                            cfq: cfq,
+                            coordinator: coordinator
+                        )
+                    ) {
                         NavigationCFQHeader(cfq: cfq)
                     }
-                }
-                else {
-                    let cfq = editHeader(cfq: cfq ?? CFQ(uid: conversation.eventUID, title: conversation.titleConv, admin: user.uid, messagerieUUID: conversation.uid, users: [], timestamp: Date(), userContact: UserContact(uid: user.uid, pseudo: user.pseudo, profilePictureUrl: user.profilePictureUrl)))
-                    NavigationLink(destination: ConversationOptionCFQView(cfq: cfq, coordinator: coordinator)) {
+                } else {
+                    let cfq = editHeader(
+                        cfq: cfq
+                            ?? CFQ(
+                                uid: conversation.eventUID,
+                                title: conversation.titleConv,
+                                admin: user.uid,
+                                messagerieUUID: conversation.uid,
+                                users: [],
+                                timestamp: Date(),
+                                userContact: UserContact(
+                                    uid: user.uid,
+                                    pseudo: user.pseudo,
+                                    profilePictureUrl: user.profilePictureUrl
+                                )
+                            )
+                    )
+                    NavigationLink(
+                        destination: ConversationOptionCFQView(
+                            cfq: cfq,
+                            coordinator: coordinator
+                        )
+                    ) {
                         NavigationCFQHeader(cfq: cfq)
                     }
-                }
+                 
+                }*/
             } else {
-                let cfq = editHeader(cfq: cfq ?? CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: [], userContact: nil))
-                NavigationLink(destination: ConversationOptionCFQView(cfq: cfq, coordinator: coordinator)) {
+                let cfq = editHeader(
+                    cfq: cfq
+                        ?? CFQ(
+                            uid: "",
+                            title: "",
+                            admin: "",
+                            messagerieUUID: "",
+                            users: [],
+                            timestamp: Date(),
+                            participants: [],
+                            userContact: nil
+                        )
+                )
+                NavigationLink(
+                    destination: ConversationOptionCFQView(
+                        cfq: cfq,
+                        coordinator: coordinator
+                    )
+                ) {
                     NavigationCFQHeader(cfq: cfq)
                 }
             }
         }
     }
+
     
     private func editHeader(cfq: CFQ) -> CFQ {
+        print("@@@ cfqFromCache = \(cfq.printObject)")
+        // var shouldParticipate = false
+
         if cfq.admin == user.uid {
             cfq.userContact = UserContact(
                 uid: user.uid,
                 pseudo: user.pseudo,
                 profilePictureUrl: user.profilePictureUrl
             )
-            return cfq
+            // shouldParticipate = true
+
         } else if let userContact = user.userFriendsContact?.first(where: { $0.uid == cfq.admin }) {
             cfq.userContact = userContact
-            return cfq
+            
+            if let participants = cfq.participants, participants.contains(user.uid) {
+                // shouldParticipate = true
+            } else {
+                // shouldParticipate = false
+            }
         }
-
+        
+        //DispatchQueue.main.async {
+            //self.isParticipateToCFQ = shouldParticipate
+        //}
         
         return cfq
     }
 }
-

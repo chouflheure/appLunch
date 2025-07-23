@@ -73,9 +73,9 @@ class CFQ: ObservableObject, Encodable, Decodable {
     let messagerieUUID: String
     let users: [String]
     let timestamp: Date
-    let participants: [String]?
     var userContact: UserContact?
-
+    @Published var participants: [String]?
+    
     enum CodingKeys: String, CodingKey {
         case uid
         case title

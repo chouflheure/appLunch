@@ -75,6 +75,7 @@ internal enum PictureCacheDesignType {
     case scaledToFill_Circle_CFQMessage
     case scaleImageMessageProfile
     case scaleImageTeam
+    case scaleImagePreviewUsers
     
 }
 
@@ -142,6 +143,17 @@ struct CachedAsyncImageView: View {
                         Circle()
                             .foregroundColor(.gray)
                             .frame(width: 90, height: 90)
+                        
+                        animation
+                            .playing()
+                            .looping()
+                    }
+                    
+                case .scaleImagePreviewUsers:
+                    ZStack {
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 38, height: 38)
                         
                         animation
                             .playing()
@@ -215,6 +227,13 @@ struct CachedAsyncImageView: View {
                         .foregroundColor(.white)
                         .frame(width: 90, height: 90)
                         .clipShape(Circle())
+
+                case .scaleImagePreviewUsers:
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+                        .frame(width: 38, height: 38)
                 }
 
             case .failure(_):
@@ -272,6 +291,16 @@ struct CachedAsyncImageView: View {
                         Circle()
                             .foregroundColor(.gray)
                             .frame(width: 90, height: 90)
+                        
+                        animation
+                            .playing()
+                            .looping()
+                    }
+                case .scaleImagePreviewUsers:
+                    ZStack {
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 38, height: 38)
                         
                         animation
                             .playing()
@@ -339,6 +368,16 @@ struct CachedAsyncImageView: View {
                         animation
                             .playing()
                             .looping()
+                    }
+                case .scaleImagePreviewUsers:
+                    ZStack {
+                        animation
+                            .playing()
+                            .looping()
+                        
+                        Circle()
+                            .foregroundColor(.gray)
+                            .frame(width: 38, height: 38)
                     }
                 }
             }

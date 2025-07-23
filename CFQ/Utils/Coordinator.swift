@@ -189,18 +189,29 @@ class Coordinator: ObservableObject {
             case .success(let teams):
                 DispatchQueue.main.async {
                     self.user?.arrayTeamFromUser = teams
-                    teams.indices.forEach { index in
-                        self.startListeningToUsersOnTeam(friendsIds: teams[index].friends, uidTeam: teams[index].uid) { data, error in
-                            if !data.isEmpty {
-                                self.user?.arrayTeamFromUser?[index].friendsContact = data
-                                
-                                let uuidSet = Set(teams[index].admins)
-                                // Filtrer les objets pour ne conserver que ceux dont l'UUID est dans l'ensemble
-                                let commonObjects = data.filter { uuidSet.contains($0.uid) }
-                                self.user?.arrayTeamFromUser?[index].adminsContact = commonObjects
-                                
-                            } else {
-                                print("@@@ data NOOOO")
+                    print("### user.teams = \(user.teams)")
+                    print("### teams = \(teams)")
+                    
+                    if !teams.isEmpty {
+                        teams.forEach { team in
+                            self.startListeningToUsersOnTeam(friendsIds: team.friends, uidTeam: team.uid) { data, error in
+                                DispatchQueue.main.async {
+                                    // ✅ Trouver l'index par UID au lieu d'utiliser l'index original
+                                    guard let teamIndex = self.user?.arrayTeamFromUser?.firstIndex(where: { $0.uid == team.uid }) else {
+                                        print("⚠️ Team avec UID \(team.uid) non trouvée")
+                                        return
+                                    }
+                                    
+                                    if !data.isEmpty {
+                                        self.user?.arrayTeamFromUser?[teamIndex].friendsContact = data
+                                        
+                                        let uuidSet = Set(team.admins)
+                                        let commonObjects = data.filter { uuidSet.contains($0.uid) }
+                                        self.user?.arrayTeamFromUser?[teamIndex].adminsContact = commonObjects
+                                    } else {
+                                        print("@@@ data NOOOO")
+                                    }
+                                }
                             }
                         }
                     }
@@ -219,9 +230,8 @@ class Coordinator: ObservableObject {
         ){ (result: Result<[UserContact], Error>) in
             switch result {
             case .success(let userContact):
-                DispatchQueue.main.async {
-                    completion(userContact, nil)
-                }
+                completion(userContact, nil)
+                
             case .failure(let error):
                 print("👎 Erreur : \(error.localizedDescription)")
                 

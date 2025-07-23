@@ -128,7 +128,8 @@ class FirebaseService: FirebaseServiceProtocol {
     }
 
     func deleteDataByID(
-        from collection: CollectionFirebaseType, at id: String,
+        from collection: CollectionFirebaseType,
+        at id: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         let collectionName = collection.rawValue
@@ -143,7 +144,8 @@ class FirebaseService: FirebaseServiceProtocol {
     }
 
     func getDataByID<T: Codable>(
-        from collection: CollectionFirebaseType, with id: String,
+        from collection: CollectionFirebaseType,
+        with id: String,
         listenerKeyPrefix: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) -> ListenerRegistration? {
@@ -249,6 +251,7 @@ class FirebaseService: FirebaseServiceProtocol {
                         print("✅ Document \(id) loaded successfully")
                     } catch {
                         print("❌ Error decoding document \(id): \(error.localizedDescription)")
+                        print("❌ error = \(error)")
                         invalidIds.insert(id)
                     }
                 } else {

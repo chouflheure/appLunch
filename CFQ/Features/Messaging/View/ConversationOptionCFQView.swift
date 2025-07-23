@@ -46,19 +46,22 @@ struct ConversationOptionCFQView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             ScrollView(showsIndicators: false) {
-                VStack {
-                    ModernCachedAsyncImage(
-                        url: cfq.userContact?.profilePictureUrl ?? ""
-                    )
-                    .scaledToFill()
-                    .frame(width: 90, height: 90)
-                    .clipShape(Circle())
-                    
-                    Text(cfq.title)
-                        .tokenFont(.Title_Inter_semibold_24)
-                    
+                VStack(alignment: .center) {
+                        ModernCachedAsyncImage(
+                            url: cfq.userContact?.profilePictureUrl ?? ""
+                        )
+                        .scaledToFill()
+                        .frame(width: 90, height: 90)
+                        .clipShape(Circle())
+                        .padding(.bottom, 10)
+                        
+                        Text(cfq.title)
+                            .tokenFont(.Title_Inter_semibold_24)
+                            .padding(.bottom, 10)
+                        
+
                     if cfq.admin == coordinator.user?.uid {
                         // MEDIA PART
                         NavigationLink(destination: {
@@ -125,6 +128,7 @@ struct ConversationOptionCFQView: View {
             .padding(.horizontal, 12)
             
         }
+        .frame(maxWidth: .infinity)
         .customNavigationFlexible(
             leftElement: {
                 NavigationBackIcon()
