@@ -112,7 +112,6 @@ struct TeamFormView: View {
                         viewModel.pushNewTeamToFirebase { success, message in
                             if success {
                                 dismiss()
-                                // coordinator.selectedTab = 0
                             } else {
                                 toast = Toast(
                                     style: .error,
@@ -179,15 +178,21 @@ struct TeamFormView: View {
 }
 
 class ListFriendToAddViewModel: ObservableObject {
-    // @Published var friendsOnTeam = Set<UserContact>()
-
+    
     @Published var coordinator: Coordinator
-    @Published var researchText = ""
-    // @Published var userFriends = Set<UserContact>()
+    @Published var researchText = "" {
+        didSet {
+            updateDisplayedFriends()
+        }
+    }
+    
     @Binding var friendsOnTeam: Set<UserContact>
     @Binding var allFriends: Set<UserContact>
-    private var allFriendstemps = Set<UserContact>()
-
+    private var originalFriends = Set<UserContact>()
+    
+    // Nouvelle propriété pour la liste filtrée affichée
+    @Published var displayedFriends = Set<UserContact>()
+    
     init(
         coordinator: Coordinator,
         friendsOnTeam: Binding<Set<UserContact>>,
@@ -196,50 +201,49 @@ class ListFriendToAddViewModel: ObservableObject {
         self.coordinator = coordinator
         self._friendsOnTeam = friendsOnTeam
         self._allFriends = allFriends
-        // sortListFriendOnTeam()
-        allFriendstemps = friendsOnTeam.wrappedValue
-    }
-
-    func sortListFriendOnTeam() {
-        /*
-        if let friendsOnTeamFromCoordinator = coordinator.teamDetail?.friends {
-            friendsOnTeam = Set(friendsOnTeamFromCoordinator)
-        }
         
-         */
-        // friendsOnTeam = friends
-        allFriends = allFriends.filter { !friendsOnTeam.contains($0) }
+        // Initialiser avec les amis qui ne sont pas déjà dans l'équipe
+        let availableFriends = allFriends.wrappedValue.filter { !friendsOnTeam.wrappedValue.contains($0) }
+        self.originalFriends = Set(availableFriends)
+        self.displayedFriends = Set(availableFriends)
     }
-
-    var filteredNames: Set<UserContact> {
-        let searchWords = researchText.lowercased().split(separator: " ")
-        return allFriendstemps.filter { name in
-            searchWords.allSatisfy { word in
-                name.pseudo.lowercased().hasPrefix(word)
-                    || name.name.lowercased().hasPrefix(word)
+    
+    private func updateDisplayedFriends() {
+        if researchText.isEmpty {
+            displayedFriends = originalFriends
+        } else {
+            let searchWords = researchText.split(separator: " ").map { $0.lowercased() }
+            displayedFriends = originalFriends.filter { user in
+                searchWords.allSatisfy { word in
+                    user.pseudo.lowercased().hasPrefix(word.lowercased())
+                }
             }
         }
     }
-
+    
     func removeFriendsFromList(user: UserContact) {
         friendsOnTeam.remove(user)
+        originalFriends.insert(user)
         allFriends.insert(user)
-        allFriendstemps.insert(user)
+        updateDisplayedFriends()
     }
-
+    
     func addFriendsToList(user: UserContact) {
         friendsOnTeam.insert(user)
+        originalFriends.remove(user)
         allFriends.remove(user)
-        allFriendstemps.remove(user)
+        updateDisplayedFriends()
     }
-
+    
     func removeText() {
         researchText.removeAll()
+        // updateDisplayedFriends() sera appelé automatiquement via didSet
     }
-
+    
     func researche() {
-        allFriends = allFriendstemps
-        allFriends = filteredNames
+        // updateDisplayedFriends() est déjà appelé automatiquement via didSet
+        // Cette méthode peut rester vide ou être supprimée si pas utilisée ailleurs
+        updateDisplayedFriends()
     }
 }
 
@@ -267,6 +271,7 @@ struct ListFriendToAdd: View {
                 allFriends: allFriends
             )
         )
+
         self._friendsOnTeam = friendsOnTeam
         self._allFriends = allFriends
         self.showArrowDown = showArrowDown
@@ -302,8 +307,8 @@ struct ListFriendToAdd: View {
             .padding(.horizontal, 16)
 
             AddFriendsAndListView(
-                arrayPicture: viewModel.$friendsOnTeam,
-                arrayFriends: viewModel.$allFriends,
+                arrayPicture: $friendsOnTeam,
+                arrayFriends: $viewModel.displayedFriends,
                 coordinator: coordinator,
                 onRemove: { userRemoved in
                     viewModel.removeFriendsFromList(user: userRemoved)
