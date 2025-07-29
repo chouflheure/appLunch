@@ -189,8 +189,7 @@ class ListFriendToAddViewModel: ObservableObject {
     @Binding var friendsOnTeam: Set<UserContact>
     @Binding var allFriends: Set<UserContact>
     private var originalFriends = Set<UserContact>()
-    
-    // Nouvelle propriété pour la liste filtrée affichée
+
     @Published var displayedFriends = Set<UserContact>()
     
     init(
@@ -201,13 +200,12 @@ class ListFriendToAddViewModel: ObservableObject {
         self.coordinator = coordinator
         self._friendsOnTeam = friendsOnTeam
         self._allFriends = allFriends
-        
-        // Initialiser avec les amis qui ne sont pas déjà dans l'équipe
+
         let availableFriends = allFriends.wrappedValue.filter { !friendsOnTeam.wrappedValue.contains($0) }
         self.originalFriends = Set(availableFriends)
         self.displayedFriends = Set(availableFriends)
     }
-    
+
     private func updateDisplayedFriends() {
         if researchText.isEmpty {
             displayedFriends = originalFriends
@@ -237,12 +235,9 @@ class ListFriendToAddViewModel: ObservableObject {
     
     func removeText() {
         researchText.removeAll()
-        // updateDisplayedFriends() sera appelé automatiquement via didSet
     }
     
     func researche() {
-        // updateDisplayedFriends() est déjà appelé automatiquement via didSet
-        // Cette méthode peut rester vide ou être supprimée si pas utilisée ailleurs
         updateDisplayedFriends()
     }
 }

@@ -42,6 +42,8 @@ class FriendProfileViewModel: ObservableObject {
         }
     }
     
+    
+    
     func turnsInCommun(coordinator: Coordinator) -> [Turn]{
         var turnShowByUser: [Turn] = []
         turns.forEach({ turn in

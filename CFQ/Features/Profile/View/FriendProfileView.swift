@@ -169,8 +169,10 @@ struct FriendProfileView: View {
                 PrivateEventShow()
             } else {
                 CustomTabViewDoubleProfile(
-                    coordinator: coordinator, titles: ["TURNs", "CALENDRIER"],
-                    turns: viewModel.turnsInCommun(coordinator: coordinator),
+                    coordinator: coordinator,
+                    titles:  ["TURNs", "CALENDRIER"],
+                    turnsPosted: viewModel.turnsInCommun(coordinator: coordinator),
+                    turnsParticipate: viewModel.turnsInCommun(coordinator: coordinator),
                     user: user
                 )
             }

@@ -64,7 +64,13 @@ struct ProfileView: View {
             }
             .padding(.bottom, 16)
 
-            CustomTabViewDoubleProfile(coordinator: coordinator, titles:  ["TURNs", "CALENDRIER"], turns: viewModel.turns, user: user)
+            CustomTabViewDoubleProfile(
+                coordinator: coordinator,
+                titles:  ["TURNs", "CALENDRIER"],
+                turnsPosted: viewModel.turns,
+                turnsParticipate: viewModel.turns,
+                user: user
+            )
         }
         .padding(.horizontal, 16)
         .fullScreenCover(isPresented: $viewModel.isShowingSettingsView) {
@@ -77,7 +83,8 @@ struct CustomTabViewDoubleProfile: View {
     @State private var selectedIndex = 0
     @ObservedObject var coordinator: Coordinator
     let titles: [String]
-    let turns: [Turn]
+    let turnsPosted: [Turn]
+    let turnsParticipate: [Turn]
     let user: User
 
     var body: some View {
@@ -106,12 +113,12 @@ struct CustomTabViewDoubleProfile: View {
             ScrollView(.vertical, showsIndicators: false) {
                 if selectedIndex == 0 {
                     LazyVStack(spacing: 20) {
-                        if turns.isEmpty {
+                        if turnsPosted.isEmpty {
                             Text("Pas de turn posté")
                                 .tokenFont(.Label_Gigalypse_12)
                                 .padding(.top, 200)
                         } else {
-                            ForEach(turns.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
+                            ForEach(turnsPosted.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
                                 NavigationLink(
                                     destination: TurnCardDetailsFeedView(
                                         coordinator: coordinator,
@@ -128,9 +135,29 @@ struct CustomTabViewDoubleProfile: View {
                     }
                     .padding(.top, 24)
                 } else {
-                    Text("Feature en cours")
-                        .tokenFont(.Label_Gigalypse_12)
-                        .padding(.top, 200)
+                    LazyVStack(spacing: 20) {
+                        if turnsPosted.isEmpty {
+                            Text("Pas de turn posté")
+                                .tokenFont(.Label_Gigalypse_12)
+                                .padding(.top, 200)
+                        } else {
+                            ForEach(turnsParticipate.sorted(by: { $0.timestamp > $1.timestamp }), id: \.uid) { turn in
+                                NavigationLink(
+                                    destination: TurnCardDetailsFeedView(
+                                        coordinator: coordinator,
+                                        turn: turn,
+                                        user: user
+                                    )
+                                ) {
+                                    TurnCardFeedView(
+                                        turn: turn,
+                                        coordinator: coordinator
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    .padding(.top, 24)
                 }
             }
         }
