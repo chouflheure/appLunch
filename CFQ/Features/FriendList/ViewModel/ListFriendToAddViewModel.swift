@@ -9,13 +9,12 @@ class ListFriendToAddViewModel: ObservableObject {
             updateDisplayedFriends()
         }
     }
-    
+
     @Binding var friendsOnTeam: Set<UserContact>
     @Binding var allFriends: Set<UserContact>
-    private var originalFriends = Set<UserContact>()
-    
     @Published var displayedFriends = Set<UserContact>()
-    
+    private var originalFriends = Set<UserContact>()
+
     init(
         coordinator: Coordinator,
         friendsOnTeam: Binding<Set<UserContact>>,
