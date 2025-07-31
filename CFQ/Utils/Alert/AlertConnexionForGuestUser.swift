@@ -73,6 +73,65 @@ struct CustomAlertModifier<AlertContent: View, Background: View>: ViewModifier {
     ContentView()
 }
 
+enum IconTitleCustomAlert: String {
+    case trash = "trash"
+}
+
+struct CustomAlertDoubleButton: View {
+    var title: String
+    var content: IconTitleCustomAlert
+    var button1Title: String
+    var button2Title: String
+    var onDismissAlert: (() -> Void)
+    var onTapValidate: (() -> Void)
+    
+    var body: some View {
+        CustomDialog(
+            title: "Tu surpprime ce TURN, t'es sur ?",
+            content: "",
+            image: .init(
+                //content: "trash",
+                content: content.rawValue,
+                tint: .black,
+                foreground: .white
+            ),
+            button1: .init(
+                content: button1Title,
+                tint: .purpleText,
+                foreground: .white,
+                action: { _ in
+                    onDismissAlert()
+                    // showAlertRemoveTurn = false
+                }),
+            button2: .init(
+                content: button2Title,
+                tint: .red,
+                foreground: .white,
+                action: { _ in
+                    onTapValidate()
+                    // showAlertRemoveTurn = false
+                    /*
+                    turnCardViewModel
+                        .removeturn(
+                            uid: viewModel.turn.uid,
+                        ) {
+                            success, message in
+                            if success {
+                                dismiss()
+                            } else {
+                                toast = Toast(
+                                    style: .error,
+                                    message: message
+                                )
+                            }
+                        }
+                    */
+                }
+            )
+        )
+        .transition(.blurReplace)
+    }
+}
 
 struct CustomDialog: View {
     var title: String

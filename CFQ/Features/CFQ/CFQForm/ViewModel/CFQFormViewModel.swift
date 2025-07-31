@@ -6,8 +6,11 @@ class CFQFormViewModel: ObservableObject {
     @Published var researchText = String()
     @Published var friendsList = Set<UserContact>()
     @Published var friendsAddToCFQ = Set<UserContact>()
-    @Published var isLoading: Bool = false
+    @Published var teamAddToCFQ = Set<Team>()
+    @Published var arrayTeam = Set<Team>()
 
+    @Published var isLoading: Bool = false
+    
     private var user: User
     private var firebaseService = FirebaseService()
     private var allFriends = Set<UserContact>()
@@ -34,6 +37,7 @@ class CFQFormViewModel: ObservableObject {
     init(coordinator: Coordinator) {
         self.user = coordinator.user ?? User(uid: "")
         friendsList = Set(coordinator.user?.userFriendsContact ?? [])
+        arrayTeam = Set(coordinator.user?.arrayTeamFromUser ?? [])
         allFriends = friendsList
     }
 
@@ -41,6 +45,18 @@ class CFQFormViewModel: ObservableObject {
         friendsAddToCFQ.remove(user)
         friendsList.insert(user)
         allFriends.insert(user)
+    }
+
+    func removeTeamFromList(team: Team) {
+        teamAddToCFQ.remove(team)
+        arrayTeam.insert(team)
+        // allFriends.insert(team)
+    }
+
+    func addTeamToList(team: Team) {
+        teamAddToCFQ.insert(team)
+        arrayTeam.remove(team)
+        // allFriends.remove(user)
     }
 
     func addFriendsToList(user: UserContact) {

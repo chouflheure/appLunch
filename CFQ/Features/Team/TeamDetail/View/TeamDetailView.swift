@@ -10,14 +10,16 @@ struct TeamDetailView: View {
     
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var team: Team
+    var isEditing: Bool
 
     @EnvironmentObject var user: User
     @Environment(\.dismiss) var dismiss
     @State private var toast: Toast? = nil
 
-    init(coordinator: Coordinator, team: Team) {
+    init(coordinator: Coordinator, team: Team, isEditing: Bool = true) {
         self.coordinator = coordinator
         self.team = team
+        self.isEditing = isEditing
         self._viewModel = StateObject(
             wrappedValue: TeamDetailViewModel(coordinator: coordinator)
         )
@@ -259,11 +261,13 @@ struct TeamDetailView: View {
                 Button(action: {
                     isPresentedSeetings = true
                 }) {
-                    Image(.iconDots)
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.white)
-                        .frame(width: 24)
+                    if isEditing {
+                        Image(.iconDots)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 24)
+                    }
                 }
             },
             hasADivider: false

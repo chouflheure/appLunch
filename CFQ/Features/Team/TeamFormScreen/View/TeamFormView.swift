@@ -300,17 +300,21 @@ struct ListFriendToAdd: View {
                 }
             }
             .padding(.horizontal, 16)
-
+            
             AddFriendsAndListView(
-                arrayPicture: $friendsOnTeam,
+                arrayGuest: $friendsOnTeam,
                 arrayFriends: $viewModel.displayedFriends,
+                arrayTeamGuest: .constant([]),
+                arrayTeam: .constant([]),
                 coordinator: coordinator,
                 onRemove: { userRemoved in
                     viewModel.removeFriendsFromList(user: userRemoved)
                 },
                 onAdd: { userAdd in
                     viewModel.addFriendsToList(user: userAdd)
-                }
+                },
+                onRemoveTeam: {_ in},
+                onAddTeam: {_ in}
             )
             .padding(.top, 30)
         }

@@ -75,8 +75,10 @@ struct CFQFormView: View {
                         .padding(.top, 16)
 
                         AddFriendsAndListView(
-                            arrayPicture: $viewModel.friendsAddToCFQ,
+                            arrayGuest: $viewModel.friendsAddToCFQ,
                             arrayFriends: $viewModel.friendsList,
+                            arrayTeamGuest: $viewModel.teamAddToCFQ,
+                            arrayTeam: $viewModel.arrayTeam,
                             coordinator: coordinator,
                             onRemove: { userRemoved in
                                 viewModel.removeFriendsFromList(
@@ -87,6 +89,12 @@ struct CFQFormView: View {
                                 viewModel.addFriendsToList(
                                     user: userAdd
                                 )
+                            },
+                            onRemoveTeam: { teamRemove in
+                                viewModel.removeTeamFromList(team: teamRemove)
+                            },
+                            onAddTeam: { teamAdd in
+                                viewModel.addTeamToList(team: teamAdd)
                             }
                         )
                         .padding(.top, 15)
@@ -132,6 +140,39 @@ struct CFQFormView: View {
         NeonBackgroundImage()
         CFQFormView(coordinator: Coordinator())
     }.ignoresSafeArea()
+}
+
+struct CellTeamAdd: View {
+    var team: Team
+    var onAdd: (() -> Void)
+
+    var body: some View {
+        HStack(spacing: 0) {
+            CirclePicture(urlStringImage: team.pictureUrlString)
+                .frame(width: 48, height: 48)
+            HStack {
+                Text(team.title)
+                    .foregroundColor(.white)
+                    .padding(.leading, 8)
+                    .lineLimit(1)
+                
+                Text("- \(team.friends.count) membres")
+                    .foregroundColor(.gray)
+                    .lineLimit(1)
+            }
+            Spacer()
+            Button(action: {
+                onAdd()
+            }) {
+                Image(.iconPlus)
+                    .resizable()
+                    .foregroundStyle(.white)
+                    .frame(width: 30, height: 30)
+            }
+            .frame(width: 30, height: 30)
+        }.padding(.horizontal, 16)
+    }
+    
 }
 
 struct CellFriendsAdd: View {

@@ -23,7 +23,6 @@ struct TurnCardDetailsFeedView: View {
                 isEditing: turn.admin == user.uid
             )
         )
-        print("@@@ turn = •\(turn.printObject)")
     }
     
     var body: some View {
@@ -94,45 +93,32 @@ struct TurnCardDetailsFeedView: View {
                                 .background(.clear)
                         }
                         .alert(isPresented: $showAlertRemoveTurn) {
-                            CustomDialog(
+                            CustomAlertDoubleButton(
                                 title: "Tu surpprime ce TURN, t'es sur ?",
-                                content: "",
-                                image: .init(
-                                    content: "trash",
-                                    tint: .black,
-                                    foreground: .white
-                                ),
-                                button1: .init(
-                                    content: "Garder",
-                                    tint: .purpleText,
-                                    foreground: .white,
-                                    action: { _ in
-                                        showAlertRemoveTurn = false
-                                    }),
-                                button2: .init(
-                                    content: "Poubelle",
-                                    tint: .red,
-                                    foreground: .white,
-                                    action: { _ in
-                                        showAlertRemoveTurn = false
-                                        turnCardViewModel
-                                            .removeturn(
-                                                uid: viewModel.turn.uid,
-                                            ) {
-                                                success, message in
-                                                if success {
-                                                    dismiss()
-                                                } else {
-                                                    toast = Toast(
-                                                        style: .error,
-                                                        message: message
-                                                    )
-                                                }
+                                content: .trash,
+                                button1Title: "Garder",
+                                button2Title: "Poubelle",
+                                onDismissAlert: {
+                                    showAlertRemoveTurn = false
+                                },
+                                onTapValidate: {
+                                    showAlertRemoveTurn = false
+                                    turnCardViewModel
+                                        .removeturn(
+                                            uid: viewModel.turn.uid,
+                                        ) {
+                                            success, message in
+                                            if success {
+                                                dismiss()
+                                            } else {
+                                                toast = Toast(
+                                                    style: .error,
+                                                    message: message
+                                                )
                                             }
-                                    }
-                                )
-                            )
-                            .transition(.blurReplace)
+                                        }
+                                }
+                            ).transition(.blurReplace)
                         } background: {
                             Rectangle()
                                 .fill(.primary.opacity(0.35))

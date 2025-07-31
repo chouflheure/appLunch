@@ -1,6 +1,6 @@
 import Foundation
 
-class Team: ObservableObject, Encodable, Decodable{
+class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
     let uid: String
     let title: String
     let pictureUrlString: String
@@ -41,6 +41,16 @@ class Team: ObservableObject, Encodable, Decodable{
         case adminsContact
     }
 
+    // ✅ IMPLÉMENTATION DE HASHABLE
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uid) // Utilise l'uid comme identificateur unique
+    }
+    
+    // ✅ IMPLÉMENTATION DE EQUATABLE
+    static func == (lhs: Team, rhs: Team) -> Bool {
+        return lhs.uid == rhs.uid // Deux UserContact sont égaux s'ils ont le même uid
+    }
+    
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         uid = try values.decode(String.self, forKey: .uid)

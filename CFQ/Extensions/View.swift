@@ -68,7 +68,7 @@ extension View {
                 NavigationBarThreeElementsModifier(
                     leftElement: leftElement != nil ? AnyView(leftElement!()) : AnyView(EmptyView()),
                     centerElement: centerElement != nil ? AnyView(centerElement!()) : nil,
-                    rightElement: rightElement != nil ? AnyView(rightElement!()) : nil,
+                    rightElement: rightElement != nil ? AnyView(rightElement!()) :  AnyView(EmptyView()),
                     hasADivider: hasADivider
                 )
             )
