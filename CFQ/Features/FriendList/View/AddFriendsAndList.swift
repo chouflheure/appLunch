@@ -1,7 +1,19 @@
-class AddFriendsAndListViewModel {
-    
-}
+class AddFriendsAndListViewModel: ObservableObject {
+    @Published var guestCount: Set<String> = []
 
+    func guestCount(arrayGuest: Set<UserContact>, arrayTeamGuest: Set<Team>) {
+        guestCount = []
+        arrayTeamGuest.forEach { team in
+            team.friends.forEach { user in
+                guestCount.insert(user)
+            }
+        }
+        
+        arrayGuest.forEach { user in
+            guestCount.insert(user.uid)
+        }
+    }
+}
 
 import SwiftUI
 
@@ -11,6 +23,7 @@ struct AddFriendsAndListView: View {
     @Binding var arrayTeamGuest: Set<Team>
     @Binding var arrayTeam: Set<Team>
     @ObservedObject var coordinator: Coordinator
+    @StateObject var viewModel = AddFriendsAndListViewModel()
 
     var onRemove: ((UserContact) -> Void)
     var onAdd: ((UserContact) -> Void)
@@ -20,10 +33,10 @@ struct AddFriendsAndListView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Invité\(arrayGuest.count > 1 ? "s" : "") :")
+                Text("Invité\(viewModel.guestCount.count > 1 ? "s" : "") :")
                     .foregroundColor(.white)
 
-                Text(arrayGuest.count.description)
+                Text(viewModel.guestCount.count.description)
                     .foregroundColor(.white)
             }.padding(.horizontal, 16)
 
@@ -40,6 +53,7 @@ struct AddFriendsAndListView: View {
                             ) {
                                 CellTeamCanRemove(team: team) {
                                     onRemoveTeam(team)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
                                 }
                             }
                         }
@@ -54,10 +68,11 @@ struct AddFriendsAndListView: View {
                             ) {
                                 CellFriendCanRemove(userPreview: friend) {
                                     onRemove(friend)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
                                 }
                             }
                         }
-                    }.frame(height: arrayGuest.isEmpty ? 0 : 100)
+                    }.frame(height: viewModel.guestCount.isEmpty ? 0 : 100)
                 }
             }
 
@@ -78,6 +93,7 @@ struct AddFriendsAndListView: View {
                             ) {
                                 CellTeamAdd(team: team) {
                                     onAddTeam(team)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
                                 }
                                 .padding(.top, 15)
                             }
@@ -93,6 +109,7 @@ struct AddFriendsAndListView: View {
                             ) {
                                 CellFriendsAdd(userPreview: friend) {
                                     onAdd(friend)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
                                 }
                                 .padding(.top, 15)
                             }

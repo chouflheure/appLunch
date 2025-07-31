@@ -20,7 +20,7 @@ class CFQFormViewModel: ObservableObject {
 
     var isEnableButton: Bool {
         get {
-            !friendsAddToCFQ.isEmpty && !titleCFQ.isEmpty
+            (!friendsAddToCFQ.isEmpty || !teamAddToCFQ.isEmpty) && !titleCFQ.isEmpty
         }
         set {}
     }
@@ -82,19 +82,18 @@ extension CFQFormViewModel {
         isLoading = true
         let uuid = UUID()
         let messagerieUUID = UUID()
-        var adminUUIDs = [String]()
+        var usersUUIDs = [String]()
         
-        friendsAddToCFQ.forEach({ adminUUIDs.append($0.uid) })
+        friendsAddToCFQ.forEach({ usersUUIDs.append($0.uid) })
         
         let cfq = CFQ(
             uid: uuid.description,
             title: "CFQ " + titleCFQ + (titleCFQ.last == "?" ? "" : " ?"),
             admin: user.uid,
             messagerieUUID: messagerieUUID.description,
-            users: adminUUIDs,
+            users: usersUUIDs,
             timestamp: Date()
         )
-        
         
         firebaseService.addData(
             data: cfq,
@@ -114,7 +113,7 @@ extension CFQFormViewModel {
             }
         )
     }
-    
+
     func addEventCFQOnFriendProfile(cfq: CFQ, completion: @escaping (Bool, String) -> Void) {
         firebaseService.updateDataByID(
             data: [
