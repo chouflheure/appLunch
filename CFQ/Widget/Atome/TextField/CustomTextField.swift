@@ -7,7 +7,7 @@ enum TextFieldType {
     case cfq
     case editProfile
     case searchBar
-    
+
     var data: TextFieldData {
         switch self {
         case .sign:
@@ -70,12 +70,12 @@ struct TextFieldData {
     let iconCross: String?
     let cornerRadius: CGFloat
     let leadingPadding: CGFloat
-    
+
     init(
         background: Color,
         foregroundColor: Color,
         hasStoke: Bool,
-       // titleCase: Text.Case,
+        // titleCase: Text.Case,
         // titleCaseFunc: @escaping (String) -> String,
         iconResearch: String? = nil,
         iconCross: String? = nil,
@@ -94,13 +94,45 @@ struct TextFieldData {
     }
 }
 
+extension View {
+    func limitText(_ text: Binding<String>, to characterLimit: Int) -> some View
+    {
+        self
+            .onChange(of: text.wrappedValue) { _ in
+                text.wrappedValue = String(
+                    text.wrappedValue.prefix(characterLimit)
+                )
+            }
+    }
+}
+
 struct CustomTextField: View {
     @Binding var text: String
     let keyBoardType: UIKeyboardType
     let placeHolder: String
     let textFieldType: TextFieldType
+    let characterLimit: Int
     var onRemoveText: (() -> Void)?
     var onTapResearch: (() -> Void)?
+
+    init(
+        text: Binding<String>,
+        keyBoardType: UIKeyboardType,
+        placeHolder: String,
+        textFieldType: TextFieldType,
+        characterLimit: Int = 20,
+        onRemoveText: (() -> Void)? = nil,
+        onTapResearch: (() -> Void)? = nil
+    ) {
+
+        self._text = text
+        self.keyBoardType = keyBoardType
+        self.placeHolder = placeHolder
+        self.textFieldType = textFieldType
+        self.characterLimit = characterLimit
+        self.onRemoveText = onRemoveText
+        self.onTapResearch = onTapResearch
+    }
 
     var body: some View {
         HStack {
@@ -119,29 +151,40 @@ struct CustomTextField: View {
             }
 
             TextField("", text: $text)
-                .multilineTextAlignment(textFieldType == .sign ? .center : .leading)
-                .placeholder(when: text.isEmpty, alignment: textFieldType == .sign ? .center : .leading) {
+                .limitText($text, to: characterLimit)
+                .multilineTextAlignment(
+                    textFieldType == .sign ? .center : .leading
+                )
+                .placeholder(
+                    when: text.isEmpty,
+                    alignment: textFieldType == .sign ? .center : .leading
+                ) {
                     HStack {
                         Text(placeHolder)
                             .foregroundColor(.gray)
                             // .textCase(textFieldType.data.titleCase)
-                            .multilineTextAlignment(textFieldType == .sign ? .center : .leading)
+                            .multilineTextAlignment(
+                                textFieldType == .sign ? .center : .leading
+                            )
                     }
-            }.onChange(of: text) { newValue in
-                // text = textFieldType.data.titleCaseFunc(newValue)
-                if textFieldType == .cfq || textFieldType == .turn {
-                    text = uppercaseText(text: newValue)
-                }
+                }.onChange(of: text) { newValue in
 
-                if textFieldType == .searchBar {
-                    onTapResearch?()
+                    text = String(text.prefix(characterLimit))
+                    // text = String(text.prefix(characterLimit))
+
+                    if textFieldType == .cfq || textFieldType == .turn {
+                        text = uppercaseText(text: newValue)
+                    }
+
+                    if textFieldType == .searchBar {
+                        onTapResearch?()
+                    }
                 }
-            }
-            .foregroundColor(.white)
-            .padding(.all, textFieldType.data.hasStoke ? 10 : 5)
-            .padding(.leading, textFieldType == .cfq ? -10 : 0)
-            .keyboardType(keyBoardType)
-            
+                .foregroundColor(.white)
+                .padding(.all, textFieldType.data.hasStoke ? 10 : 5)
+                .padding(.leading, textFieldType == .cfq ? -10 : 0)
+                .keyboardType(keyBoardType)
+
             if textFieldType == .searchBar && !text.isEmpty {
                 Button(action: {
                     onRemoveText?()
@@ -154,15 +197,18 @@ struct CustomTextField: View {
             }
         }
         .background(textFieldType.data.background)
-        .clipShape(RoundedRectangle(cornerRadius: textFieldType.data.cornerRadius))
+        .clipShape(
+            RoundedRectangle(cornerRadius: textFieldType.data.cornerRadius)
+        )
         .overlay(
             RoundedRectangle(cornerRadius: textFieldType.data.cornerRadius)
-                .stroke(.white, lineWidth: textFieldType.data.hasStoke ? 0.5 : 0)
+                .stroke(
+                    .white,
+                    lineWidth: textFieldType.data.hasStoke ? 0.5 : 0
+                )
         )
     }
 }
-
-
 
 #Preview {
     ParentView()
@@ -188,14 +234,14 @@ private struct ParentView: View {
                     placeHolder: "test",
                     textFieldType: .signUp
                 )
-                
+
                 CustomTextField(
                     text: $currentIndex2,
                     keyBoardType: .default,
                     placeHolder: "test",
                     textFieldType: .turn
                 )
-                
+
                 CustomTextField(
                     text: $currentIndex2,
                     keyBoardType: .default,

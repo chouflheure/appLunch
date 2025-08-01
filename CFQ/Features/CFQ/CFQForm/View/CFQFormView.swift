@@ -55,7 +55,8 @@ struct CFQFormView: View {
                                 text: $viewModel.titleCFQ,
                                 keyBoardType: .default,
                                 placeHolder: "DEMAIN",
-                                textFieldType: .cfq
+                                textFieldType: .cfq,
+                                characterLimit: 10
                             )
                         }
                         .padding(.top, 16)
