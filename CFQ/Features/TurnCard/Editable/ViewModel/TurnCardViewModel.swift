@@ -24,6 +24,7 @@ class TurnCardViewModel: ObservableObject {
     @Published var placeLatitude = Double()
     @Published var placeLongitude = Double()
     @Published var setFriendsOnTurn = Set<UserContact>()
+    @Published var setTeamOnTurn = Set<Team>()
     
     @Published var friendsList = Set<UserContact>()
     @Published var friendsAddToCFQ = Set<UserContact>()
@@ -41,10 +42,13 @@ class TurnCardViewModel: ObservableObject {
     var user: User
     var firebaseService = FirebaseService()
     var allFriends: Set<UserContact> = []
+    var allTeam: Set<Team> = []
 
     @State var isEditing: Bool = false
 
     @Published var friendListToAdd = Set<UserContact>()
+    @Published var teamToAdd = Set<Team>()
+    
     
     var isEnableButton: Bool {
         get {
@@ -121,6 +125,7 @@ class TurnCardViewModel: ObservableObject {
 
         self.coordinator = coordinator
         self.allFriends = friendListToAdd
+        self.allTeam = teamToAdd
 
         verificationIdentificationUserUID(coordinator: coordinator)
 
@@ -147,9 +152,15 @@ class TurnCardViewModel: ObservableObject {
         }
         
         friendListToAdd = Set(coordinator.user?.userFriendsContact ?? [])
+        teamToAdd = Set(coordinator.user?.arrayTeamFromUser ?? [])
+        print("@@@ teamToAdd = \(teamToAdd)")
 
         setFriendsOnTurn.forEach { invited in
             friendListToAdd.remove(invited)
+        }
+        
+        setTeamOnTurn.forEach { invited in
+            teamToAdd.remove(invited)
         }
     }
     
@@ -183,6 +194,23 @@ class TurnCardViewModel: ObservableObject {
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 extension TurnCardViewModel {
     

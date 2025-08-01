@@ -5,15 +5,19 @@ struct ListFriendToAdd: View {
     @Binding var isPresented: Bool
     @ObservedObject var coordinator: Coordinator
     @StateObject private var viewModel: ListFriendToAddViewModel
-    @Binding var friendsOnTeam: Set<UserContact>
+    @Binding var friendsAdd: Set<UserContact>
+    @Binding var teamToAdd: Set<Team>
     @Binding var allFriends: Set<UserContact>
+    @Binding var allTeams: Set<Team>
     var showArrowDown: Bool
     
     init(
         isPresented: Binding<Bool>,
         coordinator: Coordinator,
-        friendsOnTeam: Binding<Set<UserContact>>,
+        friendsAdd: Binding<Set<UserContact>>,
         allFriends: Binding<Set<UserContact>>,
+        teamToAdd: Binding<Set<Team>>,
+        allTeams: Binding<Set<Team>>,
         showArrowDown: Bool = true
     ) {
         self._isPresented = isPresented
@@ -21,13 +25,17 @@ struct ListFriendToAdd: View {
         self._viewModel = StateObject(
             wrappedValue: ListFriendToAddViewModel(
                 coordinator: coordinator,
-                friendsOnTeam: friendsOnTeam,
-                allFriends: allFriends
+                friendsAdd: friendsAdd,
+                allFriends: allFriends,
+                teamAdd: teamToAdd,
+                allTeams: allTeams
             )
         )
         
-        self._friendsOnTeam = friendsOnTeam
+        self._friendsAdd = friendsAdd
         self._allFriends = allFriends
+        self._teamToAdd = teamToAdd
+        self._allTeams = allTeams
         self.showArrowDown = showArrowDown
     }
     
@@ -61,10 +69,10 @@ struct ListFriendToAdd: View {
             .padding(.horizontal, 16)
             
             AddFriendsAndListView(
-                arrayGuest: $friendsOnTeam,
+                arrayGuest: $friendsAdd,
                 arrayFriends: $viewModel.displayedFriends,
-                arrayTeamGuest: .constant([]),
-                arrayTeam: .constant([]),
+                arrayTeamGuest: $teamToAdd,
+                arrayTeam: $viewModel.displayedTeam,
                 coordinator: coordinator,
                 onRemove: { userRemoved in
                     viewModel.removeFriendsFromList(user: userRemoved)
@@ -72,8 +80,12 @@ struct ListFriendToAdd: View {
                 onAdd: { userAdd in
                     viewModel.addFriendsToList(user: userAdd)
                 },
-                onRemoveTeam: {_ in},
-                onAddTeam: {_ in}
+                onRemoveTeam: { teamAdd in
+                    viewModel.removeTeamFromList(team: teamAdd)
+                },
+                onAddTeam: { teamRemoved in
+                    viewModel.addTeamToList(team: teamRemoved)
+                }
             )
             .padding(.top, 30)
         }

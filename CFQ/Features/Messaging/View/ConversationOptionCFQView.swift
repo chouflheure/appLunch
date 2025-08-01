@@ -167,7 +167,9 @@ private struct AddFriendScreenWithActionButtonView: View {
     var cfq: CFQ
     var friendBeforeModification: [String]
 
+    
     var body: some View {
+        /*
         VStack {
             ListFriendToAdd(
                 isPresented: .constant(true),
@@ -191,7 +193,7 @@ private struct AddFriendScreenWithActionButtonView: View {
                 hasADivider: true
             )
         }
-        
+        */
         HStack(spacing: 30) {
             Button(
                 action: {

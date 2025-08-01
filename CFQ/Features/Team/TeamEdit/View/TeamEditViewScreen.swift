@@ -129,8 +129,10 @@ struct TeamEditViewScreen: View {
                         ListFriendToAdd(
                             isPresented: .constant(true),
                             coordinator: coordinator,
-                            friendsOnTeam: $viewModel.setFriends,
+                            friendsAdd: $viewModel.setFriends,
                             allFriends: $viewModel.allFriends,
+                            teamToAdd: .constant([]),
+                            allTeams: .constant([]),
                             showArrowDown: false
                         )
                         .customNavigationFlexible(

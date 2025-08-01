@@ -152,8 +152,10 @@ struct TeamFormView: View {
                 ListFriendToAdd(
                     isPresented: $viewModel.showFriendsList,
                     coordinator: coordinator,
-                    friendsOnTeam: $viewModel.friendsAdd,
-                    allFriends: $viewModel.friendsList
+                    friendsAdd: $viewModel.friendsAdd,
+                    allFriends: $viewModel.friendsList,
+                    teamToAdd: .constant([]),
+                    allTeams: .constant([])
                 )
             }
         }

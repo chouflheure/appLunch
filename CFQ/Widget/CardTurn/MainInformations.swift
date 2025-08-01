@@ -242,8 +242,10 @@ struct MainInformationsDetailView: View {
                 ListFriendToAdd(
                     isPresented: $viewModel.showFriendsList,
                     coordinator: viewModel.coordinator,
-                    friendsOnTeam: $viewModel.setFriendsOnTurn,
-                    allFriends: $viewModel.friendListToAdd
+                    friendsAdd: $viewModel.setFriendsOnTurn,
+                    allFriends: $viewModel.friendListToAdd,
+                    teamToAdd: $viewModel.setTeamOnTurn,
+                    allTeams: $viewModel.teamToAdd
                 )
             }
         }
