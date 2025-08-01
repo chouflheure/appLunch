@@ -118,5 +118,8 @@ struct AddFriendsAndListView: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
+        }
     }
 }

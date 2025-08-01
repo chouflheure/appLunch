@@ -193,24 +193,12 @@ class TurnCardViewModel: ObservableObject {
         allFriends.insert(user)
     }
     
+    func removeTeamsFromList(team: Team) {
+        setTeamOnTurn.remove(team)
+        teamToAdd.insert(team)
+        allTeam.insert(team)
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 extension TurnCardViewModel {
     
@@ -382,7 +370,7 @@ extension TurnCardViewModel {
             uid: turn.uid.isEmpty ? UUID().description : turn.uid,
             titleEvent: titleEvent,
             dateStartEvent: combineDateAndTime(date: dateEventStart, time: startHours) ?? Date(),
-            dateEndEvent: combineDateAndTime(date: dateEventEnd, time: endHours) ?? Date(),
+            dateEndEvent: combineDateAndTime(date: dateEventEnd, time: endHours),
             pictureURLString: urlStringImage,
             admin: user.uid,
             description: description,

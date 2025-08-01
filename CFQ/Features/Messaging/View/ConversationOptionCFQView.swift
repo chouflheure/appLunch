@@ -68,6 +68,8 @@ struct ConversationOptionCFQView: View {
                             AddFriendScreenWithActionButtonView(
                                 setFriendsState: setInvitedState,
                                 allFriendsState: allFriendsState,
+                                teamToAdd: [],
+                                allTeams: [],
                                 coordinator: coordinator,
                                 viewModel: viewModel,
                                 user: coordinator.user,
@@ -157,6 +159,9 @@ struct ConversationOptionCFQView: View {
 private struct AddFriendScreenWithActionButtonView: View {
     @State var setFriendsState = Set<UserContact>()
     @State var allFriendsState = Set<UserContact>()
+    @State var teamToAdd = Set<Team>()
+    @State var allTeams = Set<Team>()
+    
     @State private var toast: Toast? = nil
 
     @ObservedObject var coordinator: Coordinator
@@ -169,13 +174,15 @@ private struct AddFriendScreenWithActionButtonView: View {
 
     
     var body: some View {
-        /*
+        
         VStack {
             ListFriendToAdd(
                 isPresented: .constant(true),
                 coordinator: coordinator,
-                friendsOnTeam: $setFriendsState,
+                friendsAdd: $setFriendsState,
                 allFriends: $allFriendsState,
+                teamToAdd: $teamToAdd,
+                allTeams: $allTeams,
                 showArrowDown: false
             )
             .toastView(toast: $toast)
@@ -193,7 +200,7 @@ private struct AddFriendScreenWithActionButtonView: View {
                 hasADivider: true
             )
         }
-        */
+        
         HStack(spacing: 30) {
             Button(
                 action: {
@@ -257,7 +264,7 @@ private struct AddFriendScreenWithActionButtonView: View {
                             .padding(.leading, 15)
                             .padding(.vertical, 10)
                         
-                        Text("Valider les modifs")
+                        Text("Valider")
                             .tokenFont(
                                 .Body_Inter_Medium_14
                             )

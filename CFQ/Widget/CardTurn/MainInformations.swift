@@ -207,17 +207,27 @@ struct MainInformationsDetailView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    VStack {
                         HStack {
+                            ForEach(Array(viewModel.setTeamOnTurn), id: \.self) { team in
+                                CellFriendCanRemove(userPreview: UserContact(
+                                    uid: team.uid,
+                                    name: team.title,
+                                    pseudo: team.title,
+                                    profilePictureUrl: team.pictureUrlString,
+                                    isActive: false
+                                )) {
+                                    viewModel.removeTeamsFromList(team: team)
+                                }
+                            }
                             ForEach(Array(viewModel.setFriendsOnTurn), id: \.self) { user in
                                 CellFriendCanRemove(userPreview: user) {
                                     viewModel.removeFriendsFromList(
                                         user: user
                                     )
                                 }
-                            }.frame(height: 100)
+                            }
                         }
-                    }
+                        .frame(height: 100)
                 }
                 .padding(.top, 15)
                 
