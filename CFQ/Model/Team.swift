@@ -7,6 +7,8 @@ class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
     let friends: [String]
     let admins: [String]
     let timestamp: Date
+    let cfqs: [CFQ]?
+    let turns: [Turn]?
     @Published var friendsContact: [UserContact]?
     @Published var adminsContact: [UserContact]?
     
@@ -17,6 +19,8 @@ class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
         friends: [String],
         admins: [String],
         timestamp: Date,
+        cfqs: [CFQ]? = nil,
+        turns: [Turn]? = nil,
         friendsContact: [UserContact]? = nil,
         adminsContact: [UserContact]? = nil
     ) {
@@ -26,6 +30,8 @@ class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
         self.friends = friends
         self.admins = admins
         self.timestamp = timestamp
+        self.cfqs = cfqs
+        self.turns = turns
         self.friendsContact = friendsContact
         self.adminsContact = adminsContact
     }
@@ -37,6 +43,8 @@ class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
         case friends
         case admins
         case timestamp
+        case cfqs
+        case turns
         case friendsContact
         case adminsContact
     }
@@ -59,6 +67,8 @@ class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
         friends = try values.decode([String].self, forKey: .friends)
         admins = try values.decode([String].self, forKey: .admins)
         timestamp = try values.decode(Date.self, forKey: .timestamp)
+        cfqs = try values.decodeIfPresent([CFQ].self, forKey: .cfqs)
+        turns = try values.decodeIfPresent([Turn].self, forKey: .turns)
         friendsContact = try values.decodeIfPresent([UserContact].self, forKey: .friendsContact)
         adminsContact = try values.decodeIfPresent([UserContact].self, forKey: .adminsContact)
     }
@@ -71,6 +81,8 @@ class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
         try container.encode(friends, forKey: .friends)
         try container.encode(admins, forKey: .admins)
         try container.encode(timestamp, forKey: .timestamp)
+        try container.encodeIfPresent(cfqs, forKey: .cfqs)
+        try container.encodeIfPresent(turns, forKey: .turns)
         try container.encodeIfPresent(friendsContact, forKey: .friendsContact)
         try container.encodeIfPresent(adminsContact, forKey: .adminsContact)
     }

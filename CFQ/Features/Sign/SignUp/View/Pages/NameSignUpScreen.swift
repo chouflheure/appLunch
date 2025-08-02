@@ -40,7 +40,8 @@ struct NameSignUpScreen: View {
                     text: $viewModel.user.name,
                     keyBoardType: .default,
                     placeHolder: "Prenom",
-                    textFieldType: .signUp
+                    textFieldType: .signUp,
+                    characterLimit: 40
                 )
                 .focused($focusedField, equals: .name)
                 .submitLabel(.next)
@@ -51,7 +52,8 @@ struct NameSignUpScreen: View {
                     text: $viewModel.user.pseudo,
                     keyBoardType: .default,
                     placeHolder: "Pseudo",
-                    textFieldType: .signUp
+                    textFieldType: .signUp,
+                    characterLimit: 40
                 )
                 .focused($focusedField, equals: .pseudo)
                 .submitLabel(.return)

@@ -120,7 +120,7 @@ struct CustomTextField: View {
         keyBoardType: UIKeyboardType,
         placeHolder: String,
         textFieldType: TextFieldType,
-        characterLimit: Int = 20,
+        characterLimit: Int = 200,
         onRemoveText: (() -> Void)? = nil,
         onTapResearch: (() -> Void)? = nil
     ) {

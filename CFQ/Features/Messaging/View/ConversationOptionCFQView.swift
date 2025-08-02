@@ -288,7 +288,8 @@ private struct UserInCFQ: View {
     var pageViewType: PageViewType = .invited
     @State var invited = [UserContact]()
     @State var participants = [UserContact]()
-    
+    @ObservedObject var coordinator: Coordinator
+
     let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
@@ -328,7 +329,7 @@ private struct UserInCFQ: View {
                                     .tokenFont(.Label_Gigalypse_12)
                                     .padding(.top, 50)
                             } else {
-                                CollectionViewParticipant(participants: $participants)
+                                CollectionViewParticipant(participants: $participants, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)
@@ -340,7 +341,7 @@ private struct UserInCFQ: View {
                                     .padding(.top, 50)
                             }
                             else {
-                                CollectionViewParticipant(participants: $invited)
+                                CollectionViewParticipant(participants: $invited, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)

@@ -13,6 +13,7 @@ struct SearchBarView: View {
             keyBoardType: .default,
             placeHolder: placeholder,
             textFieldType: .searchBar,
+            characterLimit: 100,
             onRemoveText: {
                 onRemoveText()
             },

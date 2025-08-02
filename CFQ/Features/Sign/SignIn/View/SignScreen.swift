@@ -26,7 +26,8 @@ struct SignScreen: View {
                     text: $viewModel.phoneNumber,
                     keyBoardType: .phonePad,
                     placeHolder: "06 ...",
-                    textFieldType: .signUp
+                    textFieldType: .signUp,
+                    characterLimit: 15
                 )
             }
 

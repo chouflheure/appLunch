@@ -6,9 +6,11 @@ struct MainInformationsPreviewFeedView: View {
     let formattedDateAndTime = FormattedDateAndTime()
     @State private var isShowMaps: Bool = false
     private var paddinBottom = 12.0
+    @ObservedObject var coordinator: Coordinator
 
-    init(turn: Turn) {
+    init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
+        self.coordinator = coordinator
     }
 
     var body: some View {
@@ -147,7 +149,7 @@ struct MainInformationsPreviewFeedView: View {
         )
         
         NavigationLink(destination: {
-            FriendListStatusTurnInvitation(turn: turn)
+            FriendListStatusTurnInvitation(turn: turn, coordinator: coordinator)
         }) {
             HStack {
                 Text("\(turn.participants.count) y vont")

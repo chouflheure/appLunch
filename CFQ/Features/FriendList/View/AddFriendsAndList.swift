@@ -48,7 +48,7 @@ struct AddFriendsAndListView: View {
                                 destination: TeamDetailView(
                                     coordinator: coordinator,
                                     team: team,
-                                    isEditing: false
+                                    isEditable: false
                                 )
                             ) {
                                 CellTeamCanRemove(team: team) {
@@ -88,7 +88,7 @@ struct AddFriendsAndListView: View {
                                     TeamDetailView(
                                         coordinator: coordinator,
                                         team: team,
-                                        isEditing: false
+                                        isEditable: false
                                     )
                             ) {
                                 CellTeamAdd(team: team) {

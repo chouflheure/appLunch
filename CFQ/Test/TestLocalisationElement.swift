@@ -37,6 +37,7 @@ struct SelectLocalisationView: View {
     @State private var searchTextLocation = ""
     @State var searchText: String = ""
     @State private var items: Set<PlaceItem> = []
+    @State private var isFocusSelectorAdresse = false
 
     @FocusState private var isSearchFocused: Bool
     
@@ -70,14 +71,14 @@ struct SelectLocalisationView: View {
                         .foregroundColor(.white)
                         .frame(width: 20)
                     
-                    Text("Le nom du lieu :")
+                    Text("Le nom du lieu : ( optionnel ) ")
                         .tokenFont(.Label_Inter_Semibold_16)
                 }
                 .padding(.horizontal, 16)
 
                 SearchBarView(
                     text: $searchText,
-                    placeholder: "Chez moi",
+                    placeholder: "ex: Chez moi",
                     onRemoveText: {searchText = ""},
                     onTapResearch: {}
                 )
@@ -100,7 +101,8 @@ struct SelectLocalisationView: View {
                     .padding()
                 }
             }
-            .frame(height: 200)
+            .opacity(isFocusSelectorAdresse ? 0 : 1)
+            .frame(height: isFocusSelectorAdresse ? 10 : 200)
             .padding(.top, 30)
 
             VStack(alignment: .leading) {
@@ -110,19 +112,30 @@ struct SelectLocalisationView: View {
                         .frame(width: 16, height: 16)
                         .foregroundColor(.white)
 
-                    Text("L'adresse exacte :")
+                    Text("L'adresse exacte : ")
                         .tokenFont(.Label_Inter_Semibold_16)
                 }
                 .padding(.horizontal, 16)
 
                 SearchBarView(
                     text: $searchTextLocation,
-                    placeholder: "1 rue de Clichy",
-                    onRemoveText: {searchText = ""},
-                    onTapResearch: {}
+                    placeholder: "ex: 1 rue de Clichy",
+                    onRemoveText: {
+                        searchTextLocation = ""
+                        isFocusSelectorAdresse = false
+                    },
+                    onTapResearch: {
+                        isFocusSelectorAdresse = false
+                    }
                 )
                 .padding(.top, 15)
                 .onChange(of: searchTextLocation) { newValue in
+                    if searchTextLocation.isEmpty {
+                        isFocusSelectorAdresse = false
+                    } else {
+                        isFocusSelectorAdresse = true
+                    }
+
                     searchCompleter.updateQueryFragment(newValue)
                 }
                 
@@ -156,7 +169,7 @@ struct SelectLocalisationView: View {
                                     viewModel.placeAdresse = viewModel.placeTitle + " • " + viewModel.placeAdresse
                                     viewModel.placeTitle = searchTextPlace
                                 }
-                                
+                                isFocusSelectorAdresse = false
                                 isPresented = false
                             }
                         }
@@ -167,19 +180,21 @@ struct SelectLocalisationView: View {
                     }
                 }
             }
-
+                .padding(.top, 30)
             Button(action: {
                 if !searchTextPlace.isEmpty {
                     viewModel.placeAdresse = viewModel.placeTitle + " • " + viewModel.placeAdresse
                     viewModel.placeTitle = searchTextPlace
                 }
+                isFocusSelectorAdresse = false
                 isPresented = false
             }, label: {
-                Text("Ok")
+                Text("Done")
                     .foregroundColor(.white)
                     .padding(.vertical, 10)
                     .font(.system(size: 15, weight: .bold))
                     .multilineTextAlignment(.center)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
             })
             .frame(width: 150)
             .background(Color(hex: "B098E6").opacity(1))
@@ -187,16 +202,30 @@ struct SelectLocalisationView: View {
         }
         .onAppear {
             searchTextPlace = viewModel.placeTitle
-            searchTextLocation = viewModel.placeAdresse
+            if !viewModel.placeTitle.isEmpty {
+                items.insert(PlaceItem(customValue: viewModel.placeTitle))
+            }
+            if searchTextLocation != " • " {
+                searchTextLocation = viewModel.placeAdresse
+            }
         }
     }
 
-    // Filtrer les items en fonction de la recherche
     private var filteredItems: Set<PlaceItem> {
+        
         if searchText.isEmpty {
             return items
         } else {
-            return [PlaceItem(customValue: searchText)]
+            let filtered = items.filter { item in
+                item.value.lowercased().contains(searchText.lowercased())
+            }
+
+            var result = Set(filtered)
+            if !filtered.contains(where: { $0.value.lowercased() == searchText.lowercased() }) {
+                result.insert(PlaceItem(customValue: searchText))
+            }
+            
+            return result
         }
     }
     

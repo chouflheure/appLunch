@@ -45,7 +45,7 @@ struct TurnCardDetailsFeedView: View {
                     .padding(.top, !turn.pictureURLString.isEmpty ? 0 : 70)
                     
                     // Informations ( Mood / Date / Loc )
-                    MainInformationsDetailFeedView(turn: viewModel.turn)
+                    MainInformationsDetailFeedView(turn: viewModel.turn, coordinator: coordinator)
                         .padding(.horizontal, 16)
                     
                     // Description ( Bio event )
@@ -337,9 +337,11 @@ struct MainInformationsDetailFeedView: View {
     var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
     @State private var isShowMaps: Bool = false
+    @ObservedObject var coordinator: Coordinator
 
-    init(turn: Turn) {
+    init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
+        self.coordinator = coordinator
     }
 
     var body: some View {
@@ -498,7 +500,7 @@ struct MainInformationsDetailFeedView: View {
         )
         
         NavigationLink(destination: {
-            FriendListStatusTurnInvitation(turn: turn)
+            FriendListStatusTurnInvitation(turn: turn, coordinator: coordinator)
         }) {
             HStack {
                 Text("\(turn.participants.count) y vont")

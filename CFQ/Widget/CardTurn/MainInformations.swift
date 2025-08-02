@@ -314,17 +314,23 @@ struct SelectLinkView: View {
             .textFieldStyle(RoundedBorderTextFieldStyle())
 
             TextField(
-                viewModel.link.isEmpty ? "lien url" : viewModel.link,
+                viewModel.link.isEmpty ? "Lien url" : viewModel.link,
                 text: $viewModel.link
             )
             .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Button(action: {
                 isPresented = false
-            }) {
+            }, label: {
                 Text("Done")
-                    .background(Color(hex: "B098E6"))
-            }
+                    .foregroundColor(.white)
+                    .padding(.vertical, 10)
+                    .font(.system(size: 15, weight: .bold))
+                    .multilineTextAlignment(.center)
+            })
+            .frame(width: 150)
+            .background(Color(hex: "B098E6").opacity(1))
+            .cornerRadius(10)
         }
         .padding(.top, 40)
         .padding(.horizontal, 20)

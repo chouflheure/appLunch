@@ -33,7 +33,7 @@ struct TurnCardFeedView: View {
                     .padding(.top, !turn.pictureURLString.isEmpty ? 20 : 70)
 
                     // Informations ( Mood / Date / Loc )
-                    MainInformationsPreviewFeedView(turn: turn)
+                    MainInformationsPreviewFeedView(turn: turn, coordinator: coordinator)
                         .padding(.horizontal, 16)
                     
                     // Description ( Bio event )

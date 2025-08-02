@@ -51,15 +51,17 @@ struct FriendListStatusTurnInvitation: View {
     @State var selectedIndex = 0
     var pageViewType: PageViewType = .attendingGuestsView
     @StateObject var viewModel: FriendListStatusTurnInvitationViewModel
-    
+    @ObservedObject var coordinator: Coordinator
+
     let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16)
     ]
 
-    init(turn: Turn) {
+    init(turn: Turn, coordinator: Coordinator) {
         _viewModel = StateObject(wrappedValue: FriendListStatusTurnInvitationViewModel(turn: turn))
+        self.coordinator = coordinator
     }
     
     var body: some View {
@@ -95,7 +97,7 @@ struct FriendListStatusTurnInvitation: View {
                                     .tokenFont(.Label_Gigalypse_12)
                                     .padding(.top, 200)
                             } else {
-                                CollectionViewParticipant(participants: $viewModel.invited)
+                                CollectionViewParticipant(participants: $viewModel.invited, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)
@@ -107,11 +109,10 @@ struct FriendListStatusTurnInvitation: View {
                                     .padding(.top, 200)
                             }
                             else {
-                                CollectionViewParticipant(participants: $viewModel.participants)
+                                CollectionViewParticipant(participants: $viewModel.participants, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)
-                        
                     } else if selectedIndex == 2 {
                         LazyVStack(spacing: 20) {
                             if viewModel.invited.isEmpty {
@@ -120,7 +121,7 @@ struct FriendListStatusTurnInvitation: View {
                                     .padding(.top, 200)
                             }
                             else {
-                                CollectionViewParticipant(participants: $viewModel.mayBe)
+                                CollectionViewParticipant(participants: $viewModel.mayBe, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)
@@ -132,29 +133,13 @@ struct FriendListStatusTurnInvitation: View {
                                     .padding(.top, 200)
                             }
                             else {
-                                CollectionViewParticipant(participants: $viewModel.denied)
+                                CollectionViewParticipant(participants: $viewModel.denied, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)
                     }
                     
                 }
-
-
-                /*
-                // PageView avec TabView
-                TabView(selection: $selectedIndex) {
-                    CollectionViewParticipant(viewModel: TurnCardViewModel())
-                        .tag(0)
-                    CollectionViewParticipant(viewModel: TurnCardViewModel())
-                        .tag(1)
-                    CollectionViewParticipant(viewModel: TurnCardViewModel())
-                        .tag(2)
-                    CollectionViewParticipant(viewModel: TurnCardViewModel())
-                        .tag(3)
-                }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Mode Page sans dots
-                 */
             }
         }
         .customNavigationFlexible(
@@ -188,7 +173,8 @@ struct ItemView: View {
 
 struct CollectionViewParticipant: View {
     @Binding var participants: [UserContact]
-    
+    @ObservedObject var coordinator: Coordinator
+
     let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
@@ -200,7 +186,15 @@ struct CollectionViewParticipant: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(participants, id: \.self) { participant in
-                    ItemView(participant: participant)
+                    NavigationLink(destination: {
+                        FriendProfileView(
+                            coordinator: coordinator,
+                            user: coordinator.user ?? User(),
+                            friend: participant
+                        )
+                    }) {
+                        ItemView(participant: participant)
+                    }
                 }
             }
             .padding()

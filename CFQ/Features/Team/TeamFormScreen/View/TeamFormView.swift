@@ -64,7 +64,8 @@ struct TeamFormView: View {
                     text: $viewModel.nameTeam,
                     keyBoardType: .default,
                     placeHolder: "Nom de ta team",
-                    textFieldType: .sign
+                    textFieldType: .sign,
+                    characterLimit: 40
                 )
                 .padding(.horizontal, 16)
                 

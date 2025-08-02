@@ -184,7 +184,7 @@ struct NotificationButtonIcon_Nav: View {
             //if numberNotificationUnRead > 0 {
             if hasNotificationUnRead {
                 Circle()
-                    .fill(.purpleText)
+                    .fill(.purpleDark)
                     .frame(width: 12, height: 12)
                     .offset(x: 12, y: -12)
                 /*

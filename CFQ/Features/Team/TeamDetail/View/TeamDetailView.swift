@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct TeamDetailView: View {
@@ -7,19 +6,19 @@ struct TeamDetailView: View {
     @State var isPresentedSeetings = false
     @State var navigateToTeamEdit = false
     @State var showAlertRemoveTeam = false
-    
+
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var team: Team
-    var isEditing: Bool
+    var isEditable: Bool
 
     @EnvironmentObject var user: User
     @Environment(\.dismiss) var dismiss
     @State private var toast: Toast? = nil
 
-    init(coordinator: Coordinator, team: Team, isEditing: Bool = true) {
+    init(coordinator: Coordinator, team: Team, isEditable: Bool = true) {
         self.coordinator = coordinator
         self.team = team
-        self.isEditing = isEditing
+        self.isEditable = isEditable
         self._viewModel = StateObject(
             wrappedValue: TeamDetailViewModel(coordinator: coordinator)
         )
@@ -36,57 +35,60 @@ struct TeamDetailView: View {
                     .clipShape(Circle())
                     .frame(width: 90, height: 90)
                     .padding(.bottom, 16)
-                    
-                    NavigationLink(destination: {
-                        TurnCardView(
-                            turn: Turn(
-                                uid: "",
-                                titleEvent: "",
-                                dateStartEvent: nil,
-                                pictureURLString: "",
-                                admin: "",
-                                description: "",
-                                invited: team.friends,
-                                participants: [],
-                                denied: [],
-                                mayBeParticipate: [],
-                                mood: [],
-                                messagerieUUID: "",
-                                placeTitle: "",
-                                placeAdresse: "",
-                                placeLatitude: 0,
-                                placeLongitude: 0,
-                                timestamp: Date()
-                            ),
-                            coordinator: coordinator
-                        )
-                    }) {
-                        HStack {
-                            Image(.iconPlus)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.white)
-                            
-                            Text("Créer un TURN pour la team")
-                                .tokenFont(.Body_Inter_Semibold_16)
+
+                    if isEditable {
+                        NavigationLink(destination: {
+                            TurnCardView(
+                                turn: Turn(
+                                    uid: "",
+                                    titleEvent: "",
+                                    dateStartEvent: nil,
+                                    pictureURLString: "",
+                                    admin: "",
+                                    description: "",
+                                    invited: team.friends,
+                                    participants: [],
+                                    denied: [],
+                                    mayBeParticipate: [],
+                                    mood: [],
+                                    messagerieUUID: "",
+                                    placeTitle: "",
+                                    placeAdresse: "",
+                                    placeLatitude: 0,
+                                    placeLongitude: 0,
+                                    timestamp: Date()
+                                ),
+                                coordinator: coordinator
+                            )
+                        }) {
+                            HStack {
+                                Image(.iconPlus)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.white)
+
+                                Text("Créer un TURN pour la team")
+                                    .tokenFont(.Body_Inter_Semibold_16)
+                            }
                         }
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(.white, lineWidth: 1)
+                        }
+                        .padding(.bottom, 16)
                     }
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, 10)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(.white, lineWidth: 1)
-                    }
-                    .padding(.bottom, 16)
                     
                     Divider()
                         .overlay(.white)
-                    
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         VStack(spacing: 0) {
                             HStack(spacing: 0) {
                                 ForEach(
-                                    team.friendsContact ?? [], id: \.uid
+                                    team.friendsContact ?? [],
+                                    id: \.uid
                                 ) { user in
                                     CellFriendAdmin(
                                         userPreview: user,
@@ -106,10 +108,10 @@ struct TeamDetailView: View {
                                                     coordinator.teamDetail
                                                         != nil
                                                 else { return }
-                                                
+
                                                 if newValue {
                                                     let isAlreadyAdmin =
-                                                    team.adminsContact?
+                                                        team.adminsContact?
                                                         .contains(where: {
                                                             $0.uid == user.uid
                                                         }) ?? false
@@ -133,6 +135,30 @@ struct TeamDetailView: View {
                         }
                     }
                     .padding(.top, 10)
+                    
+                    Divider()
+                        .overlay(.white)
+
+
+                    Divider()
+                        .overlay(.white)
+
+                    LazyVStack(spacing: 20) {
+                        ForEach(team.turns?.sorted(by: { $0.timestamp > $1.timestamp}) ?? [], id: \.uid) { turn in
+                            NavigationLink(
+                                destination: TurnCardDetailsFeedView(
+                                    coordinator: coordinator,
+                                    turn: turn,
+                                    user: user
+                                )
+                            ) {
+                                TurnCardFeedView(
+                                    turn: turn, coordinator: coordinator
+                                )
+                                .padding(.horizontal, 12)
+                            }
+                        }
+                    }.padding(.top, 24)
                 }
             }
         }
@@ -153,13 +179,13 @@ struct TeamDetailView: View {
                                     .scaledToFit()
                                     .foregroundColor(.white)
                                     .frame(width: 20)
-                                
+
                                 Text("Modifier la team")
                                     .foregroundColor(.white)
                                 Spacer()
                             }
                         }
-                        
+
                         Button(action: {
                             isPresentedSeetings = false
                             showAlertRemoveTeam = true
@@ -170,7 +196,7 @@ struct TeamDetailView: View {
                                     .scaledToFit()
                                     .foregroundColor(.white)
                                     .frame(width: 20)
-                                
+
                                 Text("Supprimer la team")
                                     .foregroundColor(.white)
 
@@ -178,6 +204,7 @@ struct TeamDetailView: View {
                             }
                         }
                     }
+
                     HStack {
                         Image(.iconDoor)
                             .resizable()
@@ -188,13 +215,17 @@ struct TeamDetailView: View {
                             action: {
                                 Logger.log("Quitter la team", level: .action)
                                 isPresentedSeetings = false
-                                viewModel.leaveTeam(team: team, userUUID: user.uid)
+                                viewModel.leaveTeam(
+                                    team: team,
+                                    userUUID: user.uid
+                                )
                                 dismiss()
                             },
                             label: {
                                 Text("Quitter la team")
                                     .tokenFont(.Body_Inter_Medium_16)
-                            })
+                            }
+                        )
                         Spacer()
                     }
                 }
@@ -221,7 +252,8 @@ struct TeamDetailView: View {
                     foreground: .white,
                     action: { _ in
                         showAlertRemoveTeam = false
-                    }),
+                    }
+                ),
                 button2: .init(
                     content: "Yes, No team",
                     tint: .red,
@@ -261,7 +293,7 @@ struct TeamDetailView: View {
                 Button(action: {
                     isPresentedSeetings = true
                 }) {
-                    if isEditing {
+                    if isEditable {
                         Image(.iconDots)
                             .resizable()
                             .scaledToFit()

@@ -56,7 +56,7 @@ struct CFQFormView: View {
                                 keyBoardType: .default,
                                 placeHolder: "DEMAIN",
                                 textFieldType: .cfq,
-                                characterLimit: 10
+                                characterLimit: 30
                             )
                         }
                         .padding(.top, 16)
