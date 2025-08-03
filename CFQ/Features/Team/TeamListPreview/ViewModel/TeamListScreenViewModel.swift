@@ -4,8 +4,22 @@ import FirebaseFirestore
 
 class TeamListScreenViewModel: ObservableObject {
     var firebaseService = FirebaseService()
-    @Published var teams = [Team]()
+    // @Published var teams = [Team]()
     var user: User
+    
+    @Published private var _teams: [Team] = []
+    
+    var teams: [Team] {
+        return _teams.sorted { $0.timestamp > $1.timestamp }
+    }
+    
+    func addTeam(_ team: Team) {
+        _teams.append(team)
+    }
+    
+    func updateTeams(_ teams: [Team]) {
+        _teams = teams
+    }
     
     init(coordinator: Coordinator) {
         self.user = coordinator.user ?? User(uid: "")
@@ -16,7 +30,7 @@ class TeamListScreenViewModel: ObservableObject {
         firebaseService.removeListener(for: ListenerType.team_group_listener.rawValue)
         
         // Vider la liste actuelle
-        teams.removeAll()
+        _teams.removeAll()
         
         // Relancer l'écoute
         startListeningToTeams()
@@ -26,24 +40,30 @@ class TeamListScreenViewModel: ObservableObject {
         print("@@@ here")
         firebaseService.getDataByIDs(
             from: .teams,
-            with: user.teams ?? [""],
+            with: user.teams ?? []
         ){ (result: Result<[Team], Error>) in
                 switch result {
                 case .success(let teams):
                     DispatchQueue.main.async {
-                        self.teams = teams
-                        teams.indices.forEach { index in
-                            self.startListeningToUsersOnTeam(friendsIds: teams[index].friends, uidTeam: teams[index].uid) { data, error in
-                                if !data.isEmpty {
-                                    self.teams[index].friendsContact = data
+                        self._teams = teams
+                        teams.forEach { team in
+                            self.startListeningToUsersOnTeam(friendsIds: team.friends, uidTeam: team.uid) { data, error in
+                                DispatchQueue.main.async {
+                                    // ✅ Trouver l'équipe par son UID au lieu d'utiliser l'index
+                                    guard let teamIndex = self._teams.firstIndex(where: { $0.uid == team.uid }) else {
+                                        print("⚠️ Team avec UID \(team.uid) non trouvée dans self.teams")
+                                        return
+                                    }
                                     
-                                    let uuidSet = Set(teams[index].admins)
-                                    // Filtrer les objets pour ne conserver que ceux dont l'UUID est dans l'ensemble
-                                    let commonObjects = data.filter { uuidSet.contains($0.uid) }
-                                    self.teams[index].adminsContact = commonObjects
-                                    
-                                } else {
-                                    print("@@@ data NOOOO")
+                                    if !data.isEmpty {
+                                        self._teams[teamIndex].friendsContact = data
+                                        
+                                        let uuidSet = Set(team.admins)
+                                        let commonObjects = data.filter { uuidSet.contains($0.uid) }
+                                        self._teams[teamIndex].adminsContact = commonObjects
+                                    } else {
+                                        print("@@@ data NOOOO")
+                                    }
                                 }
                             }
                         }

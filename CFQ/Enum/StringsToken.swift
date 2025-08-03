@@ -13,7 +13,7 @@ enum StringsToken {
         // ConfirmCodeScreen
         static let PlaceholderConfimCode = "123456"
         static let DontReceiveCode = "Je n'ai pas recu le code"
-        static let SendConfirmCode = "Envoyez un code"
+        static let SendConfirmCode = "Envoi le code"
         static let CheckConfirmCode = "Vérifier le code"
         static let ConfirmationCode = "Confirme ton code"
         
@@ -26,6 +26,8 @@ enum StringsToken {
         static let TitleBackStep = "Revenir en arrière"
         static let Next = "Ensuite"
         static let Back = "Retour"
+        static let NextStep = "Etape Suivante"
+        static let ItsGood = "C’est bon"
         static let BackToSign = "Retour à l'inscription"
         static let WelcomeToCFQ = "Bienvenue sur CFQ 🎉"
         static let AlmostThere = "Tu y es presque"

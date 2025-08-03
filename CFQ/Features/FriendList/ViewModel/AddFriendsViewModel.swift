@@ -225,4 +225,24 @@ extension AddFriendsViewModel {
             at: self.user.uid
         )
     }
+    
+    func removeRequestFriend(userFriend: UserContact) {
+        firebaseService.updateDataByID(
+            data: [
+                "sentFriendRequests": FieldValue.arrayRemove([user.uid]),
+            ],
+            to: .users,
+            at: userFriend.uid
+        )
+        
+        firebaseService.updateDataByID(
+            data: [
+                "requestsFriends": FieldValue.arrayRemove([userFriend.uid]),
+            ],
+            to: .users,
+            at: self.user.uid
+        )
+        
+        requestsFriends.remove(userFriend)
+    }
 }

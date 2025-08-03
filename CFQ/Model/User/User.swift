@@ -28,6 +28,7 @@ class User: ObservableObject, Encodable, Decodable {
     @Published var userFriendsContact: [UserContact]?
     @Published var someNotificationUnread: Bool?
     @Published var arrayConversationUnread: [String]?
+    @Published var arrayTeamFromUser: [Team]?
     // conversations
 
     init(
@@ -56,7 +57,8 @@ class User: ObservableObject, Encodable, Decodable {
         sentFriendRequests: [String] = [],
         userFriendsContact: [UserContact]? = nil,
         someNotificationUnread: Bool? = false,
-        arrayConversationUnread: [String]? = []
+        arrayConversationUnread: [String]? = [],
+        arrayTeamFromUser: [Team]? = []
     ) {
         self.uid = uid
         self.name = name
@@ -84,6 +86,7 @@ class User: ObservableObject, Encodable, Decodable {
         self.userFriendsContact = userFriendsContact
         self.someNotificationUnread = someNotificationUnread
         self.arrayConversationUnread = arrayConversationUnread
+        self.arrayTeamFromUser = arrayTeamFromUser
     }
 
     enum CodingKeys: String, CodingKey {
@@ -113,8 +116,9 @@ class User: ObservableObject, Encodable, Decodable {
         case userFriendsContact
         case someNotificationUnread
         case arrayConversationUnread
+        case arrayTeamFromUser
     }
-    
+
     required init(from decoder:Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         uid = try values.decode(String.self, forKey: .uid)
@@ -142,6 +146,7 @@ class User: ObservableObject, Encodable, Decodable {
         userFriendsContact = try values.decodeIfPresent([UserContact].self, forKey: .userFriendsContact)
         someNotificationUnread = try values.decodeIfPresent(Bool.self, forKey: .someNotificationUnread)
         arrayConversationUnread = try values.decodeIfPresent([String].self, forKey: .arrayConversationUnread)
+        arrayTeamFromUser = try values.decodeIfPresent([Team].self, forKey: .arrayTeamFromUser)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -172,6 +177,7 @@ class User: ObservableObject, Encodable, Decodable {
         try container.encodeIfPresent(userFriendsContact, forKey: .userFriendsContact)
         try container.encodeIfPresent(someNotificationUnread, forKey: .someNotificationUnread)
         try container.encodeIfPresent(arrayConversationUnread, forKey: .arrayConversationUnread)
+        try container.encodeIfPresent(arrayTeamFromUser, forKey: .arrayTeamFromUser)
     }
 
     var guestMode: User {

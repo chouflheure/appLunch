@@ -85,8 +85,5 @@ struct NotificationScreenView: View {
             },
             hasADivider: true
         )
-        .onAppear {
-            
-        }
     }
 }

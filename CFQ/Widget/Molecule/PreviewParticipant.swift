@@ -33,7 +33,7 @@ struct PreviewProfile: View {
                         ) { index, imageUrl in
                             CachedAsyncImageView(
                                 urlString: imageUrl,
-                                designType: .scaleImageMessageProfile
+                                designType: .scaleImagePreviewUsers
                             )
                         }
                     }

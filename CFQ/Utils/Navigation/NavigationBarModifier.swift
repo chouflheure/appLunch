@@ -36,7 +36,7 @@ struct NavigationBarThreeElementsModifier: ViewModifier {
     let hasADivider: Bool
 
     func body(content: Content) -> some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             if hasADivider {
                 Divider()
                     .frame(height: 0.5)

@@ -57,7 +57,7 @@ struct PictureSignUpScreen: View {
                         viewModel.picture = selectedImage ?? UIImage()
                         viewModel.goNext()
                     },
-                    title: StringsToken.Sign.Next,
+                    title: StringsToken.Sign.AlmostThere,
                     largeButtonType: .signNext,
                     isDisabled: selectedImage == nil
                 ).padding(.horizontal, 20)

@@ -24,7 +24,7 @@ struct LocalisationSignUpScreen: View {
                 VStack {
                     LargeButtonView(
                         action: {viewModel.goNext()},
-                        title: StringsToken.Sign.Next,
+                        title: StringsToken.Sign.NextStep,
                         largeButtonType: .signNext,
                         isDisabled: viewModel.user.location.isEmpty
                     ).padding(.horizontal, 20)

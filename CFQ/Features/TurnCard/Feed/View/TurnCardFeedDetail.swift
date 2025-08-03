@@ -7,8 +7,7 @@ struct TurnCardDetailsFeedView: View {
     @StateObject var turnCardViewModel: TurnCardViewModel
     @State private var toast: Toast? = nil
     @Environment(\.dismiss) var dismiss
-
-    @State var showEditTurnCard = false
+    @State var showAlertRemoveTurn = false
 
     var user: User
 
@@ -24,7 +23,6 @@ struct TurnCardDetailsFeedView: View {
                 isEditing: turn.admin == user.uid
             )
         )
-        print("@@@ turn = •\(turn.printObject)")
     }
     
     var body: some View {
@@ -47,7 +45,7 @@ struct TurnCardDetailsFeedView: View {
                     .padding(.top, !turn.pictureURLString.isEmpty ? 0 : 70)
                     
                     // Informations ( Mood / Date / Loc )
-                    MainInformationsDetailFeedView(turn: viewModel.turn)
+                    MainInformationsDetailFeedView(turn: viewModel.turn, coordinator: coordinator)
                         .padding(.horizontal, 16)
                     
                     // Description ( Bio event )
@@ -62,43 +60,29 @@ struct TurnCardDetailsFeedView: View {
             if turn.admin == user.uid {
                 VStack {
                     Spacer()
+                    
+
                     HStack(spacing: 30) {
-                        Button(
-                            action: {
-                                turnCardViewModel
-                                    .removeturn(
-                                        uid: viewModel.turn.uid,
-                                    ) {
-                                        success, message in
-                                        if success {
-                                            dismiss()
-                                        } else {
-                                            toast = Toast(
-                                                style: .error,
-                                                message: message
-                                            )
-                                        }
-                                    }
-                            },
-                            label: {
-                                HStack {
-                                    Image(.iconTrash)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 30)
-                                        .foregroundColor(.white)
-                                        .padding(.leading, 15)
-                                        .padding(.vertical, 10)
-                                        .font(.system(size: 10, weight: .bold))
-                                    
-                                    Text("Supprimer")
-                                        .tokenFont(.Body_Inter_Medium_14)
-                                        .padding(.trailing, 15)
-                                        .padding(.vertical, 10)
-                                        .font(.system(size: 15, weight: .bold))
-                                }
+                        Button(action: {
+                            showAlertRemoveTurn.toggle()
+                        }, label: {
+                            HStack {
+                                Image(.iconTrash)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
+                                    .foregroundColor(.white)
+                                    .padding(.leading, 15)
+                                    .padding(.vertical, 10)
+                                    .font(.system(size: 10, weight: .bold))
+                                
+                                Text("Supprimer")
+                                    .tokenFont(.Body_Inter_Medium_14)
+                                    .padding(.trailing, 15)
+                                    .padding(.vertical, 10)
+                                    .font(.system(size: 15, weight: .bold))
                             }
-                        )
+                        })
                         .frame(width: 150)
                         .background(.clear)
                         .cornerRadius(10)
@@ -108,7 +92,37 @@ struct TurnCardDetailsFeedView: View {
                                 .foregroundColor(.white)
                                 .background(.clear)
                         }
-                        
+                        .alert(isPresented: $showAlertRemoveTurn) {
+                            CustomAlertDoubleButton(
+                                title: "Tu surpprime ce TURN, t'es sur ?",
+                                content: .trash,
+                                button1Title: "Garder",
+                                button2Title: "Poubelle",
+                                onDismissAlert: {
+                                    showAlertRemoveTurn = false
+                                },
+                                onTapValidate: {
+                                    showAlertRemoveTurn = false
+                                    turnCardViewModel
+                                        .removeturn(
+                                            uid: viewModel.turn.uid,
+                                        ) {
+                                            success, message in
+                                            if success {
+                                                dismiss()
+                                            } else {
+                                                toast = Toast(
+                                                    style: .error,
+                                                    message: message
+                                                )
+                                            }
+                                        }
+                                }
+                            ).transition(.blurReplace)
+                        } background: {
+                            Rectangle()
+                                .fill(.primary.opacity(0.35))
+                        }
                         
                         Button(
                             action: {
@@ -323,9 +337,11 @@ struct MainInformationsDetailFeedView: View {
     var turn: Turn
     let formattedDateAndTime = FormattedDateAndTime()
     @State private var isShowMaps: Bool = false
+    @ObservedObject var coordinator: Coordinator
 
-    init(turn: Turn) {
+    init(turn: Turn, coordinator: Coordinator) {
         self.turn = turn
+        self.coordinator = coordinator
     }
 
     var body: some View {
@@ -484,7 +500,7 @@ struct MainInformationsDetailFeedView: View {
         )
         
         NavigationLink(destination: {
-            FriendListStatusTurnInvitation(turn: turn)
+            FriendListStatusTurnInvitation(turn: turn, coordinator: coordinator)
         }) {
             HStack {
                 Text("\(turn.participants.count) y vont")

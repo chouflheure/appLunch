@@ -1,11 +1,14 @@
 import Foundation
 
-class Team: ObservableObject, Encodable, Decodable{
+class Team: ObservableObject, Encodable, Decodable, Hashable, Equatable {
     let uid: String
     let title: String
     let pictureUrlString: String
     let friends: [String]
     let admins: [String]
+    let timestamp: Date
+    let cfqs: [CFQ]?
+    let turns: [Turn]?
     @Published var friendsContact: [UserContact]?
     @Published var adminsContact: [UserContact]?
     
@@ -15,6 +18,9 @@ class Team: ObservableObject, Encodable, Decodable{
         pictureUrlString: String,
         friends: [String],
         admins: [String],
+        timestamp: Date,
+        cfqs: [CFQ]? = nil,
+        turns: [Turn]? = nil,
         friendsContact: [UserContact]? = nil,
         adminsContact: [UserContact]? = nil
     ) {
@@ -23,6 +29,9 @@ class Team: ObservableObject, Encodable, Decodable{
         self.pictureUrlString = pictureUrlString
         self.friends = friends
         self.admins = admins
+        self.timestamp = timestamp
+        self.cfqs = cfqs
+        self.turns = turns
         self.friendsContact = friendsContact
         self.adminsContact = adminsContact
     }
@@ -33,10 +42,23 @@ class Team: ObservableObject, Encodable, Decodable{
         case pictureUrlString
         case friends
         case admins
+        case timestamp
+        case cfqs
+        case turns
         case friendsContact
         case adminsContact
     }
 
+    // ✅ IMPLÉMENTATION DE HASHABLE
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uid) // Utilise l'uid comme identificateur unique
+    }
+    
+    // ✅ IMPLÉMENTATION DE EQUATABLE
+    static func == (lhs: Team, rhs: Team) -> Bool {
+        return lhs.uid == rhs.uid // Deux UserContact sont égaux s'ils ont le même uid
+    }
+    
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         uid = try values.decode(String.self, forKey: .uid)
@@ -44,6 +66,9 @@ class Team: ObservableObject, Encodable, Decodable{
         pictureUrlString = try values.decode(String.self, forKey: .pictureUrlString)
         friends = try values.decode([String].self, forKey: .friends)
         admins = try values.decode([String].self, forKey: .admins)
+        timestamp = try values.decode(Date.self, forKey: .timestamp)
+        cfqs = try values.decodeIfPresent([CFQ].self, forKey: .cfqs)
+        turns = try values.decodeIfPresent([Turn].self, forKey: .turns)
         friendsContact = try values.decodeIfPresent([UserContact].self, forKey: .friendsContact)
         adminsContact = try values.decodeIfPresent([UserContact].self, forKey: .adminsContact)
     }
@@ -55,6 +80,9 @@ class Team: ObservableObject, Encodable, Decodable{
         try container.encode(pictureUrlString, forKey: .pictureUrlString)
         try container.encode(friends, forKey: .friends)
         try container.encode(admins, forKey: .admins)
+        try container.encode(timestamp, forKey: .timestamp)
+        try container.encodeIfPresent(cfqs, forKey: .cfqs)
+        try container.encodeIfPresent(turns, forKey: .turns)
         try container.encodeIfPresent(friendsContact, forKey: .friendsContact)
         try container.encodeIfPresent(adminsContact, forKey: .adminsContact)
     }

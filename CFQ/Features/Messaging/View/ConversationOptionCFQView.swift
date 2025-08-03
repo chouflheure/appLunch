@@ -46,75 +46,82 @@ struct ConversationOptionCFQView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             ScrollView(showsIndicators: false) {
-                VStack {
-                    ModernCachedAsyncImage(
-                        url: cfq.userContact?.profilePictureUrl ?? ""
-                    )
-                    .scaledToFill()
-                    .frame(width: 90, height: 90)
-                    .clipShape(Circle())
-                    
-                    Text(cfq.title)
-                        .tokenFont(.Title_Inter_semibold_24)
-                    
-                    // MEDIA PART
-                    NavigationLink(destination: {
-                        AddFriendScreenWithActionButtonView(
-                            setFriendsState: setInvitedState,
-                            allFriendsState: allFriendsState,
-                            coordinator: coordinator,
-                            viewModel: viewModel,
-                            user: coordinator.user,
-                            uuidCFQ: cfq.uid,
-                            cfq: cfq,
-                            friendBeforeModification: setInvitedState.map { $0.uid }
+                VStack(alignment: .center) {
+                        ModernCachedAsyncImage(
+                            url: cfq.userContact?.profilePictureUrl ?? ""
                         )
-                    })
-                    {
-                        ConversationOptionPart(
-                            icon: .iconAdduser,
-                            title: "Ajouter quelqu'un"
-                        )
+                        .scaledToFill()
+                        .frame(width: 90, height: 90)
+                        .clipShape(Circle())
+                        .padding(.bottom, 10)
+                        
+                        Text(cfq.title)
+                            .tokenFont(.Title_Inter_semibold_24)
+                            .padding(.bottom, 10)
+                        
+
+                    if cfq.admin == coordinator.user?.uid {
+                        // MEDIA PART
+                        NavigationLink(destination: {
+                            AddFriendScreenWithActionButtonView(
+                                setFriendsState: setInvitedState,
+                                allFriendsState: allFriendsState,
+                                teamToAdd: [],
+                                allTeams: [],
+                                coordinator: coordinator,
+                                viewModel: viewModel,
+                                user: coordinator.user,
+                                uuidCFQ: cfq.uid,
+                                cfq: cfq,
+                                friendBeforeModification: setInvitedState.map { $0.uid }
+                            )
+                        })
+                        {
+                            ConversationOptionPart(
+                                icon: .iconAdduser,
+                                title: "Ajouter quelqu'un"
+                            )
+                        }
+                        
+                        NavigationLink(destination: {
+                            TurnCardView(
+                                turn: Turn(
+                                    uid: "",
+                                    titleEvent: "",
+                                    dateStartEvent: nil,
+                                    dateEndEvent: nil,
+                                    pictureURLString: "",
+                                    admin: cfq.admin,
+                                    description: "",
+                                    invited: cfq.users,
+                                    participants: [],
+                                    denied: [],
+                                    mayBeParticipate: [],
+                                    mood: [],
+                                    messagerieUUID: "",
+                                    placeTitle: "",
+                                    placeAdresse: "",
+                                    placeLatitude: 0,
+                                    placeLongitude: 0,
+                                    timestamp: Date(),
+                                    link: "",
+                                    lintiTitle: "",
+                                    imageEvent: nil,
+                                    userUID: ""
+                                ),
+                                coordinator: coordinator
+                            )
+                        }) {
+                            ConversationOptionPart(
+                                icon: .iconPlus,
+                                title: "Créer un turn"
+                            )
+                        }
                     }
-                    
-                    NavigationLink(destination: {
-                        TurnCardView(
-                            turn: Turn(
-                                uid: "",
-                                titleEvent: "",
-                                dateStartEvent: nil,
-                                dateEndEvent: nil,
-                                pictureURLString: "",
-                                admin: cfq.admin,
-                                description: "",
-                                invited: cfq.users,
-                                participants: [],
-                                denied: [],
-                                mayBeParticipate: [],
-                                mood: [],
-                                messagerieUUID: "",
-                                placeTitle: "",
-                                placeAdresse: "",
-                                placeLatitude: 0,
-                                placeLongitude: 0,
-                                timestamp: Date(),
-                                link: "",
-                                lintiTitle: "",
-                                imageEvent: nil,
-                                userUID: ""
-                            ),
-                            coordinator: coordinator
-                        )
-                    }) {
-                        ConversationOptionPart(
-                            icon: .iconPlus,
-                            title: "Creéer un turn"
-                        )
-                    }
-                    
-                    UserInCFQ(invited: invitedArray, participants: participantsArray)
+
+                    // UserInCFQ(invited: invitedArray, participants: participantsArray)
                     
                     Spacer()
                 }
@@ -123,6 +130,7 @@ struct ConversationOptionCFQView: View {
             .padding(.horizontal, 12)
             
         }
+        .frame(maxWidth: .infinity)
         .customNavigationFlexible(
             leftElement: {
                 NavigationBackIcon()
@@ -151,6 +159,9 @@ struct ConversationOptionCFQView: View {
 private struct AddFriendScreenWithActionButtonView: View {
     @State var setFriendsState = Set<UserContact>()
     @State var allFriendsState = Set<UserContact>()
+    @State var teamToAdd = Set<Team>()
+    @State var allTeams = Set<Team>()
+    
     @State private var toast: Toast? = nil
 
     @ObservedObject var coordinator: Coordinator
@@ -161,13 +172,17 @@ private struct AddFriendScreenWithActionButtonView: View {
     var cfq: CFQ
     var friendBeforeModification: [String]
 
+    
     var body: some View {
+        
         VStack {
             ListFriendToAdd(
                 isPresented: .constant(true),
                 coordinator: coordinator,
-                friendsOnTeam: $setFriendsState,
+                friendsAdd: $setFriendsState,
                 allFriends: $allFriendsState,
+                teamToAdd: $teamToAdd,
+                allTeams: $allTeams,
                 showArrowDown: false
             )
             .toastView(toast: $toast)
@@ -249,7 +264,7 @@ private struct AddFriendScreenWithActionButtonView: View {
                             .padding(.leading, 15)
                             .padding(.vertical, 10)
                         
-                        Text("Valider les modifs")
+                        Text("Valider")
                             .tokenFont(
                                 .Body_Inter_Medium_14
                             )
@@ -273,7 +288,8 @@ private struct UserInCFQ: View {
     var pageViewType: PageViewType = .invited
     @State var invited = [UserContact]()
     @State var participants = [UserContact]()
-    
+    @ObservedObject var coordinator: Coordinator
+
     let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
@@ -313,7 +329,7 @@ private struct UserInCFQ: View {
                                     .tokenFont(.Label_Gigalypse_12)
                                     .padding(.top, 50)
                             } else {
-                                CollectionViewParticipant(participants: $participants)
+                                CollectionViewParticipant(participants: $participants, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)
@@ -325,7 +341,7 @@ private struct UserInCFQ: View {
                                     .padding(.top, 50)
                             }
                             else {
-                                CollectionViewParticipant(participants: $invited)
+                                CollectionViewParticipant(participants: $invited, coordinator: coordinator)
                             }
                         }
                         .padding(.top, 24)

@@ -1,6 +1,7 @@
 
 import Foundation
 import SwiftUI
+import Firebase
 
 class MessagerieViewModel: ObservableObject {
     @Published var showSettingMessagerie: Bool = false
@@ -10,13 +11,18 @@ class MessagerieViewModel: ObservableObject {
     @Published var textMessage: String = ""
     @ObservedObject var coordinator: Coordinator
     @ObservedObject var conversation: Conversation
-
+    @Published var cfq = CFQ(uid: "", title: "", admin: "", messagerieUUID: "", users: [], timestamp: Date(), participants: nil, userContact: nil)
+    
     private let firebaseService = FirebaseService()
 
     init(coordinator: Coordinator, conversation: Conversation) {
         self.coordinator = coordinator
         self.conversation = conversation
         fetchMessages()
+        
+        if conversation.typeEvent == "cfq" {
+            fetchCFQData(cfqUUID: conversation.eventUID)
+        }
     }
 
     deinit {
@@ -57,6 +63,29 @@ extension MessagerieViewModel {
         firebaseService.markMessageAsRead(conversationId: conversation.uid, userId: coordinator.user?.uid ?? "")
     }
     
+    func joinCFQ(userUUID: String, cfq: CFQ) {
+        firebaseService.updateDataByID(
+            data: ["participants": FieldValue.arrayUnion([userUUID])],
+            to: .cfqs,
+            at: cfq.uid
+        )
+    }
+    
+    private func fetchCFQData(cfqUUID: String) {
+        firebaseService.getDataByID(
+            from: .cfqs,
+            with: cfqUUID,
+            completion: { (result: Result<CFQ, Error>) in
+                switch result {
+                case .success(let cfq):
+                    self.cfq = cfq
+                case .failure( let e):
+                    print("@@@ error load catchDataAppToStart = \(e)")
+                }
+            }
+        )
+    }
+
     private func fetchUserContactMessages(at index: Int, adminID: String) {
         firebaseService.getDataByID(from: .users, with: adminID) { [weak self] (result: Result<UserContact, Error>) in
             guard let self = self else { return }

@@ -49,7 +49,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         // Action "Non, je reste"
         let noAction = UNNotificationAction(
             identifier: "NO_ACTION",
-            title: "🏠 Non, je reste",
+            title: "😴 Non",
             options: [] // Reste en arrière-plan
         )
         
@@ -112,22 +112,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         
             // guard let userId = Auth.auth().currentUser?.uid else { return }
             
-        firebaseService.updateDataByID(data: ["isActive": isActive], to: .users, at: userUID)
-        
-        /*
-            let db = Firestore.firestore()
-            db.collection("users").document(userId).updateData([
-                "isActive": isActive,
-                "lastResponse": response,
-                "responseTimestamp": FieldValue.serverTimestamp()
-            ]) { error in
-                if let error = error {
-                    print("Erreur mise à jour: \(error)")
-                } else {
-                    print("Statut mis à jour avec succès")
-                }
-            }
-         */
+            firebaseService.updateDataByID(data: ["isActive": isActive], to: .users, at: userUID)
         }
     
     func registerNotificationCategories() {

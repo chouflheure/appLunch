@@ -76,14 +76,14 @@ struct HeaderCardViewDetail: View {
                                 viewModel.showDetailTurnCard = false
                             }
                         }) {
-                        Image(.iconOutExpend)
+                        Image(.iconValidationTurn)
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 24)
+                            .frame(width: 34)
                         }
-                        .frame(width: 40, height: 40)
-                        .background(Color.gray, in: Circle())
+                        .frame(width: 50, height: 50)
+                        .background(Color.black.opacity(0.5), in: Circle())
                     }
                 }
                 .padding(.horizontal, 16)

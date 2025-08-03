@@ -1,27 +1,64 @@
+class AddFriendsAndListViewModel: ObservableObject {
+    @Published var guestCount: Set<String> = []
+
+    func guestCount(arrayGuest: Set<UserContact>, arrayTeamGuest: Set<Team>) {
+        guestCount = []
+        arrayTeamGuest.forEach { team in
+            team.friends.forEach { user in
+                guestCount.insert(user)
+            }
+        }
+        
+        arrayGuest.forEach { user in
+            guestCount.insert(user.uid)
+        }
+    }
+}
+
 import SwiftUI
 
 struct AddFriendsAndListView: View {
-    @Binding var arrayPicture: Set<UserContact>
+    @Binding var arrayGuest: Set<UserContact>
     @Binding var arrayFriends: Set<UserContact>
+    @Binding var arrayTeamGuest: Set<Team>
+    @Binding var arrayTeam: Set<Team>
     @ObservedObject var coordinator: Coordinator
+    @StateObject var viewModel = AddFriendsAndListViewModel()
 
     var onRemove: ((UserContact) -> Void)
     var onAdd: ((UserContact) -> Void)
+    var onRemoveTeam: ((Team) -> Void)
+    var onAddTeam: ((Team) -> Void)
 
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Invité\(arrayPicture.count > 1 ? "s" : "") :")
+                Text("Invité\(viewModel.guestCount.count > 1 ? "s" : "") :")
                     .foregroundColor(.white)
 
-                Text(arrayPicture.count.description)
+                Text(viewModel.guestCount.count.description)
                     .foregroundColor(.white)
             }.padding(.horizontal, 16)
 
             VStack(alignment: .leading) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(Array(arrayPicture), id: \.self) { friend in
+                        ForEach(Array(arrayTeamGuest), id: \.self) { team in
+                            NavigationLink(
+                                destination: TeamDetailView(
+                                    coordinator: coordinator,
+                                    team: team,
+                                    isEditable: false
+                                )
+                            ) {
+                                CellTeamCanRemove(team: team) {
+                                    onRemoveTeam(team)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
+                                }
+                            }
+                        }
+
+                        ForEach(Array(arrayGuest), id: \.self) { friend in
                             NavigationLink(
                                 destination: FriendProfileView(
                                     coordinator: coordinator,
@@ -31,10 +68,11 @@ struct AddFriendsAndListView: View {
                             ) {
                                 CellFriendCanRemove(userPreview: friend) {
                                     onRemove(friend)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
                                 }
                             }
-                        }.frame(height: 100)
-                    }
+                        }
+                    }.frame(height: viewModel.guestCount.isEmpty ? 0 : 100)
                 }
             }
 
@@ -44,6 +82,23 @@ struct AddFriendsAndListView: View {
             VStack {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(alignment: .leading) {
+                        ForEach(Array(arrayTeam), id: \.self) { team in
+                            NavigationLink(
+                                destination:
+                                    TeamDetailView(
+                                        coordinator: coordinator,
+                                        team: team,
+                                        isEditable: false
+                                    )
+                            ) {
+                                CellTeamAdd(team: team) {
+                                    onAddTeam(team)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
+                                }
+                                .padding(.top, 15)
+                            }
+                        }
+                        
                         ForEach(Array(arrayFriends), id: \.self) { friend in
                             NavigationLink(
                                 destination: FriendProfileView(
@@ -54,6 +109,7 @@ struct AddFriendsAndListView: View {
                             ) {
                                 CellFriendsAdd(userPreview: friend) {
                                     onAdd(friend)
+                                    viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
                                 }
                                 .padding(.top, 15)
                             }
@@ -61,6 +117,9 @@ struct AddFriendsAndListView: View {
                     }
                 }
             }
+        }
+        .onAppear {
+            viewModel.guestCount(arrayGuest: arrayGuest, arrayTeamGuest: arrayTeamGuest)
         }
     }
 }

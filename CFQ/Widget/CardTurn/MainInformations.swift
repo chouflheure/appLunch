@@ -207,17 +207,27 @@ struct MainInformationsDetailView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    VStack {
                         HStack {
+                            ForEach(Array(viewModel.setTeamOnTurn), id: \.self) { team in
+                                CellFriendCanRemove(userPreview: UserContact(
+                                    uid: team.uid,
+                                    name: team.title,
+                                    pseudo: team.title,
+                                    profilePictureUrl: team.pictureUrlString,
+                                    isActive: false
+                                )) {
+                                    viewModel.removeTeamsFromList(team: team)
+                                }
+                            }
                             ForEach(Array(viewModel.setFriendsOnTurn), id: \.self) { user in
                                 CellFriendCanRemove(userPreview: user) {
                                     viewModel.removeFriendsFromList(
                                         user: user
                                     )
                                 }
-                            }.frame(height: 100)
+                            }
                         }
-                    }
+                        .frame(height: 100)
                 }
                 .padding(.top, 15)
                 
@@ -242,8 +252,10 @@ struct MainInformationsDetailView: View {
                 ListFriendToAdd(
                     isPresented: $viewModel.showFriendsList,
                     coordinator: viewModel.coordinator,
-                    friendsOnTeam: $viewModel.setFriendsOnTurn,
-                    allFriends: $viewModel.friendListToAdd
+                    friendsAdd: $viewModel.setFriendsOnTurn,
+                    allFriends: $viewModel.friendListToAdd,
+                    teamToAdd: $viewModel.setTeamOnTurn,
+                    allTeams: $viewModel.teamToAdd
                 )
             }
         }
@@ -302,17 +314,23 @@ struct SelectLinkView: View {
             .textFieldStyle(RoundedBorderTextFieldStyle())
 
             TextField(
-                viewModel.link.isEmpty ? "lien url" : viewModel.link,
+                viewModel.link.isEmpty ? "Lien url" : viewModel.link,
                 text: $viewModel.link
             )
             .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Button(action: {
                 isPresented = false
-            }) {
+            }, label: {
                 Text("Done")
-                    .background(Color(hex: "B098E6"))
-            }
+                    .foregroundColor(.white)
+                    .padding(.vertical, 10)
+                    .font(.system(size: 15, weight: .bold))
+                    .multilineTextAlignment(.center)
+            })
+            .frame(width: 150)
+            .background(Color(hex: "B098E6").opacity(1))
+            .cornerRadius(10)
         }
         .padding(.top, 40)
         .padding(.horizontal, 20)

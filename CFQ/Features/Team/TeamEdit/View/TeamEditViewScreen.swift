@@ -27,7 +27,8 @@ struct TeamEditViewScreen: View {
                         text: $viewModel.titleTeam,
                         keyBoardType: .default,
                         placeHolder: team.title,
-                        textFieldType: .editProfile
+                        textFieldType: .editProfile,
+                        characterLimit: 30
                     )
                     .padding(.horizontal, 20)
                     .padding(.bottom, 15)
@@ -129,8 +130,10 @@ struct TeamEditViewScreen: View {
                         ListFriendToAdd(
                             isPresented: .constant(true),
                             coordinator: coordinator,
-                            friendsOnTeam: $viewModel.setFriends,
+                            friendsAdd: $viewModel.setFriends,
                             allFriends: $viewModel.allFriends,
+                            teamToAdd: .constant([]),
+                            allTeams: .constant([]),
                             showArrowDown: false
                         )
                         .customNavigationFlexible(

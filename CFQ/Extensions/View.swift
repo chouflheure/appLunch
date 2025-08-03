@@ -68,7 +68,7 @@ extension View {
                 NavigationBarThreeElementsModifier(
                     leftElement: leftElement != nil ? AnyView(leftElement!()) : AnyView(EmptyView()),
                     centerElement: centerElement != nil ? AnyView(centerElement!()) : nil,
-                    rightElement: rightElement != nil ? AnyView(rightElement!()) : nil,
+                    rightElement: rightElement != nil ? AnyView(rightElement!()) :  AnyView(EmptyView()),
                     hasADivider: hasADivider
                 )
             )
@@ -78,5 +78,17 @@ extension View {
 extension View {
     func tokenFont(_ token: FontToken, color: Color? = nil) -> some View {
         self.font(token.font()).foregroundColor(color == nil ? token.color() : color)
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func alert<Content: View, Background: View>(
+        isPresented: Binding<Bool>,
+        @ViewBuilder content: @escaping () -> Content,
+        @ViewBuilder background: @escaping () -> Background
+    ) -> some View {
+        self
+            .modifier(CustomAlertModifier(isPresented: isPresented, alertContent: content, background: background))
     }
 }

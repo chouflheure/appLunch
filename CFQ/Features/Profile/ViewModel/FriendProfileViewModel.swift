@@ -35,10 +35,11 @@ class FriendProfileViewModel: ObservableObject {
     }
     
     private func handleStatusChange() {
-        if statusFriend != .friend {
-            isPrivateAccount = true
-        } else {
+        switch statusFriend {
+        case .friend, .myProfile:
             isPrivateAccount = false
+        case .noFriend, .requested, .sendRequested:
+            isPrivateAccount = true
         }
     }
     
@@ -59,6 +60,8 @@ class FriendProfileViewModel: ObservableObject {
             statusFriend = .sendRequested
         } else if user.requestsFriends.contains(userFriend.uid) {
             statusFriend = .requested
+        } else if user.uid == userFriend.uid {
+            statusFriend = .myProfile
         } else {
             statusFriend = .noFriend
         }
@@ -78,6 +81,8 @@ class FriendProfileViewModel: ObservableObject {
         case .friend:
             statusFriend = .noFriend
             isShowRemoveFriends = true
+        case .myProfile:
+            break
         }
     }
 

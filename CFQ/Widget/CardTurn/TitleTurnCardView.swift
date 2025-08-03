@@ -46,7 +46,8 @@ struct TitleTurnCardDetailView: View {
                 text: $viewModel.titleEvent,
                 keyBoardType: .default,
                 placeHolder: "LE TITRE",
-                textFieldType: .turn
+                textFieldType: .turn,
+                characterLimit: 30
             )
             .tokenFont(.Title_Gigalypse_24)
             .padding(.bottom, 16)

@@ -65,14 +65,16 @@ struct EditProfileUserView: View {
                                 text: $viewModel.pseudo,
                                 keyBoardType: .default,
                                 placeHolder: user.pseudo,
-                                textFieldType: .editProfile
+                                textFieldType: .editProfile,
+                                characterLimit: 40
                             )
 
                             CustomTextField(
                                 text: $viewModel.name,
                                 keyBoardType: .default,
                                 placeHolder: user.name,
-                                textFieldType: .editProfile
+                                textFieldType: .editProfile,
+                                characterLimit: 40
                             )
 
                             CollectionViewLocalisations(

@@ -10,10 +10,11 @@ struct CellTeamView: View {
         HStack(alignment: .center) {
             CirclePicture(urlStringImage: team.pictureUrlString)
                 .frame(width: 50, height: 50)
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading) {
                 Text(team.title)
                     .foregroundColor(.white)
                     .bold()
+                    .padding(.bottom, 10)
 
                 PreviewProfile(
                     friends: $team.friendsContact,

@@ -6,6 +6,7 @@ enum UsersAreFriendsStatusType {
     case requested
     case friend
     case sendRequested
+    case myProfile
 
     var icon: ImageResource {
         switch self {
@@ -17,12 +18,14 @@ enum UsersAreFriendsStatusType {
             return .iconFriendadded
         case .sendRequested:
             return .iconFriendadded
+        case .myProfile:
+            return .iconBug
         }
     }
     
     var strokeColor: Color {
         switch self {
-        case .noFriend, .sendRequested, .requested:
+        case .noFriend, .sendRequested, .requested, .myProfile:
             return .clear
         case .friend:
             return .white
@@ -35,7 +38,7 @@ enum UsersAreFriendsStatusType {
             return .purpleDark
         case .sendRequested:
             return .gray
-        case .friend:
+        case .friend, .myProfile:
             return .clear
         case .requested:
             return .green

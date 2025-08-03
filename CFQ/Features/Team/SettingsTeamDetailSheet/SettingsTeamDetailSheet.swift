@@ -18,7 +18,7 @@ struct SettingsTeamDetailSheet: View {
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 20)
+                            .frame(height: 20)
                         Button(
                             action: {
                                 Logger.log("Modifier la team", level: .action)

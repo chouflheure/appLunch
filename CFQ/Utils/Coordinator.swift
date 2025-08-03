@@ -58,6 +58,7 @@ class Coordinator: ObservableObject {
                     self.catchDataAppToStart()
                     self.catchAllUsersFriend(user: user)
                     self.catchAllUserCFQ(user: user)
+                    self.catchAllTeam(user: user)
                     
                     self.currentView = AnyView(
                         NavigationView {
@@ -178,7 +179,66 @@ class Coordinator: ObservableObject {
             )
         }
     }
+    
+    func catchAllTeam(user: User) {
+        firebaseService.getDataByIDs(
+            from: .teams,
+            with: user.teams ?? [""],
+        ){ (result: Result<[Team], Error>) in
+            switch result {
+            case .success(let teams):
+                DispatchQueue.main.async {
+                    self.user?.arrayTeamFromUser = teams
+                    print("### user.teams = \(user.teams)")
+                    print("### teams = \(teams)")
+                    
+                    if !teams.isEmpty {
+                        teams.forEach { team in
+                            self.startListeningToUsersOnTeam(friendsIds: team.friends, uidTeam: team.uid) { data, error in
+                                DispatchQueue.main.async {
+                                    // ✅ Trouver l'index par UID au lieu d'utiliser l'index original
+                                    guard let teamIndex = self.user?.arrayTeamFromUser?.firstIndex(where: { $0.uid == team.uid }) else {
+                                        print("⚠️ Team avec UID \(team.uid) non trouvée")
+                                        return
+                                    }
+                                    
+                                    if !data.isEmpty {
+                                        self.user?.arrayTeamFromUser?[teamIndex].friendsContact = data
+                                        
+                                        let uuidSet = Set(team.admins)
+                                        let commonObjects = data.filter { uuidSet.contains($0.uid) }
+                                        self.user?.arrayTeamFromUser?[teamIndex].adminsContact = commonObjects
+                                    } else {
+                                        print("@@@ data NOOOO")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("@@@ here")
+                print("❌ Erreur : \(error.localizedDescription)")
+            }
+        }
+    }
 
+    private func startListeningToUsersOnTeam(friendsIds: [String], uidTeam: String, completion: @escaping ([UserContact], Error?) -> Void) {
+        firebaseService.getDataByIDs(
+            from: .users,
+            with: friendsIds,
+        ){ (result: Result<[UserContact], Error>) in
+            switch result {
+            case .success(let userContact):
+                completion(userContact, nil)
+                
+            case .failure(let error):
+                print("👎 Erreur : \(error.localizedDescription)")
+                
+            }
+        }
+    }
+    
     func catchAllUsersFriend(user: User) {
         user.friends = removeEmptyIdInArray(data: user.friends)
 

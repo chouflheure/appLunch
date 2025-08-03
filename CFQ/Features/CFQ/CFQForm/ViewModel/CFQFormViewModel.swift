@@ -6,18 +6,22 @@ class CFQFormViewModel: ObservableObject {
     @Published var researchText = String()
     @Published var friendsList = Set<UserContact>()
     @Published var friendsAddToCFQ = Set<UserContact>()
-    @Published var isLoading: Bool = false
+    @Published var teamAddToCFQ = Set<Team>()
+    @Published var arrayTeam = Set<Team>()
 
+    @Published var isLoading: Bool = false
+    
     private var user: User
     private var firebaseService = FirebaseService()
     private var allFriends = Set<UserContact>()
+    private var allTeams = Set<Team>()
     private var errorService = ErrorService()
 
     @Published var titleCFQ: String = ""
 
     var isEnableButton: Bool {
         get {
-            !friendsAddToCFQ.isEmpty && !titleCFQ.isEmpty
+            (!friendsAddToCFQ.isEmpty || !teamAddToCFQ.isEmpty) && !titleCFQ.isEmpty
         }
         set {}
     }
@@ -26,7 +30,16 @@ class CFQFormViewModel: ObservableObject {
         let searchWords = researchText.split(separator: " ").map { $0.lowercased() }
         return allFriends.filter { name in
             searchWords.allSatisfy { word in
-                name.name.lowercased().hasPrefix(word.lowercased())
+                name.pseudo.lowercased().hasPrefix(word.lowercased())
+            }
+        }
+    }
+
+    var filteredTeams: Set<Team> {
+        let searchWords = researchText.split(separator: " ").map { $0.lowercased() }
+        return arrayTeam.filter { team in
+            searchWords.allSatisfy { word in
+                team.title.lowercased().hasPrefix(word.lowercased())
             }
         }
     }
@@ -34,13 +47,27 @@ class CFQFormViewModel: ObservableObject {
     init(coordinator: Coordinator) {
         self.user = coordinator.user ?? User(uid: "")
         friendsList = Set(coordinator.user?.userFriendsContact ?? [])
+        arrayTeam = Set(coordinator.user?.arrayTeamFromUser ?? [])
         allFriends = friendsList
+        allTeams = arrayTeam
     }
 
     func removeFriendsFromList(user: UserContact) {
         friendsAddToCFQ.remove(user)
         friendsList.insert(user)
         allFriends.insert(user)
+    }
+
+    func removeTeamFromList(team: Team) {
+        teamAddToCFQ.remove(team)
+        arrayTeam.insert(team)
+        allTeams.insert(team)
+    }
+
+    func addTeamToList(team: Team) {
+        teamAddToCFQ.insert(team)
+        arrayTeam.remove(team)
+        allTeams.remove(team)
     }
 
     func addFriendsToList(user: UserContact) {
@@ -56,9 +83,9 @@ class CFQFormViewModel: ObservableObject {
     func researche() {
         friendsList = allFriends
         friendsList = filteredNames
+        arrayTeam = allTeams
+        arrayTeam = filteredTeams
     }
-    
-    
 }
 
 extension CFQFormViewModel {
@@ -68,19 +95,18 @@ extension CFQFormViewModel {
         isLoading = true
         let uuid = UUID()
         let messagerieUUID = UUID()
-        var adminUUIDs = [String]()
+        var usersUUIDs = [String]()
         
-        friendsAddToCFQ.forEach({ adminUUIDs.append($0.uid) })
+        friendsAddToCFQ.forEach({ usersUUIDs.append($0.uid) })
         
         let cfq = CFQ(
             uid: uuid.description,
             title: "CFQ " + titleCFQ + (titleCFQ.last == "?" ? "" : " ?"),
             admin: user.uid,
             messagerieUUID: messagerieUUID.description,
-            users: adminUUIDs,
+            users: usersUUIDs,
             timestamp: Date()
         )
-        
         
         firebaseService.addData(
             data: cfq,
@@ -100,7 +126,7 @@ extension CFQFormViewModel {
             }
         )
     }
-    
+
     func addEventCFQOnFriendProfile(cfq: CFQ, completion: @escaping (Bool, String) -> Void) {
         firebaseService.updateDataByID(
             data: [

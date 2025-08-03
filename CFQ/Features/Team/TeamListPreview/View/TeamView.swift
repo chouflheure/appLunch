@@ -33,19 +33,25 @@ struct TeamView: View {
                             .padding(.vertical, 30)
                     }
                 )
-
-                ForEach(Array(viewModel.teams.indices), id: \.self) { index in
-                    NavigationLink(destination: {
-                        TeamDetailView(
-                            coordinator: coordinator,
-                            team: viewModel.teams[index]
-                        )
-                    }) {
-                        CellTeamView(
-                            coordinator: coordinator,
-                            team: viewModel.teams[index]
-                        )
-                        .padding(.bottom, 16)
+                
+                if viewModel.teams.isEmpty {
+                    Text("Pas encore de Team")
+                        .tokenFont(.Title_Gigalypse_24)
+                        .padding(.top, 100)
+                } else {
+                    ForEach(Array(viewModel.teams.indices), id: \.self) { index in
+                        NavigationLink(destination: {
+                            TeamDetailView(
+                                coordinator: coordinator,
+                                team: viewModel.teams[index]
+                            )
+                        }) {
+                            CellTeamView(
+                                coordinator: coordinator,
+                                team: viewModel.teams[index]
+                            )
+                            .padding(.bottom, 16)
+                        }
                     }
                 }
             }
