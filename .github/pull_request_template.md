@@ -20,7 +20,7 @@ Please delete options that are not relevant.
 - [ ] This change requires a documentation update
 
 # Checklist:
-
+-
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my code
 - [ ] I have commented my code, particularly in hard-to-understand areas
